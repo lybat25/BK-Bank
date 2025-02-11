@@ -242,10 +242,10 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser      = localStorage.getItem('user');
-            if (savedUser     ) {
-                const user = JSON.parse(savedUser     );
-                showProfile(user.name, user.email);
+            const savedUser     = localStorage.getItem('user');
+            if (savedUser    ) {
+                const user = JSON.parse(savedUser    );
+                showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
                 document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
@@ -258,7 +258,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser     Count');
+            const userCountElement = document.getElementById('currentUser    Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -283,6 +283,7 @@
                 <input type="text" id="name" placeholder="Ваш никнейм" required>
                 <input type="email" id="email" placeholder="Ваша электронная почта" required>
                 <input type="password" id="password" placeholder="Пароль" required>
+                <input type="text" id="accessCode" placeholder="Код доступа" required>
                 <button onclick="register()">Зарегистрироваться</button>
             `;
             document.body.appendChild(registrationForm);
@@ -317,6 +318,7 @@
             const name = document.getElementById('name').value.trim(); // Убираем пробелы
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const accessCode = document.getElementById('accessCode').value;
 
             // Проверка на наличие хотя бы одной буквы в никнейме
             const nameRegex = /[a-zA-Zа-яА-ЯЁё]/; // Регулярное выражение для проверки наличия хотя бы одной буквы
@@ -340,10 +342,17 @@
                 return;
             }
 
+            // Проверка кода доступа
+            if (!/^\d{4}$/.test(accessCode)) {
+                alert("Пожалуйста, введите ровно 4 цифры для кода доступа.");
+                return;
+            }
+
             // Сохранение данных в localStorage
             const user = {
                 name: name,
                 email: email,
+                accessCode: accessCode,
                 balance: 0 // Инициализируем баланс
             };
             localStorage.setItem('user', JSON.stringify(user));
@@ -369,7 +378,7 @@
             }, 2000); // Показать сообщение на 2 секунды
         }
 
-        function showProfile(name, email) {
+        function showProfile(name, email, accessCode) {
             const profileSection = document.querySelector('.profile-section');
             const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
             profileSection.innerHTML = `
@@ -380,6 +389,7 @@
                     <button class="logout-button" onclick="logout()">Выйти</button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
                 <p>Email: ${email}</p> <!-- Изменено на "Email" -->
+                <p>Ваш код доступа: ${accessCode}</p>
                 <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p> <!-- Отображаем текущий баланс -->
                 
                 <h3>Пополнить баланс</h3>
@@ -578,12 +588,5 @@
             <span>${name}</span>
             <button class="logout-button" onclick="logout()">Выйти</button> <!-- Кнопка "Выйти" рядом с именем -->
         </div>
-        <p>Email: ${email}</p>
-        <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p> <!-- Отображаем текущий баланс -->
+        <p>Email
         
-        <h3>Пополнить баланс</h3>
-        <div class="card-form">
-            <div class="form-group">
-                <label>Номер карты</label>
-                <input type="text" id="cardNumber" placeholder="0000 0000 
-                
