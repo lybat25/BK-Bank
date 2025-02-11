@@ -238,9 +238,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser      = localStorage.getItem('user');
-            if (savedUser     ) {
-                const user = JSON.parse(savedUser     );
+            const savedUser       = localStorage.getItem('user');
+            if (savedUser      ) {
+                const user = JSON.parse(savedUser      );
                 showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -254,7 +254,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser     Count');
+            const userCountElement = document.getElementById('currentUser      Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
