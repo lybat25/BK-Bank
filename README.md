@@ -1,4 +1,4 @@
-<html lang="RU">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -243,9 +243,9 @@
             });
 
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
+            const savedUser   = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
                 showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -259,7 +259,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser  Count');
+            const userCountElement = document.getElementById('currentUser   Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -520,6 +520,7 @@
         <a onclick="toggleSection('cards')">Карты</a> 
         <a onclick="toggleSection('contact')">Контакты</a>
         <a onclick="toggleSection('profile')">Кабинет</a>
+        <span style="color: #FFD700; font-weight: bold;">BK-Bank.ru</span> <!-- Текст вместо ссылки -->
     </nav>
 </header>
 
@@ -575,20 +576,5 @@
 
     <div class="contact-info">
         <h2>Контактная информация</h2>
-        <p>Email: <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p> <!-- Изменена электронная почта -->
-        <p>Discord: <a href="https://discord.gg/q8kRuKebKH" target="_blank">BK-Bank server</a></p> <!-- Добавлена ссылка на Discord -->
-        <p>Telegram: <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">BK-Bank channel</a></p> <!-- Добавлена ссылка на Telegram -->
-        <p>YouTube: <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">BK-Bank YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
-         <p>Token: <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">BK-Bank Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
-    </div>
-
-    <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
-        <h2>Ваш Кабинет</h2>
-        <div class="user-profile">
-            <!-- Здесь будет содержимое профиля пользователя -->
-        </div>
-    </div>
-</div>
-
-</body>
-</html>
+        <p>Email: <a href="mailto:bkbank636@gmail.com">bkbank636@gmail
+        
