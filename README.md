@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -586,5 +586,5 @@
     <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
         <h2>Ваш Кабинет</h2>
         <div class="user-profile">
-            <img src="https://1.downloader.disk.yandex.ru/preview/f3a6575319
+            <img src="https://1.downloader.disk.yandex.ru/preview/f3a6575319a33e49334ea4b2a368bbccc63b77da0a1a52ce
             
