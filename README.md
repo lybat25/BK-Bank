@@ -55,6 +55,10 @@
             border-radius: 8px;
             background: #2a2a2a; /* Фон для контента */
         }
+        .logo {
+            width: 100px; /* Установлена ширина для логотипа */
+            height: auto; /* Сохраняет пропорции изображения */
+        }
         h1 {
             font-size: 2.5em; /* Размер шрифта для заголовка */
             margin: 0; /* Убираем отступы */
@@ -239,9 +243,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser        = localStorage.getItem('user');
-            if (savedUser       ) {
-                const user = JSON.parse(savedUser       );
+            const savedUser  = localStorage.getItem('user');
+            if (savedUser ) {
+                const user = JSON.parse(savedUser );
                 showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -255,7 +259,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser       Count');
+            const userCountElement = document.getElementById('currentUser Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -382,7 +386,7 @@
             profileSection.innerHTML = `
                 <h2>Ваш Кабинет</h2>
                 <div class="user-profile">
-                    <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                    <img src="https://1.downloader.disk.yandex.ru/preview/f3a6575319a33e49334ea4b2a368bbccc63b77da0a1a52ce53b7468b4fe954b2/inf/0FQV1CB8kmL9qSwUn76WejRV4J3DzYx3enQfSL4NUOldycle_QRYn70N0K-pR2ADdBMiSmk0tMPI04hwnwuQ-g%3D%3D?uid=2005947030&filename=2025-01-30_17-50-13-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
                     <span>${name}</span>
                     <button class="logout-button" onclick="logout()">Выйти</button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
@@ -508,7 +512,8 @@
 
 <header>
     <h1>
-        <span style="color: #FFD700;">BK-Bank</span> <!-- Текст с желтым цветом -->
+        <img src="https://4.downloader.disk.yandex.ru/preview/ddb5de967bf6bb4ed7c0f8fe6d835cd261f9a04a821850a13ed7dd1f170a14db/inf/3NLDQNzXNT9LKmq9modVFb1WzJtnW53goa2qXJugs8w-eT2kmhyrnDr5Xqd28Yz8Yam7RdPkhoUgq9Mr5I9IJA%3D%3D?uid=2005947030&filename=2025-01-31_14-13-47-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" class="logo" alt="Логотип BC-Bank">
+        BK-Bank
     </h1>
     <nav>
         <a onclick="toggleSection('about')">Главная</a>
@@ -581,10 +586,5 @@
     <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
         <h2>Ваш Кабинет</h2>
         <div class="user-profile">
-            <!-- Здесь будет содержимое профиля пользователя -->
-        </div>
-    </div>
-</div>
 
-</body>
-</html>
+            
