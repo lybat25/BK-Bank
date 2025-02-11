@@ -514,7 +514,7 @@
 
 <header>
     <h1>
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-31_14-13-47-Photoroom.png?raw=true" class="logo" alt="Логотип BC-Bank">
+        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-02-11_14-05-35.png?raw=true" class="logo" alt="Логотип BC-Bank">
     </h1>
     <nav>
         <a onclick="toggleSection('about')">Главная</a>
