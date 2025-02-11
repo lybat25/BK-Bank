@@ -55,14 +55,6 @@
             border-radius: 8px;
             background: #2a2a2a; /* Фон для контента */
         }
-        .logo {
-            width: 100px; /* Установлена ширина для логотипа */
-            height: auto; /* Сохраняет пропорции изображения */
-            background-color: transparent; /* Убираем белый фон */
-            border: none; /* Убираем рамку */
-            display: block; /* Убедимся, что изображение блочное */
-            margin: 0; /* Убираем отступы */
-        }
         h1 {
             font-size: 2.5em; /* Размер шрифта для заголовка */
             margin: 0; /* Убираем отступы */
@@ -247,9 +239,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser    = localStorage.getItem('user');
-            if (savedUser   ) {
-                const user = JSON.parse(savedUser   );
+            const savedUser     = localStorage.getItem('user');
+            if (savedUser    ) {
+                const user = JSON.parse(savedUser    );
                 showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -263,7 +255,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser   Count');
+            const userCountElement = document.getElementById('currentUser    Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
