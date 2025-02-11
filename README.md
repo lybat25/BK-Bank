@@ -1,3 +1,6 @@
+
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,6 +55,10 @@
             display: none; /* Скрываем раздел по умолчанию */
             border-radius: 8px;
             background: #2a2a2a; /* Фон для контента */
+        }
+        .logo {
+            width: 100px; /* Установлена ширина для логотипа */
+            height: auto; /* Сохраняет пропорции изображения */
         }
         h1 {
             font-size: 2.5em; /* Размер шрифта для заголовка */
@@ -236,11 +243,6 @@
     </style>
     <script>
         window.onload = function() {
-            // Удаляем все элементы с классом "anchorjs-link"
-            document.querySelectorAll('.anchorjs-link').forEach(function(element) {
-                element.remove();
-            });
-
             // Проверка, есть ли сохраненные данные в localStorage
             const savedUser  = localStorage.getItem('user');
             if (savedUser ) {
@@ -385,7 +387,7 @@
             profileSection.innerHTML = `
                 <h2>Ваш Кабинет</h2>
                 <div class="user-profile">
-                    <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                    <img src="https://1.downloader.disk.yandex.ru/preview/f3a6575319a33e49334ea4b2a368bbccc63b77da0a1a52ce53b7468b4fe954b2/inf/0FQV1CB8kmL9qSwUn76WejRV4J3DzYx3enQfSL4NUOldycle_QRYn70N0K-pR2ADdBMiSmk0tMPI04hwnwuQ-g%3D%3D?uid=2005947030&filename=2025-01-30_17-50-13-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
                     <span>${name}</span>
                     <button class="logout-button" onclick="logout()">Выйти</button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
@@ -511,7 +513,8 @@
 
 <header>
     <h1>
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-11_142359079.png?raw=true" class="logo" alt="Логотип BC-Bank" style="width: 150px; height: auto; display: block; border: none;">
+        <img src="https://4.downloader.disk.yandex.ru/preview/ddb5de967bf6bb4ed7c0f8fe6d835cd261f9a04a821850a13ed7dd1f170a14db/inf/3NLDQNzXNT9LKmq9modVFb1WzJtnW53goa2qXJugs8w-eT2kmhyrnDr5Xqd28Yz8Yam7RdPkhoUgq9Mr5I9IJA%3D%3D?uid=2005947030&filename=2025-01-31_14-13-47-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" class="logo" alt="Логотип BC-Bank">
+        BK-Bank
     </h1>
     <nav>
         <a onclick="toggleSection('about')">Главная</a>
@@ -519,7 +522,6 @@
         <a onclick="toggleSection('cards')">Карты</a> 
         <a onclick="toggleSection('contact')">Контакты</a>
         <a onclick="toggleSection('profile')">Кабинет</a>
-        <span style="color: #FFD700; font-weight: bold;">BK-Bank.ru</span> <!-- Текст вместо ссылки -->
     </nav>
 </header>
 
@@ -575,14 +577,14 @@
 
     <div class="contact-info">
         <h2>Контактная информация</h2>
-        <p>Email: <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p>
-        <p>Телефон: +7 (123) 456-78-90</p>
-        <p>Адрес: г. Москва, ул. Примерная, д. 1</p>
+        <p>Email: <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p> <!-- Изменена электронная почта -->
+        <p>Discord: <a href="https://discord.gg/q8kRuKebKH" target="_blank">BK-Bank server</a></p> <!-- Добавлена ссылка на Discord -->
+        <p>Telegram: <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">BK-Bank channel</a></p> <!-- Добавлена ссылка на Telegram -->
+        <p>YouTube: <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">BK-Bank YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
+         <p>Token: <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">BK-Bank Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
     </div>
 
-    <div class="profile-section">
-        <!-- Здесь будет отображаться информация о пользователе -->
-    </div>
-</div>
-
-</body>
+    <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
+        <h2>Ваш Кабинет</h2>
+        <div class="user-profile">
+        
