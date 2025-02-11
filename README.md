@@ -243,9 +243,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
+            const savedUser   = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
                 showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -578,13 +578,5 @@
         <h2>Контактная информация</h2>
         <p>Email: <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p>
         <p>Discord: <a href="https://discord.gg/q8kRuKebKH" target="_blank">BK-Bank server</a></p>
-        <p>Telegram: <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">BK-Bank channel</a></p>
-        <p>YouTube: <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">BK-Bank YouTube</a></p>
-        <p>Token: <a href="#" target="_blank">BK-Bank Token (ещё не вышел)</a></p>
-    </div>
-
-    <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
-        <h2>Ваш Кабинет</h2>
-        <div class="user-profile">
-            <img src="https://1.downloader.disk.yandex.ru/preview/f3a6575319a33e49334ea4b2a368bbccc63b77da0a1a52ce
-            
+        <p>Telegram: <a href="https://t.me/+NE8aj5oi
+        
