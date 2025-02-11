@@ -243,9 +243,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser    = localStorage.getItem('user');
-            if (savedUser   ) {
-                const user = JSON.parse(savedUser   );
+            const savedUser     = localStorage.getItem('user');
+            if (savedUser    ) {
+                const user = JSON.parse(savedUser    );
                 showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -259,7 +259,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser  Count');
+            const userCountElement = document.getElementById('currentUser   Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -513,7 +513,6 @@
 <header>
     <h1>
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-31_14-13-47-Photoroom.png?raw=true" class="logo" alt="Логотип BC-Bank">
-        BK-Bank
     </h1>
     <nav>
         <a onclick="toggleSection('about')">Главная</a>
