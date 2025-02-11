@@ -243,9 +243,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
+            const savedUser    = localStorage.getItem('user');
+            if (savedUser   ) {
+                const user = JSON.parse(savedUser   );
                 showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -259,7 +259,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser Count');
+            const userCountElement = document.getElementById('currentUser  Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -512,7 +512,7 @@
 
 <header>
     <h1>
-        <img src="https://4.downloader.disk.yandex.ru/preview/ddb5de967bf6bb4ed7c0f8fe6d835cd261f9a04a821850a13ed7dd1f170a14db/inf/3NLDQNzXNT9LKmq9modVFb1WzJtnW53goa2qXJugs8w-eT2kmhyrnDr5Xqd28Yz8Yam7RdPkhoUgq9Mr5I9IJA%3D%3D?uid=2005947030&filename=2025-01-31_14-13-47-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" class="logo" alt="Логотип BC-Bank">
+        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-31_14-13-47-Photoroom.png?raw=true" class="logo" alt="Логотип BC-Bank">
         BK-Bank
     </h1>
     <nav>
@@ -586,4 +586,10 @@
     <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
         <h2>Ваш Кабинет</h2>
         <div class="user-profile">
-            
+            <!-- Здесь будет содержимое профиля пользователя -->
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
