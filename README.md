@@ -152,6 +152,43 @@
         .fade-out {
             opacity: 0; /* Прозрачность для исчезновения */
         }
+        /* Стили для формы регистрации */
+        .registration-form {
+            display: flex;
+            flex-direction: column;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3000; /* Поверх других элементов */
+        }
+        .registration-form input {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background: #1e1e1e;
+            color: #ffffff;
+        }
+        .registration-form button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background: #FFD700;
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .registration-form button:hover {
+            background: #ffcc00; /* Более светлый желтый при наведении */
+        }
+        .hidden {
+            display: none; /* Класс для скрытия элементов */
+        }
         /* Стили для профиля пользователя */
         .user-profile {
             display: flex;
@@ -205,9 +242,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
+            const savedUser      = localStorage.getItem('user');
+            if (savedUser     ) {
+                const user = JSON.parse(savedUser     );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -221,7 +258,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser  Count');
+            const userCountElement = document.getElementById('currentUser     Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -237,6 +274,100 @@
                 console.log('Disconnected from WebSocket server');
             };
         };
+
+        function showRegistrationForm() {
+            const registrationForm = document.createElement('div');
+            registrationForm.className = 'registration-form';
+            registrationForm.innerHTML = `
+                <h2>Регистрация</h2>
+                <input type="text" id="name" placeholder="Ваш никнейм" required>
+                <input type="email" id="email" placeholder="Ваша электронная почта" required>
+                <input type="password" id="password" placeholder="Пароль" required>
+                <button onclick="register()">Зарегистрироваться</button>
+            `;
+            document.body.appendChild(registrationForm);
+        }
+
+        function showPasswordRecoveryForm() {
+            document.querySelector('.registration-form').remove(); // Удаляем форму регистрации
+
+            const recoveryForm = document.createElement('div');
+            recoveryForm.className = 'registration-form';
+            recoveryForm.innerHTML = `
+                <h2>Восстановление пароля</h2>
+                <input type="email" id="recoveryEmail" placeholder="Введите вашу электронную почту" required>
+                <button onclick="recoverPassword()">Восстановить пароль</button>
+                <p><a href="#" onclick="showRegistrationForm()">Назад к регистрации</a></p>
+            `;
+            document.body.appendChild(recoveryForm);
+        }
+
+        function recoverPassword() {
+            const email = document.getElementById('recoveryEmail').value;
+
+            // Здесь должна быть логика для восстановления пароля
+            // Например, отправка ссылки на восстановление пароля на указанный email
+            alert(`Ссылка для восстановления пароля отправлена на ${email}.`);
+
+            // Возвращаемся к форме регистрации после восстановления
+            showRegistrationForm();
+        }
+
+        function register() {
+            const name = document.getElementById('name').value.trim(); // Убираем пробелы
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Проверка на наличие хотя бы одной буквы в никнейме
+            const nameRegex = /[a-zA-Zа-яА-ЯЁё]/; // Регулярное выражение для проверки наличия хотя бы одной буквы
+
+            if (!nameRegex.test(name)) {
+                alert("Никнейм должен содержать хотя бы одну букву.");
+                return;
+            }
+
+            // Проверка электронной почты
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailRegex.test(email)) {
+                alert("Пожалуйста, введите корректный адрес электронной почты.");
+                return;
+            }
+
+            // Проверка пароля
+            if (password.length < 6 || !/^[a-zA-Z]+$/.test(password)) {
+                alert("Пароль должен содержать минимум 6 символов и состоять только из английских букв.");
+                return;
+            }
+
+            // Сохранение данных в localStorage
+            const user = {
+                name: name,
+                email: email,
+                balance: 0 // Инициализируем баланс
+            };
+            localStorage.setItem('user', JSON.stringify(user));
+
+            const welcomeMessage = document.createElement('div');
+            welcomeMessage.className = 'welcome-message';
+            welcomeMessage.innerText = `Добро пожаловать, ${name}! Мы рады видеть вас на нашем сайте.`;
+            document.body.appendChild(welcomeMessage);
+
+            // Удаляем форму регистрации
+            document.querySelector('.registration-form').remove();
+
+            // Показываем содержимое страницы
+            document.querySelectorAll('.hidden').forEach(el => el.classList.remove('hidden'));
+
+            // Удаляем сообщение через 1 секунду
+            setTimeout(() => {
+                welcomeMessage.classList.add('fade-out');
+                // Удаляем элемент из DOM после завершения анимации
+                setTimeout(() => {
+                    welcomeMessage.remove();
+                }, 1000); // Время, соответствующее времени анимации
+            }, 2000); // Показать сообщение на 2 секунды
+        }
 
         function showProfile(name, email) {
             const profileSection = document.querySelector('.profile-section');
@@ -276,6 +407,7 @@
                     </button>
                 </div>
                 <p id="paymentMessage" style="color: #FFD700; margin-top: 15px;"></p>
+                 
             `;
             profileSection.style.display = 'block'; // Показываем раздел профиля
         }
@@ -453,29 +585,5 @@
         <div class="card-form">
             <div class="form-group">
                 <label>Номер карты</label>
-                <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19">
-            </div>
-            <div class="form-row">
-                <div>
-                    <label>Срок действия</label>
-                    <input type="text" id="cardExpiry" placeholder="MM/ГГ" maxlength="5">
-                </div>
-                <div>
-                    <label>CVV/CVC</label>
-                    <input type="text" id="cardCvv" placeholder="123" maxlength="3">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Сумма пополнения (руб)</label>
-                <input type="number" id="depositAmount" min="100" required>
-            </div>
-            <button onclick="processPayment()" style="width: 100%; padding: 10px; background: #FFD700; color: black; border: none; border-radius: 4px; cursor: pointer;">
-                Оплатить
-            </button>
-        </div>
-        <p id="paymentMessage" style="color: #FFD700; margin-top: 15px;"></p>
-    </div>
-</div>
-
-</body>
-</html>
+                <input type="text" id="cardNumber" placeholder="0000 0000 
+                
