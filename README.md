@@ -1,4 +1,3 @@
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -243,9 +242,9 @@
             });
 
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            const savedUser  = localStorage.getItem('user');
+            if (savedUser ) {
+                const user = JSON.parse(savedUser );
                 showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -259,7 +258,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser   Count');
+            const userCountElement = document.getElementById('currentUser Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -576,5 +575,14 @@
 
     <div class="contact-info">
         <h2>Контактная информация</h2>
-        <p>Email: <a href="mailto:bkbank636@gmail.com">bkbank636@gmail
-        
+        <p>Email: <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p>
+        <p>Телефон: +7 (123) 456-78-90</p>
+        <p>Адрес: г. Москва, ул. Примерная, д. 1</p>
+    </div>
+
+    <div class="profile-section">
+        <!-- Здесь будет отображаться информация о пользователе -->
+    </div>
+</div>
+
+</body>
