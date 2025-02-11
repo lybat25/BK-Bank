@@ -520,7 +520,6 @@
         <a onclick="toggleSection('cards')">Карты</a> 
         <a onclick="toggleSection('contact')">Контакты</a>
         <a onclick="toggleSection('profile')">Кабинет</a>
-        <span style="color: #FFD700; font-weight: bold;">BK-Bank</span> <!-- Убрана ссылка -->
     </nav>
 </header>
 
