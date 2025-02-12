@@ -87,7 +87,7 @@
             position: relative;
         }
         li::before {
-            content: '✔'; /* Знак перед элементами списка */
+            content: '✅'; /* Знак перед элементами списка (желтая галочка) */
             color: #FFD700; /* Цвет знака */
             position: absolute;
             left: -20px; /* Отступ от текста */
@@ -304,9 +304,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser              = localStorage.getItem('user');
-            if (savedUser             ) {
-                const user = JSON.parse(savedUser             );
+            const savedUser               = localStorage.getItem('user');
+            if (savedUser              ) {
+                const user = JSON.parse(savedUser              );
                 showProfile(user.name, user.email, user.balance);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -441,13 +441,11 @@
             }
 
             const savedUser    = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            if (savedUser   ) {
+                const user = JSON.parse(savedUser   );
                 user.balance += amount; // Увеличиваем баланс
                 localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленный баланс
                 alert(`Баланс успешно пополнен на ${amount} рублей. Ваш новый баланс: ${user.balance} рублей.`);
-                
-                // Здесь можно добавить логику для обработки платежа, если это необходимо
             }
         }
 
