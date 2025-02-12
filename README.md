@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -238,6 +239,34 @@
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
+        .balance-form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        .balance-form input {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background: #1e1e1e;
+            color: #ffffff;
+        }
+        .balance-form button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background: #FFD700;
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .balance-form button:hover {
+            background: #ffcc00; /* Более светлый желтый при наведении */
+        }
     </style>
     <script>
         window.onload = function() {
@@ -338,7 +367,6 @@
                 </div>
                 <p>Email: ${email}</p> <!-- Изменено на "Email" -->
                 <p>Ваш текущий баланс: <span id="currentBalance">${balance}</span> рублей.</p> <!-- Отображаем текущий баланс -->
-                <h3>Пополнить баланс</h3>
                 <div class="balance-form">
                     <input type="number" id="amount" placeholder="Сумма для пополнения" required>
                     <button onclick="addBalance()">Пополнить баланс</button>
@@ -354,9 +382,9 @@
                 return;
             }
 
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            const savedUser  = localStorage.getItem('user');
+            if (savedUser ) {
+                const user = JSON.parse(savedUser );
                 user.balance += amount; // Увеличиваем баланс
                 localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
                 document.getElementById('currentBalance').innerText = user.balance; // Обновляем отображаемый баланс
@@ -485,32 +513,8 @@
         </div>
         <p>Email: <span id="userEmail"></span></p>
         <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p>
-        <h3>Пополнить баланс</h3>
-        <div class="balance-form">
-            <input type="number" id="amount" placeholder="Сумма для пополнения" required>
-            <button onclick="addBalance()">Пополнить баланс</button>
-        </div>
     </div>
 </div>
-
-<script>
-    function addBalance() {
-        const amount = parseFloat(document.getElementById('amount').value);
-        if (isNaN(amount) || amount <= 0) {
-            alert("Введите корректную сумму для пополнения.");
-            return;
-        }
-
-        const savedUser   = localStorage.getItem('user');
-        if (savedUser  ) {
-            const user = JSON.parse(savedUser  );
-            user.balance += amount; // Увеличиваем баланс
-            localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
-            document.getElementById('currentBalance').innerText = user.balance; // Обновляем отображаемый баланс
-            alert(`Баланс успешно пополнен на ${amount} рублей.`);
-        }
-    }
-</script>
 
 </body>
 </html>
