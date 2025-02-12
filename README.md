@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -243,9 +242,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser    = localStorage.getItem('user');
-            if (savedUser   ) {
-                const user = JSON.parse(savedUser   );
+            const savedUser     = localStorage.getItem('user');
+            if (savedUser    ) {
+                const user = JSON.parse(savedUser    );
                 showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -259,7 +258,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser  Count');
+            const userCountElement = document.getElementById('currentUser   Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -513,7 +512,7 @@
 <header>
     <h1>
         <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-11_142359079.png?raw=true" class="logo" alt="Логотип BC-Bank">
-        BK-Bank
+        BC-Bank
     </h1>
     <nav>
         <a onclick="toggleSection('about')">Главная</a>
@@ -526,13 +525,13 @@
 
 <div class="container">
     <div class="about-bank">
-        <h2>БК-Банк: Ваш надежный финансовый партнер</h2>
-        <p>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни. Как говорит наш клиент: "Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление." Мы стремимся сделать каждую Вашу финансовую операцию прозрачной и удобной.</p>
-        <p>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем БК-Банка, чтобы сражаться с деньгами. Это была ложь."</p>
+        <h2>BC-Банк: Ваш надежный финансовый партнер</h2>
+        <p>В BC-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни. Как говорит наш клиент: "Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление." Мы стремимся сделать каждую Вашу финансовую операцию прозрачной и удобной.</p>
+        <p>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем BC-Банка, чтобы сражаться с деньгами. Это была ложь."</p>
         
         <h3 style="color: #FFD700;">Наши продукты</h3> <!-- Заголовок "Наши продукты" теперь желтый -->
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <p>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от BK-Bank.</p>
+        <p>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от BC-Банк.</p>
         
         <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Первое изображение -->
         
@@ -577,10 +576,10 @@
     <div class="contact-info">
         <h2>Контактная информация</h2>
         <p>Email: <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p> <!-- Изменена электронная почта -->
-        <p>Discord: <a href="https://discord.gg/q8kRuKebKH" target="_blank">BK-Bank server</a></p> <!-- Добавлена ссылка на Discord -->
-        <p>Telegram: <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">BK-Bank channel</a></p> <!-- Добавлена ссылка на Telegram -->
-        <p>YouTube: <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">BK-Bank YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
-         <p>Token: <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">BK-Bank Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
+        <p>Discord: <a href="https://discord.gg/q8kRuKebKH" target="_blank">BC-Банк server</a></p> <!-- Добавлена ссылка на Discord -->
+        <p>Telegram: <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">BC-Банк channel</a></p> <!-- Добавлена ссылка на Telegram -->
+        <p>YouTube: <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">BC-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
+         <p>Token: <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">BC-Банк Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
     </div>
 
     <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
