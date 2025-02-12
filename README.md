@@ -512,7 +512,7 @@
 
 <header>
     <h1>
-        <img src="https://4.downloader.disk.yandex.ru/preview/ddb5de967bf6bb4ed7c0f8fe6d835cd261f9a04a821850a13ed7dd1f170a14db/inf/3NLDQNzXNT9LKmq9modVFb1WzJtnW53goa2qXJugs8w-eT2kmhyrnDr5Xqd28Yz8Yam7RdPkhoUgq9Mr5I9IJA%3D%3D?uid=2005947030&filename=2025-01-31_14-13-47-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" class="logo" alt="Логотип BC-Bank">
+        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-11_142359079.png?raw=true" class="logo" alt="Логотип BC-Bank">
         BK-Bank
     </h1>
     <nav>
