@@ -304,9 +304,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser            = localStorage.getItem('user');
-            if (savedUser           ) {
-                const user = JSON.parse(savedUser           );
+            const savedUser             = localStorage.getItem('user');
+            if (savedUser            ) {
+                const user = JSON.parse(savedUser            );
                 showProfile(user.name, user.email, user.balance);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -404,6 +404,10 @@
                 <!-- Форма для пополнения баланса -->
                 <div class="balance-form">
                     <h3>Пополнить баланс</h3>
+                    <input type="text" id="cardNumber" placeholder="Номер карты" required>
+                    <input type="text" id="cardHolder" placeholder="Имя владельца" required>
+                    <input type="text" id="expiryDate" placeholder="Срок действия (MM/YY)" required>
+                    <input type="text" id="cvv" placeholder="CVV" required>
                     <input type="number" id="amount" placeholder="Сумма пополнения" required>
                     <button onclick="addBalance()">Пополнить</button>
                 </div>
@@ -412,13 +416,24 @@
         }
 
         function addBalance() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const cardHolder = document.getElementById('cardHolder').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
             const amount = parseFloat(document.getElementById('amount').value);
+
+            // Проверка данных карты
+            if (!cardNumber || !cardHolder || !expiryDate || !cvv) {
+                alert("Пожалуйста, заполните все поля для карты.");
+                return;
+            }
+
             if (isNaN(amount) || amount <= 0) {
                 alert("Пожалуйста, введите корректную сумму для пополнения.");
                 return;
             }
 
-            const savedUser    = localStorage.getItem('user');
+            const savedUser   = localStorage.getItem('user');
             if (savedUser  ) {
                 const user = JSON.parse(savedUser  );
                 user.balance += amount; // Увеличиваем баланс
@@ -459,5 +474,111 @@
                 cards.style.display = 'block';
             } else if (section === 'contact') {
                 contact.style.display = 'block';
-            } else if (
-            
+            } else if (section === 'about') {
+                about.style.display = 'block';
+            } else if (section === 'profile') {
+                profile.style.display = 'block'; // Показываем раздел "Ваш Кабинет"
+            }
+        }
+    </script>
+</head>
+<body>
+
+<header>
+    <h1>
+        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-11_142359079.png?raw=true" class="logo" alt="Логотип BC-Bank">
+        <a href="https://lybat25.github.io/BC-Bank/" style="color: #FFD700;">BC-Bank</a>
+    </h1>
+    <nav>
+        <a onclick="toggleSection('about')">Главная</a>
+        <a onclick="toggleSection('services')">Услуги</a>
+        <a onclick="toggleSection('cards')">Карты</a> 
+        <a onclick="toggleSection('contact')">Контакты</a>
+        <a onclick="toggleSection('profile')">Кабинет</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="about-bank">
+        <h2>БК-Банк: Ваш надежный финансовый партнер</h2>
+        <p>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни. Как говорит наш клиент: "Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление." Мы стремимся сделать каждую Вашу финансовую операцию прозрачной и удобной.</p>
+        <p>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем БК-Банка, чтобы сражаться с деньгами. Это была ложь."</p>
+        
+        <h3 style="color: #FFD700;">Наши продукты</h3> <!-- Заголовок "Наши продукты" теперь желтый -->
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
+        <p>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от BK-Bank.</p>
+        
+        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Изображение о банке -->
+        
+        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Второе изображение -->
+        
+        <div class="additional-info" style="color: #FFD700;">Наши карты</div> <!-- Заголовок "Наши карты" -->
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
+        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты" class="bank-image"> <!-- Изображение карт -->
+
+        <div class="additional-text">
+            Мы верим, что финансовая грамотность — это ключ к свободе. Каждый день мы работаем над тем, чтобы наши клиенты могли принимать обоснованные решения, основанные на чёткой информации. Мы предлагаем инструменты и ресурсы, которые помогут Вам лучше понять свой расходы и сбережения.
+            <br><br>
+            <img src="" style="margin-top: 20px; max-width: 50%; height: auto;">
+        </div>
+    </div>
+
+    <div id="services" class="services">
+        <h2>Наши услуги</h2>
+        <ul>
+            <li>Кредитование</li>
+            <li>Депозиты</li>
+            <li>Инвестиционные услуги</li>
+            <li>Консультации по финансовым вопросам</li>
+            <li>Онлайн-банкинг</li>
+        </ul>
+    </div>
+
+    <div id="cards" class="cards">
+        <h2>Наши карты</h2>
+        <ul>
+            <li>Карта "тень и свет"</li>
+            <li>Карта "чёрно-жёлтая энергия"</li>
+            <li>Карта "жёлтая стрела"</li>
+            <li>Карта "золотая волна"</li>
+            <li>Карта "солнечный ночной ветер"</li>
+            <li>Карта "БКашная тёмный"</li>
+            <li>Карта "БКашная светлый"</li>
+        </ul>
+        <p>Наши карты всё ещё не будут доступны больше пару месяцев советуем вам использовать нашу Биржу</p>
+    </div>
+
+    <div class="contact-info">
+        <h2>Контактная информация</h2>
+        <p>Email: <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p> <!-- Изменена электронная почта -->
+        <p>Discord: <a href="https://discord.gg/q8kRuKebKH" target="_blank">BK-Bank server</a></p> <!-- Добавлена ссылка на Discord -->
+        <p>Telegram: <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">BK-Bank channel</a></p> <!-- Добавлена ссылка на Telegram -->
+        <p>YouTube: <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">BK-Bank YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
+         <p>Token: <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">BK-Bank Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
+    </div>
+
+    <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
+        <h2>Ваш Кабинет</h2>
+        <div class="user-profile">
+            <img src="https://github.com/lybat25/BC-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+            <span>${name}</span>
+            <button class="logout-button" onclick="logout()">Выйти</button> <!-- Кнопка "Выйти" рядом с именем -->
+        </div>
+        <p>Email: <span id="userEmail"></span></p>
+        <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p>
+        
+        <!-- Форма для пополнения баланса -->
+        <div class="balance-form">
+            <h3>Пополнить баланс</h3>
+            <input type="text" id="cardNumber" placeholder="Номер карты" required>
+            <input type="text" id="cardHolder" placeholder="Имя владельца" required>
+            <input type="text" id="expiryDate" placeholder="Срок действия (MM/YY)" required>
+            <input type="text" id="cvv" placeholder="CVV" required>
+            <input type="number" id="amount" placeholder="Сумма пополнения" required>
+            <button onclick="addBalance()">Пополнить</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
