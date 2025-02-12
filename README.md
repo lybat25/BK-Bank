@@ -86,7 +86,7 @@
             position: relative;
         }
         li::before {
-            content: '✔'; /* Знак перед элементами списка */
+            content: '✓'; /* Знак перед элементами списка изменен на "✓" */
             color: #FFD700; /* Цвет знака */
             position: absolute;
             left: -20px; /* Отступ от текста */
@@ -243,9 +243,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
+            const savedUser    = localStorage.getItem('user');
+            if (savedUser   ) {
+                const user = JSON.parse(savedUser   );
                 showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -259,7 +259,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser Count');
+            const userCountElement = document.getElementById('currentUser  Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -586,4 +586,10 @@
     <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
         <h2>Ваш Кабинет</h2>
         <div class="user-profile">
-        
+            <!-- Здесь будет содержимое профиля пользователя -->
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
