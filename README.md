@@ -243,10 +243,10 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
-                showProfile(user.name, user.email);
+            const savedUser     = localStorage.getItem('user');
+            if (savedUser    ) {
+                const user = JSON.parse(savedUser    );
+                showProfile(user.name, user.email, user.balance);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
                 document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
@@ -328,7 +328,7 @@
             }, 2000); // Показать сообщение на 2 секунды
         }
 
-        function showProfile(name, email) {
+        function showProfile(name, email, balance) {
             const profileSection = document.querySelector('.profile-section');
             profileSection.innerHTML = `
                 <h2>Ваш Кабинет</h2>
@@ -338,9 +338,30 @@
                     <button class="logout-button" onclick="logout()">Выйти</button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
                 <p>Email: ${email}</p> <!-- Изменено на "Email" -->
-                <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p> <!-- Отображаем текущий баланс -->
+                <p>Ваш текущий баланс: <span id="currentBalance">${balance}</span> рублей.</p> <!-- Отображаем текущий баланс -->
+                <div class="balance-form">
+                    <input type="number" id="amount" placeholder="Сумма для пополнения" required>
+                    <button onclick="addBalance()">Пополнить баланс</button>
+                </div>
             `;
             profileSection.style.display = 'block'; // Показываем раздел профиля
+        }
+
+        function addBalance() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (isNaN(amount) || amount <= 0) {
+                alert("Введите корректную сумму для пополнения.");
+                return;
+            }
+
+            const savedUser   = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
+                user.balance += amount; // Увеличиваем баланс
+                localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
+                document.getElementById('currentBalance').innerText = user.balance; // Обновляем отображаемый баланс
+                alert(`Баланс успешно пополнен на ${amount} рублей.`);
+            }
         }
 
         function logout() {
@@ -464,6 +485,10 @@
         </div>
         <p>Email: <span id="userEmail"></span></p>
         <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p>
+        <div class="balance-form">
+            <input type="number" id="amount" placeholder="Сумма для пополнения" required>
+            <button onclick="addBalance()">Пополнить баланс</button>
+        </div>
     </div>
 </div>
 
