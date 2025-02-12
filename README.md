@@ -234,9 +234,9 @@
     </style>
     <script>
         window.onload = function() {
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
+            const savedUser   = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
                 showProfile(user.name, user.email, user.balance);
             } else {
                 document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
@@ -309,13 +309,18 @@
                 <h2>Ваш Кабинет</h2>
                 <div class="user-profile">
                     <img src="https://github.com/lybat25/BC-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя">
-                    <span>${name}</span>
+                    <span id="userName">${name}</span>
                     <button class="logout-button" onclick="logout()">Выйти</button>
                 </div>
-                <p>Email: ${email}</p>
+                <p>Email: <span id="userEmail">${email}</span></p>
                 <p>Ваш текущий баланс: <span id="currentBalance">${balance}</span> рублей.</p>
                 <h3>Пополнить баланс</h3>
                 <input type="number" id="depositAmount" placeholder="Сумма для пополнения" min="1">
+                <h4>Данные карты</h4>
+                <input type="text" id="cardNumber" placeholder="Номер карты" maxlength="19" required>
+                <input type="text" id="cardHolder" placeholder="Имя владельца" required>
+                <input type="text" id="expiryDate" placeholder="Срок действия (MM/YY)" maxlength="5" required>
+                <input type="text" id="cvv" placeholder="CVV" maxlength="3" required>
                 <button onclick="deposit()">Пополнить</button>
             `;
             profileSection.style.display = 'block';
@@ -323,17 +328,51 @@
 
         function deposit() {
             const depositAmount = parseFloat(document.getElementById('depositAmount').value);
+            const cardNumber = document.getElementById('cardNumber').value.trim();
+            const cardHolder = document.getElementById('cardHolder').value.trim();
+            const expiryDate = document.getElementById('expiryDate').value.trim();
+            const cvv = document.getElementById('cvv').value.trim();
             const user = JSON.parse(localStorage.getItem('user'));
+
+            // Валидация данных карты
+            const cardNumberRegex = /^\d{16}$/; // Пример для 16-значного номера карты
+            if (!cardNumberRegex.test(cardNumber)) {
+                alert("Пожалуйста, введите корректный номер карты (16 цифр).");
+                return;
+            }
+
+            if (cardHolder.length === 0) {
+                alert("Пожалуйста, введите имя владельца карты.");
+                return;
+            }
+
+            const expiryDateRegex = /^(0[1-9]|1[0-2])\/\d{2}$/; // MM/YY
+            if (!expiryDateRegex.test(expiryDate)) {
+                alert("Пожалуйста, введите корректную дату истечения (MM/YY).");
+                return;
+            }
+
+            const cvvRegex = /^\d{3}$/; // 3 цифры
+            if (!cvvRegex.test(cvv)) {
+                alert("Пожалуйста, введите корректный CVV (3 цифры).");
+                return;
+            }
 
             if (isNaN(depositAmount) || depositAmount <= 0) {
                 alert("Пожалуйста, введите корректную сумму для пополнения.");
                 return;
             }
 
+            // Здесь можно добавить логику для обработки платежа с использованием введенных данных карты
+
             user.balance += depositAmount;
             localStorage.setItem('user', JSON.stringify(user));
             document.getElementById('currentBalance').innerText = user.balance;
             document.getElementById('depositAmount').value = ''; // Очистить поле ввода
+            document.getElementById('cardNumber').value = ''; // Очистить поле ввода
+            document.getElementById('cardHolder').value = ''; // Очистить поле ввода
+            document.getElementById('expiryDate').value = ''; // Очистить поле ввода
+            document.getElementById('cvv').value = ''; // Очистить поле ввода
             alert(`Баланс успешно пополнен на ${depositAmount} рублей.`);
         }
 
