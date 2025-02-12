@@ -243,10 +243,10 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser     = localStorage.getItem('user');
-            if (savedUser    ) {
-                const user = JSON.parse(savedUser    );
-                showProfile(user.name, user.email, user.balance);
+            const savedUser  = localStorage.getItem('user');
+            if (savedUser ) {
+                const user = JSON.parse(savedUser );
+                showProfile(user.name, user.email, user.accessCode);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
                 document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
@@ -257,6 +257,23 @@
 
             // Скрываем раздел "Ваш кабинет" при загрузке страницы
             document.querySelector('.profile-section').style.display = 'none';
+
+            // Подключение к WebSocket для считывания количества пользователей
+            const userCountElement = document.getElementById('currentUser Count');
+            const socket = new WebSocket('ws://localhost:8080');
+
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                userCountElement.innerText = data.users; // Обновляем количество пользователей
+            };
+
+            socket.onopen = function() {
+                console.log('Connected to WebSocket server');
+            };
+
+            socket.onclose = function() {
+                console.log('Disconnected from WebSocket server');
+            };
         };
 
         function showRegistrationForm() {
@@ -267,15 +284,43 @@
                 <input type="text" id="name" placeholder="Ваш никнейм" required>
                 <input type="email" id="email" placeholder="Ваша электронная почта" required>
                 <input type="password" id="password" placeholder="Пароль" required>
+                <input type="text" id="accessCode" placeholder="Код доступа" required>
                 <button onclick="register()">Зарегистрироваться</button>
+                <p><a href="#" onclick="showPasswordRecoveryForm()">Забыли пароль?</a></p>
             `;
             document.body.appendChild(registrationForm);
+        }
+
+        function showPasswordRecoveryForm() {
+            document.querySelector('.registration-form').remove(); // Удаляем форму регистрации
+
+            const recoveryForm = document.createElement('div');
+            recoveryForm.className = 'registration-form';
+            recoveryForm.innerHTML = `
+                <h2>Восстановление пароля</h2>
+                <input type="email" id="recoveryEmail" placeholder="Введите вашу электронную почту" required>
+                <button onclick="recoverPassword()">Восстановить пароль</button>
+                <p><a href="#" onclick="showRegistrationForm()">Назад к регистрации</a></p>
+            `;
+            document.body.appendChild(recoveryForm);
+        }
+
+        function recoverPassword() {
+            const email = document.getElementById('recoveryEmail').value;
+
+            // Здесь должна быть логика для восстановления пароля
+            // Например, отправка ссылки на восстановление пароля на указанный email
+            alert(`Ссылка для восстановления пароля отправлена на ${email}.`);
+
+            // Возвращаемся к форме регистрации после восстановления
+            showRegistrationForm();
         }
 
         function register() {
             const name = document.getElementById('name').value.trim(); // Убираем пробелы
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const accessCode = document.getElementById('accessCode').value;
 
             // Проверка на наличие хотя бы одной буквы в никнейме
             const nameRegex = /[a-zA-Zа-яА-ЯЁё]/; // Регулярное выражение для проверки наличия хотя бы одной буквы
@@ -294,8 +339,14 @@
             }
 
             // Проверка пароля
-            if (password.length < 6) {
-                alert("Пароль должен содержать минимум 6 символов.");
+            if (password.length < 6 || !/^[a-zA-Z]+$/.test(password)) {
+                alert("Пароль должен содержать минимум 6 символов и состоять только из английских букв.");
+                return;
+            }
+
+            // Проверка кода доступа
+            if (!/^\d{4}$/.test(accessCode)) {
+                alert("Пожалуйста, введите ровно 4 цифры для кода доступа.");
                 return;
             }
 
@@ -303,6 +354,7 @@
             const user = {
                 name: name,
                 email: email,
+                accessCode: accessCode,
                 balance: 0 // Инициализируем баланс
             };
             localStorage.setItem('user', JSON.stringify(user));
@@ -328,40 +380,95 @@
             }, 2000); // Показать сообщение на 2 секунды
         }
 
-        function showProfile(name, email, balance) {
+        function showProfile(name, email, accessCode) {
             const profileSection = document.querySelector('.profile-section');
+            const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
             profileSection.innerHTML = `
                 <h2>Ваш Кабинет</h2>
                 <div class="user-profile">
-                    <img src="https://github.com/lybat25/BC-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                    <img src="https://1.downloader.disk.yandex.ru/preview/f3a6575319a33e49334ea4b2a368bbccc63b77da0a1a52ce53b7468b4fe954b2/inf/0FQV1CB8kmL9qSwUn76WejRV4J3DzYx3enQfSL4NUOldycle_QRYn70N0K-pR2ADdBMiSmk0tMPI04hwnwuQ-g%3D%3D?uid=2005947030&filename=2025-01-30_17-50-13-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
                     <span>${name}</span>
                     <button class="logout-button" onclick="logout()">Выйти</button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
                 <p>Email: ${email}</p> <!-- Изменено на "Email" -->
-                <p>Ваш текущий баланс: <span id="currentBalance">${balance}</span> рублей.</p> <!-- Отображаем текущий баланс -->
-                <div class="balance-form">
-                    <input type="number" id="amount" placeholder="Сумма для пополнения" required>
-                    <button onclick="addBalance()">Пополнить баланс</button>
+                <p>Ваш код доступа: ${accessCode}</p>
+                <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p> <!-- Отображаем текущий баланс -->
+                
+                <h3>Пополнить баланс</h3>
+                <div class="card-form">
+                    <div class="form-group">
+                        <label>Номер карты</label>
+                        <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19">
+                    </div>
+                    <div class="form-row">
+                        <div>
+                            <label>Срок действия</label>
+                            <input type="text" id="cardExpiry" placeholder="MM/ГГ" maxlength="5">
+                        </div>
+                        <div>
+                            <label>CVV/CVC</label>
+                            <input type="text" id="cardCvv" placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Сумма пополнения (руб)</label>
+                        <input type="number" id="depositAmount" min="100" required>
+                    </div>
+                    <button onclick="processPayment()" style="width: 100%; padding: 10px; background: #FFD700; color: black; border: none; border-radius: 4px; cursor: pointer;">
+                        Оплатить
+                    </button>
                 </div>
+                <p id="paymentMessage" style="color: #FFD700; margin-top: 15px;"></p>
+                 
             `;
             profileSection.style.display = 'block'; // Показываем раздел профиля
         }
 
-        function addBalance() {
-            const amount = parseFloat(document.getElementById('amount').value);
-            if (isNaN(amount) || amount <= 0) {
-                alert("Введите корректную сумму для пополнения.");
+        function processPayment() {
+            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+            const cardExpiry = document.getElementById('cardExpiry').value;
+            const cardCvv = document.getElementById('cardCvv').value;
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            const messageElement = document.getElementById('paymentMessage');
+
+            // Валидация данных
+            if (!/^\d{16}$/.test(cardNumber)) {
+                alert("Некорректный номер карты! Должно быть 16 цифр.");
                 return;
             }
 
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
-                user.balance += amount; // Увеличиваем баланс
-                localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
-                document.getElementById('currentBalance').innerText = user.balance; // Обновляем отображаемый баланс
-                alert(`Баланс успешно пополнен на ${amount} рублей.`);
+            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cardExpiry)) {
+                alert("Некорректный срок действия! Используйте формат MM/ГГ.");
+                return;
             }
+
+            if (!/^\d{3}$/.test(cardCvv)) {
+                alert("Некорректный CVV код! Должно быть 3 цифры.");
+                return;
+            }
+
+            if (!amount || amount < 100) {
+                alert("Минимальная сумма пополнения - 100 рублей!");
+                return;
+            }
+
+            // Обновляем баланс пользователя
+            const user = JSON.parse(localStorage.getItem('user'));
+            user.balance += amount; // Увеличиваем баланс на сумму пополнения
+            localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленный баланс
+
+            // Здесь должна быть интеграция с платежным шлюзом
+            // Это демо-версия, поэтому просто показываем сообщение
+            messageElement.innerHTML = `
+                Платеж на сумму ${amount} руб. успешно обработан!<br>
+                Карта: **** **** **** ${cardNumber.slice(-4)}<br>
+                Средства будут зачислены в течение 5 минут.
+            `;
+
+            // Очищаем поля
+            document.querySelectorAll('.card-form input').forEach(input => input.value = '');
+            // Обновляем отображение текущего баланса
+            document.getElementById('currentBalance').innerText = user.balance;
         }
 
         function logout() {
@@ -405,7 +512,7 @@
 
 <header>
     <h1>
-        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-11_142359079.png?raw=true" class="logo" alt="Логотип BC-Bank">
+        <img src="https://4.downloader.disk.yandex.ru/preview/ddb5de967bf6bb4ed7c0f8fe6d835cd261f9a04a821850a13ed7dd1f170a14db/inf/3NLDQNzXNT9LKmq9modVFb1WzJtnW53goa2qXJugs8w-eT2kmhyrnDr5Xqd28Yz8Yam7RdPkhoUgq9Mr5I9IJA%3D%3D?uid=2005947030&filename=2025-01-31_14-13-47-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" class="logo" alt="Логотип BC-Bank">
         BK-Bank
     </h1>
     <nav>
@@ -427,13 +534,13 @@
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <p>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от BK-Bank.</p>
         
-        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Изображение о банке -->
+        <img src="https://3.downloader.disk.yandex.ru/preview/7065c14e4e83950d36344a2ce41dbd4f783ab474fc34ec1e0300b6a39f7696bc/inf/KIP1_uHY4U2xYiM0nakexipxZOGpkqVQKPcP7bzOr5lUrwLqeuHhpjxayqC0bIgMBtOSaSFR_NcTAHJczJ1XzQ%3D%3D?uid=2005947030&filename=2025-01-30_23-24-11-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" alt="Изображение о банке" class="bank-image"> <!-- Первое изображение -->
         
-        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Второе изображение -->
+        <img src="https://4.downloader.disk.yandex.ru/preview/43fe92993989f4a6cb3f8b2b89a83bfc800dfa10998bd6ad385fd483cc91adc0/inf/1IHoK4Mje1Zoih8Vllfw44b0qVeqIudRyKVYLa2KZEgzEBIIy4MmeAtTg_q_Cd6jB4uQfPF6vbLOXnpOBgnAZA%3D%3D?uid=2005947030&filename=2025-01-31_00-23-07-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" alt="Изображение о банке" class="bank-image"> <!-- Второе изображение -->
         
         <div class="additional-info" style="color: #FFD700;">Наши карты</div> <!-- Заголовок "Наши карты" -->
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты" class="bank-image"> <!-- Изображение карт -->
+        <img src="https://3.downloader.disk.yandex.ru/preview/7065c14e4e83950d36344a2ce41dbd4f783ab474fc34ec1e0300b6a39f7696bc/inf/KIP1_uHY4U2xYiM0nakexipxZOGpkqVQKPcP7bzOr5lUrwLqeuHhpjxayqC0bIgMBtOSaSFR_NcTAHJczJ1XzQ%3D%3D?uid=2005947030&filename=2025-01-30_23-24-11-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" alt="Наши карты" class="bank-image"> <!-- Изображение карт -->
 
         <div class="additional-text">
             Мы верим, что финансовая грамотность — это ключ к свободе. Каждый день мы работаем над тем, чтобы наши клиенты могли принимать обоснованные решения, основанные на чёткой информации. Мы предлагаем инструменты и ресурсы, которые помогут Вам лучше понять свой расходы и сбережения.
@@ -479,18 +586,5 @@
     <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
         <h2>Ваш Кабинет</h2>
         <div class="user-profile">
-            <img src="https://github.com/lybat25/BC-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
-            <span>${name}</span>
-            <button class="logout-button" onclick="logout()">Выйти</button> <!-- Кнопка "Выйти" рядом с именем -->
-        </div>
-        <p>Email: <span id="userEmail"></span></p>
-        <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p>
-        <div class="balance-form">
-            <input type="number" id="amount" placeholder="Сумма для пополнения" required>
-            <button onclick="addBalance()">Пополнить баланс</button>
-        </div>
-    </div>
-</div>
 
-</body>
-</html>
+            
