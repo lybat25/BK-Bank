@@ -240,73 +240,13 @@
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
-        .balance-form {
-            display: flex;
-            flex-direction: column;
-            margin-top: 20px;
-            padding: 20px;
-            background: #2a2a2a;
-            border-radius: 8px;
-        }
-        .balance-form input {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            background: #1e1e1e;
-            color: #ffffff;
-        }
-        .balance-form button {
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            background: #FFD700;
-            color: #000;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .balance-form button:hover {
-            background: #ffcc00; /* Более светлый желтый при наведении */
-        }
-
-        /* Адаптивные стили */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column; /* Вертикальное расположение элементов в заголовке */
-                align-items: flex-start; /* Выравнивание по левому краю */
-            }
-            nav {
-                margin-top: 10px; /* Отступ сверху для навигации */
-            }
-            h1 {
-                font-size: 2em; /* Уменьшаем размер заголовка на мобильных устройствах */
-            }
-            .container {
-                padding: 10px; /* Уменьшаем отступы в контейнере */
-            }
-            .about-bank, .services, .cards, .contact-info, .profile-section {
-                padding: 15px; /* Уменьшаем отступы в разделах */
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.5em; /* Еще больше уменьшаем размер заголовка на маленьких экранах */
-            }
-            nav a {
-                margin: 0 10px; /* Уменьшаем отступы между ссылками */
-            }
-            .registration-form {
-                width: 90%; /* Увеличиваем ширину формы регистрации */
-            }
-        }
     </style>
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
             const savedUser               = localStorage.getItem('user');
-            if (savedUser              ) {
-                const user = JSON.parse(savedUser              );
+            if (savedUser               ) {
+                const user = JSON.parse(savedUser               );
                 showProfile(user.name, user.email, user.balance);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -400,53 +340,8 @@
                 </div>
                 <p>Email: ${email}</p> <!-- Изменено на "Email" -->
                 <p>Ваш текущий баланс: <span id="currentBalance">${balance}</span> рублей.</p> <!-- Отображаем текущий баланс -->
-                
-                <!-- Форма для пополнения баланса -->
-                <div class="balance-form">
-                    <h3>Пополнить баланс</h3>
-                    <input type="text" id="cardNumber" placeholder="Номер карты" required>
-                    <input type="text" id="cardHolder" placeholder="Имя владельца" required>
-                    <input type="text" id="expiryDate" placeholder="Срок действия (MM/YY)" required>
-                    <input type="text" id="cvv" placeholder="CVV" required>
-                    <input type="number" id="amount" placeholder="Сумма пополнения" required>
-                    <button onclick="addBalance()">Пополнить</button>
-                </div>
             `;
             profileSection.style.display = 'block'; // Показываем раздел профиля
-        }
-
-        function addBalance() {
-            const cardNumber = document.getElementById('cardNumber').value;
-            const cardHolder = document.getElementById('cardHolder').value;
-            const expiryDate = document.getElementById('expiryDate').value;
-            const cvv = document.getElementById('cvv').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-
-            // Проверка данных карты
-            if (!cardNumber || !cardHolder || !expiryDate || !cvv) {
-                alert("Пожалуйста, заполните все поля для карты.");
-                return;
-            }
-
-            // Простейшая валидация номера карты (должен состоять из 16 цифр)
-            const cardNumberRegex = /^\d{16}$/;
-            if (!cardNumberRegex.test(cardNumber)) {
-                alert("Номер карты должен содержать 16 цифр.");
-                return;
-            }
-
-            if (isNaN(amount) || amount <= 0) {
-                alert("Пожалуйста, введите корректную сумму для пополнения.");
-                return;
-            }
-
-            const savedUser    = localStorage.getItem('user');
-            if (savedUser   ) {
-                const user = JSON.parse(savedUser   );
-                user.balance += amount; // Увеличиваем баланс
-                localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленный баланс
-                alert(`Баланс успешно пополнен на ${amount} рублей. Ваш новый баланс: ${user.balance} рублей.`);
-            }
         }
 
         function logout() {
@@ -570,17 +465,6 @@
         </div>
         <p>Email: <span id="userEmail"></span></p>
         <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p>
-        
-        <!-- Форма для пополнения баланса -->
-        <div class="balance-form">
-            <h3>Пополнить баланс</h3>
-            <input type="text" id="cardNumber" placeholder="Номер карты" required>
-            <input type="text" id="cardHolder" placeholder="Имя владельца" required>
-            <input type="text" id="expiryDate" placeholder="Срок действия (MM/YY)" required>
-            <input type="text" id="cvv" placeholder="CVV" required>
-            <input type="number" id="amount" placeholder="Сумма пополнения" required>
-            <button onclick="addBalance()">Пополнить</button>
-        </div>
     </div>
 </div>
 
