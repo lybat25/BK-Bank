@@ -314,8 +314,27 @@
                 </div>
                 <p>Email: ${email}</p>
                 <p>Ваш текущий баланс: <span id="currentBalance">${balance}</span> рублей.</p>
+                <h3>Пополнить баланс</h3>
+                <input type="number" id="depositAmount" placeholder="Сумма для пополнения" min="1">
+                <button onclick="deposit()">Пополнить</button>
             `;
             profileSection.style.display = 'block';
+        }
+
+        function deposit() {
+            const depositAmount = parseFloat(document.getElementById('depositAmount').value);
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            if (isNaN(depositAmount) || depositAmount <= 0) {
+                alert("Пожалуйста, введите корректную сумму для пополнения.");
+                return;
+            }
+
+            user.balance += depositAmount;
+            localStorage.setItem('user', JSON.stringify(user));
+            document.getElementById('currentBalance').innerText = user.balance;
+            document.getElementById('depositAmount').value = ''; // Очистить поле ввода
+            alert(`Баланс успешно пополнен на ${depositAmount} рублей.`);
         }
 
         function logout() {
@@ -431,7 +450,7 @@
         <h2>Ваш Кабинет</h2>
         <div class="user-profile">
             <img src="https://github.com/lybat25/BC-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя">
-            <span>${name}</span>
+            <span id="userName"></span>
             <button class="logout-button" onclick="logout()">Выйти</button>
         </div>
         <p>Email: <span id="userEmail"></span></p>
