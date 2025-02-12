@@ -244,9 +244,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser                = localStorage.getItem('user');
-            if (savedUser                ) {
-                const user = JSON.parse(savedUser                );
+            const savedUser               = localStorage.getItem('user');
+            if (savedUser               ) {
+                const user = JSON.parse(savedUser               );
                 showProfile(user.name, user.email, user.balance);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
