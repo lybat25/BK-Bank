@@ -50,15 +50,117 @@
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
-        .deposit-form {
-            display: none; /* Скрываем форму пополнения по умолчанию */
+        .content {
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+            border-radius: 8px;
+            background: #2a2a2a;
+        }
+        .logo {
+            width: 100px;
+            height: auto;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+        h2 {
+            color: #FFD700;
+            border-bottom: 2px solid #FFD700;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #FFD700;
+            margin: 20px 0 10px;
+        }
+        .yellow-line {
+            height: 2px;
+            background-color: #FFD700;
+            margin-bottom: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 5px 0;
+            position: relative;
+        }
+        li::before {
+            content: '✓';
+            color: #FFD700;
+            position: absolute;
+            left: -20px;
+        }
+        .about-bank {
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .contact-info {
+            display: none;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .contact-info a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+        .contact-info a:hover {
+            color: #ffcc00;
+        }
+        .services, .cards {
+            display: none;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .bank-image {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .welcome-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(31, 31, 31, 0.9);
+            color: #FFD700;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            opacity: 1;
+            transition: opacity 1s ease-out;
+            z-index: 2000;
+        }
+        .fade-out {
+            opacity: 0;
+        }
+        .registration-form {
+            display: flex;
+            flex-direction: column;
             background: #2a2a2a;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            margin-top: 20px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3000;
         }
-        .deposit-form input {
+        .registration-form input {
             margin-bottom: 10px;
             padding: 10px;
             border: none;
@@ -66,7 +168,7 @@
             background: #1e1e1e;
             color: #ffffff;
         }
-        .deposit-form button {
+        .registration-form button {
             padding: 10px;
             border: none;
             border-radius: 4px;
@@ -75,11 +177,60 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .deposit-form button:hover {
+        .registration-form button:hover {
             background: #ffcc00;
         }
-        /* Остальные стили остаются прежними */
-        /* ... */
+        .hidden {
+            display: none;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .logout-button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background: #FFD700;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .logout-button:hover {
+            background: #ffcc00;
+        }
+        .additional-info {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.5em;
+            color: #FFD700;
+        }
+        .additional-text {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1em;
+            color: #ffffff;
+            padding: 0 20px;
+        }
+        .profile-section {
+            display: none;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
     </style>
     <script>
         window.onload = function() {
@@ -160,7 +311,6 @@
                     <img src="https://github.com/lybat25/BC-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя">
                     <span>${name}</span>
                     <button class="logout-button" onclick="logout()">Выйти</button>
-                    <button class="deposit-button" onclick="showDepositForm()">Пополнить баланс</button> <!-- Кнопка для пополнения баланса -->
                 </div>
                 <p>Email: ${email}</p>
                 <p>Ваш текущий баланс: <span id="currentBalance">${balance}</span> рублей.</p>
@@ -173,57 +323,6 @@
             document.querySelector('.profile-section').style.display = 'none';
             document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
             showRegistrationForm();
-        }
-
-        function showDepositForm() {
-            const depositForm = document.createElement('div');
-            depositForm.className = 'deposit-form';
-            depositForm.innerHTML = `
-                <h2>Пополнение баланса</h2>
-                <input type="text" id="cardNumber" placeholder="Номер карты" required>
-                <input type="number" id="amount" placeholder="Сумма пополнения" required>
-                <button onclick="deposit()">Пополнить</button>
-                <button onclick="hideDepositForm()">Отмена</button>
-            `;
-            document.body.appendChild(depositForm);
-            depositForm.style.display = 'block'; // Показываем форму
-        }
-
-        function hideDepositForm() {
-            const depositForm = document.querySelector('.deposit-form');
-            if (depositForm) {
-                depositForm.remove(); // Удаляем форму
-            }
-        }
-
-        function deposit() {
-            const cardNumber = document.getElementById('cardNumber').value.trim();
-            const amount = parseFloat(document.getElementById('amount').value);
-
-            // Простейшая проверка номера карты (должен состоять из 16 цифр)
-            const cardRegex = /^\d{16}$/;
-            if (!cardRegex.test(cardNumber)) {
-                alert("Номер карты должен состоять из 16 цифр.");
-                return;
-            }
-
-            // Проверка суммы пополнения
-            if (isNaN(amount) || amount <= 0) {
-                alert("Введите корректную сумму для пополнения.");
-                return;
-            }
-
-            // Получаем данные пользователя из localStorage
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
-                user.balance += amount; // Увеличиваем баланс
-                localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
-
-                alert(`Баланс успешно пополнен на ${amount} рублей!`);
-                hideDepositForm(); // Скрываем форму пополнения
-                showProfile(user.name, user.email, user.balance); // Обновляем профиль
-            }
         }
 
         function toggleSection(section) {
@@ -251,94 +350,6 @@
                 profile.style.display = 'block';
             }
         }
-
-        // Дополнительные функции для улучшения пользовательского интерфейса
-        function showError(message) {
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-message';
-            errorDiv.innerText = message;
-            document.body.appendChild(errorDiv);
-            setTimeout(() => {
-                errorDiv.remove();
-            }, 3000);
-        }
-
-        function validateCardNumber(cardNumber) {
-            // Простейшая проверка номера карты (должен состоять из 16 цифр)
-            const cardRegex = /^\d{16}$/;
-            return cardRegex.test(cardNumber);
-        }
-
-        function validateAmount(amount) {
-            // Проверка суммы пополнения
-            return !isNaN(amount) && amount > 0;
-        }
-
-        function validateUser Input(name, email, password) {
-            const nameRegex = /[a-zA-Zа-яА-ЯЁё]/;
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-            if (!nameRegex.test(name)) {
-                showError("Никнейм должен содержать хотя бы одну букву.");
-                return false;
-            }
-
-            if (!emailRegex.test(email)) {
-                showError("Пожалуйста, введите корректный адрес электронной почты.");
-                return false;
-            }
-
-            if (password.length < 6) {
-                showError("Пароль должен содержать минимум 6 символов.");
-                return false;
-            }
-
-            return true;
-        }
-
-        function resetFormInputs() {
-            document.getElementById('name').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('cardNumber').value = '';
-            document.getElementById('amount').value = '';
-        }
-
-        // Функция для отображения приветственного сообщения
-        function showWelcomeMessage(name) {
-            const welcomeMessage = document.createElement('div');
-            welcomeMessage.className = 'welcome-message';
-            welcomeMessage.innerText = `Добро пожаловать, ${name}! Мы рады видеть вас на нашем сайте.`;
-            document.body.appendChild(welcomeMessage);
-
-            setTimeout(() => {
-                welcomeMessage.classList.add('fade-out');
-                setTimeout(() => {
-                    welcomeMessage.remove();
-                }, 1000);
-            }, 2000);
-        }
-
-        // Функция для обновления профиля
-        function updateProfile(user) {
-            const profileSection = document.querySelector('.profile-section');
-            profileSection.querySelector('span').innerText = user.name;
-            profileSection.querySelector('#currentBalance').innerText = user.balance;
-        }
-
-        // Функция для инициализации приложения
-        function initApp() {
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
-                showProfile(user.name, user.email, user.balance);
-            } else {
-                showRegistrationForm();
-            }
-        }
-
-        // Запуск приложения
-        initApp();
     </script>
 </head>
 <body>
@@ -422,7 +433,6 @@
             <img src="https://github.com/lybat25/BC-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя">
             <span>${name}</span>
             <button class="logout-button" onclick="logout()">Выйти</button>
-            <button class="deposit-button" onclick="showDepositForm()">Пополнить баланс</button> <!-- Кнопка для пополнения баланса -->
         </div>
         <p>Email: <span id="userEmail"></span></p>
         <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p>
