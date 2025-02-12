@@ -540,7 +540,7 @@
         
         <div class="additional-info" style="color: #FFD700;">Наши карты</div> <!-- Заголовок "Наши карты" -->
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <img src="https://3.downloader.disk.yandex.ru/preview/7065c14e4e83950d36344a2ce41dbd4f783ab474fc34ec1e0300b6a39f7696bc/inf/KIP1_uHY4U2xYiM0nakexipxZOGpkqVQKPcP7bzOr5lUrwLqeuHhpjxayqC0bIgMBtOSaSFR_NcTAHJczJ1XzQ%3D%3D?uid=2005947030&filename=2025-01-30_23-24-11-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" alt="Наши карты" class="bank-image"> <!-- Изображение карт -->
+        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты" class="bank-image"> <!-- Изображение карт -->
 
         <div class="additional-text">
             Мы верим, что финансовая грамотность — это ключ к свободе. Каждый день мы работаем над тем, чтобы наши клиенты могли принимать обоснованные решения, основанные на чёткой информации. Мы предлагаем инструменты и ресурсы, которые помогут Вам лучше понять свой расходы и сбережения.
