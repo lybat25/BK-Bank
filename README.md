@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -384,7 +385,7 @@
 <header>
     <h1>
         <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-11_142359079.png?raw=true" class="logo" alt="Логотип BC-Bank">
-        BK-Bank
+        <a href="https://lybat25.github.io/BC-Bank/" style="color: #FFD700;">BC-Bank</a>
     </h1>
     <nav>
         <a onclick="toggleSection('about')">Главная</a>
