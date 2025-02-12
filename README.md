@@ -1,5 +1,3 @@
-
-Copy code
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -89,7 +87,7 @@ Copy code
             position: relative;
         }
         li::before {
-            content: '✅'; /* Знак перед элементами списка (желтая галочка) */
+            content: '✓'; /* Знак перед элементами списка (галочка) */
             color: #FFD700; /* Цвет знака */
             position: absolute;
             left: -20px; /* Отступ от текста */
