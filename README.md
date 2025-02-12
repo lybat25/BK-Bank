@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BC-Bank - Ваш надежный банк</title>
+    <base href="http://www.BK-Bank.com/mypage.html"> <!-- Базовый URL для относительных ссылок -->
     <link rel="stylesheet" href="styles.css"> <!-- Подключите свой CSS файл -->
     <style>
         body {
@@ -275,9 +276,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser        = localStorage.getItem('user');
-            if (savedUser       ) {
-                const user = JSON.parse(savedUser       );
+            const savedUser         = localStorage.getItem('user');
+            if (savedUser        ) {
+                const user = JSON.parse(savedUser        );
                 showProfile(user.name, user.email, user.balance);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
