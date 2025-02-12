@@ -50,13 +50,6 @@
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
-        .content {
-            padding: 20px;
-            margin-bottom: 20px;
-            display: none;
-            border-radius: 8px;
-            background: #2a2a2a;
-        }
         .logo {
             width: 100px;
             height: auto;
@@ -79,88 +72,16 @@
             background-color: #FFD700;
             margin-bottom: 10px;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            padding: 5px 0;
-            position: relative;
-        }
-        li::before {
-            content: '✓';
-            color: #FFD700;
-            position: absolute;
-            left: -20px;
-        }
-        .about-bank {
-            text-align: center;
-            margin: 40px 0;
-            padding: 20px;
-            background: #2a2a2a;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-        .contact-info {
-            display: none;
-            padding: 20px;
-            background: #2a2a2a;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        .contact-info a {
-            color: #FFD700;
-            text-decoration: none;
-        }
-        .contact-info a:hover {
-            color: #ffcc00;
-        }
-        .services, .cards {
-            display: none;
-            padding: 20px;
-            background: #2a2a2a;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        .bank-image {
-            margin-top: 20px;
-            width: 100%;
-            max-width: 600px;
-            height: auto;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .welcome-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(31, 31, 31, 0.9);
-            color: #FFD700;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            opacity: 1;
-            transition: opacity 1s ease-out;
-            z-index: 2000;
-        }
-        .fade-out {
-            opacity: 0;
-        }
-        .registration-form {
+        .registration-form, .deposit-form {
             display: flex;
             flex-direction: column;
             background: #2a2a2a;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 3000;
+            margin-bottom: 20px;
         }
-        .registration-form input {
+        .registration-form input, .deposit-form input {
             margin-bottom: 10px;
             padding: 10px;
             border: none;
@@ -168,7 +89,7 @@
             background: #1e1e1e;
             color: #ffffff;
         }
-        .registration-form button {
+        .registration-form button, .deposit-form button {
             padding: 10px;
             border: none;
             border-radius: 4px;
@@ -177,7 +98,7 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .registration-form button:hover {
+        .registration-form button:hover, .deposit-form button:hover {
             background: #ffcc00;
         }
         .hidden {
@@ -211,19 +132,6 @@
         .logout-button:hover {
             background: #ffcc00;
         }
-        .additional-info {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 1.5em;
-            color: #FFD700;
-        }
-        .additional-text {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 1em;
-            color: #ffffff;
-            padding: 0 20px;
-        }
         .profile-section {
             display: none;
             padding: 20px;
@@ -234,15 +142,14 @@
     </style>
     <script>
         window.onload = function() {
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            const savedUser  = localStorage.getItem('user');
+            if (savedUser ) {
+                const user = JSON.parse(savedUser );
                 showProfile(user.name, user.email, user.balance);
             } else {
                 document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
                 showRegistrationForm();
             }
-            document.querySelector('.profile-section').style.display = 'none';
         };
 
         function showRegistrationForm() {
@@ -296,10 +203,7 @@
             document.querySelectorAll('.hidden').forEach(el => el.classList.remove('hidden'));
 
             setTimeout(() => {
-                welcomeMessage.classList.add('fade-out');
-                setTimeout(() => {
-                    welcomeMessage.remove();
-                }, 1000);
+                welcomeMessage.remove();
             }, 2000);
         }
 
@@ -315,13 +219,15 @@
                 <p>Email: <span id="userEmail">${email}</span></p>
                 <p>Ваш текущий баланс: <span id="currentBalance">${balance}</span> рублей.</p>
                 <h3>Пополнить баланс</h3>
-                <input type="number" id="depositAmount" placeholder="Сумма для пополнения" min="1">
-                <h4>Данные карты</h4>
-                <input type="text" id="cardNumber" placeholder="Номер карты" maxlength="19" required>
-                <input type="text" id="cardHolder" placeholder="Имя владельца" required>
-                <input type="text" id="expiryDate" placeholder="Срок действия (MM/YY)" maxlength="5" required>
-                <input type="text" id="cvv" placeholder="CVV" maxlength="3" required>
-                <button onclick="deposit()">Пополнить</button>
+                <div class="deposit-form">
+                    <input type="number" id="depositAmount" placeholder="Сумма для пополнения" min="1" required>
+                    <h4>Данные карты</h4>
+                    <input type="text" id="cardNumber" placeholder="Номер карты" maxlength="19" required>
+                    <input type="text" id="cardHolder" placeholder="Имя владельца" required>
+                    <input type="text" id="expiryDate" placeholder="Срок действия (MM/YY)" maxlength="5" required>
+                    <input type="text" id="cvv" placeholder="CVV" maxlength="3" required>
+                    <button onclick="deposit()">Пополнить</button>
+                </div>
             `;
             profileSection.style.display = 'block';
         }
