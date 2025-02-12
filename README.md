@@ -242,10 +242,10 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser     = localStorage.getItem('user');
-            if (savedUser    ) {
-                const user = JSON.parse(savedUser    );
-                showProfile(user.name, user.email, user.accessCode);
+            const savedUser      = localStorage.getItem('user');
+            if (savedUser     ) {
+                const user = JSON.parse(savedUser     );
+                showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
                 document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
@@ -258,7 +258,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser   Count');
+            const userCountElement = document.getElementById('currentUser    Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -283,43 +283,15 @@
                 <input type="text" id="name" placeholder="Ваш никнейм" required>
                 <input type="email" id="email" placeholder="Ваша электронная почта" required>
                 <input type="password" id="password" placeholder="Пароль" required>
-                <input type="text" id="accessCode" placeholder="Код доступа" required>
                 <button onclick="register()">Зарегистрироваться</button>
-                <p><a href="#" onclick="showPasswordRecoveryForm()">Забыли пароль?</a></p>
             `;
             document.body.appendChild(registrationForm);
-        }
-
-        function showPasswordRecoveryForm() {
-            document.querySelector('.registration-form').remove(); // Удаляем форму регистрации
-
-            const recoveryForm = document.createElement('div');
-            recoveryForm.className = 'registration-form';
-            recoveryForm.innerHTML = `
-                <h2>Восстановление пароля</h2>
-                <input type="email" id="recoveryEmail" placeholder="Введите вашу электронную почту" required>
-                <button onclick="recoverPassword()">Восстановить пароль</button>
-                <p><a href="#" onclick="showRegistrationForm()">Назад к регистрации</a></p>
-            `;
-            document.body.appendChild(recoveryForm);
-        }
-
-        function recoverPassword() {
-            const email = document.getElementById('recoveryEmail').value;
-
-            // Здесь должна быть логика для восстановления пароля
-            // Например, отправка ссылки на восстановление пароля на указанный email
-            alert(`Ссылка для восстановления пароля отправлена на ${email}.`);
-
-            // Возвращаемся к форме регистрации после восстановления
-            showRegistrationForm();
         }
 
         function register() {
             const name = document.getElementById('name').value.trim(); // Убираем пробелы
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const accessCode = document.getElementById('accessCode').value;
 
             // Проверка на наличие хотя бы одной буквы в никнейме
             const nameRegex = /[a-zA-Zа-яА-ЯЁё]/; // Регулярное выражение для проверки наличия хотя бы одной буквы
@@ -343,17 +315,10 @@
                 return;
             }
 
-            // Проверка кода доступа
-            if (!/^\d{4}$/.test(accessCode)) {
-                alert("Пожалуйста, введите ровно 4 цифры для кода доступа.");
-                return;
-            }
-
             // Сохранение данных в localStorage
             const user = {
                 name: name,
                 email: email,
-                accessCode: accessCode,
                 balance: 0 // Инициализируем баланс
             };
             localStorage.setItem('user', JSON.stringify(user));
@@ -379,7 +344,7 @@
             }, 2000); // Показать сообщение на 2 секунды
         }
 
-        function showProfile(name, email, accessCode) {
+        function showProfile(name, email) {
             const profileSection = document.querySelector('.profile-section');
             const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
             profileSection.innerHTML = `
@@ -390,7 +355,6 @@
                     <button class="logout-button" onclick="logout()">Выйти</button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
                 <p>Email: ${email}</p> <!-- Изменено на "Email" -->
-                <p>Ваш код доступа: ${accessCode}</p>
                 <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p> <!-- Отображаем текущий баланс -->
                 
                 <h3>Пополнить баланс</h3>
