@@ -386,7 +386,7 @@
             profileSection.innerHTML = `
                 <h2>Ваш Кабинет</h2>
                 <div class="user-profile">
-                    <img src="https://1.downloader.disk.yandex.ru/preview/f3a6575319a33e49334ea4b2a368bbccc63b77da0a1a52ce53b7468b4fe954b2/inf/0FQV1CB8kmL9qSwUn76WejRV4J3DzYx3enQfSL4NUOldycle_QRYn70N0K-pR2ADdBMiSmk0tMPI04hwnwuQ-g%3D%3D?uid=2005947030&filename=2025-01-30_17-50-13-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                    <img src="https://github.com/lybat25/BC-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
                     <span>${name}</span>
                     <button class="logout-button" onclick="logout()">Выйти</button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
