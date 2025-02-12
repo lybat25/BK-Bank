@@ -24,7 +24,6 @@
             display: flex; /* Используем flexbox для выравнивания */
             justify-content: space-between; /* Разделяем пространство между элементами */
             align-items: center; /* Центрируем по вертикали */
-            flex-wrap: wrap; /* Позволяет элементам переноситься на новую строку */
         }
         nav {
             margin: 0; /* Убираем отступы */
@@ -239,45 +238,13 @@
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
-
-        /* Адаптивные стили */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column; /* Вертикальное расположение элементов в заголовке */
-                align-items: flex-start; /* Выравнивание по левому краю */
-            }
-            nav {
-                margin-top: 10px; /* Отступ сверху для навигации */
-            }
-            h1 {
-                font-size: 2em; /* Уменьшаем размер заголовка на мобильных устройствах */
-            }
-            .container {
-                padding: 10px; /* Уменьшаем отступы в контейнере */
-            }
-            .about-bank, .services, .cards, .contact-info, .profile-section {
-                padding: 15px; /* Уменьшаем отступы в разделах */
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.5em; /* Еще больше уменьшаем размер заголовка на маленьких экранах */
-            }
-            nav a {
-                margin: 0 10px; /* Уменьшаем отступы между ссылками */
-            }
-            .registration-form {
-                width: 90%; /* Увеличиваем ширину формы регистрации */
-            }
-        }
     </style>
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser      = localStorage.getItem('user');
-            if (savedUser     ) {
-                const user = JSON.parse(savedUser     );
+            const savedUser     = localStorage.getItem('user');
+            if (savedUser    ) {
+                const user = JSON.parse(savedUser    );
                 showProfile(user.name, user.email, user.balance);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
