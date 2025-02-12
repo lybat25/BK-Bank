@@ -433,9 +433,9 @@
                 return;
             }
 
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            const savedUser  = localStorage.getItem('user');
+            if (savedUser ) {
+                const user = JSON.parse(savedUser );
                 user.balance += amount; // Увеличиваем баланс
                 localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленный баланс
                 alert(`Баланс успешно пополнен на ${amount} рублей. Ваш новый баланс: ${user.balance} рублей.`);
