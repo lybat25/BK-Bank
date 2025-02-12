@@ -242,9 +242,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser       = localStorage.getItem('user');
-            if (savedUser      ) {
-                const user = JSON.parse(savedUser      );
+            const savedUser        = localStorage.getItem('user');
+            if (savedUser       ) {
+                const user = JSON.parse(savedUser       );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -405,9 +405,9 @@
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <p>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от BK-Bank.</p>
         
-        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Изображение о банке -->
+        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_103752940.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Изображение о банке -->
         
-        <img src="https://4.downloader.disk.yandex.ru/preview/43fe92993989f4a6cb3f8b2b89a83bfc800dfa10998bd6ad385fd483cc91adc0/inf/1IHoK4Mje1Zoih8Vllfw44b0qVeqIudRyKVYLa2KZEgzEBIIy4MmeAtTg_q_Cd6jB4uQfPF6vbLOXnpOBgnAZA%3D%3D?uid=2005947030&filename=2025-01-31_00-23-07-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1866x955" alt="Изображение о банке" class="bank-image"> <!-- Второе изображение -->
+        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Второе изображение -->
         
         <div class="additional-info" style="color: #FFD700;">Наши карты</div> <!-- Заголовок "Наши карты" -->
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
