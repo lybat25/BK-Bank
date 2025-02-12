@@ -304,9 +304,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser             = localStorage.getItem('user');
-            if (savedUser            ) {
-                const user = JSON.parse(savedUser            );
+            const savedUser              = localStorage.getItem('user');
+            if (savedUser             ) {
+                const user = JSON.parse(savedUser             );
                 showProfile(user.name, user.email, user.balance);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -428,20 +428,26 @@
                 return;
             }
 
+            // Простейшая валидация номера карты (должен состоять из 16 цифр)
+            const cardNumberRegex = /^\d{16}$/;
+            if (!cardNumberRegex.test(cardNumber)) {
+                alert("Номер карты должен содержать 16 цифр.");
+                return;
+            }
+
             if (isNaN(amount) || amount <= 0) {
                 alert("Пожалуйста, введите корректную сумму для пополнения.");
                 return;
             }
 
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
+            const savedUser    = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
                 user.balance += amount; // Увеличиваем баланс
                 localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленный баланс
                 alert(`Баланс успешно пополнен на ${amount} рублей. Ваш новый баланс: ${user.balance} рублей.`);
                 
-                // Перенаправление на указанный URL
-                window.location.href = "https://www.donationalerts.com/r/zayebkin";
+                // Здесь можно добавить логику для обработки платежа, если это необходимо
             }
         }
 
