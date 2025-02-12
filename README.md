@@ -240,6 +240,34 @@
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
+        .balance-form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        .balance-form input {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background: #1e1e1e;
+            color: #ffffff;
+        }
+        .balance-form button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background: #FFD700;
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .balance-form button:hover {
+            background: #ffcc00; /* Более светлый желтый при наведении */
+        }
 
         /* Адаптивные стили */
         @media (max-width: 768px) {
@@ -276,9 +304,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser         = localStorage.getItem('user');
-            if (savedUser        ) {
-                const user = JSON.parse(savedUser        );
+            const savedUser           = localStorage.getItem('user');
+            if (savedUser          ) {
+                const user = JSON.parse(savedUser          );
                 showProfile(user.name, user.email, user.balance);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -372,8 +400,32 @@
                 </div>
                 <p>Email: ${email}</p> <!-- Изменено на "Email" -->
                 <p>Ваш текущий баланс: <span id="currentBalance">${balance}</span> рублей.</p> <!-- Отображаем текущий баланс -->
+                
+                <!-- Форма для пополнения баланса -->
+                <div class="balance-form">
+                    <h3>Пополнить баланс</h3>
+                    <input type="number" id="amount" placeholder="Сумма пополнения" required>
+                    <button onclick="addBalance()">Пополнить</button>
+                </div>
             `;
             profileSection.style.display = 'block'; // Показываем раздел профиля
+        }
+
+        function addBalance() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (isNaN(amount) || amount <= 0) {
+                alert("Пожалуйста, введите корректную сумму для пополнения.");
+                return;
+            }
+
+            const savedUser   = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
+                user.balance += amount; // Увеличиваем баланс
+                localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленный баланс
+                alert(`Баланс успешно пополнен на ${amount} рублей. Ваш новый баланс: ${user.balance} рублей.`);
+                showProfile(user.name, user.email, user.balance); // Обновляем отображение профиля
+            }
         }
 
         function logout() {
@@ -497,6 +549,13 @@
         </div>
         <p>Email: <span id="userEmail"></span></p>
         <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p>
+        
+        <!-- Форма для пополнения баланса -->
+        <div class="balance-form">
+            <h3>Пополнить баланс</h3>
+            <input type="number" id="amount" placeholder="Сумма пополнения" required>
+            <button onclick="addBalance()">Пополнить</button>
+        </div>
     </div>
 </div>
 
