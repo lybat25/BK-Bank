@@ -242,9 +242,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser      = localStorage.getItem('user');
-            if (savedUser     ) {
-                const user = JSON.parse(savedUser     );
+            const savedUser       = localStorage.getItem('user');
+            if (savedUser      ) {
+                const user = JSON.parse(savedUser      );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -258,7 +258,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser    Count');
+            const userCountElement = document.getElementById('currentUser     Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -356,82 +356,8 @@
                 </div>
                 <p>Email: ${email}</p> <!-- Изменено на "Email" -->
                 <p>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</p> <!-- Отображаем текущий баланс -->
-                
-                <h3>Пополнить баланс</h3>
-                <div class="card-form">
-                    <div class="form-group">
-                        <label>Номер карты</label>
-                        <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19">
-                    </div>
-                    <div class="form-row">
-                        <div>
-                            <label>Срок действия</label>
-                            <input type="text" id="cardExpiry" placeholder="MM/ГГ" maxlength="5">
-                        </div>
-                        <div>
-                            <label>CVV/CVC</label>
-                            <input type="text" id="cardCvv" placeholder="123" maxlength="3">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Сумма пополнения (руб)</label>
-                        <input type="number" id="depositAmount" min="100" required>
-                    </div>
-                    <button onclick="processPayment()" style="width: 100%; padding: 10px; background: #FFD700; color: black; border: none; border-radius: 4px; cursor: pointer;">
-                        Оплатить
-                    </button>
-                </div>
-                <p id="paymentMessage" style="color: #FFD700; margin-top: 15px;"></p>
-                 
             `;
             profileSection.style.display = 'block'; // Показываем раздел профиля
-        }
-
-        function processPayment() {
-            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
-            const cardExpiry = document.getElementById('cardExpiry').value;
-            const cardCvv = document.getElementById('cardCvv').value;
-            const amount = parseFloat(document.getElementById('depositAmount').value);
-            const messageElement = document.getElementById('paymentMessage');
-
-            // Валидация данных
-            if (!/^\d{16}$/.test(cardNumber)) {
-                alert("Некорректный номер карты! Должно быть 16 цифр.");
-                return;
-            }
-
-            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cardExpiry)) {
-                alert("Некорректный срок действия! Используйте формат MM/ГГ.");
-                return;
-            }
-
-            if (!/^\d{3}$/.test(cardCvv)) {
-                alert("Некорректный CVV код! Должно быть 3 цифры.");
-                return;
-            }
-
-            if (!amount || amount < 100) {
-                alert("Минимальная сумма пополнения - 100 рублей!");
-                return;
-            }
-
-            // Обновляем баланс пользователя
-            const user = JSON.parse(localStorage.getItem('user'));
-            user.balance += amount; // Увеличиваем баланс на сумму пополнения
-            localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленный баланс
-
-            // Здесь должна быть интеграция с платежным шлюзом
-            // Это демо-версия, поэтому просто показываем сообщение
-            messageElement.innerHTML = `
-                Платеж на сумму ${amount} руб. успешно обработан!<br>
-                Карта: **** **** **** ${cardNumber.slice(-4)}<br>
-                Средства будут зачислены в течение 5 минут.
-            `;
-
-            // Очищаем поля
-            document.querySelectorAll('.card-form input').forEach(input => input.value = '');
-            // Обновляем отображение текущего баланса
-            document.getElementById('currentBalance').innerText = user.balance;
         }
 
         function logout() {
