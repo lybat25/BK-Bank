@@ -242,9 +242,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            const savedUser    = localStorage.getItem('user');
+            if (savedUser   ) {
+                const user = JSON.parse(savedUser   );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -258,7 +258,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser  Count');
+            const userCountElement = document.getElementById('currentUser   Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -349,6 +349,7 @@
             const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
             profileSection.innerHTML = `
                 <h2>Ваш Кабинет</h2>
+                <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
                 <div class="user-profile">
                     <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
                     <span>${name}</span>
@@ -385,14 +386,19 @@
             // Показываем выбранную секцию
             if (section === 'services') {
                 services.style.display = 'block';
+                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
             } else if (section === 'cards') { // Показать раздел карт
                 cards.style.display = 'block';
+                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
             } else if (section === 'contact') {
                 contact.style.display = 'block';
+                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
             } else if (section === 'about') {
                 about.style.display = 'block';
+                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
             } else if (section === 'profile') {
                 profile.style.display = 'block'; // Показываем раздел "Ваш Кабинет"
+                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
             }
         }
     </script>
@@ -441,6 +447,7 @@
 
     <div id="services" class="services">
         <h2>Наши услуги</h2>
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <ul>
             <li>Кредитование</li>
             <li>Депозиты</li>
@@ -452,6 +459,7 @@
 
     <div id="cards" class="cards">
         <h2>Наши карты</h2>
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <ul>
             <li>Карта "тень и свет"</li>
             <li>Карта "чёрно-жёлтая энергия"</li>
@@ -466,15 +474,17 @@
 
     <div class="contact-info">
         <h2>Контактная информация</h2>
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <p>Email: <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p> <!-- Изменена электронная почта -->
         <p>Discord: <a href="https://discord.gg/q8kRuKebKH" target="_blank">BK-Банк server</a></p> <!-- Добавлена ссылка на Discord -->
         <p>Telegram: <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">BK-Банк channel</a></p> <!-- Добавлена ссылка на Telegram -->
         <p>YouTube: <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">BK-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
-         <p>Token: <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">BK-Банк Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
+        <p>Token: <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">BK-Банк Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
     </div>
 
     <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
         <h2>Ваш Кабинет</h2>
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <div class="user-profile">
             <!-- Здесь будет содержимое профиля пользователя -->
         </div>
