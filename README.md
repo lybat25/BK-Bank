@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +33,7 @@
             margin: 0 15px;
             color: #FFD700; /* Желтый текст для ссылок */
             text-decoration: none;
-            font-weight: bold;
+            font-weight: bold; /* Жирный шрифт для ссылок */
             transition: color 0.3s ease; /* Плавный переход цвета */
             cursor: pointer; /* Указатель при наведении */
         }
@@ -61,15 +62,18 @@
         h1 {
             font-size: 2.5em; /* Размер шрифта для заголовка */
             margin: 0; /* Убираем отступы */
+            font-weight: bold; /* Жирный шрифт для заголовка */
         }
         h2 {
             color: #FFD700; /* Желтый цвет для заголовков */
             padding-bottom: 10px;
             border-bottom: 2px solid #FFD700; /* Подчеркивание заголовка */
+            font-weight: bold; /* Жирный шрифт для заголовка */
         }
         h3 {
             color: #FFD700; /* Желтый цвет для подзаголовка "Наши продукты" */
             margin: 20px 0 10px; /* Отступы сверху и снизу */
+            font-weight: bold; /* Жирный шрифт для подзаголовка */
         }
         .yellow-line {
             height: 2px; /* Высота желтой полоски */
@@ -83,6 +87,7 @@
         li {
             padding: 5px 0; /* Отступы для элементов списка */
             position: relative;
+            font-weight: bold; /* Жирный шрифт для элементов списка */
         }
         li::before {
             content: '✓'; /* Знак перед элементами списка изменен на "✓" */
@@ -108,6 +113,7 @@
         .contact-info a {
             color: #FFD700; /* Желтый цвет для ссылки электронной почты */
             text-decoration: none; /* Убираем подчеркивание */
+            font-weight: bold; /* Жирный шрифт для ссылки */
         }
         .contact-info a:hover {
             color: #ffcc00; /* Более светлый желтый при наведении */
@@ -148,6 +154,7 @@
             opacity: 1;
             transition: opacity 1s ease-out; /* Плавное исчезновение */
             z-index: 2000; /* Убедитесь, что сообщение поверх других элементов */
+            font-weight: bold; /* Жирный шрифт для приветственного сообщения */
         }
         .fade-out {
             opacity: 0; /* Прозрачность для исчезновения */
@@ -173,6 +180,7 @@
             border-radius: 4px;
             background: #1e1e1e;
             color: #ffffff;
+            font-weight: bold; /* Жирный шрифт для полей ввода */
         }
         .registration-form button {
             padding: 10px;
@@ -181,7 +189,7 @@
             background: #FFD700;
             color: #000;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: bold; /* Жирный шрифт для кнопки */
         }
         .registration-form button:hover {
             background: #ffcc00; /* Более светлый желтый при наведении */
@@ -213,7 +221,7 @@
             border: none; /* Убираем рамку */
             border-radius: 4px; /* Закругленные углы */
             cursor: pointer; /* Указатель при наведении */
-            font-weight: bold; /* Жирный шрифт */
+            font-weight: bold; /* Жирный шрифт для кнопки "Выйти" */
         }
         .logout-button:hover {
             background: #ffcc00; /* Более светлый желтый при наведении */
@@ -223,6 +231,7 @@
             margin: 20px 0; /* Отступы сверху и снизу */
             font-size: 1.5em; /* Размер шрифта для текста */
             color: #FFD700; /* Желтый цвет для текста */
+            font-weight: bold; /* Жирный шрифт для дополнительной информации */
         }
         .additional-text {
             text-align: center; /* Центрируем текст */
@@ -230,6 +239,7 @@
             font-size: 1em; /* Размер шрифта для текста */
             color: #ffffff; /* Белый цвет для текста */
             padding: 0 20px; /* Отступы по бокам */
+            font-weight: bold; /* Жирный шрифт для дополнительного текста */
         }
         .profile-section {
             display: none; /* Скрываем раздел по умолчанию */
@@ -242,9 +252,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser    = localStorage.getItem('user');
-            if (savedUser   ) {
-                const user = JSON.parse(savedUser   );
+            const savedUser   = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -258,7 +268,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser   Count');
+            const userCountElement = document.getElementById('currentUser  Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -493,4 +503,3 @@
 
 </body>
 </html>
-
