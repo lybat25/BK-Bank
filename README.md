@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -12,6 +13,7 @@
             background-color: #121212; /* Темный фон */
             color: #ffffff; /* Белый текст */
             overflow-y: auto; /* Включает вертикальную прокрутку */
+            font-weight: bold; /* Жирный шрифт для всего текста */
         }
         header {
             background: #1f1f1f; /* Темно-серый фон */
@@ -65,10 +67,12 @@
         h2 {
             color: #FFD700; /* Желтый цвет для заголовков */
             padding-bottom: 10px;
+            border-bottom: 2px solid #FFD700; /* Желтая полоска под заголовком */
         }
         h3 {
             color: #FFD700; /* Желтый цвет для подзаголовка "Наши продукты" */
             margin: 20px 0 10px; /* Отступы сверху и снизу */
+            border-bottom: 2px solid #FFD700; /* Желтая полоска под подзаголовком */
         }
         ul {
             list-style-type: none; /* Убираем маркеры списка */
@@ -461,7 +465,7 @@
         <p>Discord: <a href="https://discord.gg/q8kRuKebKH" target="_blank">BK-Банк server</a></p> <!-- Добавлена ссылка на Discord -->
         <p>Telegram: <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">BK-Банк channel</a></p> <!-- Добавлена ссылка на Telegram -->
         <p>YouTube: <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">BK-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
-         <p>Token: <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">BK-Банк Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
+        <p>Token: <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">BK-Банк Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
     </div>
 
     <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
@@ -474,4 +478,3 @@
 
 </body>
 </html>
-
