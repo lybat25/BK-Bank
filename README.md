@@ -12,7 +12,6 @@
             background-color: #121212; /* Темный фон */
             color: #ffffff; /* Белый текст */
             overflow-y: auto; /* Включает вертикальную прокрутку */
-            font-weight: bold; /* Жирный шрифт для всего текста */
         }
         header {
             background: #1f1f1f; /* Темно-серый фон */
@@ -66,12 +65,16 @@
         h2 {
             color: #FFD700; /* Желтый цвет для заголовков */
             padding-bottom: 10px;
-            border-bottom: 2px solid #FFD700; /* Желтая полоска под заголовком */
+            border-bottom: 2px solid #FFD700; /* Подчеркивание заголовка */
         }
         h3 {
             color: #FFD700; /* Желтый цвет для подзаголовка "Наши продукты" */
             margin: 20px 0 10px; /* Отступы сверху и снизу */
-            border-bottom: 2px solid #FFD700; /* Желтая полоска под подзаголовком */
+        }
+        .yellow-line {
+            height: 2px; /* Высота желтой полоски */
+            background-color: #FFD700; /* Цвет полоски */
+            margin-bottom: 10px; /* Отступ снизу */
         }
         ul {
             list-style-type: none; /* Убираем маркеры списка */
@@ -413,10 +416,12 @@
 <div class="container">
     <div class="about-bank">
         <h2>BK-Банк: Ваш надежный финансовый партнер</h2>
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <p>В BK-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни. Как говорит наш клиент: "Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление." Мы стремимся сделать каждую Вашу финансовую операцию прозрачной и удобной.</p>
         <p>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем BK-Банка, чтобы сражаться с деньгами. Это была ложь."</p>
         
         <h3 style="color: #FFD700;">Наши продукты</h3> <!-- Заголовок "Наши продукты" теперь желтый -->
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <p>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от BK-Банк.</p>
         
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Первое изображение -->
@@ -424,6 +429,7 @@
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Второе изображение -->
         
         <div class="additional-info" style="color: #FFD700;">Наши карты</div> <!-- Заголовок "Наши карты" -->
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты" class="bank-image"> <!-- Изображение карт -->
 
         <div class="additional-text">
@@ -464,7 +470,7 @@
         <p>Discord: <a href="https://discord.gg/q8kRuKebKH" target="_blank">BK-Банк server</a></p> <!-- Добавлена ссылка на Discord -->
         <p>Telegram: <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">BK-Банк channel</a></p> <!-- Добавлена ссылка на Telegram -->
         <p>YouTube: <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">BK-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
-        <p>Token: <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">BK-Банк Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
+         <p>Token: <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">BK-Банк Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
     </div>
 
     <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
