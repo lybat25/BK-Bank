@@ -243,9 +243,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            const savedUser    = localStorage.getItem('user');
+            if (savedUser   ) {
+                const user = JSON.parse(savedUser   );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -259,7 +259,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser  Count');
+            const userCountElement = document.getElementById('currentUser   Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -417,6 +417,7 @@
 <div class="container">
     <div class="about-bank">
         <h2>BK-Банк: Ваш надежный финансовый партнер</h2>
+        <img src="https://github.com/lybat25/BC-Bank/blob/main/png/2025-01-31_14-13-47-Photoroom.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Добавленное изображение -->
         <p>В BK-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни. Как говорит наш клиент: "Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление." Мы стремимся сделать каждую Вашу финансовую операцию прозрачной и удобной.</p>
         <p>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем BK-Банка, чтобы сражаться с деньгами. Это была ложь."</p>
         
