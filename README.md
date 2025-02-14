@@ -9,15 +9,15 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #121212; /* Темный фон */
-            color: #ffffff; /* Белый текст */
+            background-color: #ffe6e6; /* Светлый фон */
+            color: #333; /* Темный текст */
             overflow-y: auto; /* Включает вертикальную прокрутку */
         }
         header {
-            background: #1f1f1f; /* Темно-серый фон */
-            color: #FFD700; /* Желтый текст */
+            background: #ff4d4d; /* Красный фон */
+            color: #ffffff; /* Белый текст */
             padding: 10px 20px; /* Увеличены отступы */
-            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 2px 10px rgba(255, 0, 0, 0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -30,53 +30,43 @@
         }
         nav a {
             margin: 0 15px;
-            color: #FFD700; /* Желтый текст для ссылок */
+            color: #ffffff; /* Белый текст для ссылок */
             text-decoration: none;
             font-weight: bold; /* Жирный шрифт для ссылок */
             transition: color 0.3s ease; /* Плавный переход цвета */
             cursor: pointer; /* Указатель при наведении */
         }
         nav a:hover {
-            color: #ffcc00; /* Более светлый желтый при наведении */
+            color: #ffcccb; /* Более светлый цвет при наведении */
         }
         .container {
             max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
-            background: #1e1e1e; /* Темно-серый фон для контента */
+            background: #fff0f0; /* Светло-розовый фон для контента */
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Легкая тень */
-        }
-        .content {
-            padding: 20px;
-            margin-bottom: 20px;
-            display: none; /* Скрываем раздел по умолчанию */
-            border-radius: 8px;
-            background: #2a2a2a; /* Фон для контента */
-        }
-        .logo {
-            width: 100px; /* Установлена ширина для логотипа */
-            height: auto; /* Сохраняет пропорции изображения */
         }
         h1 {
             font-size: 2.5em; /* Размер шрифта для заголовка */
             margin: 0; /* Убираем отступы */
             font-weight: bold; /* Жирный шрифт для заголовка */
+            text-align: center; /* Центрируем заголовок */
         }
         h2 {
-            color: #FFD700; /* Желтый цвет для заголовков */
+            color: #ff4d4d; /* Красный цвет для заголовков */
             padding-bottom: 10px;
-            border-bottom: 2px solid #FFD700; /* Подчеркивание заголовка */
+            border-bottom: 2px solid #ff4d4d; /* Подчеркивание заголовка */
             font-weight: bold; /* Жирный шрифт для заголовка */
         }
         h3 {
-            color: #FFD700; /* Желтый цвет для подзаголовка "Наши продукты" */
+            color: #ff4d4d; /* Красный цвет для подзаголовка "Наши продукты" */
             margin: 20px 0 10px; /* Отступы сверху и снизу */
             font-weight: bold; /* Жирный шрифт для подзаголовка */
         }
         .yellow-line {
             height: 2px; /* Высота желтой полоски */
-            background-color: #FFD700; /* Цвет полоски */
+            background-color: #ff4d4d; /* Цвет полоски */
             margin-bottom: 10px; /* Отступ снизу */
         }
         ul {
@@ -89,8 +79,8 @@
             font-weight: bold; /* Жирный шрифт для элементов списка */
         }
         li::before {
-            content: '✓'; /* Знак перед элементами списка изменен на "✓" */
-            color: #FFD700; /* Цвет знака */
+            content: '❤️'; /* Знак перед элементами списка изменен на сердечко */
+            color: #ff4d4d; /* Цвет знака */
             position: absolute;
             left: -20px; /* Отступ от текста */
         }
@@ -98,36 +88,36 @@
             text-align: center; /* Центрируем текст */
             margin: 40px 0; /* Отступы сверху и снизу */
             padding: 20px; /* Внутренние отступы */
-            background: #2a2a2a; /* Фон для раздела о банке */
+            background: #ffe6e6; /* Светло-розовый фон для раздела о банке */
             border-radius: 8px; /* Закругленные углы */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Тень для раздела */
         }
         .contact-info {
             display: none; /* Скрываем информацию по умолчанию */
             padding: 20px;
-            background: #2a2a2a; /* Фон для контактной информации */
+            background: #ffe6e6; /* Фон для контактной информации */
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
         .contact-info a {
-            color: #FFD700; /* Желтый цвет для ссылки электронной почты */
+            color: #ff4d4d; /* Красный цвет для ссылки электронной почты */
             text-decoration: none; /* Убираем подчеркивание */
             font-weight: bold; /* Жирный шрифт для ссылки */
         }
         .contact-info a:hover {
-            color: #ffcc00; /* Более светлый желтый при наведении */
+            color: #ffcccb; /* Более светлый цвет при наведении */
         }
         .services {
             display: none; /* Скрываем раздел по умолчанию */
             padding: 20px;
-            background: #2a2a2a; /* Фон для услуг */
+            background: #ffe6e6; /* Фон для услуг */
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
         .cards {
             display: none; /* Скрываем раздел по умолчанию */
             padding: 20px;
-            background: #2a2a2a; /* Фон для карт */
+            background: #ffe6e6; /* Фон для карт */
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
@@ -162,7 +152,7 @@
         .registration-form {
             display: flex;
             flex-direction: column;
-            background: #2a2a2a;
+            background: #ffe6e6;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
@@ -177,21 +167,21 @@
             padding: 10px;
             border: none;
             border-radius: 4px;
-            background: #1e1e1e;
-            color: #ffffff;
+            background: #ffcccc; /* Светло-розовый фон для полей ввода */
+            color: #333; /* Темный текст */
             font-weight: bold; /* Жирный шрифт для полей ввода */
         }
         .registration-form button {
             padding: 10px;
             border: none;
             border-radius: 4px;
-            background: #FFD700;
-            color: #000;
+            background: #ff4d4d; /* Красный фон для кнопки */
+            color: #fff; /* Белый текст кнопки */
             cursor: pointer;
             font-weight: bold; /* Жирный шрифт для кнопки */
         }
         .registration-form button:hover {
-            background: #ffcc00; /* Более светлый желтый при наведении */
+            background: #ffcccb; /* Более светлый цвет при наведении */
         }
         .hidden {
             display: none; /* Класс для скрытия элементов */
@@ -202,7 +192,7 @@
             align-items: center;
             margin-top: 20px;
             padding: 10px;
-            background: #2a2a2a;
+            background: #ffe6e6; /* Светло-розовый фон для профиля */
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
@@ -215,35 +205,35 @@
         .logout-button {
             margin-left: 10px; /* Отступ слева от кнопки "Выйти" */
             padding: 5px 10px; /* Отступы для кнопки */
-            background: #FFD700; /* Цвет фона кнопки */
-            color: #000; /* Цвет текста кнопки */
+            background: #ff4d4d; /* Цвет фона кнопки */
+            color: #fff; /* Цвет текста кнопки */
             border: none; /* Убираем рамку */
             border-radius: 4px; /* Закругленные углы */
             cursor: pointer; /* Указатель при наведении */
             font-weight: bold; /* Жирный шрифт для кнопки "Выйти" */
         }
         .logout-button:hover {
-            background: #ffcc00; /* Более светлый желтый при наведении */
+            background: #ffcccb; /* Более светлый цвет при наведении */
         }
         .additional-info {
             text-align: center; /* Центрируем текст */
             margin: 20px 0; /* Отступы сверху и снизу */
             font-size: 1.5em; /* Размер шрифта для текста */
-            color: #FFD700; /* Желтый цвет для текста */
+            color: #ff4d4d; /* Красный цвет для текста */
             font-weight: bold; /* Жирный шрифт для дополнительной информации */
         }
         .additional-text {
             text-align: center; /* Центрируем текст */
             margin: 20px 0; /* Отступы сверху и снизу */
             font-size: 1em; /* Размер шрифта для текста */
-            color: #ffffff; /* Белый цвет для текста */
+            color: #333; /* Темный цвет для текста */
             padding: 0 20px; /* Отступы по бокам */
             font-weight: bold; /* Жирный шрифт для дополнительного текста */
         }
         .profile-section {
             display: none; /* Скрываем раздел по умолчанию */
             padding: 20px;
-            background: #2a2a2a; /* Фон для профиля */
+            background: #ffe6e6; /* Фон для профиля */
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
