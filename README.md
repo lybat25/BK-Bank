@@ -251,9 +251,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser      = localStorage.getItem('user');
-            if (savedUser     ) {
-                const user = JSON.parse(savedUser     );
+            const savedUser       = localStorage.getItem('user');
+            if (savedUser      ) {
+                const user = JSON.parse(savedUser      );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -267,7 +267,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser     Count');
+            const userCountElement = document.getElementById('currentUser      Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -365,7 +365,7 @@
                     <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
                 <p><strong>Email: ${email}</strong></p> <!-- Изменено на "Email" -->
-                <p><strong>Ваш текущий баланс: <span id="currentBalance">0</span> рублей.</strong></p> <!-- Отображаем текущий баланс -->
+                <p><strong>Наш банк ещё не готов полностью, пока что у нас есть только это насчёт вашего кабинета.</strong></p> <!-- Обновленный текст -->
             `;
             profileSection.style.display = 'block'; // Показываем раздел профиля
         }
