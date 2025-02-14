@@ -252,9 +252,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser     = localStorage.getItem('user');
-            if (savedUser    ) {
-                const user = JSON.parse(savedUser    );
+            const savedUser      = localStorage.getItem('user');
+            if (savedUser     ) {
+                const user = JSON.parse(savedUser     );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -268,7 +268,7 @@
             document.querySelector('.profile-section').style.display = 'none';
 
             // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser    Count');
+            const userCountElement = document.getElementById('currentUser     Count');
             const socket = new WebSocket('ws://localhost:8080');
 
             socket.onmessage = function(event) {
@@ -484,7 +484,7 @@
             <li><strong>Карта "БКашная тёмный"</strong></li>
             <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_101740633.png?raw=true" alt="Карта БКашная тёмный" class="bank-image"> <!-- Новое изображение -->
             <li><strong>Карта "БКашная светлый"</strong></li>
-            <img src="https://2.downloader.disk.yandex.ru/preview/11e12c541723f77609d2cbd77ce7f8b0898f4dbcc3323b7f360b20e9f7bf58ab/inf/wr7Vq3yYV9yjvkpg5mnvesMgc--_-qSCmi0CWfDFe6qtLGhQc-Adypdmn8XOiJDu8ubflE5QmrQ9hZ8fTKtk6Q%3D%3D?uid=2005947030&filename=2025-01-30_23-06-40-Photoroom.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=2005947030&tknv=v2&size=1369x941" alt="Карта БКашная светлый" class="bank-image"> <!-- Новое изображение -->
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_102653372.png?raw=true" alt="Карта БКашная светлый" class="bank-image"> <!-- Новое изображение -->
         </ul>
         <p><strong>Наши карты всё ещё не будут доступны больше пару месяцев, советуем вам использовать нашу Биржу.</strong></p>
     </div>
