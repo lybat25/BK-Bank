@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -289,7 +290,8 @@
                 name: name,
                 email: email,
                 balance: 0, // Инициализируем баланс
-                friends: [] // Инициализируем список друзей
+                friends: [], // Инициализируем список друзей
+                friendRequests: [] // Инициализируем список запросов в друзья
             };
             localStorage.setItem('user', JSON.stringify(user));
 
@@ -331,11 +333,15 @@
                 <div class="add-friend">
                     <h3><strong>Добавить в друзья</strong></h3>
                     <input type="text" id="friendName" placeholder="Имя или Email друга" required>
-                    <button onclick="addFriend()"><strong>Добавить</strong></button>
+                    <button onclick="sendFriendRequest()"><strong>Отправить запрос</strong></button>
                 </div>
                 <div class="friend-list">
                     <h3><strong>Список друзей</strong></h3>
                     <ul id="friends"></ul>
+                </div>
+                <div class="friend-requests">
+                    <h3><strong>Запросы в друзья</strong></h3>
+                    <ul id="friendRequests"></ul>
                 </div>
             `;
             profileSection.style.display = 'block'; // Показываем раздел профиля
@@ -347,25 +353,47 @@
                 friendItem.textContent = friend;
                 friendsList.appendChild(friendItem);
             });
+
+            // Отображаем запросы в друзья
+            const requestsList = document.getElementById('friendRequests');
+            user.friendRequests.forEach(request => {
+                const requestItem = document.createElement('li');
+                requestItem.textContent = request;
+                const acceptButton = document.createElement('button');
+                acceptButton.textContent = "Принять";
+                acceptButton.onclick = () => acceptFriendRequest(request);
+                requestItem.appendChild(acceptButton);
+                requestsList.appendChild(requestItem);
+            });
         }
 
-        function addFriend() {
+        function sendFriendRequest() {
             const friendName = document.getElementById('friendName').value.trim();
             const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
 
             if (friendName) {
-                // Добавляем друга в список друзей текущего пользователя
-                user.friends.push(friendName);
+                // Добавляем запрос в друзья текущего пользователя
+                user.friendRequests.push(friendName);
                 localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
 
-                const friendsList = document.getElementById('friends');
-                const newFriendItem = document.createElement('li');
-                newFriendItem.textContent = friendName;
-                friendsList.appendChild(newFriendItem);
+                alert(`Запрос в друзья отправлен пользователю ${friendName}`);
                 document.getElementById('friendName').value = ''; // Очищаем поле ввода
             } else {
                 alert("Пожалуйста, введите имя или email друга.");
             }
+        }
+
+        function acceptFriendRequest(friendName) {
+            const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+
+            // Удаляем запрос из списка запросов
+            user.friendRequests = user.friendRequests.filter(request => request !== friendName);
+            // Добавляем друга в список друзей
+            user.friends.push(friendName);
+            localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
+
+            showProfile(user.name, user.email); // Обновляем профиль
+            alert(`Вы добавили ${friendName} в друзья!`);
         }
 
         function logout() {
@@ -504,33 +532,5 @@
         </div>
         <div class="add-friend">
             <h3><strong>Добавить в друзья</strong></h3>
-            <input type="text" id="friendName" placeholder="Имя или Email друга" required>
-            <button onclick="addFriend()"><strong>Добавить</strong></button>
-        </div>
-        <div class="friend-list">
-            <h3><strong>Список друзей</strong></h3>
-            <ul id="friends"></ul>
-        </div>
-    </div>
-</div>
-
-<script>
-    function addFriend() {
-        const friendName = document.getElementById('friendName').value.trim();
-        const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
-
-        if (friendName) {
-            // Добавляем друга в список друзей текущего пользователя
-            user.friends.push(friendName);
-            localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
-
-            const friendsList = document.getElementById('friends');
-            const newFriendItem = document.createElement('li');
-            newFriendItem.textContent = friendName;
-            friendsList.appendChild(newFriendItem);
-            document.getElementById('friendName').value = ''; // Очищаем поле ввода
-        } else {
-            alert("Пожалуйста, введите имя или email друга.");
-        }
-    }
-</
+            <input type="text" id="friendName" placeholder="Им
+            
