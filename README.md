@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -284,12 +283,18 @@
             const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
 
             if (friendName) {
-                // Добавляем запрос в друзья текущего пользователя
-                user.friendRequests.push(friendName);
-                localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
+                // Проверяем, существует ли другой пользователь
+                const otherUser  = JSON.parse(localStorage.getItem(friendName));
+                if (otherUser ) {
+                    // Добавляем запрос в друзья текущего пользователя
+                    otherUser .friendRequests.push(user.name); // Добавляем имя текущего пользователя в запросы
+                    localStorage.setItem(friendName, JSON.stringify(otherUser )); // Сохраняем обновленные данные
 
-                alert(`Запрос в друзья отправлен пользователю ${friendName}`);
-                document.getElementById('friendName').value = ''; // Очищаем поле ввода
+                    alert(`Запрос в друзья отправлен пользователю ${friendName}`);
+                    document.getElementById('friendName').value = ''; // Очищаем поле ввода
+                } else {
+                    alert("Пользователь не найден.");
+                }
             } else {
                 alert("Пожалуйста, введите имя или email друга.");
             }
@@ -304,7 +309,8 @@
             user.friends.push(friendName);
             localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
 
-            showProfile(user.name, user.email); // Обновляем профиль
+            // Обновляем профиль
+            showProfile(user.name, user.email);
             alert(`Вы добавили ${friendName} в друзья!`);
         }
 
@@ -459,64 +465,74 @@
 </div>
 
 <script>
-    function sendFriendRequest() {
-        const friendName = document.getElementById('friendName').value.trim();
-        const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
-
-        if (friendName) {
-            // Проверяем, существует ли другой пользователь
-            const otherUser  = JSON.parse(localStorage.getItem(friendName));
-            if (otherUser ) {
-                // Добавляем запрос в друзья текущего пользователя
-                otherUser .friendRequests.push(user.name); // Добавляем имя текущего пользователя в запросы
-                localStorage.setItem(friendName, JSON.stringify(otherUser )); // Сохраняем обновленные данные
-
-                alert(`Запрос в друзья отправлен пользователю ${friendName}`);
-                document.getElementById('friendName').value = ''; // Очищаем поле ввода
-            } else {
-                alert("Пользователь не найден.");
-            }
+    window.onload = function() {
+        // Проверка, есть ли сохраненные данные в localStorage
+        const savedUser  = localStorage.getItem('user');
+        if (savedUser ) {
+            const user = JSON.parse(savedUser );
+            showProfile(user.name, user.email);
         } else {
-            alert("Пожалуйста, введите имя или email друга.");
+            // Скрываем все содержимое, кроме формы регистрации
+            document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
+            // Показ формы регистрации
+            showRegistrationForm();
         }
+
+        // Скрываем раздел "Ваш кабинет" при загрузке страницы
+        document.querySelector('.profile-section').style.display = 'none';
+    };
+
+    function showRegistrationForm() {
+        const registrationForm = document.createElement('div');
+        registrationForm.className = 'registration-form';
+        registrationForm.innerHTML = `
+            <h2><strong>Регистрация</strong></h2>
+            <input type="text" id="name" placeholder="Ваш никнейм" required>
+            <input type="email" id="email" placeholder="Ваша электронная почта" required>
+            <input type="password" id="password" placeholder="Пароль" required>
+            <button onclick="register()"><strong>Зарегистрироваться</strong></button>
+        `;
+        document.body.appendChild(registrationForm);
     }
 
-    function acceptFriendRequest(friendName) {
-        const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+    function register() {
+        const name = document.getElementById('name').value.trim(); // Убираем пробелы
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-        // Удаляем запрос из списка запросов
-        user.friendRequests = user.friendRequests.filter(request => request !== friendName);
-        // Добавляем друга в список друзей
-        user.friends.push(friendName);
-        localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
+        // Проверка на наличие хотя бы одной буквы в никнейме
+        const nameRegex = /[a-zA-Zа-яА-ЯЁё]/; // Регулярное выражение для проверки наличия хотя бы одной буквы
 
-        showProfile(user.name, user.email); // Обновляем профиль
-        alert(`Вы добавили ${friendName} в друзья!`);
-    }
+        if (!nameRegex.test(name)) {
+            alert("Никнейм должен содержать хотя бы одну букву.");
+            return;
+        }
 
-    function showProfile(name, email) {
-        const profileSection = document.querySelector('.profile-section');
-        const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
-        profileSection.innerHTML = `
-            <h2><strong>Ваш Кабинет</strong></h2>
-            <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-            <div class="user-profile">
-                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
-                <span><strong>${name}</strong></span>
-                <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button> <!-- Кнопка "Выйти" рядом с именем -->
-            </div>
-            <p><strong>Email: ${email}</strong></p> <!-- Изменено на "Email" -->
-            <p><strong>Наш банк ещё не готов полностью, пока что у нас есть только это насчёт вашего кабинета.</strong></p> <!-- Обновленный текст -->
-            
-            <div class="add-friend">
-                <h3><strong>Добавить в друзья</strong></h3>
-                <input type="text" id="friendName" placeholder="Имя или Email друга" required>
-                <button onclick="sendFriendRequest()"><strong>Отправить запрос</strong></button>
-            </div>
-            <div class="friend-list">
-                <h3><strong>Список друзей</strong></h3>
-                <ul id="friends"></ul>
-            </div>
-            <div class="friend-requests">
-                <h3><strong>Запросы
-                
+        // Проверка электронной почты
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!emailRegex.test(email)) {
+            alert("Пожалуйста, введите корректный адрес электронной почты.");
+            return;
+        }
+
+        // Проверка пароля
+        if (password.length < 6 || !/^[a-zA-Z]+$/.test(password)) {
+            alert("Пароль должен содержать минимум 6 символов и состоять только из английских букв.");
+            return;
+        }
+
+        // Сохранение данных в localStorage
+        const user = {
+            name: name,
+            email: email,
+            balance: 0, // Инициализируем баланс
+            friends: [], // Инициализируем список друзей
+            friendRequests: [] // Инициализируем список запросов в друзья
+        };
+        localStorage.setItem('user', JSON.stringify(user));
+
+        const welcomeMessage = document.createElement('div');
+        welcomeMessage.className = 'welcome-message';
+        welcomeMessage.innerHTML = `<strong>Добро пожаловать,
+        
