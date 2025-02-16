@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -247,41 +248,40 @@
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
+        .friend-list {
+            margin-top: 20px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        .friend-list h3 {
+            color: #FFD700; /* Желтый цвет для заголовка списка друзей */
+        }
+        .friend-list ul {
+            list-style-type: none; /* Убираем маркеры списка */
+            padding: 0;
+        }
+        .friend-list li {
+            padding: 5px 0; /* Отступы для элементов списка */
+            color: #ffffff; /* Белый цвет для текста */
+        }
     </style>
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser       = localStorage.getItem('user');
-            if (savedUser      ) {
-                const user = JSON.parse(savedUser      );
+            const savedUser  = localStorage.getItem('user');
+            if (savedUser ) {
+                const user = JSON.parse(savedUser );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
                 document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
-
                 // Показ формы регистрации
                 showRegistrationForm();
             }
 
             // Скрываем раздел "Ваш кабинет" при загрузке страницы
             document.querySelector('.profile-section').style.display = 'none';
-
-            // Подключение к WebSocket для считывания количества пользователей
-            const userCountElement = document.getElementById('currentUser      Count');
-            const socket = new WebSocket('ws://localhost:8080');
-
-            socket.onmessage = function(event) {
-                const data = JSON.parse(event.data);
-                userCountElement.innerText = data.users; // Обновляем количество пользователей
-            };
-
-            socket.onopen = function() {
-                console.log('Connected to WebSocket server');
-            };
-
-            socket.onclose = function() {
-                console.log('Disconnected from WebSocket server');
-            };
         };
 
         function showRegistrationForm() {
@@ -306,7 +306,7 @@
             const nameRegex = /[a-zA-Zа-яА-ЯЁё]/; // Регулярное выражение для проверки наличия хотя бы одной буквы
 
             if (!nameRegex.test(name)) {
-                alert("<strong>Никнейм должен содержать хотя бы одну букву.</strong>");
+                alert("Никнейм должен содержать хотя бы одну букву.");
                 return;
             }
 
@@ -314,13 +314,13 @@
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
             if (!emailRegex.test(email)) {
-                alert("<strong>Пожалуйста, введите корректный адрес электронной почты.</strong>");
+                alert("Пожалуйста, введите корректный адрес электронной почты.");
                 return;
             }
 
             // Проверка пароля
             if (password.length < 6 || !/^[a-zA-Z]+$/.test(password)) {
-                alert("<strong>Пароль должен содержать минимум 6 символов и состоять только из английских букв.</strong>");
+                alert("Пароль должен содержать минимум 6 символов и состоять только из английских букв.");
                 return;
             }
 
@@ -366,8 +366,31 @@
                 </div>
                 <p><strong>Email: ${email}</strong></p> <!-- Изменено на "Email" -->
                 <p><strong>Наш банк ещё не готов полностью, пока что у нас есть только это насчёт вашего кабинета.</strong></p> <!-- Обновленный текст -->
+                
+                <div class="add-friend">
+                    <h3><strong>Добавить в друзья</strong></h3>
+                    <input type="text" id="friendName" placeholder="Имя или Email друга" required>
+                    <button onclick="addFriend()"><strong>Добавить</strong></button>
+                </div>
+                <div class="friend-list">
+                    <h3><strong>Список друзей</strong></h3>
+                    <ul id="friends"></ul>
+                </div>
             `;
             profileSection.style.display = 'block'; // Показываем раздел профиля
+        }
+
+        function addFriend() {
+            const friendName = document.getElementById('friendName').value.trim();
+            if (friendName) {
+                const friendsList = document.getElementById('friends');
+                const newFriendItem = document.createElement('li');
+                newFriendItem.textContent = friendName;
+                friendsList.appendChild(newFriendItem);
+                document.getElementById('friendName').value = ''; // Очищаем поле ввода
+            } else {
+                alert("Пожалуйста, введите имя или email друга.");
+            }
         }
 
         function logout() {
@@ -504,8 +527,8 @@
         <div class="user-profile">
             <!-- Здесь будет содержимое профиля пользователя -->
         </div>
-    </div>
-</div>
-
-</body>
-</html>
+        <div class="add-friend">
+            <h3><strong>Добавить в друзья</strong></h3>
+            <input type="text" id="friendName" placeholder="Имя или Email друга" required>
+            <button onclick="addFriend()"><strong>
+            
