@@ -248,23 +248,6 @@
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
-        .friend-list {
-            margin-top: 20px;
-            padding: 10px;
-            background: #2a2a2a;
-            border-radius: 8px;
-        }
-        .friend-list h3 {
-            color: #FFD700; /* Желтый цвет для заголовка списка друзей */
-        }
-        .friend-list ul {
-            list-style-type: none; /* Убираем маркеры списка */
-            padding: 0;
-        }
-        .friend-list li {
-            padding: 5px 0; /* Отступы для элементов списка */
-            color: #ffffff; /* Белый цвет для текста */
-        }
     </style>
     <script>
         window.onload = function() {
@@ -530,5 +513,21 @@
         <div class="add-friend">
             <h3><strong>Добавить в друзья</strong></h3>
             <input type="text" id="friendName" placeholder="Имя или Email друга" required>
-            <button onclick="addFriend()"><strong>
+            <button onclick="addFriend()"><strong>Добавить</strong></button>
+        </div>
+        <div class="friend-list">
+            <h3><strong>Список друзей</strong></h3>
+            <ul id="friends"></ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addFriend() {
+        const friendName = document.getElementById('friendName').value.trim();
+        if (friendName) {
+            const friendsList = document.getElementById('friends');
+            const newFriendItem = document.createElement('li');
+            newFriendItem.textContent = friendName;
+            friendsList.appendChild(newFriend
             
