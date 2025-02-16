@@ -225,28 +225,6 @@
         .logout-button:hover {
             background: #ffcc00; /* Более светлый желтый при наведении */
         }
-        .additional-info {
-            text-align: center; /* Центрируем текст */
-            margin: 20px 0; /* Отступы сверху и снизу */
-            font-size: 1.5em; /* Размер шрифта для текста */
-            color: #FFD700; /* Желтый цвет для текста */
-            font-weight: bold; /* Жирный шрифт для дополнительной информации */
-        }
-        .additional-text {
-            text-align: center; /* Центрируем текст */
-            margin: 20px 0; /* Отступы сверху и снизу */
-            font-size: 1em; /* Размер шрифта для текста */
-            color: #ffffff; /* Белый цвет для текста */
-            padding: 0 20px; /* Отступы по бокам */
-            font-weight: bold; /* Жирный шрифт для дополнительного текста */
-        }
-        .profile-section {
-            display: none; /* Скрываем раздел по умолчанию */
-            padding: 20px;
-            background: #2a2a2a; /* Фон для профиля */
-            border-radius: 8px; /* Закругленные углы */
-            margin-top: 20px; /* Отступ сверху */
-        }
     </style>
     <script>
         window.onload = function() {
@@ -310,7 +288,8 @@
             const user = {
                 name: name,
                 email: email,
-                balance: 0 // Инициализируем баланс
+                balance: 0, // Инициализируем баланс
+                friends: [] // Инициализируем список друзей
             };
             localStorage.setItem('user', JSON.stringify(user));
 
@@ -360,11 +339,25 @@
                 </div>
             `;
             profileSection.style.display = 'block'; // Показываем раздел профиля
+
+            // Отображаем список друзей
+            const friendsList = document.getElementById('friends');
+            user.friends.forEach(friend => {
+                const friendItem = document.createElement('li');
+                friendItem.textContent = friend;
+                friendsList.appendChild(friendItem);
+            });
         }
 
         function addFriend() {
             const friendName = document.getElementById('friendName').value.trim();
+            const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+
             if (friendName) {
+                // Добавляем друга в список друзей текущего пользователя
+                user.friends.push(friendName);
+                localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
+
                 const friendsList = document.getElementById('friends');
                 const newFriendItem = document.createElement('li');
                 newFriendItem.textContent = friendName;
@@ -524,9 +517,20 @@
 <script>
     function addFriend() {
         const friendName = document.getElementById('friendName').value.trim();
+        const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+
         if (friendName) {
+            // Добавляем друга в список друзей текущего пользователя
+            user.friends.push(friendName);
+            localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
+
             const friendsList = document.getElementById('friends');
             const newFriendItem = document.createElement('li');
             newFriendItem.textContent = friendName;
-            friendsList.appendChild(newFriend
-            
+            friendsList.appendChild(newFriendItem);
+            document.getElementById('friendName').value = ''; // Очищаем поле ввода
+        } else {
+            alert("Пожалуйста, введите имя или email друга.");
+        }
+    }
+</
