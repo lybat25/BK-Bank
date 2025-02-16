@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -47,53 +48,6 @@
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Легкая тень */
         }
-        .content {
-            padding: 20px;
-            margin-bottom: 20px;
-            display: none; /* Скрываем раздел по умолчанию */
-            border-radius: 8px;
-            background: #2a2a2a; /* Фон для контента */
-        }
-        .logo {
-            width: 100px; /* Установлена ширина для логотипа */
-            height: auto; /* Сохраняет пропорции изображения */
-        }
-        h1 {
-            font-size: 2.5em; /* Размер шрифта для заголовка */
-            margin: 0; /* Убираем отступы */
-            font-weight: bold; /* Жирный шрифт для заголовка */
-        }
-        h2 {
-            color: #FFD700; /* Желтый цвет для заголовков */
-            padding-bottom: 10px;
-            border-bottom: 2px solid #FFD700; /* Подчеркивание заголовка */
-            font-weight: bold; /* Жирный шрифт для заголовка */
-        }
-        h3 {
-            color: #FFD700; /* Желтый цвет для подзаголовка "Наши продукты" */
-            margin: 20px 0 10px; /* Отступы сверху и снизу */
-            font-weight: bold; /* Жирный шрифт для подзаголовка */
-        }
-        .yellow-line {
-            height: 2px; /* Высота желтой полоски */
-            background-color: #FFD700; /* Цвет полоски */
-            margin-bottom: 10px; /* Отступ снизу */
-        }
-        ul {
-            list-style-type: none; /* Убираем маркеры списка */
-            padding: 0;
-        }
-        li {
-            padding: 5px 0; /* Отступы для элементов списка */
-            position: relative;
-            font-weight: bold; /* Жирный шрифт для элементов списка */
-        }
-        li::before {
-            content: '✓'; /* Знак перед элементами списка изменен на "✓" */
-            color: #FFD700; /* Цвет знака */
-            position: absolute;
-            left: -20px; /* Отступ от текста */
-        }
         .about-bank {
             text-align: center; /* Центрируем текст */
             margin: 40px 0; /* Отступы сверху и снизу */
@@ -102,63 +56,23 @@
             border-radius: 8px; /* Закругленные углы */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Тень для раздела */
         }
-        .contact-info {
-            display: none; /* Скрываем информацию по умолчанию */
-            padding: 20px;
-            background: #2a2a2a; /* Фон для контактной информации */
-            border-radius: 8px; /* Закругленные углы */
-            margin-top: 20px; /* Отступ сверху */
-        }
-        .contact-info a {
-            color: #FFD700; /* Желтый цвет для ссылки электронной почты */
-            text-decoration: none; /* Убираем подчеркивание */
-            font-weight: bold; /* Жирный шрифт для ссылки */
-        }
-        .contact-info a:hover {
-            color: #ffcc00; /* Более светлый желтый при наведении */
-        }
-        .services {
-            display: none; /* Скрываем раздел по умолчанию */
-            padding: 20px;
-            background: #2a2a2a; /* Фон для услуг */
-            border-radius: 8px; /* Закругленные углы */
-            margin-top: 20px; /* Отступ сверху */
-        }
-        .cards {
-            display: none; /* Скрываем раздел по умолчанию */
-            padding: 20px;
-            background: #2a2a2a; /* Фон для карт */
-            border-radius: 8px; /* Закругленные углы */
-            margin-top: 20px; /* Отступ сверху */
-        }
-        .bank-image {
-            margin-top: 20px; /* Отступ сверху для изображения */
-            width: 100%; /* Ширина изображения */
-            max-width: 600px; /* Максимальная ширина изображения */
-            height: auto; /* Сохраняет пропорции изображения */
-            display: block; /* Убедимся, что изображение блочное */
-            margin-left: auto; /* Центрируем изображение */
-            margin-right: auto; /* Центрируем изображение */
-        }
-        /* Стили для приветственного сообщения */
-        .welcome-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(31, 31, 31, 0.9);
-            color: #FFD700;
-            padding: 20px;
+        .friend-list {
+            margin-top: 20px;
+            padding: 10px;
+            background: #2a2a2a;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            opacity: 1;
-            transition: opacity 1s ease-out; /* Плавное исчезновение */
-            z-index: 2000; /* Убедитесь, что сообщение поверх других элементов */
-            font-weight: bold; /* Жирный шрифт для приветственного сообщения */
         }
-        .fade-out {
-            opacity: 0; /* Прозрачность для исчезновения */
+        .friend-list h3 {
+            color: #FFD700; /* Желтый цвет для заголовка списка друзей */
         }
-        /* Стили для формы регистрации */
+        .friend-list ul {
+            list-style-type: none; /* Убираем маркеры списка */
+            padding: 0;
+        }
+        .friend-list li {
+            padding: 5px 0; /* Отступы для элементов списка */
+            color: #ffffff; /* Белый цвет для текста */
+        }
         .registration-form {
             display: flex;
             flex-direction: column;
@@ -196,7 +110,6 @@
         .hidden {
             display: none; /* Класс для скрытия элементов */
         }
-        /* Стили для профиля пользователя */
         .user-profile {
             display: flex;
             align-items: center;
@@ -531,5 +444,79 @@
         </div>
         <div class="add-friend">
             <h3><strong>Добавить в друзья</strong></h3>
-            <input type="text" id="friendName" placeholder="Им
+            <input type="text" id="friendName" placeholder="Имя или Email друга" required>
+            <button onclick="sendFriendRequest()"><strong>Отправить запрос</strong></button>
+        </div>
+        <div class="friend-list">
+            <h3><strong>Список друзей</strong></h3>
+            <ul id="friends"></ul>
+        </div>
+        <div class="friend-requests">
+            <h3><strong>Запросы в друзья</strong></h3>
+            <ul id="friendRequests"></ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    function sendFriendRequest() {
+        const friendName = document.getElementById('friendName').value.trim();
+        const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+
+        if (friendName) {
+            // Проверяем, существует ли другой пользователь
+            const otherUser  = JSON.parse(localStorage.getItem(friendName));
+            if (otherUser ) {
+                // Добавляем запрос в друзья текущего пользователя
+                otherUser .friendRequests.push(user.name); // Добавляем имя текущего пользователя в запросы
+                localStorage.setItem(friendName, JSON.stringify(otherUser )); // Сохраняем обновленные данные
+
+                alert(`Запрос в друзья отправлен пользователю ${friendName}`);
+                document.getElementById('friendName').value = ''; // Очищаем поле ввода
+            } else {
+                alert("Пользователь не найден.");
+            }
+        } else {
+            alert("Пожалуйста, введите имя или email друга.");
+        }
+    }
+
+    function acceptFriendRequest(friendName) {
+        const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+
+        // Удаляем запрос из списка запросов
+        user.friendRequests = user.friendRequests.filter(request => request !== friendName);
+        // Добавляем друга в список друзей
+        user.friends.push(friendName);
+        localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
+
+        showProfile(user.name, user.email); // Обновляем профиль
+        alert(`Вы добавили ${friendName} в друзья!`);
+    }
+
+    function showProfile(name, email) {
+        const profileSection = document.querySelector('.profile-section');
+        const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+        profileSection.innerHTML = `
+            <h2><strong>Ваш Кабинет</strong></h2>
+            <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
+            <div class="user-profile">
+                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                <span><strong>${name}</strong></span>
+                <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button> <!-- Кнопка "Выйти" рядом с именем -->
+            </div>
+            <p><strong>Email: ${email}</strong></p> <!-- Изменено на "Email" -->
+            <p><strong>Наш банк ещё не готов полностью, пока что у нас есть только это насчёт вашего кабинета.</strong></p> <!-- Обновленный текст -->
             
+            <div class="add-friend">
+                <h3><strong>Добавить в друзья</strong></h3>
+                <input type="text" id="friendName" placeholder="Имя или Email друга" required>
+                <button onclick="sendFriendRequest()"><strong>Отправить запрос</strong></button>
+            </div>
+            <div class="friend-list">
+                <h3><strong>Список друзей</strong></h3>
+                <ul id="friends"></ul>
+            </div>
+            <div class="friend-requests">
+                <h3><strong>Запросы
+                
