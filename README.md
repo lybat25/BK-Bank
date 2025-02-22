@@ -230,9 +230,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser     = localStorage.getItem('user');
-            if (savedUser    ) {
-                const user = JSON.parse(savedUser    );
+            const savedUser      = localStorage.getItem('user');
+            if (savedUser     ) {
+                const user = JSON.parse(savedUser     );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -242,7 +242,7 @@
             }
 
             // Скрываем раздел "Ваш кабинет" при загрузке страницы
-            document.querySelector('.profile-section').style.display = 'none';
+            document.querySelector('.profile-section').style.display = 'none'; // Этот раздел скрыт по умолчанию
         };
 
         function showRegistrationForm() {
@@ -528,8 +528,5 @@
         <h2><strong>Ваш Кабинет</strong></h2>
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <div class="user-profile">
-            <!-- Здесь будет содержимое профиля пользователя -->
-        </div>
-        <div class="add-friend">
-            <h3><strong>Добавить в друзья</strong></h
+            <!-- Здесь будет содержимое
             
