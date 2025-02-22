@@ -230,16 +230,19 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser       = localStorage.getItem('user');
-            if (savedUser      ) {
-                const user = JSON.parse(savedUser      );
-                // Здесь можно добавить логику для отображения информации о пользователе, если это необходимо
+            const savedUser        = localStorage.getItem('user');
+            if (savedUser        ) {
+                const user = JSON.parse(savedUser        );
+                showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
                 document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
                 // Показ формы регистрации
                 showRegistrationForm();
             }
+
+            // Скрываем раздел "Ваш кабинет" при загрузке страницы
+            document.querySelector('.profile-section').style.display = 'none'; // Этот раздел скрыт по умолчанию
         };
 
         function showRegistrationForm() {
@@ -312,6 +315,127 @@
                 }, 1000); // Время, соответствующее времени анимации
             }, 2000); // Показать сообщение на 2 секунды
         }
+
+        function showProfile(name, email) {
+            const profileSection = document.querySelector('.profile-section');
+            const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+            profileSection.innerHTML = `
+                <h2><strong>Ваш Кабинет</strong></h2>
+                <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
+                <div class="user-profile">
+                    <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                    <span><strong>${name}</strong></span>
+                    <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button> <!-- Кнопка "Выйти" рядом с именем -->
+                </div>
+                <p><strong>Email: ${email}</strong></p> <!-- Изменено на "Email" -->
+                <p><strong>Наш банк ещё не готов полностью, пока что у нас есть только это насчёт вашего кабинета.</strong></p> <!-- Обновленный текст -->
+                
+                <div class="add-friend">
+                    <h3><strong>Добавить в друзья</strong></h3>
+                    <input type="text" id="friendName" placeholder="Имя или Email друга" required>
+                    <button onclick="sendFriendRequest()"><strong>Отправить запрос</strong></button>
+                </div>
+                <div class="friend-list">
+                    <h3><strong>Список друзей</strong></h3>
+                    <ul id="friends"></ul>
+                </div>
+                <div class="friend-requests">
+                    <h3><strong>Запросы в друзья</strong></h3>
+                    <ul id="friendRequests"></ul>
+                </div>
+            `;
+            profileSection.style.display = 'block'; // Показываем раздел профиля
+
+            // Отображаем список друзей
+            const friendsList = document.getElementById('friends');
+            user.friends.forEach(friend => {
+                const friendItem = document.createElement('li');
+                friendItem.textContent = friend;
+                friendsList.appendChild(friendItem);
+            });
+
+            // Отображаем запросы в друзья
+            const requestsList = document.getElementById('friendRequests');
+            user.friendRequests.forEach(request => {
+                const requestItem = document.createElement('li');
+                requestItem.textContent = request;
+                const acceptButton = document.createElement('button');
+                acceptButton.textContent = "Принять";
+                acceptButton.onclick = () => acceptFriendRequest(request);
+                requestItem.appendChild(acceptButton);
+                requestsList.appendChild(requestItem);
+            });
+        }
+
+        function sendFriendRequest() {
+            const friendName = document.getElementById('friendName').value.trim();
+            const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+
+            if (friendName) {
+                // Добавляем запрос в друзья текущего пользователя
+                user.friendRequests.push(friendName);
+                localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
+
+                alert(`Запрос в друзья отправлен пользователю ${friendName}`);
+                document.getElementById('friendName').value = ''; // Очищаем поле ввода
+            } else {
+                alert("Пожалуйста, введите имя или email друга.");
+            }
+        }
+
+        function acceptFriendRequest(friendName) {
+            const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+
+            // Удаляем запрос из списка запросов
+            user.friendRequests = user.friendRequests.filter(request => request !== friendName);
+            // Добавляем друга в список друзей
+            user.friends.push(friendName);
+            localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
+
+            showProfile(user.name, user.email); // Обновляем профиль
+            alert(`Вы добавили ${friendName} в друзья!`);
+        }
+
+        function logout() {
+            localStorage.removeItem('user'); // Удаляем данные пользователя из localStorage
+            document.querySelector('.profile-section').style.display = 'none'; // Скрываем раздел профиля
+            document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden')); // Скрываем остальное содержимое
+            // Показ формы регистрации снова
+            showRegistrationForm();
+        }
+
+        function toggleSection(section) {
+            const services = document.getElementById('services');
+            const cards = document.getElementById('cards'); // Новый раздел для карт
+            const contact = document.querySelector('.contact-info');
+            const about = document.querySelector('.about-bank');
+            const profile = document.querySelector('.profile-section');
+
+            // Скрываем все секции
+            services.style.display = 'none';
+            cards.style.display = 'none'; // Скрываем раздел карт
+            contact.style.display = 'none';
+            about.style.display = 'none';
+            profile.style.display = 'none'; // Скрываем раздел "Ваш Кабинет"
+
+            // Показываем выбранную секцию
+            if (section === 'services') {
+                services.style.display = 'block';
+                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
+            } else if (section === 'cards') { // Показать раздел карт
+                cards.style.display = 'block';
+                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
+            } else if (section === 'contact') {
+                contact.style.display = 'block';
+                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
+            } else if (section === 'about') {
+                about.style.display = 'block';
+                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
+            } else if (section === 'profile') {
+                profile.style.display = 'block'; // Показываем раздел "Ваш Кабинет"
+                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
+            }
+        }
     </script>
 </head>
 <body>
@@ -326,7 +450,7 @@
         <a onclick="toggleSection('services')"><strong>Услуги</strong></a>
         <a onclick="toggleSection('cards')"><strong>Карты</strong></a> 
         <a onclick="toggleSection('contact')"><strong>Контакты</strong></a>
-        <!-- Удален раздел "Кабинет" -->
+        <a onclick="toggleSection('profile')"><strong>Кабинет</strong></a> <!-- Вкладка "Ваш Кабинет" -->
     </nav>
 </header>
 
@@ -399,7 +523,11 @@
         <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
         <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
     </div>
-</div>
 
-</body>
-</html>
+    <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
+        <h2><strong>Ваш Кабинет</strong></h2>
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
+        <div class="user-profile">
+            <!-- Здесь будет содержимое профиля пользователя -->
+        </div>
+        
