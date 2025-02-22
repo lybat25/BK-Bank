@@ -230,9 +230,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            const savedUser  = localStorage.getItem('user');
+            if (savedUser ) {
+                const user = JSON.parse(savedUser );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -528,13 +528,5 @@
     </div>
 
     <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
-        <h2><strong>Ваш Кабинет</strong></h2>
-        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <div class="user-profile">
-            <!-- Здесь будет содержимое профиля пользователя -->
-        </div>
-    </div>
-</div>
-
-</body>
-</html>
+        <h2><strong>Ваш Кабинет</
+        
