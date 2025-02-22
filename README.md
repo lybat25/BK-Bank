@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -229,9 +230,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
+            const savedUser   = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -415,7 +416,7 @@
             cards.style.display = 'none'; // Скрываем раздел карт
             contact.style.display = 'none';
             about.style.display = 'none';
-            profile.style.display = 'none';
+            profile.style.display = 'none'; // Скрываем раздел "Ваш Кабинет"
 
             // Показываем выбранную секцию
             if (section === 'services') {
@@ -529,7 +530,5 @@
         <div class="user-profile">
             <!-- Здесь будет содержимое профиля пользователя -->
         </div>
-        <div class="add-friend">
-            <h3><strong>Добавить в друзья</strong></h3>
-            <input type="text" id="friendName" placeholder="Им
-            
+        <div class="add-f
+        
