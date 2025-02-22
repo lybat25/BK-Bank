@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -531,3 +530,4 @@
             <!-- Здесь будет содержимое профиля пользователя -->
         </div>
         
+
