@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -240,9 +241,6 @@
                 showRegistrationForm();
             }
 
-            // Скрываем раздел "Ваш кабинет" при загрузке страницы
-            document.querySelector('.profile-section').style.display = 'none'; // Этот раздел скрыт по умолчанию
-
             // Всегда показываем главную страницу
             toggleSection('about');
         };
@@ -320,7 +318,6 @@
 
         function showProfile(name, email) {
             const profileSection = document.querySelector('.profile-section');
-            const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
             profileSection.innerHTML = `
                 <h2><strong>Ваш Кабинет</strong></h2>
                 <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
@@ -350,6 +347,7 @@
 
             // Отображаем список друзей
             const friendsList = document.getElementById('friends');
+            const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
             user.friends.forEach(friend => {
                 const friendItem = document.createElement('li');
                 friendItem.textContent = friend;
@@ -400,7 +398,6 @@
 
         function logout() {
             localStorage.removeItem('user'); // Удаляем данные пользователя из localStorage
-            document.querySelector('.profile-section').style.display = 'none'; // Скрываем раздел профиля
             document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden')); // Скрываем остальное содержимое
             // Показ формы регистрации снова
             showRegistrationForm();
@@ -527,5 +524,13 @@
     </div>
 
     <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
-        <h2><strong>Ваш Кабинет</
-        
+        <h2><strong>Ваш Кабинет</strong></h2>
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
+        <div class="user-profile">
+            <!-- Здесь будет содержимое профиля пользователя -->
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
