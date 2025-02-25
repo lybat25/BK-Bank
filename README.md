@@ -1,4 +1,5 @@
-[<html lang="ru">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -229,9 +230,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
+            const savedUser    = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -476,6 +477,13 @@
             <br><br>
             <img src="" style="margin-top: 20px; max-width: 50%; height: auto;">
         </div>
+
+        <!-- Поздравление для Садыкова Рамира Маратовича -->
+        <div class="congratulations">
+            <h2><strong>Поздравляем Садыкова Рамира Маратовича!</strong></h2>
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/e7402828-9c3b-4c04-8196-9ec11d82fa25.jpg?raw=true" alt="Садыков Рамир Маратович" style="width: 200px; height: auto; border-radius: 10px;">
+            <p><strong>Мы рады поздравить Рамира с его достижениями и желаем ему дальнейших успехов!</strong></p>
+        </div>
     </div>
 
     <div id="services" class="services">
@@ -519,18 +527,5 @@
         <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">БК-Банк server</a></p> <!-- Добавлена ссылка на Discord -->
         <p><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">БК-Банк channel</a></p> <!-- Добавлена ссылка на Telegram -->
         <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
-        <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p> <!-- Добавлена ссылка на Token -->
-    </div>
-
-    <div class="profile-section" style="display: none;"> <!-- Скрываем раздел "Ваш Кабинет" по умолчанию -->
-        <h2><strong>Ваш Кабинет</strong></h2>
-        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <div class="user-profile">
-            <!-- Здесь будет содержимое профиля пользователя -->
-        </div>
-    </div>
-</div>
-
-</body>
-</html>
-](https://github.com/lybat25/BK-Bank/blob/main/png/e7402828-9c3b-4c04-8196-9ec11d82fa25.jpg?raw=true)
+        <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД
+        
