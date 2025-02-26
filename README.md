@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -229,9 +230,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
+            const savedUser   = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -426,7 +427,8 @@
             } else if (section === 'about') {
                 about.style.display = 'block';
             } else if (section === 'profile') {
-                profile.style.display = 'block';
+                profile.style.display = 'block'; // Показываем раздел "Ваш Кабинет"
+                showProfile(JSON.parse(localStorage.getItem('user')).name, JSON.parse(localStorage.getItem('user')).email); // Обновляем профиль
             }
         }
     </script>
