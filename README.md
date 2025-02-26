@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -477,13 +476,6 @@
             <br><br>
             <img src="" style="margin-top: 20px; max-width: 50%; height: auto;">
         </div>
-
-        <!-- Поздравление для Садыкова Рамира Маратовича -->
-        <div class="congratulations">
-            <h2><strong>Поздравляем Садыкова Рамира Маратовича!</strong></h2>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/e7402828-9c3b-4c04-8196-9ec11d82fa25.jpg?raw=true" alt="Садыков Рамир Маратович" style="width: 200px; height: auto; border-radius: 10px;">
-            <p><strong>Мы рады поздравить Рамира с его достижениями и желаем ему дальнейших успехов!</strong></p>
-        </div>
     </div>
 
     <div id="services" class="services">
@@ -527,5 +519,9 @@
         <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">БК-Банк server</a></p> <!-- Добавлена ссылка на Discord -->
         <p><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">БК-Банк channel</a></p> <!-- Добавлена ссылка на Telegram -->
         <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
-        <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a
-        
+        <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p>
+    </div>
+</div>
+
+</body>
+</html>
