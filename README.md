@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -229,9 +230,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser    = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            const savedUser  = localStorage.getItem('user');
+            if (savedUser ) {
+                const user = JSON.parse(savedUser );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -404,34 +405,29 @@
 
         function toggleSection(section) {
             const services = document.getElementById('services');
-            const cards = document.getElementById('cards'); // Новый раздел для карт
+            const cards = document.getElementById('cards');
             const contact = document.querySelector('.contact-info');
             const about = document.querySelector('.about-bank');
             const profile = document.querySelector('.profile-section');
 
             // Скрываем все секции
             services.style.display = 'none';
-            cards.style.display = 'none'; // Скрываем раздел карт
+            cards.style.display = 'none';
             contact.style.display = 'none';
             about.style.display = 'none';
-            profile.style.display = 'none'; // Скрываем раздел "Ваш Кабинет"
+            profile.style.display = 'none';
 
             // Показываем выбранную секцию
             if (section === 'services') {
                 services.style.display = 'block';
-                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
-            } else if (section === 'cards') { // Показать раздел карт
+            } else if (section === 'cards') {
                 cards.style.display = 'block';
-                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
             } else if (section === 'contact') {
                 contact.style.display = 'block';
-                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
             } else if (section === 'about') {
                 about.style.display = 'block';
-                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
             } else if (section === 'profile') {
-                profile.style.display = 'block'; // Показываем раздел "Ваш Кабинет"
-                document.querySelector('.yellow-line').style.display = 'block'; // Показываем желтую полоску
+                profile.style.display = 'block';
             }
         }
     </script>
@@ -521,6 +517,8 @@
         <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
         <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p>
     </div>
+
+    <div class="profile-section" style="display: none;"></div> <!-- Секция профиля, скрыта по умолчанию -->
 </div>
 
 </body>
