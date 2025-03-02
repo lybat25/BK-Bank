@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -533,8 +532,5 @@
         <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p>
     </div>
 
-    <div class="profile-section" style="display: none;"></div> <!-- Секция профиля, скрыта по умолчанию -->
-</div>
-
-</body>
-</html>
+    <div class="profile-section" style="display: none;"></div> <!-- Секция профиля,
+    
