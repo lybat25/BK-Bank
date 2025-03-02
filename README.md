@@ -1,10 +1,9 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>БК-Банк - Ваш надежный банк</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Подключите свой CSS файл -->
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -266,9 +265,9 @@
         let currentLanguage = 'ru'; // Устанавливаем язык по умолчанию
 
         window.onload = function() {
-            const savedUser  = localStorage.getItem('user');
-            if (savedUser ) {
-                const user = JSON.parse(savedUser );
+            const savedUser   = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
                 showProfile(user.name, user.email);
             } else {
                 document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
@@ -296,31 +295,13 @@
             updateText(); // Обновляем текст на странице
         }
 
-        // Остальные функции остаются без изменений
-        window.onload = function() {
-            // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
-                showProfile(user.name, user.email);
-            } else {
-                // Скрываем все содержимое, кроме формы регистрации
-                document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
-                // Показ формы регистрации
-                showRegistrationForm();
-            }
-
-            // Всегда показываем главную страницу
-            toggleSection('about');
-        };
-
         function showRegistrationForm() {
             const registrationForm = document.createElement('div');
             registrationForm.className = 'registration-form';
             registrationForm.innerHTML = 
                 `<h2><strong>${texts[currentLanguage].registration}</strong></h2>
                 <input type="text" id="name" placeholder="Ваш никнейм" required>
-                <input type="email" id="email" placeholder="Ваша электронная почта" required>
+                <input type="email" id="email" placeholder="${texts[currentLanguage].email}" required>
                 <input type="password" id="password" placeholder="Пароль" required>
                 <button onclick="register()"><strong>${texts[currentLanguage].registration}</strong></button>`;
             document.body.appendChild(registrationForm);
@@ -512,7 +493,7 @@
         <a onclick="toggleSection('services')"><strong>Услуги</strong></a>
         <a onclick="toggleSection('cards')"><strong>Карты</strong></a> 
         <a onclick="toggleSection('contact')"><strong>Контакты</strong></a>
-        <a onclick="toggleSection('profile')"><strong>Кабинет</strong></a>
+        <a onclick="toggleSection('profile')"><strong>Кабинет</strong></a> <!-- Вкладка "Ваш Кабинет" -->
         <button onclick="switchLanguage()"><strong>Сменить язык</strong></button> <!-- Кнопка для смены языка -->
     </nav>
 </header>
@@ -520,19 +501,32 @@
 <div class="container">
     <div class="about-bank">
         <h2><strong>${texts[currentLanguage].about}</strong></h2>
-        <div class="yellow-line"></div>
-        <p><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни.</strong></p>
-        <h3 style="color: #FFD700;"><strong>${texts[currentLanguage].products}</strong></h3>
-        <div class="yellow-line"></div>
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
+        <p><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни. Как говорит наш клиент: "Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление." Мы стремимся сделать каждую Вашу финансовую операцию прозрачной и удобной.</strong></p>
+        <p><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем БК-Банка, чтобы сражаться с деньгами. Это была ложь."</strong></p>
+        
+        <h3 style="color: #FFD700;"><strong>${texts[currentLanguage].products}</strong></h3> <!-- Заголовок "Наши продукты" теперь желтый -->
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <p><strong>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от БК-Банк.</strong></p>
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image">
-        <div class="additional-info" style="color: #FFD700;"><strong>${texts[currentLanguage].products}</strong></div>
-        <div class="yellow-line"></div>
+        
+        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Первое изображение -->
+        
+        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Второе изображение -->
+        
+        <div class="additional-info" style="color: #FFD700;"><strong>${texts[currentLanguage].products}</strong></div> <!-- Заголовок "Наши карты" -->
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
+        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты" class="bank-image"> <!-- Изображение карт -->
+
+        <div class="additional-text">
+            <strong>Мы верим, что финансовая грамотность — это ключ к свободе. Каждый день мы работаем над тем, чтобы наши клиенты могли принимать обоснованные решения, основанные на чёткой информации. Мы предлагаем инструменты и ресурсы, которые помогут Вам лучше понять свои расходы и сбережения.</strong>
+            <br><br>
+            <img src="" style="margin-top: 20px; max-width: 50%; height: auto;">
+        </div>
     </div>
 
     <div id="services" class="services">
         <h2><strong>${texts[currentLanguage].services}</strong></h2>
-        <div class="yellow-line"></div>
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <ul>
             <li><strong>Кредитование</strong></li>
             <li><strong>Депозиты</strong></li>
@@ -544,38 +538,29 @@
 
     <div id="cards" class="cards">
         <h2><strong>Наши карты</strong></h2>
-        <div class="yellow-line"></div>
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <ul>
             <li><strong>Карта "тень и свет"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_092441724.png?raw=true" alt="Карта тень и свет" class="bank-image">
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_092441724.png?raw=true" alt="Карта тень и свет" class="bank-image"> <!-- Добавлено изображение -->
             <li><strong>Карта "чёрно-жёлтая энергия"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_093348500.png?raw=true" alt="Карта чёрно-жёлтая энергия" class="bank-image">
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_093348500.png?raw=true" alt="Карта чёрно-жёлтая энергия" class="bank-image"> <!-- Добавлено изображение -->
             <li><strong>Карта "жёлтая стрела"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_094122593.png?raw=true" alt="Карта жёлтая стрела" class="bank-image">
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_094122593.png?raw=true" alt="Карта жёлтая стрела" class="bank-image"> <!-- Добавлено изображение -->
             <li><strong>Карта "золотая волна"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_095046740.png?raw=true" alt="Карта золотая волна" class="bank-image">
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_095046740.png?raw=true" alt="Карта золотая волна" class="bank-image"> <!-- Новое изображение -->
             <li><strong>Карта "солнечный ночной ветер"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_100946793.png?raw=true" alt="Карта солнечный ночной ветер" class="bank-image">
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_100946793.png?raw=true" alt="Карта солнечный ночной ветер" class="bank-image"> <!-- Новое изображение -->
             <li><strong>Карта "БКашная тёмный"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_101740633.png?raw=true" alt="Карта БКашная тёмный" class="bank-image">
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_101740633.png?raw=true" alt="Карта БКашная тёмный" class="bank-image"> <!-- Новое изображение -->
             <li><strong>Карта "БКашная светлый"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_102653372.png?raw=true" alt="Карта БКашная светлый" class="bank-image">
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_102653372.png?raw=true" alt="Карта БКашная светлый" class="bank-image"> <!-- Новое изображение -->
         </ul>
         <p><strong>Наши карты всё ещё не будут доступны больше пару месяцев, советуем вам использовать нашу Биржу.</strong></p>
     </div>
 
     <div class="contact-info">
         <h2><strong>${texts[currentLanguage].contact}</strong></h2>
-        <div class="yellow-line"></div>
-        <p><strong>Email:</strong> <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p>
-        <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">БК-Банк server</a></p>
-        <p><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">БК-Банк channel</a></p>
-        <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p>
-        <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p>
-    </div>
-
-    <div class="profile-section" style="display: none;"></div> <!-- Секция профиля, скрыта по умолчанию -->
-</div>
-
-</body>
-</html>
+        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
+        <p><strong>${texts[currentLanguage].email}:</strong> <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p> <!-- Изменена электронная почта -->
+        <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH"
+        
