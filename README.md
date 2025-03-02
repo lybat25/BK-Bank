@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -460,11 +461,6 @@
         <a onclick="toggleSection('contact')"><strong>Контакты</strong></a>
         <a onclick="toggleSection('profile')"><strong>Кабинет</strong></a> <!-- Вкладка "Ваш Кабинет" -->
     </nav>
-    <select onchange="changeLanguage(this.value)">
-        <option value="ru">Русский</option>
-        <option value="en">English</option>
-        <!-- Добавьте другие языки по мере необходимости -->
-    </select>
 </header>
 
 <div class="container">
@@ -494,10 +490,14 @@
     </div>
 
     <div id="services" class="services">
-        <h2><strong>${translations[currentLanguage].servicesTitle}</strong></h2>
+        <h2><strong>Наши услуги</strong></h2>
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <ul>
-            ${translations[currentLanguage].servicesList.map(service => `<li><strong>${service}</strong></li>`).join('')}
+            <li><strong>Кредитование</strong></li>
+            <li><strong>Депозиты</strong></li>
+            <li><strong>Инвестиционные услуги</strong></li>
+            <li><strong>Консультации по финансовым вопросам</strong></li>
+            <li><strong>Онлайн-банкинг</strong></li>
         </ul>
     </div>
 
@@ -524,21 +524,17 @@
     </div>
 
     <div class="contact-info">
-        <h2><strong>${translations[currentLanguage].contactInfoTitle}</strong></h2>
+        <h2><strong>Контактная информация</strong></h2>
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <p><strong>Email:</strong> <a href="mailto:${translations[currentLanguage].contactEmail}">${translations[currentLanguage].contactEmail}</a></p> <!-- Изменена электронная почта -->
-        <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">${translations[currentLanguage].discord}</a></p> <!-- Добавлена ссылка на Discord -->
-        <p><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">${translations[currentLanguage].telegram}</a></p> <!-- Добавлена ссылка на Telegram -->
-        <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">${translations[currentLanguage].youtube}</a></p> <!-- Добавлена ссылка на YouTube -->
-        <p><strong>Token:</strong> <a href="#" target="_blank">${translations[currentLanguage].token}</a></p>
+        <p><strong>Email:</strong> <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p> <!-- Изменена электронная почта -->
+        <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">БК-Банк server</a></p> <!-- Добавлена ссылка на Discord -->
+        <p><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">БК-Банк channel</a></p> <!-- Добавлена ссылка на Telegram -->
+        <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
+        <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p>
     </div>
 
-    <div id="faq" class="faq-section"></div> <!-- Секция FAQ -->
-    <div id="reviews" class="reviews-section"></div> <!-- Секция отзывов -->
-    <div id="news" class="news-section"></div> <!-- Секция новостей -->
-    <div id="partners" class="partners-section"></div> <!-- Секция партнеров -->
-    <div id="privacy-policy" class="privacy-policy-section"></div> <!-- Политика конфиденциальности -->
-    <div id="calculator" class="calculator-section"></div> <!-- Секция калькулятора кредита -->
-    <div id="offers" class="offers-section"></div> <!-- Секция акций и предложений -->
-    <div id="feedback" class="feedback-section"></
-    
+    <div class="profile-section" style="display: none;"></div> <!-- Секция профиля, скрыта по умолчанию -->
+</div>
+
+</body>
+</html>
