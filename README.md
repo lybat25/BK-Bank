@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -6,266 +5,233 @@
     <title>БК-Банк - Ваш надежный банк</title>
     <link rel="stylesheet" href="styles.css"> <!-- Подключите свой CSS файл -->
     <style>
-        /* Ваши стили остаются без изменений */
-        /* ... */
-        .feedback-section {
-            margin-top: 20px;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212; /* Темный фон */
+            color: #ffffff; /* Белый текст */
+            overflow-y: auto; /* Включает вертикальную прокрутку */
+        }
+        header {
+            background: #1f1f1f; /* Темно-серый фон */
+            color: #FFD700; /* Желтый текст */
+            padding: 10px 20px; /* Увеличены отступы */
+            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex; /* Используем flexbox для выравнивания */
+            justify-content: space-between; /* Разделяем пространство между элементами */
+            align-items: center; /* Центрируем по вертикали */
+        }
+        nav {
+            margin: 0; /* Убираем отступы */
+        }
+        nav a {
+            margin: 0 15px;
+            color: #FFD700; /* Желтый текст для ссылок */
+            text-decoration: none;
+            font-weight: bold; /* Жирный шрифт для ссылок */
+            transition: color 0.3s ease; /* Плавный переход цвета */
+            cursor: pointer; /* Указатель при наведении */
+        }
+        nav a:hover {
+            color: #ffcc00; /* Более светлый желтый при наведении */
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
             padding: 20px;
-            background: #2a2a2a;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            background: #1e1e1e; /* Темно-серый фон для контента */
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Легкая тень */
         }
-        .feedback-section input, .feedback-section textarea {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            background: #1e1e1e;
-            color: #ffffff;
-            width: 100%;
-        }
-        .feedback-section button {
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            background: #FFD700;
-            color: #000;
-            cursor: pointer;
-        }
-        .feedback-section button:hover {
-            background: #ffcc00; /* Более светлый желтый при наведении */
-        }
-        .user-list {
-            margin-top: 20px;
+        .content {
             padding: 20px;
-            background: #2a2a2a;
+            margin-bottom: 20px;
+            display: none; /* Скрываем раздел по умолчанию */
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            background: #2a2a2a; /* Фон для контента */
         }
-        .user-item {
-            margin-bottom: 10px;
-            padding: 10px;
-            background: #1e1e1e;
-            border-radius: 4px;
+        .logo {
+            width: 100px; /* Установлена ширина для логотипа */
+            height: auto; /* Сохраняет пропорции изображения */
         }
-        .offers-section {
-            margin-top: 20px;
+        h1 {
+            font-size: 2.5em; /* Размер шрифта для заголовка */
+            margin: 0; /* Убираем отступы */
+            font-weight: bold; /* Жирный шрифт для заголовка */
+        }
+        h2 {
+            color: #FFD700; /* Желтый цвет для заголовков */
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FFD700; /* Подчеркивание заголовка */
+            font-weight: bold; /* Жирный шрифт для заголовка */
+        }
+        h3 {
+            color: #FFD700; /* Желтый цвет для подзаголовка "Наши продукты" */
+            margin: 20px 0 10px; /* Отступы сверху и снизу */
+            font-weight: bold; /* Жирный шрифт для подзаголовка */
+        }
+        .yellow-line {
+            height: 2px; /* Высота желтой полоски */
+            background-color: #FFD700; /* Цвет полоски */
+            margin-bottom: 10px; /* Отступ снизу */
+        }
+        ul {
+            list-style-type: none; /* Убираем маркеры списка */
+            padding: 0;
+        }
+        li {
+            padding: 5px 0; /* Отступы для элементов списка */
+            position: relative;
+            font-weight: bold; /* Жирный шрифт для элементов списка */
+        }
+        li::before {
+            content: '✓'; /* Знак перед элементами списка изменен на "✓" */
+            color: #FFD700; /* Цвет знака */
+            position: absolute;
+            left: -20px; /* Отступ от текста */
+        }
+        .about-bank {
+            text-align: center; /* Центрируем текст */
+            margin: 40px 0; /* Отступы сверху и снизу */
+            padding: 20px; /* Внутренние отступы */
+            background: #2a2a2a; /* Фон для раздела о банке */
+            border-radius: 8px; /* Закругленные углы */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Тень для раздела */
+        }
+        .contact-info {
+            display: none; /* Скрываем информацию по умолчанию */
             padding: 20px;
-            background: #2a2a2a;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            background: #2a2a2a; /* Фон для контактной информации */
+            border-radius: 8px; /* Закругленные углы */
+            margin-top: 20px; /* Отступ сверху */
         }
-        .offer-item {
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #1e1e1e;
-            border-radius: 4px;
+        .contact-info a {
+            color: #FFD700; /* Желтый цвет для ссылки электронной почты */
+            text-decoration: none; /* Убираем подчеркивание */
+            font-weight: bold; /* Жирный шрифт для ссылки */
         }
-        .offer-item h4 {
+        .contact-info a:hover {
+            color: #ffcc00; /* Более светлый желтый при наведении */
+        }
+        .services {
+            display: none; /* Скрываем раздел по умолчанию */
+            padding: 20px;
+            background: #2a2a2a; /* Фон для услуг */
+            border-radius: 8px; /* Закругленные углы */
+            margin-top: 20px; /* Отступ сверху */
+        }
+        .cards {
+            display: none; /* Скрываем раздел по умолчанию */
+            padding: 20px;
+            background: #2a2a2a; /* Фон для карт */
+            border-radius: 8px; /* Закругленные углы */
+            margin-top: 20px; /* Отступ сверху */
+        }
+        .bank-image {
+            margin-top: 20px; /* Отступ сверху для изображения */
+            width: 100%; /* Ширина изображения */
+            max-width: 600px; /* Максимальная ширина изображения */
+            height: auto; /* Сохраняет пропорции изображения */
+            display: block; /* Убедимся, что изображение блочное */
+            margin-left: auto; /* Центрируем изображение */
+            margin-right: auto; /* Центрируем изображение */
+        }
+        /* Стили для приветственного сообщения */
+        .welcome-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(31, 31, 31, 0.9);
             color: #FFD700;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            opacity: 1;
+            transition: opacity 1s ease-out; /* Плавное исчезновение */
+            z-index: 2000; /* Убедитесь, что сообщение поверх других элементов */
+            font-weight: bold; /* Жирный шрифт для приветственного сообщения */
         }
-        .add-offer-form {
-            margin-top: 20px;
-            padding: 10px;
-            background: #1e1e1e;
-            border-radius: 4px;
+        .fade-out {
+            opacity: 0; /* Прозрачность для исчезновения */
         }
-        .add-offer-form input {
+        /* Стили для формы регистрации */
+        .registration-form {
+            display: flex;
+            flex-direction: column;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3000; /* Поверх других элементов */
+        }
+        .registration-form input {
             margin-bottom: 10px;
             padding: 10px;
             border: none;
             border-radius: 4px;
             background: #1e1e1e;
             color: #ffffff;
-            width: 100%;
+            font-weight: bold; /* Жирный шрифт для полей ввода */
         }
-        .add-offer-form button {
+        .registration-form button {
             padding: 10px;
             border: none;
             border-radius: 4px;
             background: #FFD700;
             color: #000;
             cursor: pointer;
+            font-weight: bold; /* Жирный шрифт для кнопки */
         }
-        .add-offer-form button:hover {
+        .registration-form button:hover {
             background: #ffcc00; /* Более светлый желтый при наведении */
         }
-        .transaction-history {
+        .hidden {
+            display: none; /* Класс для скрытия элементов */
+        }
+        /* Стили для профиля пользователя */
+        .user-profile {
+            display: flex;
+            align-items: center;
             margin-top: 20px;
-            padding: 20px;
+            padding: 10px;
             background: #2a2a2a;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
-        .transaction-item {
-            margin-bottom: 10px;
-            padding: 10px;
-            background: #1e1e1e;
-            border-radius: 4px;
+        .user-profile img {
+            width: 40px; /* Ширина иконки пользователя */
+            height: 40px; /* Высота иконки пользователя */
+            border-radius: 50%; /* Круглая иконка */
+            margin-right: 10px; /* Отступ справа от иконки */
         }
-        .download-report {
-            margin-top: 20px;
-            padding: 10px;
-            background: #FFD700;
-            color: #000;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        .logout-button {
+            margin-left: 10px; /* Отступ слева от кнопки "Выйти" */
+            padding: 5px 10px; /* Отступы для кнопки */
+            background: #FFD700; /* Цвет фона кнопки */
+            color: #000; /* Цвет текста кнопки */
+            border: none; /* Убираем рамку */
+            border-radius: 4px; /* Закругленные углы */
+            cursor: pointer; /* Указатель при наведении */
+            font-weight: bold; /* Жирный шрифт для кнопки "Выйти" */
         }
-        .download-report:hover {
+        .logout-button:hover {
             background: #ffcc00; /* Более светлый желтый при наведении */
         }
     </style>
     <script>
-        const translations = {
-            ru: {
-                title: "БК-Банк - Ваш надежный банк",
-                welcome: "Добро пожаловать, {name}! Мы рады видеть вас на нашем сайте.",
-                registration: "Регистрация",
-                namePlaceholder: "Ваш никнейм",
-                emailPlaceholder: "Ваша электронная почта",
-                passwordPlaceholder: "Пароль",
-                registerButton: "Зарегистрироваться",
-                profileTitle: "Ваш Кабинет",
-                emailLabel: "Email:",
-                logoutButton: "Выйти",
-                servicesTitle: "Наши услуги",
-                servicesList: [
-                    "Кредитование",
-                    "Депозиты",
-                    "Инвестиционные услуги",
-                    "Консультации по финансовым вопросам",
-                    "Онлайн-банкинг"
-                ],
-                contactInfoTitle: "Контактная информация",
-                contactEmail: "bkbank636@gmail.com",
-                discord: "БК-Банк server",
-                telegram: "БК-Банк channel",
-                youtube: "БК-Банк YouTube",
-                token: "БК-Банк Token (ещё не вышел)",
-                faqTitle: "Часто задаваемые вопросы",
-                faqList: [
-                    { question: "Как открыть счет?", answer: "Чтобы открыть счет, вам нужно заполнить форму регистрации на нашем сайте." },
-                    { question: "Как получить кредит?", answer: "Для получения кредита необходимо подать заявку через наш онлайн-сервис." },
-                    { question: "Как связаться с поддержкой?", answer: "Вы можете связаться с нашей службой поддержки по электронной почте или через чат на сайте." }
-                ],
-                reviewsTitle: "Отзывы клиентов",
-                reviewsList: [
-                    { name: "Иван", text: "Отличный банк! Удобный интерфейс и быстрая поддержка." },
-                    { name: "Мария", text: "Я довольна услугами. Рекомендую всем!" },
-                    { name: "Алексей", text: "Хорошие условия по кредитам." }
-                ],
-                newsTitle: "Новости",
-                newsList: [
-                    { title: "Запуск новой кредитной карты", content: "Мы рады сообщить о запуске новой кредитной карты с низкими процентными ставками." },
-                    { title: "Обновление мобильного приложения", content: "Наше мобильное приложение теперь стало еще удобнее и функциональнее." },
-                    { title: "Новая программа лояльности", content: "Запускаем новую программу лояльности для наших постоянных клиентов." }
-                ],
-                partnersTitle: "Наши партнеры",
-                partnersList: [
-                    { name: "Компания А", description: "Лидер в области финансовых технологий." },
-                    { name: "Компания Б", description: "Надежный поставщик услуг." },
-                    { name: "Компания В", description: "Партнер в области кредитования." }
-                ],
-                privacyPolicyTitle: "Политика конфиденциальности",
-                privacyPolicyContent: "Мы уважаем вашу конфиденциальность и обязуемся защищать ваши личные данные. Мы не будем передавать ваши данные третьим лицам без вашего согласия.",
-                calculatorTitle: "Калькулятор кредита",
-                loanAmountPlaceholder: "Сумма кредита",
-                interestRatePlaceholder: "Процентная ставка (%)",
-                loanTermPlaceholder: "Срок кредита (лет)",
-                calculateButton: "Рассчитать",
-                monthlyPaymentLabel: "Ежемесячный платеж:",
-                offersTitle: "Акции и предложения",
-                addOfferButton: "Добавить акцию",
-                offerNamePlaceholder: "Название акции",
-                offerDescriptionPlaceholder: "Описание акции",
-                feedbackTitle: "Обратная связь",
-                feedbackMessagePlaceholder: "Ваше сообщение",
-                sendFeedbackButton: "Отправить",
-                userListTitle: "Список пользователей",
-                transactionHistoryTitle: "История операций",
-                downloadReportButton: "Скачать отчет",
-                // Добавьте другие переводы по мере необходимости
-            },
-            en: {
-                title: "BK-Bank - Your Reliable Bank",
-                welcome: "Welcome, {name}! We are glad to see you on our site.",
-                registration: "Registration",
-                namePlaceholder: "Your nickname",
-                emailPlaceholder: "Your email",
-                passwordPlaceholder: "Password",
-                registerButton: "Register",
-                profileTitle: "Your Profile",
-                emailLabel: "Email:",
-                logoutButton: "Logout",
-                servicesTitle: "Our Services",
-                servicesList: [
-                    "Lending",
-                    "Deposits",
-                    "Investment Services",
-                    "Financial Consulting",
-                    "Online Banking"
-                ],
-                contactInfoTitle: "Contact Information",
-                contactEmail: "bkbank636@gmail.com",
-                discord: "BK-Bank server",
-                telegram: "BK-Bank channel",
-                youtube: "BK-Bank YouTube",
-                token: "BK-Bank Token (not released yet)",
-                faqTitle: "Frequently Asked Questions",
-                faqList: [
-                    { question: "How to open an account?", answer: "To open an account, you need to fill out the registration form on our website." },
-                    { question: "How to get a loan?", answer: "To get a loan, you need to apply through our online service." },
-                    { question: "How to contact support?", answer: "You can contact our support service via email or through the chat on the website." }
-                ],
-                reviewsTitle: "Customer Reviews",
-                reviewsList: [
-                    { name: "Ivan", text: "Great bank! Convenient interface and quick support." },
-                    { name: "Maria", text: "I am satisfied with the services. I recommend it to everyone!" },
-                    { name: "Alexey", text: "Good loan conditions." }
-                ],
-                newsTitle: "News",
-                newsList: [
-                    { title: "Launch of a new credit card", content: "We are pleased to announce the launch of a new credit card with low interest rates." },
-                    { title: "Mobile app update", content: "Our mobile app has become even more convenient and functional." },
-                    { title: "New loyalty program", content: "We are launching a new loyalty program for our regular customers." }
-                ],
-                partnersTitle: "Our Partners",
-                partnersList: [
-                    { name: "Company A", description: "Leader in financial technology." },
-                    { name: "Company B", description: "Reliable service provider." },
-                    { name: "Company C", description: "Partner in lending." }
-                ],
-                privacyPolicyTitle: "Privacy Policy",
-                privacyPolicyContent: "We respect your privacy and are committed to protecting your personal data. We will not share your data with third parties without your consent.",
-                calculatorTitle: "Loan Calculator",
-                loanAmountPlaceholder: "Loan Amount",
-                interestRatePlaceholder: "Interest Rate (%)",
-                loanTermPlaceholder: "Loan Term (years)",
-                calculateButton: "Calculate",
-                monthlyPaymentLabel: "Monthly Payment:",
-                offersTitle: "Offers and Promotions",
-                addOfferButton: "Add Offer",
-                offerNamePlaceholder: "Offer Name",
-                offerDescriptionPlaceholder: "Offer Description",
-                feedbackTitle: "Feedback",
-                feedbackMessagePlaceholder: "Your message",
-                sendFeedbackButton: "Send",
-                userListTitle: "User  List",
-                transactionHistoryTitle: "Transaction History",
-                downloadReportButton: "Download Report",
-                // Добавьте другие переводы по мере необходимости
-            }
-            // Добавьте другие языки по мере необходимости
-        };
-
-        let currentLanguage = 'ru'; // Установите язык по умолчанию
-
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser        = localStorage.getItem('user');
-            if (savedUser       ) {
-                const user = JSON.parse(savedUser       );
+            const savedUser    = localStorage.getItem('user');
+            if (savedUser   ) {
+                const user = JSON.parse(savedUser   );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -276,201 +242,208 @@
 
             // Всегда показываем главную страницу
             toggleSection('about');
-            updateLanguage();
         };
-
-        function updateLanguage() {
-            document.title = translations[currentLanguage].title;
-            // Обновите другие элементы на странице в зависимости от языка
-            // Например, заголовки, текст кнопок и т.д.
-            document.querySelector('.welcome-message').innerHTML = translations[currentLanguage].welcome.replace("{name}", user.name);
-            // Обновление FAQ
-            const faqSection = document.getElementById('faq');
-            faqSection.innerHTML = `<h2>${translations[currentLanguage].faqTitle}</h2>`;
-            translations[currentLanguage].faqList.forEach(item => {
-                faqSection.innerHTML += `
-                    <div class="faq-item">
-                        <h4 onclick="toggleFAQ(this)">${item.question}</h4>
-                        <div class="faq-answer">${item.answer}</div>
-                    </div>
-                `;
-            });
-
-            // Обновление отзывов
-            const reviewsSection = document.getElementById('reviews');
-            reviewsSection.innerHTML = `<h2>${translations[currentLanguage].reviewsTitle}</h2>`;
-            translations[currentLanguage].reviewsList.forEach(review => {
-                reviewsSection.innerHTML += `
-                    <div class="review">
-                        <strong>${review.name}</strong>: ${review.text}
-                    </div>
-                `;
-            });
-
-            // Обновление новостей
-            const newsSection = document.getElementById('news');
-            newsSection.innerHTML = `<h2>${translations[currentLanguage].newsTitle}</h2>`;
-            translations[currentLanguage].newsList.forEach(news => {
-                newsSection.innerHTML += `
-                    <div class="news-item">
-                        <h4 onclick="toggleNews(this)">${news.title}</h4>
-                        <div class="news-content">${news.content}</div>
-                    </div>
-                `;
-            });
-
-            // Обновление партнеров
-            const partnersSection = document.getElementById('partners');
-            partnersSection.innerHTML = `<h2>${translations[currentLanguage].partnersTitle}</h2>`;
-            translations[currentLanguage].partnersList.forEach(partner => {
-                partnersSection.innerHTML += `
-                    <div class="partner-item">
-                        <h4>${partner.name}</h4>
-                        <div class="partner-content">${partner.description}</div>
-                    </div>
-                `;
-            });
-
-            // Обновление политики конфиденциальности
-            const privacyPolicySection = document.getElementById('privacy-policy');
-            privacyPolicySection.innerHTML = `<h2>${translations[currentLanguage].privacyPolicyTitle}</h2>
-                <p>${translations[currentLanguage].privacyPolicyContent}</p>`;
-
-            // Обновление калькулятора кредита
-            const calculatorSection = document.getElementById('calculator');
-            calculatorSection.innerHTML = `
-                <h2>${translations[currentLanguage].calculatorTitle}</h2>
-                <input type="number" id="loanAmount" placeholder="${translations[currentLanguage].loanAmountPlaceholder}" required>
-                <input type="number" id="interestRate" placeholder="${translations[currentLanguage].interestRatePlaceholder}" required>
-                <input type="number" id="loanTerm" placeholder="${translations[currentLanguage].loanTermPlaceholder}" required>
-                <button onclick="calculateLoan()">${translations[currentLanguage].calculateButton}</button>
-                <div class="calculator-result" id="calculatorResult"></div>
-            `;
-
-            // Обновление акций и предложений
-            const offersSection = document.getElementById('offers');
-            offersSection.innerHTML = `<h2>${translations[currentLanguage].offersTitle}</h2>`;
-            offersSection.innerHTML += `
-                <div class="add-offer-form">
-                    <input type="text" id="offerName" placeholder="${translations[currentLanguage].offerNamePlaceholder}" required>
-                    <input type="text" id="offerDescription" placeholder="${translations[currentLanguage].offerDescriptionPlaceholder}" required>
-                    <button onclick="addOffer()">${translations[currentLanguage].addOfferButton}</button>
-                </div>
-            `;
-
-            // Обновление обратной связи
-            const feedbackSection = document.getElementById('feedback');
-            feedbackSection.innerHTML = `
-                <h2>${translations[currentLanguage].feedbackTitle}</h2>
-                <textarea id="feedbackMessage" placeholder="${translations[currentLanguage].feedbackMessagePlaceholder}" required></textarea>
-                <button onclick="sendFeedback()">${translations[currentLanguage].sendFeedbackButton}</button>
-            `;
-
-            // Обновление списка пользователей
-            const userListSection = document.getElementById('userList');
-            userListSection.innerHTML = `<h2>${translations[currentLanguage].userListTitle}</h2>`;
-            // Здесь можно добавить существующих пользователей, если они есть
-            const users = JSON.parse(localStorage.getItem('users')) || []; // Получаем список пользователей из localStorage
-            users.forEach(user => {
-                userListSection.innerHTML += `
-                    <div class="user-item">
-                        <strong>${user.name}</strong> - ${user.email}
-                    </div>
-                `;
-            });
-
-            // Обновление истории операций
-            const transactionHistorySection = document.getElementById('transactionHistory');
-            transactionHistorySection.innerHTML = `<h2>${translations[currentLanguage].transactionHistoryTitle}</h2>`;
-            // Здесь можно добавить существующие транзакции, если они есть
-            const transactions = JSON.parse(localStorage.getItem('transactions')) || []; // Получаем список транзакций из localStorage
-            transactions.forEach(transaction => {
-                transactionHistorySection.innerHTML += `
-                    <div class="transaction-item">
-                        <strong>${transaction.date}</strong>: ${transaction.description} - ${transaction.amount} руб.
-                    </div>
-                `;
-            });
-
-            // Кнопка для загрузки отчета
-            const downloadReportSection = document.getElementById('downloadReport');
-            downloadReportSection.innerHTML = `
-                <button class="download-report" onclick="downloadReport()">${translations[currentLanguage].downloadReportButton}</button>
-            `;
-        }
-
-        function toggleFAQ(element) {
-            const answer = element.nextElementSibling;
-            answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function toggleNews(element) {
-            const content = element.nextElementSibling;
-            content.style.display = content.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function changeLanguage(lang) {
-            currentLanguage = lang;
-            updateLanguage();
-        }
 
         function showRegistrationForm() {
             const registrationForm = document.createElement('div');
             registrationForm.className = 'registration-form';
             registrationForm.innerHTML = 
-                `<h2><strong>${translations[currentLanguage].registration}</strong></h2>
-                <input type="text" id="name" placeholder="${translations[currentLanguage].namePlaceholder}" required>
-                <input type="email" id="email" placeholder="${translations[currentLanguage].emailPlaceholder}" required>
-                <input type="password" id="password" placeholder="${translations[currentLanguage].passwordPlaceholder}" required>
-                <button onclick="register()"><strong>${translations[currentLanguage].registerButton}</strong></button>`;
+                `<h2><strong>Регистрация</strong></h2>
+                <input type="text" id="name" placeholder="Ваш никнейм" required>
+                <input type="email" id="email" placeholder="Ваша электронная почта" required>
+                <input type="password" id="password" placeholder="Пароль" required>
+                <button onclick="register()"><strong>Зарегистрироваться</strong></button>`;
             document.body.appendChild(registrationForm);
         }
 
-        function calculateLoan() {
-            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
-            const interestRate = parseFloat(document.getElementById('interestRate').value) / 100 / 12; // месячная ставка
-            const loanTerm = parseInt(document.getElementById('loanTerm').value) * 12; // месяцы
+        function register() {
+            const name = document.getElementById('name').value.trim(); // Убираем пробелы
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-            const monthlyPayment = (loanAmount * interestRate) / (1 - Math.pow(1 + interestRate, -loanTerm));
-            document.getElementById('calculatorResult').innerText = `${translations[currentLanguage].monthlyPaymentLabel} ${monthlyPayment.toFixed(2)} руб.`;
+            // Проверка на наличие хотя бы одной буквы в никнейме
+            const nameRegex = /[a-zA-Zа-яА-ЯЁё]/; // Регулярное выражение для проверки наличия хотя бы одной буквы
+
+            if (!nameRegex.test(name)) {
+                alert("Никнейм должен содержать хотя бы одну букву.");
+                return;
+            }
+
+            // Проверка электронной почты
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailRegex.test(email)) {
+                alert("Пожалуйста, введите корректный адрес электронной почты.");
+                return;
+            }
+
+            // Проверка пароля
+            if (password.length < 6 || !/^[a-zA-Z]+$/.test(password)) {
+                alert("Пароль должен содержать минимум 6 символов и состоять только из английских букв.");
+                return;
+            }
+
+            // Сохранение данных в localStorage
+            const user = {
+                name: name,
+                email: email,
+                balance: 0, // Инициализируем баланс
+                friends: [], // Инициализируем список друзей
+                friendRequests: [] // Инициализируем список запросов в друзья
+            };
+            localStorage.setItem('user', JSON.stringify(user));
+
+            const welcomeMessage = document.createElement('div');
+            welcomeMessage.className = 'welcome-message';
+            welcomeMessage.innerHTML = `<strong>Добро пожаловать, ${name}! Мы рады видеть вас на нашем сайте.</strong>`;
+            document.body.appendChild(welcomeMessage);
+
+            // Удаляем форму регистрации
+            document.querySelector('.registration-form').remove();
+
+            // Показываем содержимое страницы
+            document.querySelectorAll('.hidden').forEach(el => el.classList.remove('hidden'));
+
+            // Удаляем сообщение через 1 секунду
+            setTimeout(() => {
+                welcomeMessage.classList.add('fade-out');
+                // Удаляем элемент из DOM после завершения анимации
+                setTimeout(() => {
+                    welcomeMessage.remove();
+                }, 1000); // Время, соответствующее времени анимации
+            }, 2000); // Показать сообщение на 2 секунды
         }
 
-        function addOffer() {
-            const offerName = document.getElementById('offerName').value.trim();
-            const offerDescription = document.getElementById('offerDescription').value.trim();
+        function showProfile(name, email) {
+            const profileSection = document.querySelector('.profile-section');
+            profileSection.innerHTML = 
+                `<h2><strong>Ваш Кабинет</strong></h2>
+                <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
+                <div class="user-profile">
+                    <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                    <span><strong>${name}</strong></span>
+                    <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button> <!-- Кнопка "Выйти" рядом с именем -->
+                </div>
+                <p><strong>Email: ${email}</strong></p> <!-- Изменено на "Email" -->
+                <p><strong>Наш банк ещё не готов полностью, пока что у нас есть только это насчёт вашего кабинета.</strong></p> <!-- Обновленный текст -->
+                
+                <div class="add-friend">
+                    <h3><strong>Добавить в друзья</strong></h3>
+                    <input type="text" id="friendName" placeholder="Имя или Email друга" required>
+                    <button onclick="sendFriendRequest()"><strong>Отправить запрос</strong></button>
+                </div>
+                <div class="friend-list">
+                    <h3><strong>Список друзей</strong></h3>
+                    <ul id="friends"></ul>
+                </div>
+                <div class="friend-requests">
+                    <h3><strong>Запросы в друзья</strong></h3>
+                    <ul id="friendRequests"></ul>
+                </div>`;
+            profileSection.style.display = 'block'; // Показываем раздел профиля
 
-            if (offerName && offerDescription) {
-                const offersSection = document.getElementById('offers');
-                const newOffer = document.createElement('div');
-                newOffer.className = 'offer-item';
-                newOffer.innerHTML = `<h4>${offerName}</h4><p>${offerDescription}</p>`;
-                offersSection.appendChild(newOffer);
+            // Отображаем список друзей
+            const friendsList = document.getElementById('friends');
+            const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+            user.friends.forEach(friend => {
+                const friendItem = document.createElement('li');
+                friendItem.textContent = friend;
+                friendsList.appendChild(friendItem);
+            });
 
-                // Очистка полей ввода
-                document.getElementById('offerName').value = '';
-                document.getElementById('offerDescription').value = '';
+            // Отображаем запросы в друзья
+            const requestsList = document.getElementById('friendRequests');
+            user.friendRequests.forEach(request => {
+                const requestItem = document.createElement('li');
+                requestItem.textContent = request;
+                const acceptButton = document.createElement('button');
+                acceptButton.textContent = "Принять";
+                acceptButton.onclick = () => acceptFriendRequest(request);
+                requestItem.appendChild(acceptButton);
+                requestsList.appendChild(requestItem);
+            });
+        }
+
+        function sendFriendRequest() {
+            const friendName = document.getElementById('friendName').value.trim();
+            const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
+
+            if (friendName) {
+                // Добавляем запрос в друзья текущего пользователя
+                user.friendRequests.push(friendName);
+                localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
+
+                alert(`Запрос в друзья отправлен пользователю ${friendName}`);
+                document.getElementById('friendName').value = ''; // Очищаем поле ввода
             } else {
-                alert("Пожалуйста, заполните все поля.");
+                alert("Пожалуйста, введите имя или email друга.");
             }
         }
 
-        function sendFeedback() {
-            const feedbackMessage = document.getElementById('feedbackMessage').value.trim();
+        function acceptFriendRequest(friendName) {
+            const user = JSON.parse(localStorage.getItem('user')); // Получаем данные пользователя из localStorage
 
-            if (feedbackMessage) {
-                alert("Ваше сообщение отправлено! Спасибо за обратную связь.");
-                document.getElementById('feedbackMessage').value = ''; // Очистка поля ввода
-            } else {
-                alert("Пожалуйста, введите ваше сообщение.");
+            // Удаляем запрос из списка запросов
+            user.friendRequests = user.friendRequests.filter(request => request !== friendName);
+            // Добавляем друга в список друзей
+            user.friends.push(friendName);
+            localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
+
+            showProfile(user.name, user.email); // Обновляем профиль
+            alert(`Вы добавили ${friendName} в друзья!`);
+        }
+
+        function logout() {
+            localStorage.removeItem('user'); // Удаляем данные пользователя из localStorage
+            document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden')); // Скрываем остальное содержимое
+            // Показ формы регистрации снова
+            showRegistrationForm();
+        }
+
+        function toggleSection(section) {
+            const services = document.getElementById('services');
+            const cards = document.getElementById('cards');
+            const contact = document.querySelector('.contact-info');
+            const about = document.querySelector('.about-bank');
+            const profile = document.querySelector('.profile-section');
+            const feedback = document.getElementById('feedback');
+            const offers = document.getElementById('offers');
+            const userList = document.getElementById('userList');
+            const transactionHistory = document.getElementById('transactionHistory');
+
+            // Скрываем все секции
+            services.style.display = 'none';
+            cards.style.display = 'none';
+            contact.style.display = 'none';
+            about.style.display = 'none';
+            profile.style.display = 'none';
+            feedback.style.display = 'none';
+            offers.style.display = 'none';
+            userList.style.display = 'none';
+            transactionHistory.style.display = 'none';
+
+            // Показываем выбранную секцию
+            if (section === 'services') {
+                services.style.display = 'block';
+            } else if (section === 'cards') {
+                cards.style.display = 'block';
+            } else if (section === 'contact') {
+                contact.style.display = 'block';
+            } else if (section === 'about') {
+                about.style.display = 'block';
+            } else if (section === 'profile') {
+                profile.style.display = 'block'; // Показываем раздел "Ваш Кабинет"
+                showProfile(JSON.parse(localStorage.getItem('user')).name, JSON.parse(localStorage.getItem('user')).email); // Обновляем профиль
+            } else if (section === 'feedback') {
+                feedback.style.display = 'block'; // Показываем раздел обратной связи
+            } else if (section === 'offers') {
+                offers.style.display = 'block'; // Показываем раздел акций
+            } else if (section === 'userList') {
+                userList.style.display = 'block'; // Показываем список пользователей
+            } else if (section === 'transactionHistory') {
+                transactionHistory.style.display = 'block'; // Показываем историю операций
             }
         }
-
-        function downloadReport() {
-            alert("Отчет будет загружен в формате PDF."); // Здесь можно добавить логику для загрузки отчета
-        }
-
-        // Остальные функции остаются без изменений, но добавьте обновление текста в зависимости от языка
-        // Например, в функции showProfile, toggleSection и т.д.
     </script>
 </head>
 <body>
@@ -563,5 +536,9 @@
     <div id="faq" class="faq-section"></div> <!-- Секция FAQ -->
     <div id="reviews" class="reviews-section"></div> <!-- Секция отзывов -->
     <div id="news" class="news-section"></div> <!-- Секция новостей -->
-    <div id="partners" class="partners-section"></div> <!--
+    <div id="partners" class="partners-section"></div> <!-- Секция партнеров -->
+    <div id="privacy-policy" class="privacy-policy-section"></div> <!-- Политика конфиденциальности -->
+    <div id="calculator" class="calculator-section"></div> <!-- Секция калькулятора кредита -->
+    <div id="offers" class="offers-section"></div> <!-- Секция акций и предложений -->
+    <div id="feedback" class="feedback-section"></
     
