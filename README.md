@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -228,11 +227,152 @@
         }
     </style>
     <script>
+        const translations = {
+            ru: {
+                title: "БК-Банк - Ваш надежный банк",
+                welcome: "Добро пожаловать, {name}! Мы рады видеть вас на нашем сайте.",
+                registration: "Регистрация",
+                namePlaceholder: "Ваш никнейм",
+                emailPlaceholder: "Ваша электронная почта",
+                passwordPlaceholder: "Пароль",
+                registerButton: "Зарегистрироваться",
+                profileTitle: "Ваш Кабинет",
+                emailLabel: "Email:",
+                logoutButton: "Выйти",
+                servicesTitle: "Наши услуги",
+                servicesList: [
+                    "Кредитование",
+                    "Депозиты",
+                    "Инвестиционные услуги",
+                    "Консультации по финансовым вопросам",
+                    "Онлайн-банкинг"
+                ],
+                contactInfoTitle: "Контактная информация",
+                contactEmail: "bkbank636@gmail.com",
+                discord: "БК-Банк server",
+                telegram: "БК-Банк channel",
+                youtube: "БК-Банк YouTube",
+                token: "БК-Банк Token (ещё не вышел)",
+                faqTitle: "Часто задаваемые вопросы",
+                faqList: [
+                    { question: "Как открыть счет?", answer: "Чтобы открыть счет, вам нужно заполнить форму регистрации на нашем сайте." },
+                    { question: "Как получить кредит?", answer: "Для получения кредита необходимо подать заявку через наш онлайн-сервис." },
+                    { question: "Как связаться с поддержкой?", answer: "Вы можете связаться с нашей службой поддержки по электронной почте или через чат на сайте." }
+                ],
+                reviewsTitle: "Отзывы клиентов",
+                reviewsList: [
+                    { name: "Иван", text: "Отличный банк! Удобный интерфейс и быстрая поддержка." },
+                    { name: "Мария", text: "Я довольна услугами. Рекомендую всем!" },
+                    { name: "Алексей", text: "Хорошие условия по кредитам." }
+                ],
+                newsTitle: "Новости",
+                newsList: [
+                    { title: "Запуск новой кредитной карты", content: "Мы рады сообщить о запуске новой кредитной карты с низкими процентными ставками." },
+                    { title: "Обновление мобильного приложения", content: "Наше мобильное приложение теперь стало еще удобнее и функциональнее." },
+                    { title: "Новая программа лояльности", content: "Запускаем новую программу лояльности для наших постоянных клиентов." }
+                ],
+                partnersTitle: "Наши партнеры",
+                partnersList: [
+                    { name: "Компания А", description: "Лидер в области финансовых технологий." },
+                    { name: "Компания Б", description: "Надежный поставщик услуг." },
+                    { name: "Компания В", description: "Партнер в области кредитования." }
+                ],
+                privacyPolicyTitle: "Политика конфиденциальности",
+                privacyPolicyContent: "Мы уважаем вашу конфиденциальность и обязуемся защищать ваши личные данные. Мы не будем передавать ваши данные третьим лицам без вашего согласия.",
+                calculatorTitle: "Калькулятор кредита",
+                loanAmountPlaceholder: "Сумма кредита",
+                interestRatePlaceholder: "Процентная ставка (%)",
+                loanTermPlaceholder: "Срок кредита (лет)",
+                calculateButton: "Рассчитать",
+                monthlyPaymentLabel: "Ежемесячный платеж:",
+                offersTitle: "Акции и предложения",
+                addOfferButton: "Добавить акцию",
+                offerNamePlaceholder: "Название акции",
+                offerDescriptionPlaceholder: "Описание акции",
+                feedbackTitle: "Обратная связь",
+                feedbackMessagePlaceholder: "Ваше сообщение",
+                sendFeedbackButton: "Отправить",
+                userListTitle: "Список пользователей",
+                transactionHistoryTitle: "История операций",
+                downloadReportButton: "Скачать отчет",
+            },
+            en: {
+                title: "BK-Bank - Your Reliable Bank",
+                welcome: "Welcome, {name}! We are glad to see you on our site.",
+                registration: "Registration",
+                namePlaceholder: "Your nickname",
+                emailPlaceholder: "Your email",
+                passwordPlaceholder: "Password",
+                registerButton: "Register",
+                profileTitle: "Your Profile",
+                emailLabel: "Email:",
+                logoutButton: "Logout",
+                servicesTitle: "Our Services",
+                servicesList: [
+                    "Lending",
+                    "Deposits",
+                    "Investment Services",
+                    "Financial Consulting",
+                    "Online Banking"
+                ],
+                contactInfoTitle: "Contact Information",
+                contactEmail: "bkbank636@gmail.com",
+                discord: "BK-Bank server",
+                telegram: "BK-Bank channel",
+                youtube: "BK-Bank YouTube",
+                token: "BK-Bank Token (not released yet)",
+                faqTitle: "Frequently Asked Questions",
+                faqList: [
+                    { question: "How to open an account?", answer: "To open an account, you need to fill out the registration form on our website." },
+                    { question: "How to get a loan?", answer: "To get a loan, you need to apply through our online service." },
+                    { question: "How to contact support?", answer: "You can contact our support service via email or through the chat on the website." }
+                ],
+                reviewsTitle: "Customer Reviews",
+                reviewsList: [
+                    { name: "Ivan", text: "Great bank! Convenient interface and quick support." },
+                    { name: "Maria", text: "I am satisfied with the services. I recommend it to everyone!" },
+                    { name: "Alexey", text: "Good loan conditions." }
+                ],
+                newsTitle: "News",
+                newsList: [
+                    { title: "Launch of a new credit card", content: "We are pleased to announce the launch of a new credit card with low interest rates." },
+                    { title: "Mobile app update", content: "Our mobile app has become even more convenient and functional." },
+                    { title: "New loyalty program", content: "We are launching a new loyalty program for our regular customers." }
+                ],
+                partnersTitle: "Our Partners",
+                partnersList: [
+                    { name: "Company A", description: "Leader in financial technology." },
+                    { name: "Company B", description: "Reliable service provider." },
+                    { name: "Company C", description: "Partner in lending." }
+                ],
+                privacyPolicyTitle: "Privacy Policy",
+                privacyPolicyContent: "We respect your privacy and are committed to protecting your personal data. We will not share your data with third parties without your consent.",
+                calculatorTitle: "Loan Calculator",
+                loanAmountPlaceholder: "Loan Amount",
+                interestRatePlaceholder: "Interest Rate (%)",
+                loanTermPlaceholder: "Loan Term (years)",
+                calculateButton: "Calculate",
+                monthlyPaymentLabel: "Monthly Payment:",
+                offersTitle: "Offers and Promotions",
+                addOfferButton: "Add Offer",
+                offerNamePlaceholder: "Offer Name",
+                offerDescriptionPlaceholder: "Offer Description",
+                feedbackTitle: "Feedback",
+                feedbackMessagePlaceholder: "Your message",
+                sendFeedbackButton: "Send",
+                userListTitle: "User  List",
+                transactionHistoryTitle: "Transaction History",
+                downloadReportButton: "Download Report",
+            }
+        };
+
+        let currentLanguage = 'ru'; // Установите язык по умолчанию
+
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser     = localStorage.getItem('user');
-            if (savedUser    ) {
-                const user = JSON.parse(savedUser    );
+            const savedUser  = localStorage.getItem('user');
+            if (savedUser ) {
+                const user = JSON.parse(savedUser );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -243,17 +383,33 @@
 
             // Всегда показываем главную страницу
             toggleSection('about');
+            updateLanguage();
         };
+
+        function updateLanguage() {
+            document.title = translations[currentLanguage].title;
+            document.querySelector('.welcome-message').innerHTML = translations[currentLanguage].welcome.replace("{name}", user.name);
+            // Обновление заголовков и текстов на странице
+            document.querySelector('h1').innerText = translations[currentLanguage].title;
+            document.querySelector('.about-bank h2').innerText = translations[currentLanguage].aboutTitle;
+            document.querySelector('.contact-info h2').innerText = translations[currentLanguage].contactInfoTitle;
+            document.querySelector('.services h2').innerText = translations[currentLanguage].servicesTitle;
+            document.querySelector('.cards h2').innerText = translations[currentLanguage].cardsTitle;
+            document.querySelector('.offers-section h2').innerText = translations[currentLanguage].offersTitle;
+            document.querySelector('.feedback-section h2').innerText = translations[currentLanguage].feedbackTitle;
+            document.querySelector('.profile-section h2').innerText = translations[currentLanguage].profileTitle;
+            // Обновление других элементов на странице
+        }
 
         function showRegistrationForm() {
             const registrationForm = document.createElement('div');
             registrationForm.className = 'registration-form';
             registrationForm.innerHTML = 
-                `<h2><strong>Регистрация</strong></h2>
-                <input type="text" id="name" placeholder="Ваш никнейм" required>
-                <input type="email" id="email" placeholder="Ваша электронная почта" required>
-                <input type="password" id="password" placeholder="Пароль" required>
-                <button onclick="register()"><strong>Зарегистрироваться</strong></button>`;
+                `<h2><strong>${translations[currentLanguage].registration}</strong></h2>
+                <input type="text" id="name" placeholder="${translations[currentLanguage].namePlaceholder}" required>
+                <input type="email" id="email" placeholder="${translations[currentLanguage].emailPlaceholder}" required>
+                <input type="password" id="password" placeholder="${translations[currentLanguage].passwordPlaceholder}" required>
+                <button onclick="register()"><strong>${translations[currentLanguage].registerButton}</strong></button>`;
             document.body.appendChild(registrationForm);
         }
 
@@ -318,12 +474,12 @@
         function showProfile(name, email) {
             const profileSection = document.querySelector('.profile-section');
             profileSection.innerHTML = 
-                `<h2><strong>Ваш Кабинет</strong></h2>
+                `<h2><strong>${translations[currentLanguage].profileTitle}</strong></h2>
                 <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
                 <div class="user-profile">
                     <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
                     <span><strong>${name}</strong></span>
-                    <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button> <!-- Кнопка "Выйти" рядом с именем -->
+                    <button class="logout-button" onclick="logout()"><strong>${translations[currentLanguage].logoutButton}</strong></button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
                 <p><strong>Email: ${email}</strong></p> <!-- Изменено на "Email" -->
                 <p><strong>Наш банк ещё не готов полностью, пока что у нас есть только это насчёт вашего кабинета.</strong></p> <!-- Обновленный текст -->
@@ -464,61 +620,5 @@
         
         <div class="additional-info" style="color: #FFD700;"><strong>Наши карты</strong></div> <!-- Заголовок "Наши карты" -->
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты" class="bank-image"> <!-- Изображение карт -->
-
-        <div class="additional-text">
-            <strong>Мы верим, что финансовая грамотность — это ключ к свободе. Каждый день мы работаем над тем, чтобы наши клиенты могли принимать обоснованные решения, основанные на чёткой информации. Мы предлагаем инструменты и ресурсы, которые помогут Вам лучше понять свои расходы и сбережения.</strong>
-            <br><br>
-            <img src="" style="margin-top: 20px; max-width: 50%; height: auto;">
-        </div>
-    </div>
-
-    <div id="services" class="services">
-        <h2><strong>Наши услуги</strong></h2>
-        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <ul>
-            <li><strong>Кредитование</strong></li>
-            <li><strong>Депозиты</strong></li>
-            <li><strong>Инвестиционные услуги</strong></li>
-            <li><strong>Консультации по финансовым вопросам</strong></li>
-            <li><strong>Онлайн-банкинг</strong></li>
-        </ul>
-    </div>
-
-    <div id="cards" class="cards">
-        <h2><strong>Наши карты</strong></h2>
-        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <ul>
-            <li><strong>Карта "тень и свет"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_092441724.png?raw=true" alt="Карта тень и свет" class="bank-image"> <!-- Добавлено изображение -->
-            <li><strong>Карта "чёрно-жёлтая энергия"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_093348500.png?raw=true" alt="Карта чёрно-жёлтая энергия" class="bank-image"> <!-- Добавлено изображение -->
-            <li><strong>Карта "жёлтая стрела"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_094122593.png?raw=true" alt="Карта жёлтая стрела" class="bank-image"> <!-- Добавлено изображение -->
-            <li><strong>Карта "золотая волна"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_095046740.png?raw=true" alt="Карта золотая волна" class="bank-image"> <!-- Новое изображение -->
-            <li><strong>Карта "солнечный ночной ветер"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_100946793.png?raw=true" alt="Карта солнечный ночной ветер" class="bank-image"> <!-- Новое изображение -->
-            <li><strong>Карта "БКашная тёмный"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_101740633.png?raw=true" alt="Карта БКашная тёмный" class="bank-image"> <!-- Новое изображение -->
-            <li><strong>Карта "БКашная светлый"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_102653372.png?raw=true" alt="Карта БКашная светлый" class="bank-image"> <!-- Новое изображение -->
-        </ul>
-        <p><strong>Наши карты всё ещё не будут доступны больше пару месяцев, советуем вам использовать нашу Биржу.</strong></p>
-    </div>
-
-    <div class="contact-info">
-        <h2><strong>Контактная информация</strong></h2>
-        <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <p><strong>Email:</strong> <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p> <!-- Изменена электронная почта -->
-        <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">БК-Банк server</a></p> <!-- Добавлена ссылка на Discord -->
-        <p><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">БК-Банк channel</a></p> <!-- Добавлена ссылка на Telegram -->
-        <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
-        <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p>
-    </div>
-
-    <div class="profile-section" style="display: none;"></div> <!-- Секция профиля, скрыта по умолчанию -->
-</div>
-
-</body>
-</html>
+        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%
+        
