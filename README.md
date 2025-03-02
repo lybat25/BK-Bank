@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -227,83 +228,32 @@
         }
     </style>
     <script>
-        const texts = {
-            ru: {
-                title: "БК-Банк - Ваш надежный банк",
-                welcome: "Добро пожаловать, {name}! Мы рады видеть вас на нашем сайте.",
-                registration: "Регистрация",
-                profile: "Ваш Кабинет",
-                services: "Наши услуги",
-                contact: "Контактная информация",
-                about: "БК-Банк: Ваш надежный финансовый партнер",
-                products: "Наши продукты",
-                addFriend: "Добавить в друзья",
-                friendList: "Список друзей",
-                friendRequests: "Запросы в друзья",
-                email: "Электронная почта",
-                logout: "Выйти",
-                // Добавьте остальные тексты на русском
-            },
-            en: {
-                title: "BK-Bank - Your Reliable Bank",
-                welcome: "Welcome, {name}! We are glad to see you on our site.",
-                registration: "Registration",
-                profile: "Your Cabinet",
-                services: "Our Services",
-                contact: "Contact Information",
-                about: "BK-Bank: Your Reliable Financial Partner",
-                products: "Our Products",
-                addFriend: "Add Friend",
-                friendList: "Friend List",
-                friendRequests: "Friend Requests",
-                email: "Email",
-                logout: "Logout",
-                // Добавьте остальные тексты на английском
-            }
-        };
-
-        let currentLanguage = 'ru'; // Устанавливаем язык по умолчанию
-
         window.onload = function() {
+            // Проверка, есть ли сохраненные данные в localStorage
             const savedUser   = localStorage.getItem('user');
             if (savedUser  ) {
                 const user = JSON.parse(savedUser  );
                 showProfile(user.name, user.email);
             } else {
+                // Скрываем все содержимое, кроме формы регистрации
                 document.querySelectorAll('.container, header').forEach(el => el.classList.add('hidden'));
+                // Показ формы регистрации
                 showRegistrationForm();
             }
 
+            // Всегда показываем главную страницу
             toggleSection('about');
-            updateText(); // Обновляем текст на странице
         };
-
-        function updateText() {
-            document.title = texts[currentLanguage].title;
-            const welcomeMessage = document.querySelector('.welcome-message');
-            if (welcomeMessage) {
-                welcomeMessage.innerHTML = texts[currentLanguage].welcome.replace('{name}', JSON.parse(localStorage.getItem('user')).name);
-            }
-            document.querySelector('.about-bank h2 strong').innerText = texts[currentLanguage].about;
-            document.querySelector('.services h2 strong').innerText = texts[currentLanguage].services;
-            document.querySelector('.contact-info h2 strong').innerText = texts[currentLanguage].contact;
-            // Обновите остальные элементы текста на странице
-        }
-
-        function switchLanguage() {
-            currentLanguage = currentLanguage === 'ru' ? 'en' : 'ru'; // Переключаем язык
-            updateText(); // Обновляем текст на странице
-        }
 
         function showRegistrationForm() {
             const registrationForm = document.createElement('div');
             registrationForm.className = 'registration-form';
             registrationForm.innerHTML = 
-                `<h2><strong>${texts[currentLanguage].registration}</strong></h2>
+                `<h2><strong>Регистрация</strong></h2>
                 <input type="text" id="name" placeholder="Ваш никнейм" required>
-                <input type="email" id="email" placeholder="${texts[currentLanguage].email}" required>
+                <input type="email" id="email" placeholder="Ваша электронная почта" required>
                 <input type="password" id="password" placeholder="Пароль" required>
-                <button onclick="register()"><strong>${texts[currentLanguage].registration}</strong></button>`;
+                <button onclick="register()"><strong>Зарегистрироваться</strong></button>`;
             document.body.appendChild(registrationForm);
         }
 
@@ -346,7 +296,7 @@
 
             const welcomeMessage = document.createElement('div');
             welcomeMessage.className = 'welcome-message';
-            welcomeMessage.innerHTML = `<strong>${texts[currentLanguage].welcome.replace('{name}', name)}</strong>`;
+            welcomeMessage.innerHTML = `<strong>Добро пожаловать, ${name}! Мы рады видеть вас на нашем сайте.</strong>`;
             document.body.appendChild(welcomeMessage);
 
             // Удаляем форму регистрации
@@ -368,27 +318,27 @@
         function showProfile(name, email) {
             const profileSection = document.querySelector('.profile-section');
             profileSection.innerHTML = 
-                `<h2><strong>${texts[currentLanguage].profile}</strong></h2>
-                <div class="yellow-line"></div>
+                `<h2><strong>Ваш Кабинет</strong></h2>
+                <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
                 <div class="user-profile">
                     <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
                     <span><strong>${name}</strong></span>
-                    <button class="logout-button" onclick="logout()"><strong>${texts[currentLanguage].logout}</strong></button>
+                    <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
-                <p><strong>${texts[currentLanguage].email}: ${email}</strong></p>
-                <p><strong>Наш банк ещё не готов полностью, пока что у нас есть только это насчёт вашего кабинета.</strong></p>
+                <p><strong>Email: ${email}</strong></p> <!-- Изменено на "Email" -->
+                <p><strong>Наш банк ещё не готов полностью, пока что у нас есть только это насчёт вашего кабинета.</strong></p> <!-- Обновленный текст -->
                 
                 <div class="add-friend">
-                    <h3><strong>${texts[currentLanguage].addFriend}</strong></h3>
+                    <h3><strong>Добавить в друзья</strong></h3>
                     <input type="text" id="friendName" placeholder="Имя или Email друга" required>
                     <button onclick="sendFriendRequest()"><strong>Отправить запрос</strong></button>
                 </div>
                 <div class="friend-list">
-                    <h3><strong>${texts[currentLanguage].friendList}</strong></h3>
+                    <h3><strong>Список друзей</strong></h3>
                     <ul id="friends"></ul>
                 </div>
                 <div class="friend-requests">
-                    <h3><strong>${texts[currentLanguage].friendRequests}</strong></h3>
+                    <h3><strong>Запросы в друзья</strong></h3>
                     <ul id="friendRequests"></ul>
                 </div>`;
             profileSection.style.display = 'block'; // Показываем раздел профиля
@@ -494,18 +444,17 @@
         <a onclick="toggleSection('cards')"><strong>Карты</strong></a> 
         <a onclick="toggleSection('contact')"><strong>Контакты</strong></a>
         <a onclick="toggleSection('profile')"><strong>Кабинет</strong></a> <!-- Вкладка "Ваш Кабинет" -->
-        <button onclick="switchLanguage()"><strong>Сменить язык</strong></button> <!-- Кнопка для смены языка -->
     </nav>
 </header>
 
 <div class="container">
     <div class="about-bank">
-        <h2><strong>${texts[currentLanguage].about}</strong></h2>
+        <h2><strong>БК-Банк: Ваш надежный финансовый партнер</strong></h2>
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <p><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни. Как говорит наш клиент: "Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление." Мы стремимся сделать каждую Вашу финансовую операцию прозрачной и удобной.</strong></p>
         <p><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем БК-Банка, чтобы сражаться с деньгами. Это была ложь."</strong></p>
         
-        <h3 style="color: #FFD700;"><strong>${texts[currentLanguage].products}</strong></h3> <!-- Заголовок "Наши продукты" теперь желтый -->
+        <h3 style="color: #FFD700;"><strong>Наши продукты</strong></h3> <!-- Заголовок "Наши продукты" теперь желтый -->
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <p><strong>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от БК-Банк.</strong></p>
         
@@ -513,7 +462,7 @@
         
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Второе изображение -->
         
-        <div class="additional-info" style="color: #FFD700;"><strong>${texts[currentLanguage].products}</strong></div> <!-- Заголовок "Наши карты" -->
+        <div class="additional-info" style="color: #FFD700;"><strong>Наши карты</strong></div> <!-- Заголовок "Наши карты" -->
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты" class="bank-image"> <!-- Изображение карт -->
 
@@ -525,7 +474,7 @@
     </div>
 
     <div id="services" class="services">
-        <h2><strong>${texts[currentLanguage].services}</strong></h2>
+        <h2><strong>Наши услуги</strong></h2>
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <ul>
             <li><strong>Кредитование</strong></li>
@@ -559,8 +508,17 @@
     </div>
 
     <div class="contact-info">
-        <h2><strong>${texts[currentLanguage].contact}</strong></h2>
+        <h2><strong>Контактная информация</strong></h2>
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <p><strong>${texts[currentLanguage].email}:</strong> <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p> <!-- Изменена электронная почта -->
-        <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH"
-        
+        <p><strong>Email:</strong> <a href="mailto:bkbank636@gmail.com">bkbank636@gmail.com</a></p> <!-- Изменена электронная почта -->
+        <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">БК-Банк server</a></p> <!-- Добавлена ссылка на Discord -->
+        <p><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">БК-Банк channel</a></p> <!-- Добавлена ссылка на Telegram -->
+        <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
+        <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p>
+    </div>
+
+    <div class="profile-section" style="display: none;"></div> <!-- Секция профиля, скрыта по умолчанию -->
+</div>
+
+</body>
+</html>
