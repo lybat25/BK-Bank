@@ -1,4 +1,4 @@
-<html lang="ru">
+добавь чтоб можно было изменять языки <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -247,13 +247,13 @@
         function showRegistrationForm() {
             const registrationForm = document.createElement('div');
             registrationForm.className = 'registration-form';
-            registrationForm.innerHTML = `
+            registrationForm.innerHTML = 
                 <h2><strong>Регистрация</strong></h2>
                 <input type="text" id="name" placeholder="Ваш никнейм" required>
                 <input type="email" id="email" placeholder="Ваша электронная почта" required>
                 <input type="password" id="password" placeholder="Пароль" required>
                 <button onclick="register()"><strong>Зарегистрироваться</strong></button>
-            `;
+            ;
             document.body.appendChild(registrationForm);
         }
 
@@ -296,7 +296,7 @@
 
             const welcomeMessage = document.createElement('div');
             welcomeMessage.className = 'welcome-message';
-            welcomeMessage.innerHTML = `<strong>Добро пожаловать, ${name}! Мы рады видеть вас на нашем сайте.</strong>`;
+            welcomeMessage.innerHTML = <strong>Добро пожаловать, ${name}! Мы рады видеть вас на нашем сайте.</strong>;
             document.body.appendChild(welcomeMessage);
 
             // Удаляем форму регистрации
@@ -317,7 +317,7 @@
 
         function showProfile(name, email) {
             const profileSection = document.querySelector('.profile-section');
-            profileSection.innerHTML = `
+            profileSection.innerHTML = 
                 <h2><strong>Ваш Кабинет</strong></h2>
                 <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
                 <div class="user-profile">
@@ -341,7 +341,7 @@
                     <h3><strong>Запросы в друзья</strong></h3>
                     <ul id="friendRequests"></ul>
                 </div>
-            `;
+            ;
             profileSection.style.display = 'block'; // Показываем раздел профиля
 
             // Отображаем список друзей
@@ -375,7 +375,7 @@
                 user.friendRequests.push(friendName);
                 localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
 
-                alert(`Запрос в друзья отправлен пользователю ${friendName}`);
+                alert(Запрос в друзья отправлен пользователю ${friendName});
                 document.getElementById('friendName').value = ''; // Очищаем поле ввода
             } else {
                 alert("Пожалуйста, введите имя или email друга.");
@@ -392,7 +392,7 @@
             localStorage.setItem('user', JSON.stringify(user)); // Сохраняем обновленные данные
 
             showProfile(user.name, user.email); // Обновляем профиль
-            alert(`Вы добавили ${friendName} в друзья!`);
+            alert(Вы добавили ${friendName} в друзья!);
         }
 
         function logout() {
