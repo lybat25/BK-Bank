@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -406,10 +407,6 @@
             const contact = document.querySelector('.contact-info');
             const about = document.querySelector('.about-bank');
             const profile = document.querySelector('.profile-section');
-            const feedback = document.getElementById('feedback');
-            const offers = document.getElementById('offers');
-            const userList = document.getElementById('userList');
-            const transactionHistory = document.getElementById('transactionHistory');
 
             // Скрываем все секции
             services.style.display = 'none';
@@ -417,10 +414,6 @@
             contact.style.display = 'none';
             about.style.display = 'none';
             profile.style.display = 'none';
-            feedback.style.display = 'none';
-            offers.style.display = 'none';
-            userList.style.display = 'none';
-            transactionHistory.style.display = 'none';
 
             // Показываем выбранную секцию
             if (section === 'services') {
@@ -434,14 +427,6 @@
             } else if (section === 'profile') {
                 profile.style.display = 'block'; // Показываем раздел "Ваш Кабинет"
                 showProfile(JSON.parse(localStorage.getItem('user')).name, JSON.parse(localStorage.getItem('user')).email); // Обновляем профиль
-            } else if (section === 'feedback') {
-                feedback.style.display = 'block'; // Показываем раздел обратной связи
-            } else if (section === 'offers') {
-                offers.style.display = 'block'; // Показываем раздел акций
-            } else if (section === 'userList') {
-                userList.style.display = 'block'; // Показываем список пользователей
-            } else if (section === 'transactionHistory') {
-                transactionHistory.style.display = 'block'; // Показываем историю операций
             }
         }
     </script>
@@ -532,5 +517,8 @@
         <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИТ ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p>
     </div>
 
-    <div class="profile-section" style="display: none;"></div> <!-- Секция профиля,
-    
+    <div class="profile-section" style="display: none;"></div> <!-- Секция профиля, скрыта по умолчанию -->
+</div>
+
+</body>
+</html>
