@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -229,9 +230,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser     = localStorage.getItem('user');
-            if (savedUser    ) {
-                const user = JSON.parse(savedUser    );
+            const savedUser    = localStorage.getItem('user');
+            if (savedUser   ) {
+                const user = JSON.parse(savedUser   );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -470,6 +471,14 @@
             <br><br>
             <img src="" style="margin-top: 20px; max-width: 50%; height: auto;">
         </div>
+
+        <!-- Поздравление с днем рождения от создателя банка -->
+        <div class="creator-message" style="margin-top: 40px; text-align: center;">
+            <h2><strong>Поздравляем Хасана Гараева Айдара с Днем Рождения!</strong></h2>
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/154a0fc7-a1a7-4a96-8c13-b23edcd752f3.jpg?raw=true" alt="Создатель БК-Банка" style="width: 150px; height: auto; border-radius: 50%; margin: 20px 0;">
+            <p><strong>Дорогие клиенты!</strong></p>
+            <p>Сегодня мы отмечаем день рождения нашего создателя, Хасана Гараева Айдара. Мы гордимся тем, что под его руководством БК-Банк становится все более успешным и надежным финансовым партнером. Поздравляем его с этим замечательным днем и желаем дальнейших успехов!</p>
+        </div>
     </div>
 
     <div id="services" class="services">
@@ -520,4 +529,3 @@
 </div>
 
 </body>
-</html>
