@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>БК-Банк - Ваш надежный банк</title>
+    <title>БК-Банк email - Ваш надежный банк</title>
     <link rel="stylesheet" href="styles.css"> <!-- Подключите свой CSS файл -->
     <style>
         body {
@@ -230,9 +229,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            const savedUser    = localStorage.getItem('user');
+            if (savedUser   ) {
+                const user = JSON.parse(savedUser   );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -436,7 +435,7 @@
 <header>
     <h1>
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-11_142359079.png?raw=true" class="logo" alt="Логотип БК-Банк">
-        <strong>БК-Банк</strong>
+        <strong>БК-Банк email</strong>
     </h1>
     <nav>
         <a onclick="toggleSection('about')"><strong>Главная</strong></a>
@@ -449,7 +448,7 @@
 
 <div class="container">
     <div class="about-bank">
-        <h2><strong>БК-Банк: Ваш надежный финансовый партнер</strong></h2>
+        <h2><strong>БК-Банк email: Ваш надежный финансовый партнер</strong></h2>
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <p><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни. Как говорит наш клиент: "Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление." Мы стремимся сделать каждую Вашу финансовую операцию прозрачной и удобной.</strong></p>
         <p><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем БК-Банка, чтобы сражаться с деньгами. Это была ложь."</strong></p>
