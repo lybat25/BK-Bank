@@ -9,15 +9,15 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #121212; /* Темный фон */
-            color: #ffffff; /* Белый текст */
+            background-color: #f8f0f2; /* Светлый фон */
+            color: #333; /* Темный текст */
             overflow-y: auto; /* Включает вертикальную прокрутку */
         }
         header {
-            background: #1f1f1f; /* Темно-серый фон */
-            color: #FFD700; /* Желтый текст */
+            background: #ff6f91; /* Розовый фон */
+            color: #ffffff; /* Белый текст */
             padding: 10px 20px; /* Увеличены отступы */
-            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 2px 10px rgba(255, 105, 145, 0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -30,22 +30,22 @@
         }
         nav a {
             margin: 0 15px;
-            color: #FFD700; /* Желтый текст для ссылок */
+            color: #ffffff; /* Белый текст для ссылок */
             text-decoration: none;
             font-weight: bold; /* Жирный шрифт для ссылок */
             transition: color 0.3s ease; /* Плавный переход цвета */
             cursor: pointer; /* Указатель при наведении */
         }
         nav a:hover {
-            color: #ffcc00; /* Более светлый желтый при наведении */
+            color: #ffcccb; /* Более светлый розовый при наведении */
         }
         .container {
             max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
-            background: #1e1e1e; /* Темно-серый фон для контента */
+            background: #ffffff; /* Белый фон для контента */
             border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Легкая тень */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Легкая тень */
         }
         .content {
             padding: 20px;
@@ -64,19 +64,19 @@
             font-weight: bold; /* Жирный шрифт для заголовка */
         }
         h2 {
-            color: #FFD700; /* Желтый цвет для заголовков */
+            color: #ff6f91; /* Розовый цвет для заголовков */
             padding-bottom: 10px;
-            border-bottom: 2px solid #FFD700; /* Подчеркивание заголовка */
+            border-bottom: 2px solid #ff6f91; /* Подчеркивание заголовка */
             font-weight: bold; /* Жирный шрифт для заголовка */
         }
         h3 {
-            color: #FFD700; /* Желтый цвет для подзаголовка "Наши продукты" */
+            color: #ff6f91; /* Розовый цвет для подзаголовка "Наши продукты" */
             margin: 20px 0 10px; /* Отступы сверху и снизу */
             font-weight: bold; /* Жирный шрифт для подзаголовка */
         }
         .yellow-line {
             height: 2px; /* Высота желтой полоски */
-            background-color: #FFD700; /* Цвет полоски */
+            background-color: #ff6f91; /* Цвет полоски */
             margin-bottom: 10px; /* Отступ снизу */
         }
         ul {
@@ -90,7 +90,7 @@
         }
         li::before {
             content: '✓'; /* Знак перед элементами списка изменен на "✓" */
-            color: #FFD700; /* Цвет знака */
+            color: #ff6f91; /* Цвет знака */
             position: absolute;
             left: -20px; /* Отступ от текста */
         }
@@ -98,36 +98,36 @@
             text-align: center; /* Центрируем текст */
             margin: 40px 0; /* Отступы сверху и снизу */
             padding: 20px; /* Внутренние отступы */
-            background: #2a2a2a; /* Фон для раздела о банке */
+            background: #ffe4e1; /* Светло-розовый фон для раздела о банке */
             border-radius: 8px; /* Закругленные углы */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Тень для раздела */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Тень для раздела */
         }
         .contact-info {
             display: none; /* Скрываем информацию по умолчанию */
             padding: 20px;
-            background: #2a2a2a; /* Фон для контактной информации */
+            background: #ffe4e1; /* Светло-розовый фон для контактной информации */
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
         .contact-info a {
-            color: #FFD700; /* Желтый цвет для ссылки электронной почты */
+            color: #ff6f91; /* Розовый цвет для ссылки электронной почты */
             text-decoration: none; /* Убираем подчеркивание */
             font-weight: bold; /* Жирный шрифт для ссылки */
         }
         .contact-info a:hover {
-            color: #ffcc00; /* Более светлый желтый при наведении */
+            color: #ffcccb; /* Более светлый розовый при наведении */
         }
         .services {
             display: none; /* Скрываем раздел по умолчанию */
             padding: 20px;
-            background: #2a2a2a; /* Фон для услуг */
+            background: #ffe4e1; /* Светло-розовый фон для услуг */
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
         .cards {
             display: none; /* Скрываем раздел по умолчанию */
             padding: 20px;
-            background: #2a2a2a; /* Фон для карт */
+            background: #ffe4e1; /* Светло-розовый фон для карт */
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
@@ -162,7 +162,7 @@
         .registration-form {
             display: flex;
             flex-direction: column;
-            background: #2a2a2a;
+            background: #ffe4e1; /* Светло-розовый фон для формы регистрации */
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
@@ -185,13 +185,13 @@
             padding: 10px;
             border: none;
             border-radius: 4px;
-            background: #FFD700;
-            color: #000;
+            background: #ff6f91; /* Розовый цвет фона кнопки */
+            color: #ffffff; /* Белый цвет текста кнопки */
             cursor: pointer;
             font-weight: bold; /* Жирный шрифт для кнопки */
         }
         .registration-form button:hover {
-            background: #ffcc00; /* Более светлый желтый при наведении */
+            background: #ffcccb; /* Более светлый розовый при наведении */
         }
         .hidden {
             display: none; /* Класс для скрытия элементов */
@@ -202,7 +202,7 @@
             align-items: center;
             margin-top: 20px;
             padding: 10px;
-            background: #2a2a2a;
+            background: #ffe4e1; /* Светло-розовый фон для профиля */
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
@@ -215,23 +215,23 @@
         .logout-button {
             margin-left: 10px; /* Отступ слева от кнопки "Выйти" */
             padding: 5px 10px; /* Отступы для кнопки */
-            background: #FFD700; /* Цвет фона кнопки */
-            color: #000; /* Цвет текста кнопки */
+            background: #ff6f91; /* Розовый цвет фона кнопки */
+            color: #ffffff; /* Белый цвет текста кнопки */
             border: none; /* Убираем рамку */
             border-radius: 4px; /* Закругленные углы */
             cursor: pointer; /* Указатель при наведении */
             font-weight: bold; /* Жирный шрифт для кнопки "Выйти" */
         }
         .logout-button:hover {
-            background: #ffcc00; /* Более светлый желтый при наведении */
+            background: #ffcccb; /* Более светлый розовый при наведении */
         }
     </style>
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser     = localStorage.getItem('user');
-            if (savedUser    ) {
-                const user = JSON.parse(savedUser    );
+            const savedUser   = localStorage.getItem('user');
+            if (savedUser  ) {
+                const user = JSON.parse(savedUser  );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -324,7 +324,7 @@
                     <span><strong>${name}</strong></span>
                     <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
-                <p><strong>Email: <a href="mailto:hgaraew@mail.ru" style="color: #FFD700;">БК-Банк email</a></strong></p> <!-- Изменено на "БК-Банк email" с ссылкой -->
+                <p><strong>Email: <a href="mailto:hgaraew@mail.ru" style="color: #ff6f91;">БК-Банк email</a></strong></p> <!-- Изменено на "БК-Банк email" с ссылкой -->
                 <p><strong>Наш банк ещё не готов полностью, пока что у нас есть только это насчёт вашего кабинета.</strong></p> <!-- Обновленный текст -->
                 
                 <div class="add-friend">
@@ -453,7 +453,7 @@
         <p><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни. Как говорит наш клиент: "Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление." Мы стремимся сделать каждую Вашу финансовую операцию прозрачной и удобной.</strong></p>
         <p><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем БК-Банка, чтобы сражаться с деньгами. Это была ложь."</strong></p>
         
-        <h3 style="color: #FFD700;"><strong>Наши продукты</strong></h3> <!-- Заголовок "Наши продукты" теперь желтый -->
+        <h3 style="color: #ff6f91;"><strong>Наши продукты</strong></h3> <!-- Заголовок "Наши продукты" теперь розовый -->
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <p><strong>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от БК-Банк.</strong></p>
         
@@ -461,7 +461,7 @@
         
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="Изображение о банке" class="bank-image"> <!-- Второе изображение -->
         
-        <div class="additional-info" style="color: #FFD700;"><strong>Наши карты</strong></div> <!-- Заголовок "Наши карты" -->
+        <div class="additional-info" style="color: #ff6f91;"><strong>Наши карты</strong></div> <!-- Заголовок "Наши карты" -->
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты" class="bank-image"> <!-- Изображение карт -->
 
@@ -509,7 +509,7 @@
     <div class="contact-info">
         <h2><strong>Контактная информация</strong></h2>
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
-        <p><strong>Email: <a href="mailto:hgaraew@mail.ru" style="color: #FFD700;">БК-Банк email</a></strong></p> <!-- Изменено на "БК-Банк email" с ссылкой -->
+        <p><strong>Email: <a href="mailto:hgaraew@mail.ru" style="color: #ff6f91;">БК-Банк email</a></strong></p> <!-- Изменено на "БК-Банк email" с ссылкой -->
         <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">БК-Банк server</a></p> <!-- Добавлена ссылка на Discord -->
         <p><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">БК-Банк channel</a></p> <!-- Добавлена ссылка на Telegram -->
         <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p> <!-- Добавлена ссылка на YouTube -->
