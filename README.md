@@ -229,9 +229,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            const savedUser    = localStorage.getItem('user');
+            if (savedUser   ) {
+                const user = JSON.parse(savedUser   );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -324,7 +324,7 @@
                     <span><strong>${name}</strong></span>
                     <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button> <!-- Кнопка "Выйти" рядом с именем -->
                 </div>
-                <p><strong>Email: <a href="mailto:hgaraew@mail.ru" style="color: #ff6f91;">БК-Банк email</a></strong></p> <!-- Изменено на "БК-Банк email" с ссылкой -->
+                <p><strong>Email: <a href="mailto:${email}" style="color: #ff6f91;">${email}</a></strong></p> <!-- Отображаем email пользователя -->
                 <p><strong>Наш банк ещё не готов полностью, пока что у нас есть только это насчёт вашего кабинета.</strong></p> <!-- Обновленный текст -->
                 
                 <div class="add-friend">
