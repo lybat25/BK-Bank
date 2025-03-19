@@ -16,7 +16,7 @@
         header {
             background: #1f1f1f; /* Темно-серый фон */
             color: #FFD700; /* Желтый текст */
-            padding: 10px 20px; /* Увеличены отступы */
+            padding: 15px 30px; /* Увеличены отступы */
             box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
             position: sticky;
             top: 0;
@@ -29,7 +29,7 @@
             margin: 0; /* Убираем отступы */
         }
         nav a {
-            margin: 0 15px;
+            margin: 0 20px;
             color: #FFD700; /* Желтый текст для ссылок */
             text-decoration: none;
             font-weight: bold; /* Жирный шрифт для ссылок */
@@ -55,7 +55,7 @@
             background: #2a2a2a; /* Фон для контента */
         }
         .logo {
-            width: 100px; /* Установлена ширина для логотипа */
+            width: 120px; /* Установлена ширина для логотипа */
             height: auto; /* Сохраняет пропорции изображения */
         }
         h1 {
@@ -117,17 +117,10 @@
         .contact-info a:hover {
             color: #ffcc00; /* Более светлый желтый при наведении */
         }
-        .services {
+        .services, .cards {
             display: none; /* Скрываем раздел по умолчанию */
             padding: 20px;
-            background: #2a2a2a; /* Фон для услуг */
-            border-radius: 8px; /* Закругленные углы */
-            margin-top: 20px; /* Отступ сверху */
-        }
-        .cards {
-            display: none; /* Скрываем раздел по умолчанию */
-            padding: 20px;
-            background: #2a2a2a; /* Фон для карт */
+            background: #2a2a2a; /* Фон для услуг и карт */
             border-radius: 8px; /* Закругленные углы */
             margin-top: 20px; /* Отступ сверху */
         }
@@ -229,9 +222,9 @@
     <script>
         window.onload = function() {
             // Проверка, есть ли сохраненные данные в localStorage
-            const savedUser   = localStorage.getItem('user');
-            if (savedUser  ) {
-                const user = JSON.parse(savedUser  );
+            const savedUser  = localStorage.getItem('user');
+            if (savedUser ) {
+                const user = JSON.parse(savedUser );
                 showProfile(user.name, user.email);
             } else {
                 // Скрываем все содержимое, кроме формы регистрации
@@ -453,7 +446,7 @@
         <p><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни. Как говорит наш клиент: "Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление." Мы стремимся сделать каждую Вашу финансовую операцию прозрачной и удобной.</strong></p>
         <p><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем БК-Банка, чтобы сражаться с деньгами. Это была ложь."</strong></p>
         
-        <h3 style="color: #FFD700;"><strong>Наши продукты</strong></h3> <!-- Заголовок "Наши продукты" теперь желтый -->
+        <h3><strong>Наши продукты</strong></h3> <!-- Заголовок "Наши продукты" теперь желтый -->
         <div class="yellow-line"></div> <!-- Желтая полоска под заголовком -->
         <p><strong>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от БК-Банк.</strong></p>
         
