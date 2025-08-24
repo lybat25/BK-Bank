@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>БК-Банк - Ваш надежный банк</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -262,6 +263,72 @@
             z-index: 3000;
             width: 350px;
         }
+        .reset-step {
+            display: none;
+        }
+        .reset-step.active {
+            display: block;
+        }
+        .input-icon {
+            position: relative;
+        }
+        .input-icon i {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            color: #FFD700;
+        }
+        .input-icon input {
+            padding-left: 35px;
+        }
+        .password-strength {
+            height: 5px;
+            margin-top: 8px;
+            border-radius: 3px;
+            background: #333;
+            overflow: hidden;
+        }
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s, background 0.3s;
+        }
+        .password-rules {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #999;
+        }
+        .rule {
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .rule i {
+            margin-right: 5px;
+            width: 16px;
+        }
+        .rule.valid {
+            color: #4CAF50;
+        }
+        .timer {
+            text-align: center;
+            margin-top: 15px;
+            color: #FFD700;
+            font-weight: bold;
+        }
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: #FFD700;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -289,7 +356,7 @@
         
         <h3><strong>Наши продукты</strong></h3>
         <div class="yellow-line"></div>
-        <p><strong>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от БК-Банк.</strong></p>
+        <p><strong>Будь на стороне добра! Забудьте про враждбов и оформите нашу карту от БК-Банк.</strong></p>
         
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image" />
         
@@ -358,9 +425,17 @@
     let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
     let currentUser = null;
     let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
+    let resetCode = '';
+    let userEmail = '';
+    let countdownInterval;
+    let passwordValid = false;
+    let passwordsMatch = false;
 
     // Инициализация при загрузке страницы
     window.onload = function() {
+        // Проверяем токен сброса
+        checkResetToken();
+        
         // Проверяем, есть ли активная сессия
         const session = localStorage.getItem('currentSession');
         if (session) {
@@ -388,8 +463,14 @@
         authForm.innerHTML = 
             `<h2 style="text-align: center; color: #FFD700;"><strong>Вход в БК-Банк</strong></h2>
             <div id="loginError" class="error-message hidden"></div>
-            <input type="text" id="loginUsername" placeholder="Ваш никнейм" required>
-            <input type="password" id="loginPassword" placeholder="Пароль" required>
+            <div class="input-icon">
+                <i class="fas fa-user"></i>
+                <input type="text" id="loginUsername" placeholder="Ваш никнейм" required>
+            </div>
+            <div class="input-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="loginPassword" placeholder="Пароль" required>
+            </div>
             <button onclick="login()"><strong>Войти</strong></button>
             <div class="forgot-password" onclick="showForgotPasswordForm()"><strong>Забыли пароль?</strong></div>
             <div class="switch-form" onclick="showRegistrationForm()"><strong>Нет аккаунта? Зарегистрироваться</strong></div>`;
@@ -406,9 +487,55 @@
             `<h2 style="text-align: center; color: #FFD700;"><strong>Восстановление пароля</strong></h2>
             <div id="resetError" class="error-message hidden"></div>
             <div id="resetSuccess" class="success-message hidden"></div>
-            <input type="email" id="resetEmail" placeholder="Ваш email" required>
-            <button onclick="sendResetEmail()"><strong>Отправить ссылку для сброса</strong></button>
-            <div class="switch-form" onclick="showLoginForm()"><strong>Назад к входу</strong></div>`;
+            
+            <div class="reset-step active" id="resetStep1">
+                <div class="input-icon">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="resetEmail" placeholder="Ваш email" required>
+                </div>
+                <button onclick="sendResetEmail()" id="sendEmailBtn">
+                    <span>Отправить код подтверждения</span>
+                </button>
+                <div class="switch-form" onclick="showLoginForm()"><strong>Назад к входу</strong></div>
+            </div>
+            
+            <div class="reset-step" id="resetStep2">
+                <div class="input-icon">
+                    <i class="fas fa-key"></i>
+                    <input type="text" id="resetCode" placeholder="Код из письма" required maxlength="6">
+                </div>
+                <div class="timer" id="timer">Код действителен: 04:59</div>
+                <button onclick="verifyResetCode()" id="verifyCodeBtn">
+                    <span>Подтвердить код</span>
+                </button>
+                <div class="switch-form" onclick="resendResetCode()"><strong>Отправить код повторно</strong></div>
+            </div>
+            
+            <div class="reset-step" id="resetStep3">
+                <div class="input-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="newPassword" placeholder="Новый пароль" required onkeyup="checkPasswordStrength()">
+                </div>
+                <div class="password-strength">
+                    <div class="strength-meter" id="passwordStrengthMeter"></div>
+                </div>
+                <div class="password-rules">
+                    <div class="rule" id="lengthRule"><i class="fas fa-circle"></i> Не менее 8 символов</div>
+                    <div class="rule" id="uppercaseRule"><i class="fas fa-circle"></i> Содержит заглавные буквы</div>
+                    <div class="rule" id="numberRule"><i class="fas fa-circle"></i> Содержит цифры</div>
+                    <div class="rule" id="specialRule"><i class="fas fa-circle"></i> Содержит специальные символы</div>
+                </div>
+                
+                <div class="input-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirmPassword" placeholder="Подтвердите пароль" required onkeyup="checkPasswordMatch()">
+                </div>
+                <div id="passwordMatch" style="margin-top: 8px; font-size: 13px;"></div>
+                
+                <button onclick="completePasswordReset()" id="resetPasswordBtn">
+                    <span>Установить новый пароль</span>
+                </button>
+            </div>`;
         document.body.appendChild(resetForm);
     }
 
@@ -417,10 +544,17 @@
         const email = document.getElementById('resetEmail').value;
         const errorElement = document.getElementById('resetError');
         const successElement = document.getElementById('resetSuccess');
+        const btn = document.getElementById('sendEmailBtn');
         
         // Проверка email
         if (!email) {
             showError(errorElement, 'Пожалуйста, введите email');
+            return;
+        }
+        
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(email)) {
+            showError(errorElement, 'Пожалуйста, введите корректный email адрес');
             return;
         }
         
@@ -438,69 +572,83 @@
             return;
         }
         
-        // Генерация токена сброса
-        const resetToken = generateToken();
-        resetTokens[resetToken] = {
-            username: foundUser,
-            email: email,
-            expires: Date.now() + 3600000 // Действителен 1 час
-        };
+        // Показываем индикатор загрузки
+        btn.innerHTML = '<div class="loader"></div><span>Отправка...</span>';
+        btn.disabled = true;
         
-        // Сохранение токена
-        localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
-        
-        // В реальном приложении здесь был бы код отправки email
-        // Для демонстрации покажем ссылку прямо на экране
-        const resetLink = `${window.location.origin}${window.location.pathname}?resetToken=${resetToken}`;
-        
-        showSuccess(successElement, `Ссылка для сброса пароля: ${resetLink}`);
-        
-        // В реальном приложении:
-        // sendEmail(email, 'Восстановление пароля БК-Банк', 
-        //   `Для сброса пароля перейдите по ссылке: ${resetLink}`);
+        // Имитация отправки email
+        setTimeout(() => {
+            // Сохраняем email
+            userEmail = email;
+            
+            // Генерируем случайный 6-значный код
+            resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            // В реальном приложении здесь был бы код отправки email
+            showSuccess(successElement, `Код подтверждения отправлен на ${email}. Для демонстрации: ${resetCode}`);
+            
+            // Восстанавливаем кнопку
+            btn.innerHTML = '<span>Отправить код подтверждения</span>';
+            btn.disabled = false;
+            
+            // Переходим к следующему шагу
+            document.getElementById('resetStep1').classList.remove('active');
+            document.getElementById('resetStep2').classList.add('active');
+            
+            // Запускаем таймер
+            startTimer(5 * 60); // 5 минут
+        }, 1500);
     }
 
-    // Показать форму сброса пароля
-    function showResetPasswordForm(token) {
-        document.querySelector('.auth-form, .reset-form').remove();
+    // Проверить код подтверждения
+    function verifyResetCode() {
+        const code = document.getElementById('resetCode').value.trim();
+        const btn = document.getElementById('verifyCodeBtn');
+        const errorElement = document.getElementById('resetError');
         
-        const resetForm = document.createElement('div');
-        resetForm.className = 'reset-form';
-        resetForm.innerHTML = 
-            `<h2 style="text-align: center; color: #FFD700;"><strong>Сброс пароля</strong></h2>
-            <div id="resetError" class="error-message hidden"></div>
-            <div id="resetSuccess" class="success-message hidden"></div>
-            <input type="password" id="newPassword" placeholder="Новый пароль (минимум 6 символов)" required>
-            <input type="password" id="confirmPassword" placeholder="Подтвердите новый пароль" required>
-            <button onclick="resetPassword('${token}')"><strong>Установить новый пароль</strong></button>
-            <div class="switch-form" onclick="showLoginForm()"><strong>Назад к входу</strong></div>`;
-        document.body.appendChild(resetForm);
+        if (!code) {
+            showError(errorElement, 'Пожалуйста, введите код подтверждения');
+            return;
+        }
+        
+        if (code !== resetCode) {
+            showError(errorElement, 'Неверный код подтверждения');
+            return;
+        }
+        
+        // Показываем индикатор загрузки
+        btn.innerHTML = '<div class="loader"></div><span>Проверка...</span>';
+        btn.disabled = true;
+        
+        // Имитация проверки кода
+        setTimeout(() => {
+            // Останавливаем таймер
+            clearInterval(countdownInterval);
+            
+            // Восстанавливаем кнопку
+            btn.innerHTML = '<span>Подтвердить код</span>';
+            btn.disabled = false;
+            
+            // Переходим к следующему шагу
+            document.getElementById('resetStep2').classList.remove('active');
+            document.getElementById('resetStep3').classList.add('active');
+        }, 1000);
     }
 
-    // Сброс пароля
-    function resetPassword(token) {
+    // Завершить сброс пароля
+    function completePasswordReset() {
         const newPassword = document.getElementById('newPassword').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
+        const btn = document.getElementById('resetPasswordBtn');
         const errorElement = document.getElementById('resetError');
-        const successElement = document.getElementById('resetSuccess');
         
-        // Проверка токена
-        if (!resetTokens[token]) {
-            showError(errorElement, 'Недействительная ссылка для сброса');
+        if (!newPassword || !confirmPassword) {
+            showError(errorElement, 'Пожалуйста, заполните все поля');
             return;
         }
         
-        // Проверка срока действия токена
-        if (Date.now() > resetTokens[token].expires) {
-            showError(errorElement, 'Ссылка для сброса истекла');
-            delete resetTokens[token];
-            localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
-            return;
-        }
-        
-        // Проверка пароля
-        if (newPassword.length < 6) {
-            showError(errorElement, 'Пароль должен содержать минимум 6 символов');
+        if (newPassword.length < 8) {
+            showError(errorElement, 'Пароль должен содержать минимум 8 символов');
             return;
         }
         
@@ -509,26 +657,174 @@
             return;
         }
         
-        // Обновление пароля
-        const username = resetTokens[token].username;
-        users[username].password = newPassword;
-        localStorage.setItem('bankUsers', JSON.stringify(users));
+        // Показываем индикатор загрузки
+        btn.innerHTML = '<div class="loader"></div><span>Обновление...</span>';
+        btn.disabled = true;
         
-        // Удаление использованного токена
-        delete resetTokens[token];
-        localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
-        
-        showSuccess(successElement, 'Пароль успешно изменен!');
-        
-        // Автоматический переход к форме входа через 2 секунды
+        // Имитация обновления пароля
         setTimeout(() => {
-            showLoginForm();
-        }, 2000);
+            // Обновление пароля в базе пользователей
+            let userUpdated = false;
+            for (const username in users) {
+                if (users[username].email === userEmail) {
+                    users[username].password = newPassword;
+                    userUpdated = true;
+                    break;
+                }
+            }
+            
+            if (!userUpdated) {
+                showError(errorElement, 'Ошибка обновления пароля');
+                btn.innerHTML = '<span>Установить новый пароль</span>';
+                btn.disabled = false;
+                return;
+            }
+            
+            // Сохраняем обновленных пользователей
+            localStorage.setItem('bankUsers', JSON.stringify(users));
+            
+            // Показываем сообщение об успехе
+            showSuccess(document.getElementById('resetSuccess'), 'Пароль успешно изменен!');
+            
+            // Автоматический переход к форме входа через 2 секунды
+            setTimeout(() => {
+                showLoginForm();
+            }, 2000);
+        }, 1500);
     }
 
-    // Генерация токена
-    function generateToken() {
-        return Math.random().toString(36).substring(2) + Date.now().toString(36);
+    // Повторно отправить код
+    function resendResetCode() {
+        // Генерируем новый код
+        resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // В реальном приложении здесь был бы код отправки email
+        showSuccess(document.getElementById('resetSuccess'), `Новый код подтверждения отправлен на ${userEmail}. Для демонстрации: ${resetCode}`);
+        
+        // Сбрасываем и перезапускаем таймер
+        clearInterval(countdownInterval);
+        startTimer(5 * 60); // 5 минут
+    }
+
+    // Проверка сложности пароля
+    function checkPasswordStrength() {
+        const password = document.getElementById('newPassword').value;
+        const strengthMeter = document.getElementById('passwordStrengthMeter');
+        const lengthRule = document.getElementById('lengthRule');
+        const uppercaseRule = document.getElementById('uppercaseRule');
+        const numberRule = document.getElementById('numberRule');
+        const specialRule = document.getElementById('specialRule');
+        
+        let strength = 0;
+        let color = '#ff4444';
+        
+        // Проверка длины
+        if (password.length >= 8) {
+            strength += 25;
+            lengthRule.classList.add('valid');
+            lengthRule.innerHTML = '<i class="fas fa-check-circle"></i> Не менее 8 символов';
+        } else {
+            lengthRule.classList.remove('valid');
+            lengthRule.innerHTML = '<i class="fas fa-circle"></i> Не менее 8 символов';
+        }
+        
+        // Проверка заглавных букв
+        if (/[A-ZА-Я]/.test(password)) {
+            strength += 25;
+            uppercaseRule.classList.add('valid');
+            uppercaseRule.innerHTML = '<i class="fas fa-check-circle"></i> Содержит заглавные буквы';
+        } else {
+            uppercaseRule.classList.remove('valid');
+            uppercaseRule.innerHTML = '<i class="fas fa-circle"></i> Содержит заглавные буквы';
+        }
+        
+        // Проверка цифр
+        if (/\d/.test(password)) {
+            strength += 25;
+            numberRule.classList.add('valid');
+            numberRule.innerHTML = '<i class="fas fa-check-circle"></i> Содержит цифры';
+        } else {
+            numberRule.classList.remove('valid');
+            numberRule.innerHTML = '<i class="fas fa-circle"></i> Содержит цифры';
+        }
+        
+        // Проверка специальных символов
+        if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+            strength += 25;
+            specialRule.classList.add('valid');
+            specialRule.innerHTML = '<i class="fas fa-check-circle"></i> Содержит специальные символы';
+        } else {
+            specialRule.classList.remove('valid');
+            specialRule.innerHTML = '<i class="fas fa-circle"></i> Содержит специальные символы';
+        }
+        
+        // Определение цвета
+        if (strength >= 75) {
+            color = '#4CAF50';
+            passwordValid = true;
+        } else if (strength >= 50) {
+            color = '#FFD700';
+            passwordValid = false;
+        } else if (strength >= 25) {
+            color = '#ff9800';
+            passwordValid = false;
+        } else {
+            passwordValid = false;
+        }
+        
+        // Обновление индикатора
+        strengthMeter.style.width = strength + '%';
+        strengthMeter.style.background = color;
+        
+        // Проверка совпадения паролей
+        checkPasswordMatch();
+    }
+
+    // Проверка совпадения паролей
+    function checkPasswordMatch() {
+        const password = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const matchElement = document.getElementById('passwordMatch');
+        
+        if (confirmPassword.length === 0) {
+            matchElement.textContent = '';
+            passwordsMatch = false;
+            return;
+        }
+        
+        if (password === confirmPassword) {
+            matchElement.innerHTML = '<i class="fas fa-check-circle" style="color:#4CAF50"></i> Пароли совпадают';
+            matchElement.style.color = '#4CAF50';
+            passwordsMatch = true;
+        } else {
+            matchElement.innerHTML = '<i class="fas fa-times-circle" style="color:#ff4444"></i> Пароли не совпадают';
+            matchElement.style.color = '#ff4444';
+            passwordsMatch = false;
+        }
+    }
+
+    // Запуск таймера
+    function startTimer(duration) {
+        const timerElement = document.getElementById('timer');
+        let timer = duration;
+        let minutes, seconds;
+        
+        countdownInterval = setInterval(function() {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+            
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            
+            timerElement.textContent = "Код действителен: " + minutes + ":" + seconds;
+            timerElement.style.color = "#FFD700";
+            
+            if (--timer < 0) {
+                clearInterval(countdownInterval);
+                timerElement.textContent = "Код устарел";
+                timerElement.style.color = "#ff4444";
+            }
+        }, 1000);
     }
 
     // Показать форму регистрации
@@ -743,7 +1039,7 @@
             <div class="yellow-line"></div>
             <div class="user-profile">
                 <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
-                <span><strong>${user.name}</strong></span>
+                <span><strong>${user.name</strong></span>
                 <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button>
             </div>
             <p><strong>Никнейм: ${currentUser}</strong></p>
@@ -882,13 +1178,19 @@
                 localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
                 window.history.replaceState({}, document.title, window.location.pathname);
             } else {
-                showResetPasswordForm(resetToken);
+                // Автоматически заполняем email и переходим к шагу ввода кода
+                userEmail = resetTokens[resetToken].email;
+                showForgotPasswordForm();
+                document.getElementById('resetEmail').value = userEmail;
+                document.getElementById('resetStep1').classList.remove('active');
+                document.getElementById('resetStep2').classList.add('active');
+                
+                // Генерируем код для демонстрации
+                resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+                startTimer(5 * 60);
             }
         }
     }
-
-    // Проверяем токен при загрузке
-    checkResetToken();
 </script>
 
 </body>
