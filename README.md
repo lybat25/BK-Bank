@@ -232,6 +232,36 @@
             text-align: center;
             font-weight: bold;
         }
+        .success-message {
+            color: #4CAF50;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .forgot-password {
+            text-align: center;
+            margin-top: 10px;
+            color: #FFD700;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        .reset-form {
+            display: flex;
+            flex-direction: column;
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3000;
+            width: 350px;
+        }
     </style>
 </head>
 <body>
@@ -327,6 +357,7 @@
     // Глобальные переменные
     let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
     let currentUser = null;
+    let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
 
     // Инициализация при загрузке страницы
     window.onload = function() {
@@ -360,8 +391,144 @@
             <input type="text" id="loginUsername" placeholder="Ваш никнейм" required>
             <input type="password" id="loginPassword" placeholder="Пароль" required>
             <button onclick="login()"><strong>Войти</strong></button>
+            <div class="forgot-password" onclick="showForgotPasswordForm()"><strong>Забыли пароль?</strong></div>
             <div class="switch-form" onclick="showRegistrationForm()"><strong>Нет аккаунта? Зарегистрироваться</strong></div>`;
         document.body.appendChild(authForm);
+    }
+
+    // Показать форму восстановления пароля
+    function showForgotPasswordForm() {
+        document.querySelector('.auth-form').remove();
+        
+        const resetForm = document.createElement('div');
+        resetForm.className = 'reset-form';
+        resetForm.innerHTML = 
+            `<h2 style="text-align: center; color: #FFD700;"><strong>Восстановление пароля</strong></h2>
+            <div id="resetError" class="error-message hidden"></div>
+            <div id="resetSuccess" class="success-message hidden"></div>
+            <input type="email" id="resetEmail" placeholder="Ваш email" required>
+            <button onclick="sendResetEmail()"><strong>Отправить ссылку для сброса</strong></button>
+            <div class="switch-form" onclick="showLoginForm()"><strong>Назад к входу</strong></div>`;
+        document.body.appendChild(resetForm);
+    }
+
+    // Отправить email для сброса пароля
+    function sendResetEmail() {
+        const email = document.getElementById('resetEmail').value;
+        const errorElement = document.getElementById('resetError');
+        const successElement = document.getElementById('resetSuccess');
+        
+        // Проверка email
+        if (!email) {
+            showError(errorElement, 'Пожалуйста, введите email');
+            return;
+        }
+        
+        // Поиск пользователя по email
+        let foundUser = null;
+        for (const username in users) {
+            if (users[username].email === email) {
+                foundUser = username;
+                break;
+            }
+        }
+        
+        if (!foundUser) {
+            showError(errorElement, 'Пользователь с таким email не найден');
+            return;
+        }
+        
+        // Генерация токена сброса
+        const resetToken = generateToken();
+        resetTokens[resetToken] = {
+            username: foundUser,
+            email: email,
+            expires: Date.now() + 3600000 // Действителен 1 час
+        };
+        
+        // Сохранение токена
+        localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
+        
+        // В реальном приложении здесь был бы код отправки email
+        // Для демонстрации покажем ссылку прямо на экране
+        const resetLink = `${window.location.origin}${window.location.pathname}?resetToken=${resetToken}`;
+        
+        showSuccess(successElement, `Ссылка для сброса пароля: ${resetLink}`);
+        
+        // В реальном приложении:
+        // sendEmail(email, 'Восстановление пароля БК-Банк', 
+        //   `Для сброса пароля перейдите по ссылке: ${resetLink}`);
+    }
+
+    // Показать форму сброса пароля
+    function showResetPasswordForm(token) {
+        document.querySelector('.auth-form, .reset-form').remove();
+        
+        const resetForm = document.createElement('div');
+        resetForm.className = 'reset-form';
+        resetForm.innerHTML = 
+            `<h2 style="text-align: center; color: #FFD700;"><strong>Сброс пароля</strong></h2>
+            <div id="resetError" class="error-message hidden"></div>
+            <div id="resetSuccess" class="success-message hidden"></div>
+            <input type="password" id="newPassword" placeholder="Новый пароль (минимум 6 символов)" required>
+            <input type="password" id="confirmPassword" placeholder="Подтвердите новый пароль" required>
+            <button onclick="resetPassword('${token}')"><strong>Установить новый пароль</strong></button>
+            <div class="switch-form" onclick="showLoginForm()"><strong>Назад к входу</strong></div>`;
+        document.body.appendChild(resetForm);
+    }
+
+    // Сброс пароля
+    function resetPassword(token) {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const errorElement = document.getElementById('resetError');
+        const successElement = document.getElementById('resetSuccess');
+        
+        // Проверка токена
+        if (!resetTokens[token]) {
+            showError(errorElement, 'Недействительная ссылка для сброса');
+            return;
+        }
+        
+        // Проверка срока действия токена
+        if (Date.now() > resetTokens[token].expires) {
+            showError(errorElement, 'Ссылка для сброса истекла');
+            delete resetTokens[token];
+            localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
+            return;
+        }
+        
+        // Проверка пароля
+        if (newPassword.length < 6) {
+            showError(errorElement, 'Пароль должен содержать минимум 6 символов');
+            return;
+        }
+        
+        if (newPassword !== confirmPassword) {
+            showError(errorElement, 'Пароли не совпадают');
+            return;
+        }
+        
+        // Обновление пароля
+        const username = resetTokens[token].username;
+        users[username].password = newPassword;
+        localStorage.setItem('bankUsers', JSON.stringify(users));
+        
+        // Удаление использованного токена
+        delete resetTokens[token];
+        localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
+        
+        showSuccess(successElement, 'Пароль успешно изменен!');
+        
+        // Автоматический переход к форме входа через 2 секунды
+        setTimeout(() => {
+            showLoginForm();
+        }, 2000);
+    }
+
+    // Генерация токена
+    function generateToken() {
+        return Math.random().toString(36).substring(2) + Date.now().toString(36);
     }
 
     // Показать форму регистрации
@@ -545,6 +712,15 @@
         }, 3000);
     }
 
+    // Показать успешное сообщение
+    function showSuccess(element, message) {
+        element.textContent = message;
+        element.classList.remove('hidden');
+        setTimeout(() => {
+            element.classList.add('hidden');
+        }, 5000);
+    }
+
     // Выход из системы
     function logout() {
         // Удаляем сессию
@@ -693,6 +869,26 @@
             showProfile();
         }
     }
+
+    // Проверка токена сброса при загрузке
+    function checkResetToken() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const resetToken = urlParams.get('resetToken');
+        
+        if (resetToken && resetTokens[resetToken]) {
+            if (Date.now() > resetTokens[resetToken].expires) {
+                alert('Ссылка для сброса пароля истекла');
+                delete resetTokens[resetToken];
+                localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } else {
+                showResetPasswordForm(resetToken);
+            }
+        }
+    }
+
+    // Проверяем токен при загрузке
+    checkResetToken();
 </script>
 
 </body>
