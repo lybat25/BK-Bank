@@ -251,7 +251,7 @@
         .reset-form {
             display: flex;
             flex-direction: column;
-            background: #2a2a2a;
+            background: '2a2a2a';
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
@@ -292,7 +292,7 @@
         .delete-button {
             background: #ff4444;
             color: white;
-            padding: 10px 20px;
+            padding: 极px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -325,13 +325,6 @@
             background: #444;
             border-radius: 5px;
         }
-        .auto-login-info {
-            background: #2a2a2a;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border-left: 3px solid #4CAF50;
-        }
     </style>
 </head>
 <body>
@@ -358,16 +351,16 @@
         <p><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем БК-Банка, чтобы сражаться с деньгами. Это была ложь."</strong></p>
         
         <h3><strong>Наши продукты</strong></h3>
-        <div class极yellow-line"></div>
+        <div class="yellow-line"></div>
         <p><strong>Будь на стороне добра! Забудьте про вражд и оформите нашу карту от БК-Банк.</strong></p>
         
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image" />
+        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%极%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image" />
         
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D极%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="Изображение о банке" class="bank-image" />
+        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="Изображение о банке" class="bank-image" />
         
         <div class="additional-info" style="color: #FFD700;"><strong>Наши карты</strong></div>
         <div class="yellow-line"></div>
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%极0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты" class="bank-image" />
+        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты" class="bank-image" />
 
         <div class="additional-text">
             <strong>Мы верим, что финансовая грамотность — это ключ к свободе. Каждый день мы работаем над тем, чтобы наши клиенты могли принимать обоснованные решения, основанные на чёткой информации. Мы предлагаем инструменты и ресурсы, которые помогут Вам лучше понять свои расходы и сбережения.</strong>
@@ -377,11 +370,11 @@
     </div>
 
     <div id="services" class="services">
-        <h2><strong>Наши услуги</极></h2>
-        <div class="yellow极line"></div>
+        <h2><strong>Наши услуги</strong></h2>
+        <div class="yellow-line"></div>
         <ul>
             <li><strong>Кредитование</strong></li>
-            <li><strong>Депозиты</strong></li>
+            <li><极>Депозиты</strong></li>
             <li><strong>Инвестиционные услуги</strong></li>
             <li><strong>Консультации по финансовым вопросам</strong></li>
             <li><strong>Онлайн-банкинг</strong></li>
@@ -393,17 +386,17 @@
         <div class="yellow-line"></div>
         <ul>
             <li><strong>Карта "тень и свет"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_092441724.png?raw=true" alt="Карта тень и свет" class="bank-image" />
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_092441724极?raw=true" alt="Карта тень и свет" class="bank-image" />
             <li><strong>Карта "чёрно-жёлтая энергия"</strong></li>
             <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_093348500.png?raw=true" alt="Карта чёрно-жёлтая энергия" class="bank-image" />
             <li><strong>Карта "жёлтая стрела"</strong></li>
             <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_094122593.png?raw=true" alt="Карта жёлтая стрела" class="bank-image" />
             <li><strong>Карта "золотая волна"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_095046740.png?raw=true" alt="Карта золотая волна" class="bank-image" />
+            <极g src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_095046740.png?raw=true" alt="Карта золотая волна" class="bank-image" />
             <li><strong>Карта "солнечный ночной ветер"</strong></li>
             <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_100946793.png?raw=true" alt="Карта солнечный ночной ветер" class="bank-image" />
             <li><strong>Карта "БКашная тёмный"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_101740633.png?raw=true" alt="Карта БКашная тёмный" class="bank-image" />
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%极%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_101740633.png?raw=true" alt="Карта БКашная тёмный" class="bank-image" />
             <li><strong>Карта "БКашная светлый"</strong></li>
             <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_102653372.png?raw=true" alt="Карта БКашная светлый" class="bank-image" />
         </ul>
@@ -414,9 +407,9 @@
         <h2><strong>Контактная информация</strong></h2>
         <div class="yellow-line"></div>
         <p><strong>Email: <a href="mailto:hgaraew@mail.ru" style="color: #FFD700;">БК-Банк email</a></strong></p>
-        <p><strong>Discord:</strong> <a href="https://discord.gg/q8极RuKebKH" target="_blank">БК-Банк server</a></p>
+        <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">БК-Банк server</a></p>
         <p><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">БК-Банк channel</a></p>
-        <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></极>
+        <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p>
         <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИT ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p>
     </div>
 
@@ -444,15 +437,15 @@
         checkResetToken();
     };
 
-    // Загрузка данных с "сервера" (localStorage)
+    // Загрузка данных с сервера (localStorage)
     function loadServerData() {
         try {
-            const serverData = localStorage.getItem('bk_bank_server_data');
+            const serverData = localStorage.getItem('bk_bank_data');
             if (serverData) {
                 const parsedData = JSON.parse(serverData);
                 users = parsedData.users || {};
                 resetTokens = parsedData.resetTokens || {};
-                console.log('Данные успешно загружены с сервера');
+                console.log('Данные успешно загружены');
             }
         } catch (e) {
             console.error('Ошибка загрузки данных:', e);
@@ -461,7 +454,7 @@
         }
     }
 
-    // Сохранение данных на "сервер" (localStorage)
+    // Сохранение данных на сервер (localStorage)
     function saveServerData() {
         try {
             const serverData = {
@@ -469,8 +462,7 @@
                 resetTokens: resetTokens,
                 lastUpdate: new Date().toISOString()
             };
-            localStorage.setItem('bk_bank_server_data', JSON.stringify(serverData));
-            console.log('Данные успешно сохранены на сервер');
+            localStorage.setItem('bk_bank_data', JSON.stringify(serverData));
         } catch (e) {
             console.error('Ошибка сохранения данных:', e);
         }
@@ -478,16 +470,17 @@
 
     // Проверка автоматического входа
     function checkAutoLogin() {
-        const rememberMe = localStorage.getItem('rememberMe');
         const savedSession = localStorage.getItem('currentSession');
         
-        if (rememberMe === 'true' && savedSession) {
+        if (savedSession) {
             try {
                 const sessionData = JSON.parse(savedSession);
-                // Проверяем, не истекла ли сессия (30 дней)
+                // Сессия действительна 30 дней
                 if (Date.now() - sessionData.timestamp < 30 * 24 * 60 * 60 * 1000) {
                     if (users[sessionData.username]) {
                         currentUser = sessionData.username;
+                        users[currentUser].lastLogin = new Date().toISOString();
+                        saveServerData();
                         showMainContent();
                         showWelcomeMessage(users[currentUser].name);
                         return;
@@ -538,13 +531,9 @@
             <div id="loginError" class="error-message hidden"></div>
             <input type="text" id="loginUsername" placeholder="Ваш никнейм" required>
             <input type="password" id="loginPassword" placeholder="Пароль" required>
-            <div style="display: flex; align-items: center; margin: 10px 0;">
-                <input type="checkbox" id="rememberMe" style="margin-right: 10px;">
-                <label for="rememberMe">Запомнить меня</label>
-            </div>
             <button onclick="login()"><strong>Войти</strong></button>
             <div class="forgot-password" onclick="showForgotPasswordForm()"><strong>Забыли пароль?</strong></div>
-            <div class="switch-form" onclick="showRegistrationForm()"><strong>Нет аккаунта? Зарегистрироваться</strong></div>`;
+            <div class="switch-form" onclick极showRegistrationForm()"><strong>Нет аккаунта? Зарегистрироваться</strong></div>`;
         document.body.appendChild(authForm);
     }
 
@@ -552,7 +541,6 @@
     function login() {
         const username = document.getElementById('loginUsername').value.trim();
         const password = document.getElementById('loginPassword').value;
-        const rememberMe = document.getElementById('rememberMe').checked;
         const errorElement = document.getElementById('loginError');
         
         if (!username || !password) {
@@ -574,10 +562,7 @@
         currentUser = username;
         users[username].lastLogin = new Date().toISOString();
         
-        // Сохраняем настройки запоминания
-        localStorage.setItem('rememberMe', rememberMe.toString());
-        
-        // Создаем сессию
+        // Сохраняем сессию (автоматически на 30 дней)
         const sessionData = {
             username: username,
             timestamp: Date.now()
@@ -651,7 +636,7 @@
             name: name,
             email: email,
             password: password,
-            balance: 1000, // Начальный баланс
+            balance: 1000,
             friends: [],
             friendRequests: [],
             registrationDate: new Date().toISOString(),
@@ -670,7 +655,6 @@
         
         // Автоматический вход после регистрации
         currentUser = username;
-        localStorage.setItem('rememberMe', 'true');
         
         const sessionData = {
             username: username,
@@ -687,31 +671,35 @@
     function showMainContent() {
         document.querySelectorAll('header, .container').forEach(el => el.classList.remove('hidden'));
         toggleSection('about');
-        
-        // Показываем информацию об автоматическом входе
-        const rememberMe = localStorage.getItem('rememberMe');
-        if (rememberMe === 'true') {
-            const autoLoginInfo = document.createElement('div');
-            autoLoginInfo.className = 'auto-login-info';
-            autoLoginInfo.innerHTML = '<strong>✅ Вы будете автоматически входить при следующем посещении</strong>';
-            document.querySelector('.container').prepend(autoLoginInfo);
-            
-            setTimeout(() => {
-                autoLoginInfo.remove();
-            }, 5000);
-        }
     }
 
-    // Остальные функции (showForgotPasswordForm, sendResetEmail, showResetPasswordForm, resetPassword, 
-    // generateToken, showRegistrationForm, showWelcomeMessage, showError, showSuccess, logout, showProfile,
-    // showDeleteConfirmation, hideDeleteConfirmation, deleteAccount, showUserManagement, deleteUserAccount,
-    // editWebsite, sendFriendRequest, acceptFriendRequest, declineFriendRequest, toggleSection, checkResetToken)
-    // остаются без изменений, но везде добавляем saveServerData() после изменений данных
+    // Показать приветственное сообщение
+    function showWelcomeMessage(name) {
+        const welcomeMessage = document.createElement('div');
+        welcomeMessage.className = 'welcome-message';
+        welcomeMessage.innerHTML = `<strong>Добро пожаловать, ${name}! Мы рады видеть вас в БК-Банке.</strong>`;
+        document.body.appendChild(welcomeMessage);
+
+        setTimeout(() => {
+            welcomeMessage.classList.add('fade-out');
+            setTimeout(() => {
+                welcomeMessage.remove();
+            }, 1000);
+        }, 3000);
+    }
+
+    // Показать ошибку
+    function showError(element, message) {
+        element.textContent = message;
+        element.classList.remove('hidden');
+        setTimeout(() => {
+            element.classList.add('hidden');
+        }, 3000);
+    }
 
     // Выход из системы
     function logout() {
         localStorage.removeItem('currentSession');
-        localStorage.removeItem('rememberMe');
         currentUser = null;
         
         document.querySelectorAll('header, .container').forEach(el => el.classList.add('hidden'));
@@ -800,7 +788,45 @@
         profileSection.style.display = 'block';
     }
 
-    // Остальные функции остаются аналогичными, но с добавлением saveServerData()
+    // Удалить аккаунт
+    function deleteAccount() {
+        const password = document.getElementById('confirmPassword').value;
+        
+        if (!password) {
+            alert('Пожалуйста, введите ваш пароль для подтверждения');
+            return;
+        }
+        
+        if (password !== users[currentUser].password) {
+            alert('Неверный пароль!');
+            return;
+        }
+        
+        if (confirm('Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить!')) {
+            // Удаляем пользователя из списка друзей у других пользователей
+            for (const username in users) {
+                if (users[username].friends.includes(currentUser)) {
+                    users[username].friends = users[username].friends.filter(friend => friend !== currentUser);
+                }
+                if (users[username].friendRequests.includes(currentUser)) {
+                    users[username].friendRequests = users[username].friendRequests.filter(request => request !== currentUser);
+                }
+            }
+            
+            // Удаляем аккаунт пользователя
+            delete users[currentUser];
+            
+            // Сохраняем изменения
+            saveServerData();
+            
+            // Выходим из системы
+            logout();
+            
+            alert('Ваш аккаунт был успешно удален.');
+        }
+    }
+
+    // Остальные функции остаются без изменений, но добавляем saveServerData() после изменений
 
 </script>
 
