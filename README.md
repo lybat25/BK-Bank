@@ -251,7 +251,7 @@
         .reset-form {
             display: flex;
             flex-direction: column;
-            background: '2a2a2a';
+            background: #2a2a2a;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
@@ -261,69 +261,6 @@
             transform: translate(-50%, -50%);
             z-index: 3000;
             width: 350px;
-        }
-        .creator-panel {
-            background: #333;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border-left: 4px solid #FFD700;
-        }
-        .creator-panel h3 {
-            color: #FFD700;
-            margin-top: 0;
-        }
-        .admin-control {
-            margin: 10px 0;
-            padding: 10px;
-            background: #444;
-            border-radius: 5px;
-        }
-        .delete-account-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: #2a2a2a;
-            border-radius: 8px;
-            border: 2px solid #ff4444;
-        }
-        .delete-account-section h3 {
-            color: #ff4444;
-        }
-        .delete-button {
-            background: #ff4444;
-            color: white;
-            padding: 极px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        .delete-button:hover {
-            background: #cc0000;
-        }
-        .confirm-delete {
-            display: none;
-            margin-top: 15px;
-            padding: 15px;
-            background: #333;
-            border-radius: 5px;
-            border: 1px solid #ff4444;
-        }
-        .admin-user-list {
-            margin-top: 20px;
-            padding: 15px;
-            background: #333;
-            border-radius: 8px;
-        }
-        .user-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            margin: 5px 0;
-            background: #444;
-            border-radius: 5px;
         }
     </style>
 </head>
@@ -352,9 +289,9 @@
         
         <h3><strong>Наши продукты</strong></h3>
         <div class="yellow-line"></div>
-        <p><strong>Будь на стороне добра! Забудьте про вражд и оформите нашу карту от БК-Банк.</strong></p>
+        <p><strong>Будь на стороне добра! Забудьте про врагов и оформите нашу карту от БК-Банк.</strong></p>
         
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%极%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image" />
+        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image" />
         
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="Изображение о банке" class="bank-image" />
         
@@ -374,7 +311,7 @@
         <div class="yellow-line"></div>
         <ul>
             <li><strong>Кредитование</strong></li>
-            <li><极>Депозиты</strong></li>
+            <li><strong>Депозиты</strong></li>
             <li><strong>Инвестиционные услуги</strong></li>
             <li><strong>Консультации по финансовым вопросам</strong></li>
             <li><strong>Онлайн-банкинг</strong></li>
@@ -386,17 +323,17 @@
         <div class="yellow-line"></div>
         <ul>
             <li><strong>Карта "тень и свет"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_092441724极?raw=true" alt="Карта тень и свет" class="bank-image" />
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_092441724.png?raw=true" alt="Карта тень и свет" class="bank-image" />
             <li><strong>Карта "чёрно-жёлтая энергия"</strong></li>
             <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_093348500.png?raw=true" alt="Карта чёрно-жёлтая энергия" class="bank-image" />
             <li><strong>Карта "жёлтая стрела"</strong></li>
             <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_094122593.png?raw=true" alt="Карта жёлтая стрела" class="bank-image" />
             <li><strong>Карта "золотая волна"</strong></li>
-            <极g src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_095046740.png?raw=true" alt="Карта золотая волна" class="bank-image" />
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_095046740.png?raw=true" alt="Карта золотая волна" class="bank-image" />
             <li><strong>Карта "солнечный ночной ветер"</strong></li>
             <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_100946793.png?raw=true" alt="Карта солнечный ночной ветер" class="bank-image" />
             <li><strong>Карта "БКашная тёмный"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%极%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_101740633.png?raw=true" alt="Карта БКашная тёмный" class="bank-image" />
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_101740633.png?raw=true" alt="Карта БКашная тёмный" class="bank-image" />
             <li><strong>Карта "БКашная светлый"</strong></li>
             <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_102653372.png?raw=true" alt="Карта БКашная светлый" class="bank-image" />
         </ul>
@@ -418,109 +355,31 @@
 
 <script>
     // Глобальные переменные
-    let users = {};
+    let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
     let currentUser = null;
-    let resetTokens = {};
+    let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
 
     // Инициализация при загрузке страницы
     window.onload = function() {
-        // Загружаем данные из localStorage
-        loadServerData();
-        
-        // Создаем аккаунт создателя, если его нет
-        createCreatorAccountIfNotExists();
-        
-        // Проверяем автоматический вход
-        checkAutoLogin();
-        
-        // Проверяем токен сброса
-        checkResetToken();
-    };
-
-    // Загрузка данных с сервера (localStorage)
-    function loadServerData() {
-        try {
-            const serverData = localStorage.getItem('bk_bank_data');
-            if (serverData) {
-                const parsedData = JSON.parse(serverData);
-                users = parsedData.users || {};
-                resetTokens = parsedData.resetTokens || {};
-                console.log('Данные успешно загружены');
-            }
-        } catch (e) {
-            console.error('Ошибка загрузки данных:', e);
-            users = {};
-            resetTokens = {};
-        }
-    }
-
-    // Сохранение данных на сервер (localStorage)
-    function saveServerData() {
-        try {
-            const serverData = {
-                users: users,
-                resetTokens: resetTokens,
-                lastUpdate: new Date().toISOString()
-            };
-            localStorage.setItem('bk_bank_data', JSON.stringify(serverData));
-        } catch (e) {
-            console.error('Ошибка сохранения данных:', e);
-        }
-    }
-
-    // Проверка автоматического входа
-    function checkAutoLogin() {
-        const savedSession = localStorage.getItem('currentSession');
-        
-        if (savedSession) {
-            try {
-                const sessionData = JSON.parse(savedSession);
-                // Сессия действительна 30 дней
-                if (Date.now() - sessionData.timestamp < 30 * 24 * 60 * 60 * 1000) {
-                    if (users[sessionData.username]) {
-                        currentUser = sessionData.username;
-                        users[currentUser].lastLogin = new Date().toISOString();
-                        saveServerData();
-                        showMainContent();
-                        showWelcomeMessage(users[currentUser].name);
-                        return;
-                    }
-                }
-            } catch (e) {
-                console.error('Ошибка восстановления сессии:', e);
+        // Проверяем, есть ли активная сессия
+        const session = localStorage.getItem('currentSession');
+        if (session) {
+            const sessionData = JSON.parse(session);
+            // Проверяем, не истекла ли сессия (24 часа)
+            if (Date.now() - sessionData.timestamp < 24 * 60 * 60 * 1000) {
+                currentUser = sessionData.username;
+                showMainContent();
+                showWelcomeMessage(users[currentUser].name);
+                return;
+            } else {
+                // Удаляем просроченную сессию
+                localStorage.removeItem('currentSession');
             }
         }
         
-        // Если нет автоматического входа, показываем форму входа
+        // Если нет активной сессии, показываем форму входа
         showLoginForm();
-    }
-
-    // Создание аккаунта создателя, если его нет
-    function createCreatorAccountIfNotExists() {
-        const creatorUsername = "creator";
-        const creatorEmail = "hgaraew@mail.ru";
-        
-        if (!users[creatorUsername]) {
-            users[creatorUsername] = {
-                name: "Создатель БК-Банка",
-                email: creatorEmail,
-                password: "admin123",
-                balance: 0,
-                friends: [],
-                friendRequests: [],
-                registrationDate: new Date().toISOString(),
-                lastLogin: new Date().toISOString(),
-                isCreator: true,
-                permissions: {
-                    canEditSite: true,
-                    canManageUsers: true,
-                    canModifyBalance: false,
-                    canAccessAdmin: false
-                }
-            };
-            saveServerData();
-        }
-    }
+    };
 
     // Показать форму входа
     function showLoginForm() {
@@ -533,7 +392,161 @@
             <input type="password" id="loginPassword" placeholder="Пароль" required>
             <button onclick="login()"><strong>Войти</strong></button>
             <div class="forgot-password" onclick="showForgotPasswordForm()"><strong>Забыли пароль?</strong></div>
-            <div class="switch-form" onclick极showRegistrationForm()"><strong>Нет аккаунта? Зарегистрироваться</strong></div>`;
+            <div class="switch-form" onclick="showRegistrationForm()"><strong>Нет аккаунта? Зарегистрироваться</strong></div>`;
+        document.body.appendChild(authForm);
+    }
+
+    // Показать форму восстановления пароля
+    function showForgotPasswordForm() {
+        document.querySelector('.auth-form').remove();
+        
+        const resetForm = document.createElement('div');
+        resetForm.className = 'reset-form';
+        resetForm.innerHTML = 
+            `<h2 style="text-align: center; color: #FFD700;"><strong>Восстановление пароля</strong></h2>
+            <div id="resetError" class="error-message hidden"></div>
+            <div id="resetSuccess" class="success-message hidden"></div>
+            <input type="email" id="resetEmail" placeholder="Ваш email" required>
+            <button onclick="sendResetEmail()"><strong>Отправить ссылку для сброса</strong></button>
+            <div class="switch-form" onclick="showLoginForm()"><strong>Назад к входу</strong></div>`;
+        document.body.appendChild(resetForm);
+    }
+
+    // Отправить email для сброса пароля
+    function sendResetEmail() {
+        const email = document.getElementById('resetEmail').value;
+        const errorElement = document.getElementById('resetError');
+        const successElement = document.getElementById('resetSuccess');
+        
+        // Проверка email
+        if (!email) {
+            showError(errorElement, 'Пожалуйста, введите email');
+            return;
+        }
+        
+        // Поиск пользователя по email
+        let foundUser = null;
+        for (const username in users) {
+            if (users[username].email === email) {
+                foundUser = username;
+                break;
+            }
+        }
+        
+        if (!foundUser) {
+            showError(errorElement, 'Пользователь с таким email не найден');
+            return;
+        }
+        
+        // Генерация токена сброса
+        const resetToken = generateToken();
+        resetTokens[resetToken] = {
+            username: foundUser,
+            email: email,
+            expires: Date.now() + 3600000 // Действителен 1 час
+        };
+        
+        // Сохранение токена
+        localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
+        
+        // В реальном приложении здесь был бы код отправки email
+        // Для демонстрации покажем ссылку прямо на экране
+        const resetLink = `${window.location.origin}${window.location.pathname}?resetToken=${resetToken}`;
+        
+        showSuccess(successElement, `Ссылка для сброса пароля: ${resetLink}`);
+        
+        // В реальном приложении:
+        // sendEmail(email, 'Восстановление пароля БК-Банк', 
+        //   `Для сброса пароля перейдите по ссылке: ${resetLink}`);
+    }
+
+    // Показать форму сброса пароля
+    function showResetPasswordForm(token) {
+        document.querySelector('.auth-form, .reset-form').remove();
+        
+        const resetForm = document.createElement('div');
+        resetForm.className = 'reset-form';
+        resetForm.innerHTML = 
+            `<h2 style="text-align: center; color: #FFD700;"><strong>Сброс пароля</strong></h2>
+            <div id="resetError" class="error-message hidden"></div>
+            <div id="resetSuccess" class="success-message hidden"></div>
+            <input type="password" id="newPassword" placeholder="Новый пароль (минимум 6 символов)" required>
+            <input type="password" id="confirmPassword" placeholder="Подтвердите новый пароль" required>
+            <button onclick="resetPassword('${token}')"><strong>Установить новый пароль</strong></button>
+            <div class="switch-form" onclick="showLoginForm()"><strong>Назад к входу</strong></div>`;
+        document.body.appendChild(resetForm);
+    }
+
+    // Сброс пароля
+    function resetPassword(token) {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const errorElement = document.getElementById('resetError');
+        const successElement = document.getElementById('resetSuccess');
+        
+        // Проверка токена
+        if (!resetTokens[token]) {
+            showError(errorElement, 'Недействительная ссылка для сброса');
+            return;
+        }
+        
+        // Проверка срока действия токена
+        if (Date.now() > resetTokens[token].expires) {
+            showError(errorElement, 'Ссылка для сброса истекла');
+            delete resetTokens[token];
+            localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
+            return;
+        }
+        
+        // Проверка пароля
+        if (newPassword.length < 6) {
+            showError(errorElement, 'Пароль должен содержать минимум 6 символов');
+            return;
+        }
+        
+        if (newPassword !== confirmPassword) {
+            showError(errorElement, 'Пароли не совпадают');
+            return;
+        }
+        
+        // Обновление пароля
+        const username = resetTokens[token].username;
+        users[username].password = newPassword;
+        localStorage.setItem('bankUsers', JSON.stringify(users));
+        
+        // Удаление использованного токена
+        delete resetTokens[token];
+        localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
+        
+        showSuccess(successElement, 'Пароль успешно изменен!');
+        
+        // Автоматический переход к форме входа через 2 секунды
+        setTimeout(() => {
+            showLoginForm();
+        }, 2000);
+    }
+
+    // Генерация токена
+    function generateToken() {
+        return Math.random().toString(36).substring(2) + Date.now().toString(36);
+    }
+
+    // Показать форму регистрации
+    function showRegistrationForm() {
+        document.querySelector('.auth-form').remove();
+        
+        const authForm = document.createElement('div');
+        authForm.className = 'auth-form';
+        authForm.innerHTML = 
+            `<h2 style="text-align: center; color: #FFD700;"><strong>Регистрация в БК-Банк</strong></h2>
+            <div id="registerError" class="error-message hidden"></div>
+            <input type="text" id="regName" placeholder="Ваше имя" required>
+            <input type="text" id="regUsername" placeholder="Ваш никнейм" required>
+            <input type="email" id="regEmail" placeholder="Ваша электронная почта" required>
+            <input type="password" id="regPassword" placeholder="Пароль (минимум 6 символов)" required>
+            <input type="password" id="regConfirmPassword" placeholder="Подтвердите пароль" required>
+            <button onclick="register()"><strong>Зарегистрироваться</strong></button>
+            <div class="switch-form" onclick="showLoginForm()"><strong>Уже есть аккаунт? Войти</strong></div>`;
         document.body.appendChild(authForm);
     }
 
@@ -543,16 +556,19 @@
         const password = document.getElementById('loginPassword').value;
         const errorElement = document.getElementById('loginError');
         
+        // Проверка введенных данных
         if (!username || !password) {
             showError(errorElement, 'Пожалуйста, заполните все поля');
             return;
         }
         
+        // Проверка существования пользователя
         if (!users[username]) {
             showError(errorElement, 'Пользователь с таким никнеймом не найден');
             return;
         }
         
+        // Проверка пароля
         if (users[username].password !== password) {
             showError(errorElement, 'Неверный пароль');
             return;
@@ -560,17 +576,13 @@
         
         // Успешный вход
         currentUser = username;
-        users[username].lastLogin = new Date().toISOString();
         
-        // Сохраняем сессию (автоматически на 30 дней)
+        // Создаем сессию
         const sessionData = {
             username: username,
             timestamp: Date.now()
         };
         localStorage.setItem('currentSession', JSON.stringify(sessionData));
-        
-        // Сохраняем данные
-        saveServerData();
         
         // Убираем форму и показываем основной контент
         document.querySelector('.auth-form').remove();
@@ -587,43 +599,51 @@
         const confirmPassword = document.getElementById('regConfirmPassword').value;
         const errorElement = document.getElementById('registerError');
         
+        // Проверка заполнения всех полей
         if (!name || !username || !email || !password || !confirmPassword) {
             showError(errorElement, 'Пожалуйста, заполните все поля');
             return;
         }
         
+        // Проверка имени (должно содержать хотя бы одну букву)
         const nameRegex = /[a-zA-Zа-яА-ЯЁё]/;
         if (!nameRegex.test(name)) {
             showError(errorElement, 'Имя должно содержать хотя бы одну букву');
             return;
         }
         
+        // Проверка никнейма (должен содержать хотя бы одну букву)
         if (!nameRegex.test(username)) {
             showError(errorElement, 'Никнейм должен содержать хотя бы одну букву');
             return;
         }
         
+        // Проверка email
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(email)) {
             showError(errorElement, 'Пожалуйста, введите корректный адрес электронной почты');
             return;
         }
         
+        // Проверка пароля
         if (password.length < 6) {
             showError(errorElement, 'Пароль должен содержать минимум 6 символов');
             return;
         }
         
+        // Проверка совпадения паролей
         if (password !== confirmPassword) {
             showError(errorElement, 'Пароли не совпадают');
             return;
         }
         
+        // Проверка существования пользователя
         if (users[username]) {
             showError(errorElement, 'Пользователь с таким никнеймом уже существует');
             return;
         }
         
+        // Проверка email на уникальность
         for (const user in users) {
             if (users[user].email === email) {
                 showError(errorElement, 'Пользователь с таким email уже существует');
@@ -636,32 +656,26 @@
             name: name,
             email: email,
             password: password,
-            balance: 1000,
+            balance: 0,
             friends: [],
             friendRequests: [],
-            registrationDate: new Date().toISOString(),
-            lastLogin: new Date().toISOString(),
-            isCreator: false,
-            permissions: {
-                canEditSite: false,
-                canManageUsers: false,
-                canModifyBalance: false,
-                canAccessAdmin: false
-            }
+            registrationDate: new Date().toISOString()
         };
         
-        // Сохраняем данные
-        saveServerData();
+        // Сохранение в localStorage
+        localStorage.setItem('bankUsers', JSON.stringify(users));
         
         // Автоматический вход после регистрации
         currentUser = username;
         
+        // Создаем сессию
         const sessionData = {
             username: username,
             timestamp: Date.now()
         };
         localStorage.setItem('currentSession', JSON.stringify(sessionData));
         
+        // Убираем форму и показываем основной контент
         document.querySelector('.auth-form').remove();
         showMainContent();
         showWelcomeMessage(name);
@@ -680,6 +694,7 @@
         welcomeMessage.innerHTML = `<strong>Добро пожаловать, ${name}! Мы рады видеть вас в БК-Банке.</strong>`;
         document.body.appendChild(welcomeMessage);
 
+        // Удаляем сообщение через 3 секунды
         setTimeout(() => {
             welcomeMessage.classList.add('fade-out');
             setTimeout(() => {
@@ -697,12 +712,25 @@
         }, 3000);
     }
 
+    // Показать успешное сообщение
+    function showSuccess(element, message) {
+        element.textContent = message;
+        element.classList.remove('hidden');
+        setTimeout(() => {
+            element.classList.add('hidden');
+        }, 5000);
+    }
+
     // Выход из системы
     function logout() {
+        // Удаляем сессию
         localStorage.removeItem('currentSession');
         currentUser = null;
         
+        // Скрываем основной контент
         document.querySelectorAll('header, .container').forEach(el => el.classList.add('hidden'));
+        
+        // Показываем форму входа
         showLoginForm();
     }
 
@@ -710,48 +738,6 @@
     function showProfile() {
         const user = users[currentUser];
         const profileSection = document.querySelector('.profile-section');
-        
-        let creatorContent = '';
-        if (user.isCreator && user.permissions.canEditSite) {
-            creatorContent = `
-                <div class="creator-panel">
-                    <h3>👑 Панель создателя 👑</h3>
-                    <p><strong>Статус: Создатель БК-Банка</strong></p>
-                    <div class="admin-control">
-                        <p><strong>Ваши права:</strong></p>
-                        <ul>
-                            <li>Редактирование контента сайта</li>
-                            <li>Управление пользователями</li>
-                            <li>Добавление новых разделов</li>
-                        </ul>
-                        <button onclick="showUserManagement()" style="background: #FFD700; color: #000; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px;">
-                            Управление пользователями
-                        </button>
-                    </div>
-                    <button onclick="editWebsite()" style="background: #FFD700; color: #000; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px;">
-                        Редактировать сайт
-                    </button>
-                </div>
-            `;
-        }
-        
-        let deleteAccountSection = '';
-        if (!user.isCreator) {
-            deleteAccountSection = `
-                <div class="delete-account-section">
-                    <h3>🗑️ Удаление аккаунта</h3>
-                    <p><strong>Внимание: это действие необратимо! Все ваши данные будут удалены.</strong></p>
-                    <button class="delete-button" onclick="showDeleteConfirmation()">Удалить мой аккаунт</button>
-                    <div id="confirmDelete" class="confirm-delete">
-                        <p>Вы уверены, что хотите удалить свой аккаунт?</p>
-                        <input type="password" id="confirmPassword" placeholder="Введите ваш пароль для подтверждения">
-                        <button class="delete-button" onclick="deleteAccount()" style="margin-top: 10px;">Да, удалить аккаунт</button>
-                        <button onclick="hideDeleteConfirmation()" style="background: #666; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; margin-top: 5px;">Отмена</button>
-                    </div>
-                </div>
-            `;
-        }
-        
         profileSection.innerHTML = 
             `<h2><strong>Ваш Кабинет</strong></h2>
             <div class="yellow-line"></div>
@@ -760,12 +746,10 @@
                 <span><strong>${user.name}</strong></span>
                 <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button>
             </div>
-            ${creatorContent}
             <p><strong>Никнейм: ${currentUser}</strong></p>
             <p><strong>Email: <a href="mailto:${user.email}" style="color: #FFD700;">${user.email}</a></strong></p>
             <p><strong>Баланс: ${user.balance} ₽</strong></p>
             <p><strong>Дата регистрации: ${new Date(user.registrationDate).toLocaleDateString()}</strong></p>
-            <p><strong>Последний вход: ${new Date(user.lastLogin).toLocaleDateString()}</strong></p>
             
             <div class="add-friend">
                 <h3><strong>Добавить в друзья</strong></h3>
@@ -783,51 +767,128 @@
                         <button onclick="acceptFriendRequest('${request}')">Принять</button>
                         <button onclick="declineFriendRequest('${request}')">Отклонить</button>
                     </li>`).join('') : '<li>Запросов нет</li>'}</ul>
-            </div>
-            ${deleteAccountSection}`;
+            </div>`;
         profileSection.style.display = 'block';
     }
 
-    // Удалить аккаунт
-    function deleteAccount() {
-        const password = document.getElementById('confirmPassword').value;
-        
-        if (!password) {
-            alert('Пожалуйста, введите ваш пароль для подтверждения');
+    // Отправить запрос на дружбу
+    function sendFriendRequest() {
+        const friendIdentifier = document.getElementById('friendName').value.trim();
+        if (!friendIdentifier) {
+            alert("Пожалуйста, введите имя или email друга.");
             return;
         }
         
-        if (password !== users[currentUser].password) {
-            alert('Неверный пароль!');
-            return;
-        }
-        
-        if (confirm('Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить!')) {
-            // Удаляем пользователя из списка друзей у других пользователей
-            for (const username in users) {
-                if (users[username].friends.includes(currentUser)) {
-                    users[username].friends = users[username].friends.filter(friend => friend !== currentUser);
-                }
-                if (users[username].friendRequests.includes(currentUser)) {
-                    users[username].friendRequests = users[username].friendRequests.filter(request => request !== currentUser);
-                }
+        // Поиск пользователя по имени или email
+        let foundUser = null;
+        for (const username in users) {
+            if (username === friendIdentifier || users[username].email === friendIdentifier) {
+                foundUser = username;
+                break;
             }
-            
-            // Удаляем аккаунт пользователя
-            delete users[currentUser];
-            
-            // Сохраняем изменения
-            saveServerData();
-            
-            // Выходим из системы
-            logout();
-            
-            alert('Ваш аккаунт был успешно удален.');
+        }
+        
+        if (!foundUser) {
+            alert("Пользователь не найден.");
+            return;
+        }
+        
+        if (foundUser === currentUser) {
+            alert("Вы не можете добавить себя в друзья.");
+            return;
+        }
+        
+        if (users[currentUser].friends.includes(foundUser)) {
+            alert("Этот пользователь уже у вас в друзьях.");
+            return;
+        }
+        
+        if (users[foundUser].friendRequests.includes(currentUser)) {
+            alert("Вы уже отправили запрос этому пользователю.");
+            return;
+        }
+        
+        // Добавляем запрос в друзья
+        users[foundUser].friendRequests.push(currentUser);
+        localStorage.setItem('bankUsers', JSON.stringify(users));
+        
+        alert(`Запрос в друзья отправлен пользователю ${foundUser}`);
+        document.getElementById('friendName').value = '';
+    }
+
+    // Принять запрос на дружбу
+    function acceptFriendRequest(friendUsername) {
+        const user = users[currentUser];
+        
+        // Удаляем запрос из списка
+        user.friendRequests = user.friendRequests.filter(request => request !== friendUsername);
+        
+        // Добавляем в друзья
+        if (!user.friends.includes(friendUsername)) {
+            user.friends.push(friendUsername);
+        }
+        
+        // Также добавляем текущего пользователя в друзья к тому, кто отправил запрос
+        if (!users[friendUsername].friends.includes(currentUser)) {
+            users[friendUsername].friends.push(currentUser);
+        }
+        
+        // Сохраняем изменения
+        localStorage.setItem('bankUsers', JSON.stringify(users));
+        
+        // Обновляем профиль
+        showProfile();
+        alert(`Вы добавили ${friendUsername} в друзья!`);
+    }
+
+    // Отклонить запрос на дружбу
+    function declineFriendRequest(friendUsername) {
+        users[currentUser].friendRequests = users[currentUser].friendRequests.filter(request => request !== friendUsername);
+        localStorage.setItem('bankUsers', JSON.stringify(users));
+        showProfile();
+        alert(`Запрос от ${friendUsername} отклонен.`);
+    }
+
+    // Переключение между разделами
+    function toggleSection(section) {
+        // Скрываем все секции
+        document.querySelectorAll('.about-bank, #services, #cards, .contact-info, .profile-section').forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        // Показываем выбранную секцию
+        if (section === 'services') {
+            document.getElementById('services').style.display = 'block';
+        } else if (section === 'cards') {
+            document.getElementById('cards').style.display = 'block';
+        } else if (section === 'contact') {
+            document.querySelector('.contact-info').style.display = 'block';
+        } else if (section === 'about') {
+            document.querySelector('.about-bank').style.display = 'block';
+        } else if (section === 'profile') {
+            showProfile();
         }
     }
 
-    // Остальные функции остаются без изменений, но добавляем saveServerData() после изменений
+    // Проверка токена сброса при загрузке
+    function checkResetToken() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const resetToken = urlParams.get('resetToken');
+        
+        if (resetToken && resetTokens[resetToken]) {
+            if (Date.now() > resetTokens[resetToken].expires) {
+                alert('Ссылка для сброса пароля истекла');
+                delete resetTokens[resetToken];
+                localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } else {
+                showResetPasswordForm(resetToken);
+            }
+        }
+    }
 
+    // Проверяем токен при загрузке
+    checkResetToken();
 </script>
 
 </body>
