@@ -1,286 +1,186 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>БК-Банк - Ваш надежный банк</title>
+    <title>БК-Банк - Восстановление пароля</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * {
             margin: 0;
             padding: 0;
-            background-color: #121212;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
             color: #ffffff;
-            overflow-y: auto;
-        }
-        header {
-            background: #1f1f1f;
-            color: #FFD700;
-            padding: 15px 30px;
-            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            min-height: 100vh;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            padding: 20px;
         }
-        nav {
-            margin: 0;
-        }
-        nav a {
-            margin: 0 20px;
-            color: #FFD700;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-            cursor: pointer;
-        }
-        nav a:hover {
-            color: #ffcc00;
-        }
+        
         .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #1e1e1e;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-        .content {
-            padding: 20px;
-            margin-bottom: 20px;
-            display: none;
-            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
             background: #2a2a2a;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+            overflow: hidden;
         }
+        
+        .header {
+            background: #1f1f1f;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 2px solid #FFD700;
+        }
+        
         .logo {
             width: 120px;
             height: auto;
+            margin-bottom: 15px;
         }
+        
         h1 {
-            font-size: 2.5em;
-            margin: 0;
-            font-weight: bold;
-        }
-        h2 {
             color: #FFD700;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #FFD700;
-            font-weight: bold;
-        }
-        h3 {
-            color: #FFD700;
-            margin: 20px 0 10px;
-            font-weight: bold;
-        }
-        .yellow-line {
-            height: 2px;
-            background-color: #FFD700;
+            font-size: 28px;
             margin-bottom: 10px;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+        
+        .subtitle {
+            color: #cccccc;
+            font-size: 16px;
         }
-        li {
-            padding: 5px 0;
-            position: relative;
-            font-weight: bold;
-        }
-        li::before {
-            content: '✓';
-            color: #FFD700;
-            position: absolute;
-            left: -20px;
-        }
-        .about-bank {
-            text-align: center;
-            margin: 40px 0;
-            padding: 20px;
-            background: #2a2a2a;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-        .contact-info {
-            display: none;
-            padding: 20px;
-            background: #2a2a2a;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        .contact-info a {
-            color: #FFD700;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .contact-info a:hover {
-            color: #ffcc00;
-        }
-        .services, .cards {
-            display: none;
-            padding: 20px;
-            background: #2a2a2a;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        .bank-image {
-            margin-top: 20px;
-            width: 100%;
-            max-width: 600px;
-            height: auto;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .welcome-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(31, 31, 31, 0.9);
-            color: #FFD700;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            opacity: 1;
-            transition: opacity 1s ease-out;
-            z-index: 2000;
-            font-weight: bold;
-        }
-        .fade-out {
-            opacity: 0;
-        }
-        .auth-form {
-            display: flex;
-            flex-direction: column;
-            background: #2a2a2a;
+        
+        .content {
             padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 3000;
-            width: 350px;
         }
-        .auth-form input {
-            margin-bottom: 15px;
-            padding: 12px;
+        
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .step.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #FFD700;
+            font-weight: bold;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px 14px 14px 40px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             background: #1e1e1e;
             color: #ffffff;
-            font-weight: bold;
+            font-size: 16px;
+            border: 1px solid #333;
+            transition: border-color 0.3s;
         }
-        .auth-form button {
-            padding: 12px;
-            border: none;
-            border-radius: 4px;
-            background: #FFD700;
-            color: #000;
-            cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 10px;
+        
+        input:focus {
+            outline: none;
+            border-color: #FFD700;
         }
-        .auth-form button:hover {
-            background: #ffcc00;
-        }
-        .auth-form .switch-form {
-            text-align: center;
-            margin-top: 10px;
-            color: #FFD700;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .auth-form .switch-form:hover {
-            text-decoration: underline;
-        }
-        .hidden {
-            display: none;
-        }
-        .user-profile {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-            padding: 10px;
-            background: #2a2a2a;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-        .user-profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        .logout-button {
-            margin-left: 10px;
-            padding: 5px 10px;
-            background: #FFD700;
-            color: #000;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .logout-button:hover {
-            background: #ffcc00;
-        }
-        .error-message {
-            color: #ff4444;
-            margin-bottom: 10px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .success-message {
-            color: #4CAF50;
-            margin-bottom: 10px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .forgot-password {
-            text-align: center;
-            margin-top: 10px;
-            color: #FFD700;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-        .reset-form {
-            display: flex;
-            flex-direction: column;
-            background: #2a2a2a;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 3000;
-            width: 350px;
-        }
-        .reset-step {
-            display: none;
-        }
-        .reset-step.active {
-            display: block;
-        }
+        
         .input-icon {
-            position: relative;
-        }
-        .input-icon i {
             position: absolute;
             left: 12px;
-            top: 12px;
+            top: 40px;
             color: #FFD700;
         }
-        .input-icon input {
-            padding-left: 35px;
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #FFD700;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+        
+        button:hover {
+            background: #ffcc00;
+        }
+        
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .error {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border: 1px solid #ff4444;
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+        
+        .info {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196F3;
+            border: 1px solid #2196F3;
+        }
+        
+        .timer {
+            text-align: center;
+            margin-top: 15px;
+            color: #FFD700;
+            font-weight: bold;
+        }
+        
+        .links {
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .links a {
+            color: #FFD700;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        .links a:hover {
+            color: #ffcc00;
+            text-decoration: underline;
+        }
+        
         .password-strength {
             height: 5px;
             margin-top: 8px;
@@ -288,34 +188,39 @@
             background: #333;
             overflow: hidden;
         }
+        
         .strength-meter {
             height: 100%;
             width: 0;
             transition: width 0.3s, background 0.3s;
         }
+        
         .password-rules {
             margin-top: 8px;
             font-size: 13px;
             color: #999;
         }
+        
         .rule {
             margin-bottom: 4px;
             display: flex;
             align-items: center;
         }
+        
         .rule i {
             margin-right: 5px;
             width: 16px;
         }
+        
         .rule.valid {
             color: #4CAF50;
         }
-        .timer {
-            text-align: center;
-            margin-top: 15px;
-            color: #FFD700;
-            font-weight: bold;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+        
         .loader {
             display: inline-block;
             width: 20px;
@@ -326,872 +231,465 @@
             animation: spin 1s ease-in-out infinite;
             margin-right: 10px;
         }
+        
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            .content {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
-
-<header class="hidden">
-    <h1>
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-11_142359079.png?raw=true" class="logo" alt="Логотип БК-Банк" />
-        <strong>БК-Банк</strong>
-    </h1>
-    <nav>
-        <a onclick="toggleSection('about')"><strong>Главная</strong></a>
-        <a onclick="toggleSection('services')"><strong>Услуги</strong></a>
-        <a onclick="toggleSection('cards')"><strong>Карты</strong></a> 
-        <a onclick="toggleSection('contact')"><strong>Контакты</strong></a>
-        <a onclick="toggleSection('profile')"><strong>Кабинет</strong></a>
-    </nav>
-</header>
-
-<div class="container hidden">
-    <div class="about-bank">
-        <h2><strong>БК-Банк: Ваш надежный финансовый партнер</strong></h2>
-        <div class="yellow-line"></div>
-        <p><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни. Как говорит наш клиент: "Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление." Мы стремимся сделать каждую Вашу финансовую операцию прозрачной и удобной.</strong></p>
-        <p><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью. Один из наших пользователей отметил: "Я всегда утверждал, что стал пользователем БК-Банка, чтобы сражаться с деньгами. Это была ложь."</strong></p>
+    <div class="container">
+        <div class="header">
+            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-11_142359079.png?raw=true" alt="БК-Банк" class="logo">
+            <h1>Восстановление пароля</h1>
+            <p class="subtitle">Введите данные для сброса пароля</p>
+        </div>
         
-        <h3><strong>Наши продукты</strong></h3>
-        <div class="yellow-line"></div>
-        <p><strong>Будь на стороне добра! Забудьте про враждбов и оформите нашу карту от БК-Банк.</strong></p>
-        
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Изображение о банке" class="bank-image" />
-        
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="Изображение о банке" class="bank-image" />
-        
-        <div class="additional-info" style="color: #FFD700;"><strong>Наши карты</strong></div>
-        <div class="yellow-line"></div>
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты" class="bank-image" />
-
-        <div class="additional-text">
-            <strong>Мы верим, что финансовая грамотность — это ключ к свободе. Каждый день мы работаем над тем, чтобы наши клиенты могли принимать обоснованные решения, основанные на чёткой информации. Мы предлагаем инструменты и ресурсы, которые помогут Вам лучше понять свои расходы и сбережения.</strong>
-            <br /><br />
-            <img src="" style="margin-top: 20px; max-width: 50%; height: auto;" />
+        <div class="content">
+            <!-- Шаг 1: Ввод email -->
+            <div class="step active" id="step1">
+                <div class="message info">
+                    На вашу почту будет отправлена ссылка для сброса пароля
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email адрес</label>
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="email" placeholder="Введите ваш email" required>
+                </div>
+                
+                <button onclick="sendResetEmail()" id="sendEmailBtn">
+                    <span>Отправить ссылку для сброса</span>
+                </button>
+                
+                <div class="links">
+                    <a href="#" onclick="showLogin()">Вернуться к входу</a>
+                </div>
+            </div>
+            
+            <!-- Шаг 2: Ввод кода подтверждения -->
+            <div class="step" id="step2">
+                <div class="message info">
+                    Код подтверждения отправлен на вашу почту
+                </div>
+                
+                <div class="form-group">
+                    <label for="code">Код подтверждения</label>
+                    <i class="fas fa-key input-icon"></i>
+                    <input type="text" id="code" placeholder="Введите код из письма" required maxlength="6">
+                </div>
+                
+                <div class="timer" id="timer">Код действителен: 04:59</div>
+                
+                <button onclick="verifyCode()" id="verifyCodeBtn">
+                    <span>Подтвердить код</span>
+                </button>
+                
+                <div class="links">
+                    <a href="#" onclick="resendCode()">Отправить код повторно</a>
+                </div>
+            </div>
+            
+            <!-- Шаг 3: Ввод нового пароля -->
+            <div class="step" id="step3">
+                <div class="message success">
+                    Email успешно подтвержден
+                </div>
+                
+                <div class="form-group">
+                    <label for="newPassword">Новый пароль</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="newPassword" placeholder="Введите новый пароль" required onkeyup="checkPasswordStrength()">
+                    <div class="password-strength">
+                        <div class="strength-meter" id="passwordStrengthMeter"></div>
+                    </div>
+                    <div class="password-rules">
+                        <div class="rule" id="lengthRule"><i class="fas fa-circle"></i> Не менее 8 символов</div>
+                        <div class="rule" id="uppercaseRule"><i class="fas fa-circle"></i> Содержит заглавные буквы</div>
+                        <div class="rule" id="numberRule"><i class="fas fa-circle"></i> Содержит цифры</div>
+                        <div class="rule" id="specialRule"><i class="fas fa-circle"></i> Содержит специальные символы</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Подтверждение пароля</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="confirmPassword" placeholder="Повторите новый пароль" required onkeyup="checkPasswordMatch()">
+                    <div id="passwordMatch" style="margin-top: 8px; font-size: 13px;"></div>
+                </div>
+                
+                <button onclick="resetPassword()" id="resetPasswordBtn">
+                    <span>Установить новый пароль</span>
+                </button>
+            </div>
+            
+            <!-- Шаг 4: Успешное завершение -->
+            <div class="step" id="step4">
+                <div class="message success">
+                    <i class="fas fa-check-circle"></i> Пароль успешно изменен!
+                </div>
+                
+                <p style="text-align: center; margin: 20px 0;">
+                    Теперь вы можете войти в систему с новым паролем.
+                </p>
+                
+                <button onclick="showLogin()">
+                    <span>Перейти к входу</span>
+                </button>
+            </div>
         </div>
     </div>
 
-    <div id="services" class="services">
-        <h2><strong>Наши услуги</strong></h2>
-        <div class="yellow-line"></div>
-        <ul>
-            <li><strong>Кредитование</strong></li>
-            <li><strong>Депозиты</strong></li>
-            <li><strong>Инвестиционные услуги</strong></li>
-            <li><strong>Консультации по финансовым вопросам</strong></li>
-            <li><strong>Онлайн-банкинг</strong></li>
-        </ul>
-    </div>
-
-    <div id="cards" class="cards">
-        <h2><strong>Наши карты</strong></h2>
-        <div class="yellow-line"></div>
-        <ul>
-            <li><strong>Карта "тень и свет"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_092441724.png?raw=true" alt="Карта тень и свет" class="bank-image" />
-            <li><strong>Карта "чёрно-жёлтая энергия"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_093348500.png?raw=true" alt="Карта чёрно-жёлтая энергия" class="bank-image" />
-            <li><strong>Карта "жёлтая стрела"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_094122593.png?raw=true" alt="Карта жёлтая стрела" class="bank-image" />
-            <li><strong>Карта "золотая волна"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_095046740.png?raw=true" alt="Карта золотая волна" class="bank-image" />
-            <li><strong>Карта "солнечный ночной ветер"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_100946793.png?raw=true" alt="Карта солнечный ночной ветер" class="bank-image" />
-            <li><strong>Карта "БКашная тёмный"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_101740633.png?raw=true" alt="Карта БКашная тёмный" class="bank-image" />
-            <li><strong>Карта "БКашная светлый"</strong></li>
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_102653372.png?raw=true" alt="Карта БКашная светлый" class="bank-image" />
-        </ul>
-        <p><strong>Наши карты всё ещё не будут доступны больше пару месяцев, советуем вам использовать нашу Биржу.</strong></p>
-    </div>
-
-    <div class="contact-info">
-        <h2><strong>Контактная информация</strong></h2>
-        <div class="yellow-line"></div>
-        <p><strong>Email: <a href="mailto:hgaraew@mail.ru" style="color: #FFD700;">БК-Банк email</a></strong></p>
-        <p><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">БК-Банк server</a></p>
-        <p><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">БК-Банк channel</a></p>
-        <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p>
-        <p><strong>Token:</strong> <a href="ЕСЛИ ТЫ ЭТО ВИДИШЬ ЗНАЧИT ТЫ ОТКРЫЛ ПАСХАЛКУ НАПИШИ МНЕ В ДИСКОРД fa5" target="_blank">БК-Банк Token (ещё не вышел)</a></p>
-    </div>
-
-    <div class="profile-section" style="display: none;"></div>
-</div>
-
-<script>
-    // Глобальные переменные
-    let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
-    let currentUser = null;
-    let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
-    let resetCode = '';
-    let userEmail = '';
-    let countdownInterval;
-    let passwordValid = false;
-    let passwordsMatch = false;
-
-    // Инициализация при загрузке страницы
-    window.onload = function() {
-        // Проверяем токен сброса
-        checkResetToken();
+    <script>
+        // Глобальные переменные
+        let resetCode = '';
+        let userEmail = '';
+        let countdownInterval;
+        let passwordValid = false;
+        let passwordsMatch = false;
         
-        // Проверяем, есть ли активная сессия
-        const session = localStorage.getItem('currentSession');
-        if (session) {
-            const sessionData = JSON.parse(session);
-            // Проверяем, не истекла ли сессия (24 часа)
-            if (Date.now() - sessionData.timestamp < 24 * 60 * 60 * 1000) {
-                currentUser = sessionData.username;
-                showMainContent();
-                showWelcomeMessage(users[currentUser].name);
+        // Функция для отправки email с кодом подтверждения
+        function sendResetEmail() {
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const btn = document.getElementById('sendEmailBtn');
+            
+            if (!email) {
+                showMessage('Пожалуйста, введите email адрес', 'error');
                 return;
+            }
+            
+            if (!emailRegex.test(email)) {
+                showMessage('Пожалуйста, введите корректный email адрес', 'error');
+                return;
+            }
+            
+            // Показываем индикатор загрузки
+            btn.innerHTML = '<div class="loader"></div><span>Отправка...</span>';
+            btn.disabled = true;
+            
+            // Имитация отправки email
+            setTimeout(() => {
+                // Сохраняем email
+                userEmail = email;
+                
+                // Генерируем случайный 6-значный код
+                resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+                
+                // В реальном приложении здесь был бы код отправки email
+                // Для демонстрации покажем код в сообщении
+                showMessage(`Код подтверждения отправлен на ${email}. Для демонстрации: ${resetCode}`, 'success');
+                
+                // Восстанавливаем кнопку
+                btn.innerHTML = '<span>Отправить ссылку для сброса</span>';
+                btn.disabled = false;
+                
+                // Переходим к следующему шагу
+                showStep(2);
+                
+                // Запускаем таймер
+                startTimer(5 * 60); // 5 минут
+            }, 1500);
+        }
+        
+        // Функция для проверки кода подтверждения
+        function verifyCode() {
+            const code = document.getElementById('code').value.trim();
+            const btn = document.getElementById('verifyCodeBtn');
+            
+            if (!code) {
+                showMessage('Пожалуйста, введите код подтверждения', 'error');
+                return;
+            }
+            
+            if (code !== resetCode) {
+                showMessage('Неверный код подтверждения', 'error');
+                return;
+            }
+            
+            // Показываем индикатор загрузки
+            btn.innerHTML = '<div class="loader"></div><span>Проверка...</span>';
+            btn.disabled = true;
+            
+            // Имитация проверки кода
+            setTimeout(() => {
+                // Останавливаем таймер
+                clearInterval(countdownInterval);
+                
+                // Восстанавливаем кнопку
+                btn.innerHTML = '<span>Подтвердить код</span>';
+                btn.disabled = false;
+                
+                // Переходим к следующему шагу
+                showStep(3);
+            }, 1000);
+        }
+        
+        // Функция для сброса пароля
+        function resetPassword() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const btn = document.getElementById('resetPasswordBtn');
+            
+            if (!newPassword || !confirmPassword) {
+                showMessage('Пожалуйста, заполните все поля', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 8) {
+                showMessage('Пароль должен содержать минимум 8 символов', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showMessage('Пароли не совпадают', 'error');
+                return;
+            }
+            
+            // Показываем индикатор загрузки
+            btn.innerHTML = '<div class="loader"></div><span>Обновление...</span>';
+            btn.disabled = true;
+            
+            // Имитация обновления пароля
+            setTimeout(() => {
+                // В реальном приложении здесь был бы код обновления пароля в базе данных
+                // Для демонстрации просто покажем успешное сообщение
+                
+                // Сохраняем в localStorage для демонстрации
+                const users = JSON.parse(localStorage.getItem('bankUsers')) || {};
+                let userFound = false;
+                
+                for (const username in users) {
+                    if (users[username].email === userEmail) {
+                        users[username].password = newPassword;
+                        userFound = true;
+                        break;
+                    }
+                }
+                
+                if (!userFound) {
+                    // Создаем демо-пользователя
+                    users['demo_user'] = {
+                        name: 'Демо пользователь',
+                        email: userEmail,
+                        password: newPassword,
+                        balance: 0,
+                        friends: [],
+                        friendRequests: [],
+                        registrationDate: new Date().toISOString()
+                    };
+                }
+                
+                localStorage.setItem('bankUsers', JSON.stringify(users));
+                
+                // Восстанавливаем кнопку
+                btn.innerHTML = '<span>Установить новый пароль</span>';
+                btn.disabled = false;
+                
+                // Переходим к завершающему шагу
+                showStep(4);
+            }, 1500);
+        }
+        
+        // Функция для проверки сложности пароля
+        function checkPasswordStrength() {
+            const password = document.getElementById('newPassword').value;
+            const strengthMeter = document.getElementById('passwordStrengthMeter');
+            const lengthRule = document.getElementById('lengthRule');
+            const uppercaseRule = document.getElementById('uppercaseRule');
+            const numberRule = document.getElementById('numberRule');
+            const specialRule = document.getElementById('specialRule');
+            
+            let strength = 0;
+            let color = '#ff4444';
+            
+            // Проверка длины
+            if (password.length >= 8) {
+                strength += 25;
+                lengthRule.classList.add('valid');
+                lengthRule.innerHTML = '<i class="fas fa-check-circle"></i> Не менее 8 символов';
             } else {
-                // Удаляем просроченную сессию
-                localStorage.removeItem('currentSession');
+                lengthRule.classList.remove('valid');
+                lengthRule.innerHTML = '<i class="fas fa-circle"></i> Не менее 8 символов';
+            }
+            
+            // Проверка заглавных букв
+            if (/[A-ZА-Я]/.test(password)) {
+                strength += 25;
+                uppercaseRule.classList.add('valid');
+                uppercaseRule.innerHTML = '<i class="fas fa-check-circle"></i> Содержит заглавные буквы';
+            } else {
+                uppercaseRule.classList.remove('valid');
+                uppercaseRule.innerHTML = '<i class="fas fa-circle"></i> Содержит заглавные буквы';
+            }
+            
+            // Проверка цифр
+            if (/\d/.test(password)) {
+                strength += 25;
+                numberRule.classList.add('valid');
+                numberRule.innerHTML = '<i class="fas fa-check-circle"></i> Содержит цифры';
+            } else {
+                numberRule.classList.remove('valid');
+                numberRule.innerHTML = '<i class="fas fa-circle"></i> Содержит цифры';
+            }
+            
+            // Проверка специальных символов
+            if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+                strength += 25;
+                specialRule.classList.add('valid');
+                specialRule.innerHTML = '<i class="fas fa-check-circle"></i> Содержит специальные символы';
+            } else {
+                specialRule.classList.remove('valid');
+                specialRule.innerHTML = '<i class="fas fa-circle"></i> Содержит специальные символы';
+            }
+            
+            // Определение цвета
+            if (strength >= 75) {
+                color = '#4CAF50';
+                passwordValid = true;
+            } else if (strength >= 50) {
+                color = '#FFD700';
+                passwordValid = false;
+            } else if (strength >= 25) {
+                color = '#ff9800';
+                passwordValid = false;
+            } else {
+                passwordValid = false;
+            }
+            
+            // Обновление индикатора
+            strengthMeter.style.width = strength + '%';
+            strengthMeter.style.background = color;
+            
+            // Проверка совпадения паролей
+            checkPasswordMatch();
+        }
+        
+        // Функция для проверки совпадения паролей
+        function checkPasswordMatch() {
+            const password = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const matchElement = document.getElementById('passwordMatch');
+            
+            if (confirmPassword.length === 0) {
+                matchElement.textContent = '';
+                passwordsMatch = false;
+                return;
+            }
+            
+            if (password === confirmPassword) {
+                matchElement.innerHTML = '<i class="fas fa-check-circle" style="color:#4CAF50"></i> Пароли совпадают';
+                matchElement.style.color = '#4CAF50';
+                passwordsMatch = true;
+            } else {
+                matchElement.innerHTML = '<i class="fas fa-times-circle" style="color:#ff4444"></i> Пароли не совпадают';
+                matchElement.style.color = '#ff4444';
+                passwordsMatch = false;
             }
         }
         
-        // Если нет активной сессии, показываем форму входа
-        showLoginForm();
-    };
-
-    // Показать форму входа
-    function showLoginForm() {
-        const authForm = document.createElement('div');
-        authForm.className = 'auth-form';
-        authForm.innerHTML = 
-            `<h2 style="text-align: center; color: #FFD700;"><strong>Вход в БК-Банк</strong></h2>
-            <div id="loginError" class="error-message hidden"></div>
-            <div class="input-icon">
-                <i class="fas fa-user"></i>
-                <input type="text" id="loginUsername" placeholder="Ваш никнейм" required>
-            </div>
-            <div class="input-icon">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="loginPassword" placeholder="Пароль" required>
-            </div>
-            <button onclick="login()"><strong>Войти</strong></button>
-            <div class="forgot-password" onclick="showForgotPasswordForm()"><strong>Забыли пароль?</strong></div>
-            <div class="switch-form" onclick="showRegistrationForm()"><strong>Нет аккаунта? Зарегистрироваться</strong></div>`;
-        document.body.appendChild(authForm);
-    }
-
-    // Показать форму восстановления пароля
-    function showForgotPasswordForm() {
-        document.querySelector('.auth-form').remove();
-        
-        const resetForm = document.createElement('div');
-        resetForm.className = 'reset-form';
-        resetForm.innerHTML = 
-            `<h2 style="text-align: center; color: #FFD700;"><strong>Восстановление пароля</strong></h2>
-            <div id="resetError" class="error-message hidden"></div>
-            <div id="resetSuccess" class="success-message hidden"></div>
-            
-            <div class="reset-step active" id="resetStep1">
-                <div class="input-icon">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="resetEmail" placeholder="Ваш email" required>
-                </div>
-                <button onclick="sendResetEmail()" id="sendEmailBtn">
-                    <span>Отправить код подтверждения</span>
-                </button>
-                <div class="switch-form" onclick="showLoginForm()"><strong>Назад к входу</strong></div>
-            </div>
-            
-            <div class="reset-step" id="resetStep2">
-                <div class="input-icon">
-                    <i class="fas fa-key"></i>
-                    <input type="text" id="resetCode" placeholder="Код из письма" required maxlength="6">
-                </div>
-                <div class="timer" id="timer">Код действителен: 04:59</div>
-                <button onclick="verifyResetCode()" id="verifyCodeBtn">
-                    <span>Подтвердить код</span>
-                </button>
-                <div class="switch-form" onclick="resendResetCode()"><strong>Отправить код повторно</strong></div>
-            </div>
-            
-            <div class="reset-step" id="resetStep3">
-                <div class="input-icon">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="newPassword" placeholder="Новый пароль" required onkeyup="checkPasswordStrength()">
-                </div>
-                <div class="password-strength">
-                    <div class="strength-meter" id="passwordStrengthMeter"></div>
-                </div>
-                <div class="password-rules">
-                    <div class="rule" id="lengthRule"><i class="fas fa-circle"></i> Не менее 8 символов</div>
-                    <div class="rule" id="uppercaseRule"><i class="fas fa-circle"></i> Содержит заглавные буквы</div>
-                    <div class="rule" id="numberRule"><i class="fas fa-circle"></i> Содержит цифры</div>
-                    <div class="rule" id="specialRule"><i class="fas fa-circle"></i> Содержит специальные символы</div>
-                </div>
-                
-                <div class="input-icon">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="confirmPassword" placeholder="Подтвердите пароль" required onkeyup="checkPasswordMatch()">
-                </div>
-                <div id="passwordMatch" style="margin-top: 8px; font-size: 13px;"></div>
-                
-                <button onclick="completePasswordReset()" id="resetPasswordBtn">
-                    <span>Установить новый пароль</span>
-                </button>
-            </div>`;
-        document.body.appendChild(resetForm);
-    }
-
-    // Отправить email для сброса пароля
-    function sendResetEmail() {
-        const email = document.getElementById('resetEmail').value;
-        const errorElement = document.getElementById('resetError');
-        const successElement = document.getElementById('resetSuccess');
-        const btn = document.getElementById('sendEmailBtn');
-        
-        // Проверка email
-        if (!email) {
-            showError(errorElement, 'Пожалуйста, введите email');
-            return;
-        }
-        
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(email)) {
-            showError(errorElement, 'Пожалуйста, введите корректный email адрес');
-            return;
-        }
-        
-        // Поиск пользователя по email
-        let foundUser = null;
-        for (const username in users) {
-            if (users[username].email === email) {
-                foundUser = username;
-                break;
-            }
-        }
-        
-        if (!foundUser) {
-            showError(errorElement, 'Пользователь с таким email не найден');
-            return;
-        }
-        
-        // Показываем индикатор загрузки
-        btn.innerHTML = '<div class="loader"></div><span>Отправка...</span>';
-        btn.disabled = true;
-        
-        // Имитация отправки email
-        setTimeout(() => {
-            // Сохраняем email
-            userEmail = email;
-            
-            // Генерируем случайный 6-значный код
+        // Функция для повторной отправки кода
+        function resendCode() {
+            // Генерируем новый код
             resetCode = Math.floor(100000 + Math.random() * 900000).toString();
             
             // В реальном приложении здесь был бы код отправки email
-            showSuccess(successElement, `Код подтверждения отправлен на ${email}. Для демонстрации: ${resetCode}`);
+            showMessage(`Новый код подтверждения отправлен на ${userEmail}. Для демонстрации: ${resetCode}`, 'success');
             
-            // Восстанавливаем кнопку
-            btn.innerHTML = '<span>Отправить код подтверждения</span>';
-            btn.disabled = false;
-            
-            // Переходим к следующему шагу
-            document.getElementById('resetStep1').classList.remove('active');
-            document.getElementById('resetStep2').classList.add('active');
-            
-            // Запускаем таймер
-            startTimer(5 * 60); // 5 минут
-        }, 1500);
-    }
-
-    // Проверить код подтверждения
-    function verifyResetCode() {
-        const code = document.getElementById('resetCode').value.trim();
-        const btn = document.getElementById('verifyCodeBtn');
-        const errorElement = document.getElementById('resetError');
-        
-        if (!code) {
-            showError(errorElement, 'Пожалуйста, введите код подтверждения');
-            return;
-        }
-        
-        if (code !== resetCode) {
-            showError(errorElement, 'Неверный код подтверждения');
-            return;
-        }
-        
-        // Показываем индикатор загрузки
-        btn.innerHTML = '<div class="loader"></div><span>Проверка...</span>';
-        btn.disabled = true;
-        
-        // Имитация проверки кода
-        setTimeout(() => {
-            // Останавливаем таймер
+            // Сбрасываем и перезапускаем таймер
             clearInterval(countdownInterval);
+            startTimer(5 * 60); // 5 минут
+        }
+        
+        // Функция для запуска таймера
+        function startTimer(duration) {
+            const timerElement = document.getElementById('timer');
+            let timer = duration;
+            let minutes, seconds;
             
-            // Восстанавливаем кнопку
-            btn.innerHTML = '<span>Подтвердить код</span>';
-            btn.disabled = false;
-            
-            // Переходим к следующему шагу
-            document.getElementById('resetStep2').classList.remove('active');
-            document.getElementById('resetStep3').classList.add('active');
-        }, 1000);
-    }
-
-    // Завершить сброс пароля
-    function completePasswordReset() {
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-        const btn = document.getElementById('resetPasswordBtn');
-        const errorElement = document.getElementById('resetError');
-        
-        if (!newPassword || !confirmPassword) {
-            showError(errorElement, 'Пожалуйста, заполните все поля');
-            return;
-        }
-        
-        if (newPassword.length < 8) {
-            showError(errorElement, 'Пароль должен содержать минимум 8 символов');
-            return;
-        }
-        
-        if (newPassword !== confirmPassword) {
-            showError(errorElement, 'Пароли не совпадают');
-            return;
-        }
-        
-        // Показываем индикатор загрузки
-        btn.innerHTML = '<div class="loader"></div><span>Обновление...</span>';
-        btn.disabled = true;
-        
-        // Имитация обновления пароля
-        setTimeout(() => {
-            // Обновление пароля в базе пользователей
-            let userUpdated = false;
-            for (const username in users) {
-                if (users[username].email === userEmail) {
-                    users[username].password = newPassword;
-                    userUpdated = true;
-                    break;
-                }
-            }
-            
-            if (!userUpdated) {
-                showError(errorElement, 'Ошибка обновления пароля');
-                btn.innerHTML = '<span>Установить новый пароль</span>';
-                btn.disabled = false;
-                return;
-            }
-            
-            // Сохраняем обновленных пользователей
-            localStorage.setItem('bankUsers', JSON.stringify(users));
-            
-            // Показываем сообщение об успехе
-            showSuccess(document.getElementById('resetSuccess'), 'Пароль успешно изменен!');
-            
-            // Автоматический переход к форме входа через 2 секунды
-            setTimeout(() => {
-                showLoginForm();
-            }, 2000);
-        }, 1500);
-    }
-
-    // Повторно отправить код
-    function resendResetCode() {
-        // Генерируем новый код
-        resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-        
-        // В реальном приложении здесь был бы код отправки email
-        showSuccess(document.getElementById('resetSuccess'), `Новый код подтверждения отправлен на ${userEmail}. Для демонстрации: ${resetCode}`);
-        
-        // Сбрасываем и перезапускаем таймер
-        clearInterval(countdownInterval);
-        startTimer(5 * 60); // 5 минут
-    }
-
-    // Проверка сложности пароля
-    function checkPasswordStrength() {
-        const password = document.getElementById('newPassword').value;
-        const strengthMeter = document.getElementById('passwordStrengthMeter');
-        const lengthRule = document.getElementById('lengthRule');
-        const uppercaseRule = document.getElementById('uppercaseRule');
-        const numberRule = document.getElementById('numberRule');
-        const specialRule = document.getElementById('specialRule');
-        
-        let strength = 0;
-        let color = '#ff4444';
-        
-        // Проверка длины
-        if (password.length >= 8) {
-            strength += 25;
-            lengthRule.classList.add('valid');
-            lengthRule.innerHTML = '<i class="fas fa-check-circle"></i> Не менее 8 символов';
-        } else {
-            lengthRule.classList.remove('valid');
-            lengthRule.innerHTML = '<i class="fas fa-circle"></i> Не менее 8 символов';
-        }
-        
-        // Проверка заглавных букв
-        if (/[A-ZА-Я]/.test(password)) {
-            strength += 25;
-            uppercaseRule.classList.add('valid');
-            uppercaseRule.innerHTML = '<i class="fas fa-check-circle"></i> Содержит заглавные буквы';
-        } else {
-            uppercaseRule.classList.remove('valid');
-            uppercaseRule.innerHTML = '<i class="fas fa-circle"></i> Содержит заглавные буквы';
-        }
-        
-        // Проверка цифр
-        if (/\d/.test(password)) {
-            strength += 25;
-            numberRule.classList.add('valid');
-            numberRule.innerHTML = '<i class="fas fa-check-circle"></i> Содержит цифры';
-        } else {
-            numberRule.classList.remove('valid');
-            numberRule.innerHTML = '<i class="fas fa-circle"></i> Содержит цифры';
-        }
-        
-        // Проверка специальных символов
-        if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-            strength += 25;
-            specialRule.classList.add('valid');
-            specialRule.innerHTML = '<i class="fas fa-check-circle"></i> Содержит специальные символы';
-        } else {
-            specialRule.classList.remove('valid');
-            specialRule.innerHTML = '<i class="fas fa-circle"></i> Содержит специальные символы';
-        }
-        
-        // Определение цвета
-        if (strength >= 75) {
-            color = '#4CAF50';
-            passwordValid = true;
-        } else if (strength >= 50) {
-            color = '#FFD700';
-            passwordValid = false;
-        } else if (strength >= 25) {
-            color = '#ff9800';
-            passwordValid = false;
-        } else {
-            passwordValid = false;
-        }
-        
-        // Обновление индикатора
-        strengthMeter.style.width = strength + '%';
-        strengthMeter.style.background = color;
-        
-        // Проверка совпадения паролей
-        checkPasswordMatch();
-    }
-
-    // Проверка совпадения паролей
-    function checkPasswordMatch() {
-        const password = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-        const matchElement = document.getElementById('passwordMatch');
-        
-        if (confirmPassword.length === 0) {
-            matchElement.textContent = '';
-            passwordsMatch = false;
-            return;
-        }
-        
-        if (password === confirmPassword) {
-            matchElement.innerHTML = '<i class="fas fa-check-circle" style="color:#4CAF50"></i> Пароли совпадают';
-            matchElement.style.color = '#4CAF50';
-            passwordsMatch = true;
-        } else {
-            matchElement.innerHTML = '<i class="fas fa-times-circle" style="color:#ff4444"></i> Пароли не совпадают';
-            matchElement.style.color = '#ff4444';
-            passwordsMatch = false;
-        }
-    }
-
-    // Запуск таймера
-    function startTimer(duration) {
-        const timerElement = document.getElementById('timer');
-        let timer = duration;
-        let minutes, seconds;
-        
-        countdownInterval = setInterval(function() {
-            minutes = parseInt(timer / 60, 10);
-            seconds = parseInt(timer % 60, 10);
-            
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-            
-            timerElement.textContent = "Код действителен: " + minutes + ":" + seconds;
-            timerElement.style.color = "#FFD700";
-            
-            if (--timer < 0) {
-                clearInterval(countdownInterval);
-                timerElement.textContent = "Код устарел";
-                timerElement.style.color = "#ff4444";
-            }
-        }, 1000);
-    }
-
-    // Показать форму регистрации
-    function showRegistrationForm() {
-        document.querySelector('.auth-form').remove();
-        
-        const authForm = document.createElement('div');
-        authForm.className = 'auth-form';
-        authForm.innerHTML = 
-            `<h2 style="text-align: center; color: #FFD700;"><strong>Регистрация в БК-Банк</strong></h2>
-            <div id="registerError" class="error-message hidden"></div>
-            <input type="text" id="regName" placeholder="Ваше имя" required>
-            <input type="text" id="regUsername" placeholder="Ваш никнейм" required>
-            <input type="email" id="regEmail" placeholder="Ваша электронная почта" required>
-            <input type="password" id="regPassword" placeholder="Пароль (минимум 6 символов)" required>
-            <input type="password" id="regConfirmPassword" placeholder="Подтвердите пароль" required>
-            <button onclick="register()"><strong>Зарегистрироваться</strong></button>
-            <div class="switch-form" onclick="showLoginForm()"><strong>Уже есть аккаунт? Войти</strong></div>`;
-        document.body.appendChild(authForm);
-    }
-
-    // Функция входа
-    function login() {
-        const username = document.getElementById('loginUsername').value.trim();
-        const password = document.getElementById('loginPassword').value;
-        const errorElement = document.getElementById('loginError');
-        
-        // Проверка введенных данных
-        if (!username || !password) {
-            showError(errorElement, 'Пожалуйста, заполните все поля');
-            return;
-        }
-        
-        // Проверка существования пользователя
-        if (!users[username]) {
-            showError(errorElement, 'Пользователь с таким никнеймом не найден');
-            return;
-        }
-        
-        // Проверка пароля
-        if (users[username].password !== password) {
-            showError(errorElement, 'Неверный пароль');
-            return;
-        }
-        
-        // Успешный вход
-        currentUser = username;
-        
-        // Создаем сессию
-        const sessionData = {
-            username: username,
-            timestamp: Date.now()
-        };
-        localStorage.setItem('currentSession', JSON.stringify(sessionData));
-        
-        // Убираем форму и показываем основной контент
-        document.querySelector('.auth-form').remove();
-        showMainContent();
-        showWelcomeMessage(users[username].name);
-    }
-
-    // Функция регистрации
-    function register() {
-        const name = document.getElementById('regName').value.trim();
-        const username = document.getElementById('regUsername').value.trim();
-        const email = document.getElementById('regEmail').value;
-        const password = document.getElementById('regPassword').value;
-        const confirmPassword = document.getElementById('regConfirmPassword').value;
-        const errorElement = document.getElementById('registerError');
-        
-        // Проверка заполнения всех полей
-        if (!name || !username || !email || !password || !confirmPassword) {
-            showError(errorElement, 'Пожалуйста, заполните все поля');
-            return;
-        }
-        
-        // Проверка имени (должно содержать хотя бы одну букву)
-        const nameRegex = /[a-zA-Zа-яА-ЯЁё]/;
-        if (!nameRegex.test(name)) {
-            showError(errorElement, 'Имя должно содержать хотя бы одну букву');
-            return;
-        }
-        
-        // Проверка никнейма (должен содержать хотя бы одну букву)
-        if (!nameRegex.test(username)) {
-            showError(errorElement, 'Никнейм должен содержать хотя бы одну букву');
-            return;
-        }
-        
-        // Проверка email
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(email)) {
-            showError(errorElement, 'Пожалуйста, введите корректный адрес электронной почты');
-            return;
-        }
-        
-        // Проверка пароля
-        if (password.length < 6) {
-            showError(errorElement, 'Пароль должен содержать минимум 6 символов');
-            return;
-        }
-        
-        // Проверка совпадения паролей
-        if (password !== confirmPassword) {
-            showError(errorElement, 'Пароли не совпадают');
-            return;
-        }
-        
-        // Проверка существования пользователя
-        if (users[username]) {
-            showError(errorElement, 'Пользователь с таким никнеймом уже существует');
-            return;
-        }
-        
-        // Проверка email на уникальность
-        for (const user in users) {
-            if (users[user].email === email) {
-                showError(errorElement, 'Пользователь с таким email уже существует');
-                return;
-            }
-        }
-        
-        // Создание нового пользователя
-        users[username] = {
-            name: name,
-            email: email,
-            password: password,
-            balance: 0,
-            friends: [],
-            friendRequests: [],
-            registrationDate: new Date().toISOString()
-        };
-        
-        // Сохранение в localStorage
-        localStorage.setItem('bankUsers', JSON.stringify(users));
-        
-        // Автоматический вход после регистрации
-        currentUser = username;
-        
-        // Создаем сессию
-        const sessionData = {
-            username: username,
-            timestamp: Date.now()
-        };
-        localStorage.setItem('currentSession', JSON.stringify(sessionData));
-        
-        // Убираем форму и показываем основной контент
-        document.querySelector('.auth-form').remove();
-        showMainContent();
-        showWelcomeMessage(name);
-    }
-
-    // Показать основной контент
-    function showMainContent() {
-        document.querySelectorAll('header, .container').forEach(el => el.classList.remove('hidden'));
-        toggleSection('about');
-    }
-
-    // Показать приветственное сообщение
-    function showWelcomeMessage(name) {
-        const welcomeMessage = document.createElement('div');
-        welcomeMessage.className = 'welcome-message';
-        welcomeMessage.innerHTML = `<strong>Добро пожаловать, ${name}! Мы рады видеть вас в БК-Банке.</strong>`;
-        document.body.appendChild(welcomeMessage);
-
-        // Удаляем сообщение через 3 секунды
-        setTimeout(() => {
-            welcomeMessage.classList.add('fade-out');
-            setTimeout(() => {
-                welcomeMessage.remove();
-            }, 1000);
-        }, 3000);
-    }
-
-    // Показать ошибку
-    function showError(element, message) {
-        element.textContent = message;
-        element.classList.remove('hidden');
-        setTimeout(() => {
-            element.classList.add('hidden');
-        }, 3000);
-    }
-
-    // Показать успешное сообщение
-    function showSuccess(element, message) {
-        element.textContent = message;
-        element.classList.remove('hidden');
-        setTimeout(() => {
-            element.classList.add('hidden');
-        }, 5000);
-    }
-
-    // Выход из системы
-    function logout() {
-        // Удаляем сессию
-        localStorage.removeItem('currentSession');
-        currentUser = null;
-        
-        // Скрываем основной контент
-        document.querySelectorAll('header, .container').forEach(el => el.classList.add('hidden'));
-        
-        // Показываем форму входа
-        showLoginForm();
-    }
-
-    // Показать профиль пользователя
-    function showProfile() {
-        const user = users[currentUser];
-        const profileSection = document.querySelector('.profile-section');
-        profileSection.innerHTML = 
-            `<h2><strong>Ваш Кабинет</strong></h2>
-            <div class="yellow-line"></div>
-            <div class="user-profile">
-                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_17-50-13-Photoroom.png?raw=true" alt="Иконка пользователя" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
-                <span><strong>${user.name</strong></span>
-                <button class="logout-button" onclick="logout()"><strong>Выйти</strong></button>
-            </div>
-            <p><strong>Никнейм: ${currentUser}</strong></p>
-            <p><strong>Email: <a href="mailto:${user.email}" style="color: #FFD700;">${user.email}</a></strong></p>
-            <p><strong>Баланс: ${user.balance} ₽</strong></p>
-            <p><strong>Дата регистрации: ${new Date(user.registrationDate).toLocaleDateString()}</strong></p>
-            
-            <div class="add-friend">
-                <h3><strong>Добавить в друзья</strong></h3>
-                <input type="text" id="friendName" placeholder="Имя или Email друга" required>
-                <button onclick="sendFriendRequest()"><strong>Отправить запрос</strong></button>
-            </div>
-            <div class="friend-list">
-                <h3><strong>Список друзей</strong></h3>
-                <ul id="friends">${user.friends.length ? user.friends.map(friend => `<li>${friend}</li>`).join('') : '<li>У вас пока нет друзей</li>'}</ul>
-            </div>
-            <div class="friend-requests">
-                <h3><strong>Запросы в друзья</strong></h3>
-                <ul id="friendRequests">${user.friendRequests.length ? user.friendRequests.map(request => `
-                    <li>${request} 
-                        <button onclick="acceptFriendRequest('${request}')">Принять</button>
-                        <button onclick="declineFriendRequest('${request}')">Отклонить</button>
-                    </li>`).join('') : '<li>Запросов нет</li>'}</ul>
-            </div>`;
-        profileSection.style.display = 'block';
-    }
-
-    // Отправить запрос на дружбу
-    function sendFriendRequest() {
-        const friendIdentifier = document.getElementById('friendName').value.trim();
-        if (!friendIdentifier) {
-            alert("Пожалуйста, введите имя или email друга.");
-            return;
-        }
-        
-        // Поиск пользователя по имени или email
-        let foundUser = null;
-        for (const username in users) {
-            if (username === friendIdentifier || users[username].email === friendIdentifier) {
-                foundUser = username;
-                break;
-            }
-        }
-        
-        if (!foundUser) {
-            alert("Пользователь не найден.");
-            return;
-        }
-        
-        if (foundUser === currentUser) {
-            alert("Вы не можете добавить себя в друзья.");
-            return;
-        }
-        
-        if (users[currentUser].friends.includes(foundUser)) {
-            alert("Этот пользователь уже у вас в друзьях.");
-            return;
-        }
-        
-        if (users[foundUser].friendRequests.includes(currentUser)) {
-            alert("Вы уже отправили запрос этому пользователю.");
-            return;
-        }
-        
-        // Добавляем запрос в друзья
-        users[foundUser].friendRequests.push(currentUser);
-        localStorage.setItem('bankUsers', JSON.stringify(users));
-        
-        alert(`Запрос в друзья отправлен пользователю ${foundUser}`);
-        document.getElementById('friendName').value = '';
-    }
-
-    // Принять запрос на дружбу
-    function acceptFriendRequest(friendUsername) {
-        const user = users[currentUser];
-        
-        // Удаляем запрос из списка
-        user.friendRequests = user.friendRequests.filter(request => request !== friendUsername);
-        
-        // Добавляем в друзья
-        if (!user.friends.includes(friendUsername)) {
-            user.friends.push(friendUsername);
-        }
-        
-        // Также добавляем текущего пользователя в друзья к тому, кто отправил запрос
-        if (!users[friendUsername].friends.includes(currentUser)) {
-            users[friendUsername].friends.push(currentUser);
-        }
-        
-        // Сохраняем изменения
-        localStorage.setItem('bankUsers', JSON.stringify(users));
-        
-        // Обновляем профиль
-        showProfile();
-        alert(`Вы добавили ${friendUsername} в друзья!`);
-    }
-
-    // Отклонить запрос на дружбу
-    function declineFriendRequest(friendUsername) {
-        users[currentUser].friendRequests = users[currentUser].friendRequests.filter(request => request !== friendUsername);
-        localStorage.setItem('bankUsers', JSON.stringify(users));
-        showProfile();
-        alert(`Запрос от ${friendUsername} отклонен.`);
-    }
-
-    // Переключение между разделами
-    function toggleSection(section) {
-        // Скрываем все секции
-        document.querySelectorAll('.about-bank, #services, #cards, .contact-info, .profile-section').forEach(el => {
-            el.style.display = 'none';
-        });
-        
-        // Показываем выбранную секцию
-        if (section === 'services') {
-            document.getElementById('services').style.display = 'block';
-        } else if (section === 'cards') {
-            document.getElementById('cards').style.display = 'block';
-        } else if (section === 'contact') {
-            document.querySelector('.contact-info').style.display = 'block';
-        } else if (section === 'about') {
-            document.querySelector('.about-bank').style.display = 'block';
-        } else if (section === 'profile') {
-            showProfile();
-        }
-    }
-
-    // Проверка токена сброса при загрузке
-    function checkResetToken() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const resetToken = urlParams.get('resetToken');
-        
-        if (resetToken && resetTokens[resetToken]) {
-            if (Date.now() > resetTokens[resetToken].expires) {
-                alert('Ссылка для сброса пароля истекла');
-                delete resetTokens[resetToken];
-                localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
-                window.history.replaceState({}, document.title, window.location.pathname);
-            } else {
-                // Автоматически заполняем email и переходим к шагу ввода кода
-                userEmail = resetTokens[resetToken].email;
-                showForgotPasswordForm();
-                document.getElementById('resetEmail').value = userEmail;
-                document.getElementById('resetStep1').classList.remove('active');
-                document.getElementById('resetStep2').classList.add('active');
+            countdownInterval = setInterval(function() {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
                 
-                // Генерируем код для демонстрации
-                resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-                startTimer(5 * 60);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                
+                timerElement.textContent = "Код действителен: " + minutes + ":" + seconds;
+                timerElement.style.color = "#FFD700";
+                
+                if (--timer < 0) {
+                    clearInterval(countdownInterval);
+                    timerElement.textContent = "Код устарел";
+                    timerElement.style.color = "#ff4444";
+                }
+            }, 1000);
+        }
+        
+        // Функция для отображения сообщения
+        function showMessage(message, type) {
+            // Удаляем предыдущие сообщения
+            const existingMessages = document.querySelectorAll('.message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            // Создаем новое сообщение
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${type}`;
+            messageElement.innerHTML = message;
+            
+            // Вставляем сообщение в начало контента
+            const content = document.querySelector('.content');
+            const activeStep = content.querySelector('.step.active');
+            content.insertBefore(messageElement, activeStep);
+            
+            // Автоматически скрываем сообщение через 5 секунд
+            if (type !== 'info') {
+                setTimeout(() => {
+                    messageElement.remove();
+                }, 5000);
             }
         }
-    }
-</script>
-
+        
+        // Функция для переключения между шагами
+        function showStep(stepNumber) {
+            // Скрываем все шаги
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Показываем выбранный шаг
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+        }
+        
+        // Функция для перехода к форме входа
+        function showLogin() {
+            // В реальном приложении здесь был бы переход на страницу входа
+            alert('В реальном приложении здесь будет переход на страницу входа');
+            // Обычно это: window.location.href = 'login.html';
+        }
+        
+        // Инициализация при загрузке страницы
+        window.onload = function() {
+            // Показываем первый шаг
+            showStep(1);
+            
+            // Проверяем, есть ли email в URL параметрах
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email');
+            
+            if (email) {
+                document.getElementById('email').value = email;
+            }
+        };
+    </script>
 </body>
 </html>
