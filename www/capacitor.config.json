@@ -1,5 +1,5 @@
 {
   "appId": "com.bkbank.app",
   "appName": "BK-Bank",
-  "webDir": "www"
+  "webDir": "."
 }

@@ -1,0 +1,14 @@
+{
+  "project": "BK-Bank",
+  "platform": "ios",
+  "github": {
+    "owner": "lybat25",
+    "repo": "BK-Bank"
+  },
+  "ios": {},
+  "flutter": {
+    "watch": {}
+  },
+  "reactNative": {},
+  "mobai": {}
+}
