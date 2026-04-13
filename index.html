@@ -2,13 +2,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>БК-Банк — Финансы нового поколения</title>
+    <title>BK-Bank — Финансы нового поколения</title>
     
     <!-- PWA Support -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="БК-Банк">
+    <meta name="apple-mobile-web-app-title" content="BK-Bank">
     <meta name="theme-color" content="#0a0a0a">
     <link rel="apple-touch-icon" href="png/2025-01-31_14-13-47-Photoroom.png">
     
@@ -134,8 +134,8 @@
 
 <header class="glass-header hidden">
     <div class="logo-wrapper">
-        <img src="png/2025-01-31_14-13-47-Photoroom.png" class="logo-img" alt="БК-Банк">
-        <span class="bank-name">БК-Банк</span>
+        <img src="png/2025-01-31_14-13-47-Photoroom.png" class="logo-img" alt="BK-Bank">
+        <span class="bank-name">BK-Bank</span>
     </div>
     <nav class="nav-links">
         <button class="nav-link" onclick="toggleSection('about')">Главная</button>
@@ -150,7 +150,7 @@
     <div id="about-section" class="content-card">
         <h2>Ваш надёжный финансовый партнёр</h2>
         <div class="divider"></div>
-        <p style="font-size: 1.2rem; margin-bottom: 30px;"><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни.</strong></p>
+        <p style="font-size: 1.2rem; margin-bottom: 30px;"><strong>В BK-Bank мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни.</strong></p>
         <div class="image-grid">
             <div class="image-grid-item"><img src="png/2025-01-30_15-13-31-Photoroom.png" alt="Карта"></div>
             <div class="image-grid-item"><img src="png/2025-01-30_15-58-26-Photoroom.png" alt="Карта"></div>
@@ -173,7 +173,7 @@
     <div id="cards-section" class="content-card hidden">
         <h2>Эксклюзивные карты</h2><div class="divider"></div>
         <div class="cards-stack" id="cards-stack-container"></div>
-        <div class="cards-footer"><div class="cards-footer-text"><strong>✨ Все представленные карты доступны для оформления в отделениях БК-Банка ✨</strong><br><i style="color: #FFD700; opacity: 0.8; font-size: 0.95rem;">Выберите свою идеальную карту из нашей эксклюзивной коллекции</i></div></div>
+        <div class="cards-footer"><div class="cards-footer-text"><strong>✨ Все представленные карты доступны для оформления в отделениях BK-Bank ✨</strong><br><i style="color: #FFD700; opacity: 0.8; font-size: 0.95rem;">Выберите свою идеальную карту из нашей эксклюзивной коллекции</i></div></div>
     </div>
 
     <div id="support-section" class="content-card hidden">
@@ -239,7 +239,7 @@
     function showLoginForm() {
         removeModals();
         const m = document.createElement('div'); m.className = 'modal-form';
-        m.innerHTML = `<div class="form-title">Вход</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="login()">Войти</button><span class="text-link" onclick="showForgotPasswordForm()">Забыли пароль?</span><span class="text-link" onclick="showRegistrationForm()">Регистрация</span>`;
+        m.innerHTML = `<div class="form-title">Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="login()">Войти</button><span class="text-link" onclick="showForgotPasswordForm()">Забыли пароль?</span><span class="text-link" onclick="showRegistrationForm()">Регистрация</span>`;
         document.body.appendChild(m);
     }
 
