@@ -52,18 +52,23 @@
         .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.04) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.03) 0%, transparent 50%); pointer-events: none; z-index: -1; }
         .particle { position: fixed; width: 2px; height: 2px; background: #FFD700; border-radius: 50%; opacity: 0.15; pointer-events: none; z-index: -1; animation: float 20s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0) translateX(0); } 25% { transform: translateY(-30px) translateX(15px); } 50% { transform: translateY(-15px) translateX(-20px); } 75% { transform: translateY(20px) translateX(10px); } }
-        .glass-header { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); background-color: rgba(18, 18, 18, 0.85); border-bottom: 1px solid rgba(255, 215, 0, 0.15); padding: 16px 32px; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
+        .glass-header { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); background-color: rgba(18, 18, 18, 0.85); border-bottom: 1px solid rgba(255, 215, 0, 0.15); padding: 16px 32px; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; }
         .logo-wrapper { display: flex; align-items: center; gap: 12px; }
-        .logo-img { width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
+        .logo-img { width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); transition: all 0.3s ease; }
+        .logo-img:hover { transform: scale(1.08); filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.7)); }
         .bank-name { font-size: 1.9rem; font-weight: 800; background: linear-gradient(135deg, #FFD700, #FFC200, #FFE44D); background-size: 200% 200%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradientShift 4s ease infinite; }
         @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
         .nav-links { display: flex; gap: 8px; }
-        .nav-link { background: transparent; border: none; color: #e0e0e0; padding: 12px 24px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.25s; }
-        .nav-link:hover { color: #FFD700; transform: translateY(-2px); background: rgba(255,215,0,0.1); }
-        .theme-toggle { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 8px 16px; border-radius: 30px; cursor: pointer; margin-left: 15px; font-size: 0.9rem; }
+        .nav-link { background: transparent; border: none; color: #e0e0e0; padding: 12px 24px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.25s ease; position: relative; overflow: hidden; }
+        .nav-link::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, transparent 80%); opacity: 0; transition: opacity 0.25s ease; z-index: -1; }
+        .nav-link:hover { color: #FFD700; transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(255, 215, 0, 0.2); }
+        .nav-link:hover::before { opacity: 1; }
+        .theme-toggle { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 8px 16px; border-radius: 30px; cursor: pointer; margin-left: 15px; font-size: 0.9rem; transition: all 0.25s ease; }
+        .theme-toggle:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(255, 215, 0, 0.2); }
         body.light-theme .theme-toggle { border: 1px solid #0a0a0a; color: #0a0a0a; }
         .main-container { max-width: 1300px; margin: 30px auto; padding: 0 24px; }
-        .content-card { background: rgba(25, 25, 25, 0.75); backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.12); border-radius: 32px; padding: 36px; margin-bottom: 30px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); animation: fadeInUp 0.6s ease-out; }
+        .content-card { background: rgba(25, 25, 25, 0.75); backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.12); border-radius: 32px; padding: 36px; margin-bottom: 30px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transition: all 0.4s ease; animation: fadeInUp 0.6s ease-out; }
+        .content-card:hover { border-color: rgba(255, 215, 0, 0.25); }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         h2 { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; background-clip: text; color: transparent; }
         body.light-theme h2 { background: linear-gradient(135deg, #0a0a0a, #333); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -73,64 +78,90 @@
         a, .text-link { color: #FFD700 !important; text-decoration: none; }
         body.light-theme a, body.light-theme .text-link { color: #0a0a0a !important; }
         .image-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin: 30px 0; }
-        .image-grid-item { background: rgba(255, 215, 0, 0.02); border-radius: 20px; padding: 16px; border: 1px solid rgba(255, 215, 0, 0.08); }
+        .image-grid-item { background: rgba(255, 215, 0, 0.02); border-radius: 20px; padding: 16px; border: 1px solid rgba(255, 215, 0, 0.08); transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+        .image-grid-item:hover { transform: scale(1.02) translateY(-5px); border-color: rgba(255, 215, 0, 0.3); box-shadow: 0 20px 40px -15px rgba(255, 215, 0, 0.15); }
         body.light-theme .image-grid-item { background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.1); }
-        .image-grid-item img { width: 100%; border-radius: 14px; mix-blend-mode: lighten; }
+        body.light-theme .image-grid-item:hover { border-color: rgba(0,0,0,0.3); box-shadow: 0 20px 40px -15px rgba(0,0,0,0.15); }
+        .image-grid-item img { width: 100%; border-radius: 14px; mix-blend-mode: lighten; transition: filter 0.3s ease; }
+        .image-grid-item:hover img { filter: brightness(1.1); }
         body.light-theme .image-grid-item img { mix-blend-mode: normal; }
-        .advantages-block { margin-top: 40px; padding: 30px; background: rgba(255, 215, 0, 0.03); border-radius: 24px; }
-        body.light-theme .advantages-block { background: rgba(0,0,0,0.03); }
+        .advantages-block { margin-top: 40px; padding: 30px; background: rgba(255, 215, 0, 0.03); border-radius: 24px; border: 1px solid rgba(255, 215, 0, 0.1); }
+        body.light-theme .advantages-block { background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.1); }
         .advantages-quote { font-size: 1.3rem; color: #FFD700; text-align: center; font-style: italic; }
         body.light-theme .advantages-quote { color: #0a0a0a; }
         .cards-stack { display: flex; justify-content: center; margin: 40px 0; position: relative; min-height: 450px; perspective: 1200px; }
-        .stack-card { position: absolute; width: 300px; transition: all 0.5s; cursor: pointer; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); }
-        .stack-card img { width: 100%; border-radius: 20px; border: 2px solid rgba(255,215,0,0.3); mix-blend-mode: lighten; }
-        body.light-theme .stack-card img { mix-blend-mode: normal; border: 2px solid rgba(0,0,0,0.3); }
+        .stack-card { position: absolute; width: 300px; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); }
+        .stack-card img { width: 100%; border-radius: 20px; border: 2px solid rgba(255,215,0,0.3); mix-blend-mode: lighten; transition: all 0.3s ease; }
         .stack-card:hover img { border-color: #FFD700; box-shadow: 0 0 35px rgba(255,215,0,0.25); }
+        body.light-theme .stack-card img { mix-blend-mode: normal; border: 2px solid rgba(0,0,0,0.3); }
         body.light-theme .stack-card:hover img { border-color: #0a0a0a; box-shadow: 0 0 35px rgba(0,0,0,0.25); }
-        .cards-footer-text { background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 60px; padding: 16px 40px; color: #FFD700; display: inline-block; }
+        .cards-footer-text { background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 60px; padding: 16px 40px; color: #FFD700; display: inline-block; transition: all 0.3s ease; }
+        .cards-footer-text:hover { background: rgba(255,215,0,0.1); border-color: #FFD700; transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,215,0,0.15); }
         .services-list { list-style: none; }
-        .services-list li { padding: 16px; margin: 8px 0; background: rgba(255,215,0,0.02); border-radius: 60px; }
+        .services-list li { padding: 16px; margin: 8px 0; background: rgba(255,215,0,0.02); border-radius: 60px; transition: all 0.3s ease; }
+        .services-list li:hover { background: rgba(255,215,0,0.06); transform: translateX(8px); }
         .services-list li::before { content: '✦'; color: #FFD700; margin-right: 15px; }
         body.light-theme .services-list li::before { color: #0a0a0a; }
-        .modal-form { background: rgba(20,20,20,0.95); backdrop-filter: blur(25px); border: 1px solid rgba(255,215,0,0.2); border-radius: 40px; padding: 40px; width: 420px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; max-height: 90vh; overflow-y: auto; }
+        .modal-form { background: rgba(20,20,20,0.95); backdrop-filter: blur(25px); border: 1px solid rgba(255,215,0,0.2); border-radius: 40px; padding: 40px; width: 420px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; max-height: 90vh; overflow-y: auto; animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes modalPop { from { opacity: 0; transform: translate(-50%, -48%); } to { opacity: 1; transform: translate(-50%, -50%); } }
         body.light-theme .modal-form { background: rgba(255,215,0,0.95); border: 1px solid rgba(0,0,0,0.2); }
         .form-title { font-size: 2rem; color: #FFD700; text-align: center; margin-bottom: 30px; }
         body.light-theme .form-title { color: #0a0a0a; }
-        .form-input, .form-select { width: 100%; padding: 16px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 60px; color: white; }
+        .form-input, .form-select { width: 100%; padding: 16px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 60px; color: white; transition: all 0.2s ease; }
+        .form-input:focus { border-color: #FFD700; background: rgba(255,255,255,0.08); box-shadow: 0 0 0 4px rgba(255,215,0,0.1); outline: none; }
         .form-select option { background: #1a1a1a; }
         body.light-theme .form-select option { background: #FFD700; color: #0a0a0a; }
-        .gold-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 60px; font-weight: 700; cursor: pointer; margin-top: 10px; color: #0a0a0a; }
-        .danger-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #ff4444, #cc0000); border: none; border-radius: 60px; font-weight: 700; cursor: pointer; margin-top: 10px; color: white; }
-        .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 15px 0; cursor: pointer; }
-        .toast-message { position: fixed; top: 100px; right: 30px; background: rgba(20,20,20,0.95); border-left: 6px solid #FFD700; padding: 20px 30px; border-radius: 60px; z-index: 9998; }
+        .gold-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 60px; font-weight: 700; cursor: pointer; margin-top: 10px; color: #0a0a0a; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(255,215,0,0.2); }
+        .gold-button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255,215,0,0.35); }
+        .danger-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #ff4444, #cc0000); border: none; border-radius: 60px; font-weight: 700; cursor: pointer; margin-top: 10px; color: white; transition: all 0.3s ease; }
+        .danger-button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255,0,0,0.3); }
+        .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 15px 0; cursor: pointer; transition: all 0.2s; }
+        .text-link:hover { color: #FFE44D !important; text-decoration: underline !important; }
+        .toast-message { position: fixed; top: 100px; right: 30px; background: rgba(20,20,20,0.95); backdrop-filter: blur(20px); border-left: 6px solid #FFD700; padding: 20px 30px; border-radius: 60px 16px 16px 60px; z-index: 9998; box-shadow: 0 20px 40px rgba(0,0,0,0.5); animation: slideIn 0.4s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
         body.light-theme .toast-message { background: rgba(255,215,0,0.95); border-left: 6px solid #0a0a0a; color: #0a0a0a; }
+        .fade-out { opacity: 0; transition: opacity 0.8s ease; }
         .hidden { display: none !important; }
         .error-text { color: #ff5e5e; }
         .profile-header { display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255,215,0,0.03); border-radius: 40px; flex-wrap: wrap; }
-        .profile-avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #FFD700; object-fit: cover; cursor: pointer; }
+        .profile-avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #FFD700; object-fit: cover; cursor: pointer; transition: all 0.3s ease; }
+        .profile-avatar:hover { transform: scale(1.05); border-color: #FFE44D; }
         body.light-theme .profile-avatar { border: 3px solid #0a0a0a; }
-        .logout-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 10px 24px; border-radius: 40px; cursor: pointer; }
+        .logout-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 10px 24px; border-radius: 40px; cursor: pointer; transition: all 0.2s; }
+        .logout-btn:hover { background: #FFD700; color: #0a0a0a; }
         body.light-theme .logout-btn { border: 1.5px solid #0a0a0a; color: #0a0a0a; }
-        .edit-profile-btn { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 10px 20px; border-radius: 30px; cursor: pointer; margin-top: 15px; }
+        body.light-theme .logout-btn:hover { background: #0a0a0a; color: #FFD700; }
+        .edit-profile-btn { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 10px 20px; border-radius: 30px; cursor: pointer; margin-top: 15px; transition: all 0.2s; }
+        .edit-profile-btn:hover { background: rgba(255,215,0,0.1); }
         body.light-theme .edit-profile-btn { border: 1px solid #0a0a0a; color: #0a0a0a; }
-        .export-btn { background: transparent; border: 1px solid #4ade80; color: #4ade80; padding: 10px 20px; border-radius: 30px; cursor: pointer; margin-top: 15px; margin-left: 10px; }
+        .export-btn { background: transparent; border: 1px solid #4ade80; color: #4ade80; padding: 10px 20px; border-radius: 30px; cursor: pointer; margin-top: 15px; margin-left: 10px; transition: all 0.2s; }
+        .export-btn:hover { background: rgba(74,222,128,0.1); }
         .support-panel { display: flex; gap: 20px; }
         .users-list { width: 260px; background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; }
-        .user-item { padding: 12px; margin-bottom: 8px; background: rgba(255,215,0,0.05); border-radius: 10px; cursor: pointer; }
+        .user-item { padding: 12px; margin-bottom: 8px; background: rgba(255,215,0,0.05); border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+        .user-item:hover { background: rgba(255,215,0,0.1); }
         .user-item.active { background: rgba(255,215,0,0.15); border: 1px solid #FFD700; }
         body.light-theme .user-item.active { border: 1px solid #0a0a0a; }
         .chat-area { flex: 1; }
         .chat-messages { max-height: 350px; overflow-y: auto; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 15px; margin-bottom: 20px; }
-        .chat-message { margin-bottom: 12px; padding: 12px; border-radius: 18px; max-width: 80%; position: relative; }
+        .chat-message { margin-bottom: 12px; padding: 12px; border-radius: 18px; max-width: 80%; position: relative; animation: messagePop 0.3s ease; }
+        @keyframes messagePop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         .chat-message.client { background: rgba(255,215,0,0.15); margin-left: auto; }
         .chat-message.support { background: rgba(255,255,255,0.06); }
+        .chat-message small { display: block; font-size: 0.7rem; color: #888; margin-top: 5px; }
+        body.light-theme .chat-message small { color: #555; }
         .chat-input-area { display: flex; gap: 10px; }
-        .chat-input { flex: 1; padding: 14px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 30px; color: white; }
-        .chat-send-btn { padding: 14px 28px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 30px; font-weight: 700; cursor: pointer; color: #0a0a0a; }
-        .private-chat-item { padding: 12px; margin-bottom: 8px; background: rgba(255,215,0,0.05); border-radius: 10px; cursor: pointer; }
-        .clear-chat-btn { background: rgba(255,100,100,0.2); border: 1px solid #ff6b6b; color: #ff6b6b; padding: 8px 16px; border-radius: 30px; cursor: pointer; }
-        .delete-msg-btn { position: absolute; top: 5px; right: 5px; width: 22px; height: 22px; background: rgba(255,100,100,0.5); border: none; border-radius: 50%; color: white; font-size: 14px; cursor: pointer; display: none; }
-        .chat-message:hover .delete-msg-btn { display: flex; align-items: center; justify-content: center; }
+        .chat-input { flex: 1; padding: 14px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 30px; color: white; transition: all 0.2s; }
+        .chat-input:focus { border-color: #FFD700; outline: none; }
+        .chat-send-btn { padding: 14px 28px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 30px; font-weight: 700; cursor: pointer; color: #0a0a0a; transition: all 0.2s; }
+        .chat-send-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,215,0,0.2); }
+        .private-chat-item { padding: 12px; margin-bottom: 8px; background: rgba(255,215,0,0.05); border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+        .private-chat-item:hover { background: rgba(255,215,0,0.1); }
+        .clear-chat-btn { background: rgba(255,100,100,0.2); border: 1px solid #ff6b6b; color: #ff6b6b; padding: 8px 16px; border-radius: 30px; cursor: pointer; transition: all 0.2s; }
+        .clear-chat-btn:hover { background: rgba(255,100,100,0.3); }
+        .delete-msg-btn { position: absolute; top: 5px; right: 5px; width: 22px; height: 22px; background: rgba(255,100,100,0.5); border: none; border-radius: 50%; color: white; font-size: 14px; cursor: pointer; display: none; align-items: center; justify-content: center; transition: all 0.2s; }
+        .delete-msg-btn:hover { background: #ff4444; }
+        .chat-message:hover .delete-msg-btn { display: flex; }
         .profile-info { margin: 25px 0; }
         .profile-info p { margin: 15px 0; font-size: 1.1rem; }
         .edit-field { margin-bottom: 25px; }
@@ -138,7 +169,8 @@
         body.light-theme .token-balance { color: #0a0a0a; }
         .order-book { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
         .order-side { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; }
-        .order-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid rgba(255,215,0,0.1); }
+        .order-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid rgba(255,215,0,0.1); animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .buy { color: #4ade80; }
         .sell { color: #ff5e5e; }
         body.light-theme .buy { color: #006400; }
@@ -148,8 +180,9 @@
         .chart-candle.red { background: #ff5e5e; }
         .tasks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
         .task-item { background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.1); border-radius: 15px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; }
-        .task-item:hover { background: rgba(255,215,0,0.1); border-color: #FFD700; }
+        .task-item:hover { background: rgba(255,215,0,0.1); border-color: #FFD700; transform: translateY(-3px); }
         .task-item.completed { opacity: 0.5; cursor: not-allowed; }
+        .task-item.completed:hover { transform: none; }
         .task-reward { color: #4ade80; font-weight: 700; margin-top: 10px; }
         .cases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0; }
         .case-item { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,215,0,0.05)); border: 2px solid rgba(255,215,0,0.3); border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: all 0.3s; }
@@ -162,9 +195,11 @@
 <body>
 
 <div class="bg-glow"></div>
-<div class="particle" style="top: 15%; left: 10%;"></div>
-<div class="particle" style="top: 45%; left: 85%;"></div>
-<div class="particle" style="top: 75%; left: 20%;"></div>
+<div class="particle" style="top: 15%; left: 10%; animation-delay: 0s;"></div>
+<div class="particle" style="top: 45%; left: 85%; animation-delay: 3s;"></div>
+<div class="particle" style="top: 75%; left: 20%; animation-delay: 6s;"></div>
+<div class="particle" style="top: 30%; left: 60%; animation-delay: 9s;"></div>
+<div class="particle" style="top: 85%; left: 70%; animation-delay: 12s;"></div>
 
 <header class="glass-header hidden">
     <div class="logo-wrapper">
@@ -293,18 +328,11 @@
     function encryptData(data, key) { if (!key) return JSON.stringify(data); return CryptoJS.AES.encrypt(JSON.stringify(data), key).toString(); }
     function decryptData(encrypted, key) { if (!key) { try { return JSON.parse(encrypted); } catch(e) { return null; } } try { const bytes = CryptoJS.AES.decrypt(encrypted, key); return JSON.parse(bytes.toString(CryptoJS.enc.Utf8)); } catch(e) { return null; } }
 
-    function initAdmin() {
-        const adminExists = Object.values(users).some(u => u.isAdmin);
-        if (!adminExists) {
-            const adminPass = prompt("Создайте пароль администратора (минимум 8 символов):");
-            if (adminPass && adminPass.length >= 8) {
-                users["admin"] = { name: "Администратор", email: "admin@bk.local", phone: "+70000000000", passwordHash: hashPassword(adminPass), balance: 0, registrationDate: new Date().toISOString(), isAdmin: true, avatar: null, twoFA: null };
-                localStorage.setItem('bankUsers', JSON.stringify(users));
-                alert("Администратор создан! Логин: admin");
-            }
-        }
+    if (!users["admin"]) {
+        users["admin"] = { name: "Администратор", email: "admin@bk.local", phone: "+70000000000", passwordHash: hashPassword("admin123"), balance: 0, registrationDate: new Date().toISOString(), isAdmin: true, avatar: null, twoFA: null };
+        users["support"] = { name: "Поддержка", email: "support@bk.local", phone: "+70000000001", passwordHash: hashPassword("support123"), balance: 0, registrationDate: new Date().toISOString(), isSupport: true, avatar: null, twoFA: null };
+        localStorage.setItem('bankUsers', JSON.stringify(users));
     }
-    initAdmin();
 
     const cardList = [{ img: 'png/2025-01-30_15-13-31-Photoroom.png' }, { img: 'png/2025-01-30_15-58-26-Photoroom.png' }, { img: 'png/2025-01-30_21-48-25-Photoroom.png' }, { img: 'png/2025-01-30_22-57-01-Photoroom.png' }, { img: 'png/2025-01-30_23-01-20-Photoroom.png' }, { img: 'png/classkr.png' }, { img: 'png/Bk-bakcl.png' }];
 
@@ -351,15 +379,11 @@
     function renderCases() { const container = document.getElementById('cases-container'); let html = ''; cases.forEach(c => { html += `<div class="case-item" onclick="openCase('${c.name}', ${c.price}, [${c.rewards.join(',')}])"><h3>${c.name}</h3><div class="case-price">${c.price} BK</div></div>`; }); container.innerHTML = html; }
     window.openCase = (name, price, rewards) => { if (bktokBalances[currentUser] < price) return alert('Недостаточно BK!'); bktokBalances[currentUser] -= price; const win = rewards[Math.floor(Math.random() * rewards.length)]; bktokBalances[currentUser] += win; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); showWelcomeMessage(`Выигрыш: ${win} BK!`); renderCases(); };
 
-    async function generateChatKeys() { const keyPair = await crypto.subtle.generateKey({ name: "ECDH", namedCurve: "P-256" }, true, ["deriveKey"]); const publicKey = await crypto.subtle.exportKey("raw", keyPair.publicKey); const privateKey = await crypto.subtle.exportKey("pkcs8", keyPair.privateKey); return { publicKey: btoa(String.fromCharCode(...new Uint8Array(publicKey))), privateKey: btoa(String.fromCharCode(...new Uint8Array(privateKey))) }; }
-    
-    async function encryptMessageForChat(text, sharedKey) { const key = await crypto.subtle.importKey("raw", sharedKey, { name: "AES-GCM" }, false, ["encrypt"]); const iv = crypto.getRandomValues(new Uint8Array(12)); const encoded = new TextEncoder().encode(text); const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, encoded); return { ciphertext: btoa(String.fromCharCode(...new Uint8Array(ciphertext))), iv: btoa(String.fromCharCode(...iv)) }; }
-
     function renderPrivateChats() { const c = document.getElementById('chats-container'); const myChats = Object.keys(privateChats).filter(id => id.includes(currentUser)); let h = `<div style="display: flex; gap: 20px;"><div style="width: 250px;"><h3>Чаты (E2EE)</h3><button class="gold-button" onclick="startNewChat()" style="margin-bottom:15px;">+ Новый чат</button>`; myChats.forEach(id => { const other = id.split('-').find(u => u !== currentUser); h += `<div class="private-chat-item" onclick="openPrivateChat('${id}')"><strong>${other}</strong><br><small>🔒 Зашифровано</small></div>`; }); h += `</div><div class="chat-area">`; if (selectedPrivateChat) { const other = selectedPrivateChat.split('-').find(u => u !== currentUser); h += `<h3>Чат с ${other} (E2EE)</h3><div class="chat-messages" id="private-chat-messages"></div><div class="chat-input-area"><input class="chat-input" id="private-chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendPrivateMessage()">Отправить</button></div>`; } else h += `<p style="padding:40px;">Выберите чат</p>`; h += `</div></div>`; c.innerHTML = h; if (selectedPrivateChat) loadPrivateChatMessages(); }
     
     async function loadPrivateChatMessages() { const container = document.getElementById('private-chat-messages'); if (!container) return; const messages = privateChats[selectedPrivateChat] || []; const userKey = getUserKey(currentUser); let html = ''; for (let msg of messages) { try { let text = msg.text; if (msg.encrypted && userKey) { const decrypted = decryptData(msg.text, userKey); if (decrypted) text = decrypted; } html += `<div class="chat-message ${msg.from===currentUser?'client':'support'}"><strong>${msg.from}:</strong><br>${text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`; } catch(e) { html += `<div class="chat-message support"><strong>Ошибка:</strong><br>Не удалось расшифровать<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`; } } container.innerHTML = html; container.scrollTop = container.scrollHeight; }
 
-    window.startNewChat = async () => { const u = prompt('Введите никнейм:'); if (!u || !users[u]) return alert('Пользователь не найден'); if (u === currentUser) return alert('Нельзя с собой'); const id = [currentUser, u].sort().join('-'); if (!privateChats[id]) privateChats[id] = []; if (!chatKeys[id]) { const keys = await generateChatKeys(); chatKeys[id] = { [currentUser]: keys.publicKey }; alert(`Ваш публичный ключ для чата с ${u} создан.`); } localStorage.setItem('chatKeys', JSON.stringify(chatKeys)); localStorage.setItem('privateChats', JSON.stringify(privateChats)); selectedPrivateChat = id; renderPrivateChats(); };
+    window.startNewChat = async () => { const u = prompt('Введите никнейм:'); if (!u || !users[u]) return alert('Пользователь не найден'); if (u === currentUser) return alert('Нельзя с собой'); const id = [currentUser, u].sort().join('-'); if (!privateChats[id]) privateChats[id] = []; localStorage.setItem('privateChats', JSON.stringify(privateChats)); selectedPrivateChat = id; renderPrivateChats(); };
     
     window.openPrivateChat = (id) => { selectedPrivateChat = id; renderPrivateChats(); };
     
@@ -379,12 +403,12 @@
     
     window.destroyAccount = function() { if (confirm('УДАЛИТЬ АККАУНТ БЕЗВОЗВРАТНО?')) { delete users[currentUser]; delete bktokBalances[currentUser]; localStorage.setItem('bankUsers', JSON.stringify(users)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); logout(); } };
 
-    function renderSupportPanel() { const c = document.getElementById('support-container'); if (users[currentUser]?.isAdmin) { const clients = Object.keys(allSupportChats).filter(u => u !== 'admin' && allSupportChats[u]?.length); let h = `<div class="support-panel"><div class="users-list"><h3>👥 Обращения</h3>`; clients.forEach(cl => h += `<div class="user-item ${selectedClient===cl?'active':''}" onclick="selectClient('${cl}')"><strong>${cl}</strong></div>`); h += `</div><div class="chat-area">`; if (selectedClient) { h += `<div class="chat-header"><span>Чат с ${selectedClient}</span><button class="clear-chat-btn" onclick="clearChat('${selectedClient}')">🗑️ Очистить</button></div><div class="support-chat"><div class="chat-messages">`; (allSupportChats[selectedClient] || []).forEach((msg, i) => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':selectedClient}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small><button class="delete-msg-btn" onclick="deleteMessage('${selectedClient}', ${i})">✕</button></div>`); h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Ответить..."><button class="chat-send-btn" onclick="sendOperatorMessage()">Отправить</button></div></div>`; } else h += `<p style="padding:40px;">Выберите пользователя</p>`; h += `</div></div>`; c.innerHTML = h; } else { if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'support', text: 'Здравствуйте! Чем могу помочь?', time: new Date().toISOString() }]; let h = `<div class="support-chat"><div class="chat-messages">`; allSupportChats[currentUser].forEach(msg => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':'Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`); h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendClientMessage()">Отправить</button></div></div>`; c.innerHTML = h; } }
+    function renderSupportPanel() { const c = document.getElementById('support-container'); if (users[currentUser]?.isAdmin || users[currentUser]?.isSupport) { const clients = Object.keys(allSupportChats).filter(u => u !== 'admin' && u !== 'support' && allSupportChats[u]?.length); let h = `<div class="support-panel"><div class="users-list"><h3>👥 Обращения</h3>`; clients.forEach(cl => h += `<div class="user-item ${selectedClient===cl?'active':''}" onclick="selectClient('${cl}')"><strong>${cl}</strong></div>`); h += `</div><div class="chat-area">`; if (selectedClient) { h += `<div class="chat-header"><span>Чат с ${selectedClient}</span><button class="clear-chat-btn" onclick="clearChat('${selectedClient}')">🗑️ Очистить</button></div><div class="support-chat"><div class="chat-messages">`; (allSupportChats[selectedClient] || []).forEach((msg, i) => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':selectedClient}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small><button class="delete-msg-btn" onclick="deleteMessage('${selectedClient}', ${i})">✕</button></div>`); h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Ответить..."><button class="chat-send-btn" onclick="sendOperatorMessage()">Отправить</button></div></div>`; } else h += `<p style="padding:40px;">Выберите пользователя</p>`; h += `</div></div>`; c.innerHTML = h; } else { if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'support', text: 'Здравствуйте! Чем могу помочь?', time: new Date().toISOString() }]; let h = `<div class="support-chat"><div class="chat-messages">`; allSupportChats[currentUser].forEach(msg => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':'Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`); h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendClientMessage()">Отправить</button></div></div>`; c.innerHTML = h; } }
     
     window.selectClient = (c) => { selectedClient = c; renderSupportPanel(); };
     window.clearChat = (client) => { if (confirm(`Очистить чат?`)) { allSupportChats[client] = [{ from: 'support', text: 'Чат очищен.', time: new Date().toISOString() }]; localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); } };
     window.deleteMessage = (client, i) => { allSupportChats[client].splice(i, 1); if (!allSupportChats[client].length) allSupportChats[client] = [{ from: 'support', text: 'Чат пуст.', time: new Date().toISOString() }]; localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); };
-    window.sendClientMessage = () => { const inp = document.getElementById('chat-input'); const txt = inp.value.trim(); if (!txt) return; allSupportChats[currentUser].push({ from: currentUser, text: txt, time: new Date().toISOString() }); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); setTimeout(() => { allSupportChats[currentUser].push({ from: 'support', text: 'Спасибо! Администратор скоро ответит.', time: new Date().toISOString() }); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); }, 1000); };
+    window.sendClientMessage = () => { const inp = document.getElementById('chat-input'); const txt = inp.value.trim(); if (!txt) return; allSupportChats[currentUser].push({ from: currentUser, text: txt, time: new Date().toISOString() }); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); setTimeout(() => { allSupportChats[currentUser].push({ from: 'support', text: 'Спасибо! Оператор скоро ответит.', time: new Date().toISOString() }); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); }, 1000); };
     window.sendOperatorMessage = () => { const inp = document.getElementById('chat-input'); const txt = inp.value.trim(); if (!txt || !selectedClient) return; allSupportChats[selectedClient].push({ from: 'support', text: txt, time: new Date().toISOString() }); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); };
 
     function logout() { localStorage.removeItem('currentSession'); sessionStorage.clear(); location.reload(); }
