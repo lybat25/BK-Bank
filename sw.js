@@ -1,6 +1,4 @@
-const CACHE_NAME = 'bk-bank-v1';
-const urlsToCache = ['/','/index.html','/manifest.json'];
-
-self.addEventListener('install', event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))); });
-self.addEventListener('fetch', event => { event.respondWith(fetch(event.request).then(response => { const r = response.clone(); caches.open(CACHE_NAME).then(cache => cache.put(event.request, r)); return response; }).catch(() => caches.match(event.request))); });
-self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(names => Promise.all(names.filter(n => n !== CACHE_NAME).map(n => caches.delete(n))))); });
+const CACHE_NAME = 'bk-bank-v2';
+self.addEventListener('install', e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['/','/index.html','/manifest.json']))); });
+self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).then(r => { const rc = r.clone(); caches.open(CACHE_NAME).then(c => c.put(e.request, rc)); return r; }).catch(() => caches.match(e.request))); });
+self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(n => Promise.all(n.filter(nn => nn !== CACHE_NAME).map(nn => caches.delete(nn))))); });
