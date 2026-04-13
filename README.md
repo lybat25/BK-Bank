@@ -40,10 +40,30 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.02) 0%, transparent 50%);
+            background: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.04) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
             pointer-events: none;
             z-index: -1;
+        }
+
+        /* Анимированные частицы фона */
+        .particle {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: #FFD700;
+            border-radius: 50%;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: -1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-30px) translateX(15px); }
+            50% { transform: translateY(-15px) translateX(-20px); }
+            75% { transform: translateY(20px) translateX(10px); }
         }
 
         .glass-header {
@@ -65,29 +85,37 @@
         .logo-wrapper {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .logo-img {
-            width: 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
             object-fit: contain;
-            filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.4));
-            transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
+            transition: all 0.3s ease;
         }
 
         .logo-img:hover {
-            transform: scale(1.05);
+            transform: scale(1.08);
+            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.7));
         }
 
         .bank-name {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #FFD700 0%, #FFC200 100%);
+            background: linear-gradient(135deg, #FFD700 0%, #FFC200 50%, #FFE44D 100%);
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             letter-spacing: -0.5px;
+            animation: gradientShift 4s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .nav-links {
@@ -141,20 +169,20 @@
         }
 
         .content-card {
-            background: rgba(25, 25, 25, 0.7);
+            background: rgba(25, 25, 25, 0.75);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.12);
             border-radius: 32px;
             padding: 36px;
             margin-bottom: 30px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            transition: all 0.4s ease;
             animation: fadeInUp 0.6s ease-out;
         }
 
         .content-card:hover {
-            border-color: rgba(255, 215, 0, 0.3);
+            border-color: rgba(255, 215, 0, 0.25);
         }
 
         @keyframes fadeInUp {
@@ -205,16 +233,18 @@
         }
 
         .image-block {
-            background: rgba(255, 215, 0, 0.03);
+            background: rgba(255, 215, 0, 0.02);
             border-radius: 24px;
             padding: 20px;
-            border: 1px solid rgba(255, 215, 0, 0.1);
-            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 215, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: default;
         }
 
         .image-block:hover {
-            transform: scale(1.02);
+            transform: scale(1.02) translateY(-5px);
             border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 40px -15px rgba(255, 215, 0, 0.15);
         }
 
         .image-block img {
@@ -224,13 +254,11 @@
             display: block;
             background: transparent;
             mix-blend-mode: lighten;
+            transition: filter 0.3s ease;
         }
 
-        .image-caption {
-            margin-top: 15px;
-            font-weight: 600;
-            color: #FFD700;
-            text-align: center;
+        .image-block:hover img {
+            filter: brightness(1.1);
         }
 
         /* Карточки карт - стопка */
@@ -238,7 +266,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 40px 0;
+            margin: 40px 0 20px;
             position: relative;
             min-height: 450px;
             perspective: 1200px;
@@ -267,7 +295,7 @@
 
         .stack-card:hover img {
             border-color: #FFD700;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.25);
         }
 
         .stack-card-name {
@@ -288,15 +316,11 @@
             pointer-events: none;
         }
 
-        .cards-stack.expanded .stack-card:hover .stack-card-name {
+        .cards-stack.expanded .stack-card:hover .stack-card-name,
+        .stack-card:hover .stack-card-name {
             opacity: 1;
         }
 
-        .cards-stack .stack-card:hover .stack-card-name {
-            opacity: 1;
-        }
-
-        /* Состояние "разложены" */
         .cards-stack.expanded .stack-card {
             pointer-events: auto;
         }
@@ -306,24 +330,40 @@
             z-index: 100 !important;
         }
 
-        /* Подсказка о клике */
-        .stack-hint {
-            text-align: center;
-            color: #FFD700;
-            margin-bottom: 10px;
-            font-style: italic;
-            opacity: 0.7;
-            animation: pulse 2s infinite;
+        /* Стили для списка услуг */
+        .services-list {
+            list-style: none;
+            font-size: 1.3rem;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.9; }
+        .services-list li {
+            padding: 16px 20px;
+            margin: 8px 0;
+            background: rgba(255, 215, 0, 0.02);
+            border-radius: 60px;
+            border: 1px solid rgba(255, 215, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: default;
+            display: flex;
+            align-items: center;
+        }
+
+        .services-list li::before {
+            content: '✦';
+            color: #FFD700;
+            margin-right: 15px;
+            font-size: 1.4rem;
+        }
+
+        .services-list li:hover {
+            background: rgba(255, 215, 0, 0.06);
+            border-color: rgba(255, 215, 0, 0.2);
+            transform: translateX(8px);
         }
 
         /* Формы */
         .modal-form {
-            background: rgba(20, 20, 20, 0.9);
+            background: rgba(20, 20, 20, 0.95);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 215, 0, 0.2);
@@ -394,8 +434,8 @@
         }
 
         .gold-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.35);
             background: linear-gradient(135deg, #FFE44D 0%, #FFC200 100%);
         }
 
@@ -419,7 +459,7 @@
             position: fixed;
             top: 100px;
             right: 30px;
-            background: rgba(20, 20, 20, 0.9);
+            background: rgba(20, 20, 20, 0.95);
             backdrop-filter: blur(20px);
             border-left: 6px solid #FFD700;
             padding: 20px 30px;
@@ -458,7 +498,6 @@
             border: 3px solid #FFD700;
             padding: 3px;
             background: #1a1a1a;
-            mix-blend-mode: normal;
         }
 
         .logout-btn {
@@ -558,16 +597,34 @@
         img {
             background: transparent !important;
         }
+
+        /* Добавлено от себя: стильный статус-бар */
+        .status-badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 0.85rem;
+            color: #FFD700;
+            margin-left: 15px;
+        }
     </style>
 </head>
 <body>
 
 <div class="bg-glow"></div>
+<div class="particle" style="top: 15%; left: 10%; animation-delay: 0s;"></div>
+<div class="particle" style="top: 45%; left: 85%; animation-delay: 3s;"></div>
+<div class="particle" style="top: 75%; left: 20%; animation-delay: 6s;"></div>
+<div class="particle" style="top: 30%; left: 60%; animation-delay: 9s;"></div>
+<div class="particle" style="top: 85%; left: 70%; animation-delay: 12s;"></div>
 
 <header class="glass-header hidden">
     <div class="logo-wrapper">
-        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-11_142359079.png?raw=true" class="logo-img" alt="БК-Банк">
+        <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-31_14-13-47-Photoroom.png?raw=true" class="logo-img" alt="БК-Банк">
         <span class="bank-name">БК-Банк</span>
+        <span class="status-badge">● онлайн</span>
     </div>
     <nav class="nav-links">
         <button class="nav-link" onclick="toggleSection('about')">Главная</button>
@@ -579,7 +636,6 @@
 </header>
 
 <main class="main-container hidden">
-    <!-- Главная -->
     <div id="about-section" class="content-card">
         <h2>Ваш надёжный финансовый партнёр</h2>
         <div class="divider"></div>
@@ -590,11 +646,9 @@
         <div class="image-showcase">
             <div class="image-block">
                 <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-13-31-Photoroom.png?raw=true" alt="БК-Банк карта 1">
-                <div class="image-caption">Ваш надёжный партнёр</div>
             </div>
             <div class="image-block">
                 <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-58-26-Photoroom.png?raw=true" alt="БК-Банк карта 2">
-                <div class="image-caption">Стабильность и рост</div>
             </div>
         </div>
 
@@ -603,41 +657,32 @@
         <div class="image-showcase">
             <div class="image-block">
                 <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_21-48-25-Photoroom.png?raw=true" alt="БК-Банк карта 3">
-                <div class="image-caption">Современные технологии</div>
             </div>
             <div class="image-block">
                 <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_22-57-01-Photoroom.png?raw=true" alt="БК-Банк карта 4">
-                <div class="image-caption">Безопасность транзакций</div>
             </div>
         </div>
     </div>
 
-    <!-- Услуги -->
     <div id="services-section" class="content-card hidden">
         <h2>Наши услуги</h2>
         <div class="divider"></div>
-        <ul style="list-style: none; font-size: 1.3rem;">
-            <li style="padding: 12px 0;">✓ Кредитование</li>
-            <li style="padding: 12px 0;">✓ Депозиты</li>
-            <li style="padding: 12px 0;">✓ Инвестиционные услуги</li>
-            <li style="padding: 12px 0;">✓ Консультации по финансам</li>
-            <li style="padding: 12px 0;">✓ Онлайн-банкинг</li>
+        <ul class="services-list">
+            <li>Кредитование</li>
+            <li>Депозиты</li>
+            <li>Инвестиционные услуги</li>
+            <li>Консультации по финансам</li>
+            <li>Онлайн-банкинг</li>
         </ul>
     </div>
 
-    <!-- Карты -->
     <div id="cards-section" class="content-card hidden">
         <h2>Эксклюзивные карты</h2>
         <div class="divider"></div>
         
-        <div class="stack-hint">
-            <strong>👆 Нажмите на любую карту — стопка разложится</strong>
-        </div>
-        
         <div class="cards-stack" id="cards-stack-container"></div>
     </div>
 
-    <!-- Контакты -->
     <div id="contact-section" class="content-card hidden">
         <h2>Связь с нами</h2>
         <div class="divider"></div>
@@ -647,7 +692,6 @@
         <p style="font-size: 1.2rem; margin: 15px 0;"><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p>
     </div>
 
-    <!-- Профиль -->
     <div id="profile-section" class="content-card hidden"></div>
 </main>
 
@@ -688,14 +732,12 @@
         }
 
         window.handleStackClick = function(event) {
-            // Останавливаем всплытие, чтобы не срабатывало несколько раз
             event.stopPropagation();
             
             const container = document.getElementById('cards-stack-container');
             const cards = container.querySelectorAll('.stack-card');
             
             if (!isStackExpanded) {
-                // Разложить карты
                 container.classList.add('expanded');
                 
                 cards.forEach((card, index) => {
@@ -709,7 +751,6 @@
                 
                 isStackExpanded = true;
             } else {
-                // Сложить обратно
                 container.classList.remove('expanded');
                 
                 const rotations = [-6, 3, 10];
