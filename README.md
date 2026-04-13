@@ -23,7 +23,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Стильный скроллбар */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -35,7 +34,6 @@
             border-radius: 10px;
         }
 
-        /* Анимированный градиентный фон */
         .bg-glow {
             position: fixed;
             top: 0;
@@ -48,7 +46,6 @@
             z-index: -1;
         }
 
-        /* Хедер с эффектом размытия */
         .glass-header {
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -137,14 +134,12 @@
             opacity: 1;
         }
 
-        /* Основной контейнер */
         .main-container {
             max-width: 1300px;
             margin: 30px auto;
             padding: 0 24px;
         }
 
-        /* Карточки с контентом */
         .content-card {
             background: rgba(25, 25, 25, 0.7);
             backdrop-filter: blur(15px);
@@ -186,7 +181,6 @@
             margin-bottom: 32px;
         }
 
-        /* Стили для текста и ссылок - убираем синий цвет */
         p, li, span, div {
             color: #ffffff;
         }
@@ -203,7 +197,6 @@
             text-decoration-color: #FFD700 !important;
         }
 
-        /* Изображения на главной - отдельные блоки */
         .image-showcase {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -238,48 +231,50 @@
             text-align: center;
         }
 
-        /* Карточки карт в сетке */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-            margin-top: 30px;
+        /* Карточки карт - эффект стопки на столе */
+        .cards-stack {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 60px 0 40px;
+            position: relative;
+            min-height: 500px;
         }
 
-        .card-item {
-            background: rgba(40, 40, 40, 0.6);
-            backdrop-filter: blur(8px);
+        .stack-card {
+            position: absolute;
+            width: 320px;
+            background: rgba(40, 40, 40, 0.8);
+            backdrop-filter: blur(10px);
             border-radius: 24px;
             padding: 20px;
-            border: 1px solid rgba(255, 215, 0, 0.08);
-            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
         }
 
-        .card-item:hover {
-            transform: translateY(-8px) scale(1.02);
+        .stack-card:hover {
+            transform: translateY(-20px) rotate(0deg) !important;
             border-color: #FFD700;
-            box-shadow: 0 30px 40px -20px rgba(255, 215, 0, 0.2);
+            box-shadow: 0 30px 60px rgba(255, 215, 0, 0.2);
+            z-index: 100 !important;
         }
 
-        .card-image {
+        .stack-card img {
             width: 100%;
             border-radius: 16px;
             margin-bottom: 16px;
-            transition: transform 0.5s ease;
         }
 
-        .card-item:hover .card-image {
-            transform: perspective(1000px) rotateY(2deg);
-        }
-
-        .card-name {
+        .stack-card-name {
             font-weight: 700;
             font-size: 1.2rem;
             color: #FFD700;
             text-align: center;
         }
 
-        /* Формы - современный стиль */
+        /* Формы */
         .modal-form {
             background: rgba(20, 20, 20, 0.9);
             backdrop-filter: blur(25px);
@@ -373,7 +368,6 @@
             text-decoration: underline !important;
         }
 
-        /* Приветственное сообщение */
         .toast-message {
             position: fixed;
             top: 100px;
@@ -400,7 +394,6 @@
             transition: opacity 0.8s ease;
         }
 
-        /* Профиль */
         .profile-header {
             display: flex;
             align-items: center;
@@ -437,7 +430,6 @@
             color: #0a0a0a !important;
         }
 
-        /* Друзья и запросы */
         .friend-actions {
             display: flex;
             gap: 12px;
@@ -493,7 +485,6 @@
             font-size: 1.1rem;
         }
 
-        /* Утилиты */
         .hidden {
             display: none !important;
         }
@@ -515,13 +506,19 @@
         strong {
             color: #ffffff;
         }
+
+        .stack-note {
+            text-align: center;
+            color: #FFD700;
+            margin-top: 30px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
 
 <div class="bg-glow"></div>
 
-<!-- Хедер с эффектом стекла -->
 <header class="glass-header hidden">
     <div class="logo-wrapper">
         <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-11_142359079.png?raw=true" class="logo-img" alt="БК-Банк">
@@ -545,15 +542,15 @@
         <p style="margin-bottom: 20px;"><strong>«Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление.»</strong></p>
         <p><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью.</strong></p>
         
-        <!-- Изображения как отдельные блоки -->
+        <!-- Новые изображения -->
         <div class="image-showcase">
             <div class="image-block">
-                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="О банке">
-                <div class="image-caption">БК-Банк — ваш выбор</div>
+                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-13-31-Photoroom.png?raw=true" alt="БК-Банк карта 1">
+                <div class="image-caption">Ваш надёжный партнёр</div>
             </div>
             <div class="image-block">
-                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="О банке">
-                <div class="image-caption">Надёжность и стабильность</div>
+                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-58-26-Photoroom.png?raw=true" alt="БК-Банк карта 2">
+                <div class="image-caption">Стабильность и рост</div>
             </div>
         </div>
 
@@ -561,8 +558,12 @@
         <div class="divider"></div>
         <div class="image-showcase">
             <div class="image-block">
-                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты">
-                <div class="image-caption">Современные решения</div>
+                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_21-48-25-Photoroom.png?raw=true" alt="БК-Банк карта 3">
+                <div class="image-caption">Современные технологии</div>
+            </div>
+            <div class="image-block">
+                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_22-57-01-Photoroom.png?raw=true" alt="БК-Банк карта 4">
+                <div class="image-caption">Безопасность транзакций</div>
             </div>
         </div>
     </div>
@@ -580,12 +581,15 @@
         </ul>
     </div>
 
-    <!-- Карты -->
+    <!-- Карты - стопкой -->
     <div id="cards-section" class="content-card hidden">
         <h2>Эксклюзивные карты</h2>
         <div class="divider"></div>
-        <div class="cards-grid" id="cards-container"></div>
-        <p style="margin-top: 30px; font-style: italic; color: #FFD700;"><strong>Карты появятся в ближайшее время. Рекомендуем воспользоваться Биржей.</strong></p>
+        
+        <div class="cards-stack" id="cards-stack-container"></div>
+        
+        <p class="stack-note"><strong>Наведите на карту — она поднимется над остальными</strong></p>
+        <p style="margin-top: 20px; text-align: center; color: #FFD700;"><strong>Карты скоро появятся в отделениях банка</strong></p>
     </div>
 
     <!-- Контакты -->
@@ -609,26 +613,33 @@
         let currentUser = null;
         let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
 
-        // Список карт
+        // Новый список карт
         const cardList = [
-            { name: 'Тень и свет', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_092441724.png?raw=true' },
-            { name: 'Чёрно-жёлтая энергия', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_093348500.png?raw=true' },
-            { name: 'Жёлтая стрела', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_094122593.png?raw=true' },
-            { name: 'Золотая волна', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_095046740.png?raw=true' },
-            { name: 'Солнечный ночной ветер', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_100946793.png?raw=true' },
-            { name: 'БКашная тёмный', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_101740633.png?raw=true' },
-            { name: 'БКашная светлый', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_102653372.png?raw=true' }
+            { name: 'Золотая карта', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-01-20-Photoroom.png?raw=true' },
+            { name: 'Платиновая карта', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-05-01-Photoroom.png?raw=true' },
+            { name: 'Бизнес карта', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-06-40-Photoroom.png?raw=true' }
         ];
 
-        function renderCards() {
-            const container = document.getElementById('cards-container');
+        function renderCardsStack() {
+            const container = document.getElementById('cards-stack-container');
             if (!container) return;
-            container.innerHTML = cardList.map(card => `
-                <div class="card-item">
-                    <img src="${card.img}" class="card-image" alt="${card.name}">
-                    <div class="card-name">${card.name}</div>
-                </div>
-            `).join('');
+            
+            container.innerHTML = cardList.map((card, index) => {
+                // Разные углы поворота и смещения для эффекта стопки
+                const rotations = [-8, 3, -4];
+                const offsets = [-20, 0, 20];
+                const zIndices = [1, 2, 3];
+                
+                return `
+                    <div class="stack-card" style="
+                        transform: rotate(${rotations[index]}deg) translateX(${offsets[index]}px);
+                        z-index: ${zIndices[index]};
+                    ">
+                        <img src="${card.img}" alt="${card.name}">
+                        <div class="stack-card-name">${card.name}</div>
+                    </div>
+                `;
+            }).join('');
         }
 
         // Проверка сессии при загрузке
@@ -640,7 +651,6 @@
                     currentUser = sessionData.username;
                     showMainContent();
                     showWelcomeMessage(users[currentUser].name);
-                    renderCards();
                     return;
                 } else {
                     localStorage.removeItem('currentSession');
@@ -726,7 +736,6 @@
             removeExistingModals();
             showMainContent();
             showWelcomeMessage(users[username].name);
-            renderCards();
         };
 
         window.register = function() {
@@ -748,7 +757,6 @@
             removeExistingModals();
             showMainContent();
             showWelcomeMessage(name);
-            renderCards();
         };
 
         function showMainContent() {
@@ -772,7 +780,10 @@
             });
             if (section === 'about') document.getElementById('about-section')?.classList.remove('hidden');
             else if (section === 'services') document.getElementById('services-section')?.classList.remove('hidden');
-            else if (section === 'cards') { document.getElementById('cards-section')?.classList.remove('hidden'); renderCards(); }
+            else if (section === 'cards') { 
+                document.getElementById('cards-section')?.classList.remove('hidden'); 
+                renderCardsStack(); 
+            }
             else if (section === 'contact') document.getElementById('contact-section')?.classList.remove('hidden');
             else if (section === 'profile') showProfile();
         };
