@@ -233,14 +233,14 @@
             text-align: center;
         }
 
-        /* Карточки карт - стопка с разлетанием */
+        /* Карточки карт - стопка */
         .cards-stack {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 60px 0 40px;
+            margin: 40px 0;
             position: relative;
-            min-height: 500px;
+            min-height: 450px;
             perspective: 1200px;
         }
 
@@ -249,7 +249,7 @@
             width: 340px;
             background: transparent;
             border-radius: 20px;
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: pointer;
             filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
         }
@@ -281,17 +281,22 @@
             color: #FFD700;
             text-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.3s ease;
             background: linear-gradient(135deg, rgba(0,0,0,0.5), transparent);
             padding: 8px;
             border-radius: 20px;
+            pointer-events: none;
         }
 
-        .stack-card:hover .stack-card-name {
+        .cards-stack.expanded .stack-card:hover .stack-card-name {
             opacity: 1;
         }
 
-        /* Состояние "разлетелись" */
+        .cards-stack .stack-card:hover .stack-card-name {
+            opacity: 1;
+        }
+
+        /* Состояние "разложены" */
         .cards-stack.expanded .stack-card {
             pointer-events: auto;
         }
@@ -301,44 +306,19 @@
             z-index: 100 !important;
         }
 
-        .stack-control {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .stack-toggle-btn {
-            background: transparent;
-            border: 2px solid #FFD700;
-            color: #FFD700;
-            padding: 14px 32px;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        .stack-toggle-btn:hover {
-            background: #FFD700;
-            color: #0a0a0a;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
-        }
-
-        /* Индикатор клика */
-        .click-hint {
+        /* Подсказка о клике */
+        .stack-hint {
             text-align: center;
             color: #FFD700;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-style: italic;
-            opacity: 0.8;
+            opacity: 0.7;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.9; }
         }
 
         /* Формы */
@@ -575,13 +555,6 @@
             color: #ffffff;
         }
 
-        .stack-note {
-            text-align: center;
-            color: #FFD700;
-            margin-top: 20px;
-            font-style: italic;
-        }
-
         img {
             background: transparent !important;
         }
@@ -652,25 +625,16 @@
         </ul>
     </div>
 
-    <!-- Карты - стопка с разлетанием -->
+    <!-- Карты -->
     <div id="cards-section" class="content-card hidden">
         <h2>Эксклюзивные карты</h2>
         <div class="divider"></div>
         
-        <div class="click-hint">
-            <strong>👆 Нажмите на стопку, чтобы разложить карты</strong>
+        <div class="stack-hint">
+            <strong>👆 Нажмите на любую карту — стопка разложится</strong>
         </div>
         
-        <div class="cards-stack" id="cards-stack-container" onclick="toggleCardsStack(event)"></div>
-        
-        <div class="stack-control">
-            <button class="stack-toggle-btn" onclick="toggleCardsStack(event)">
-                <span id="stack-toggle-text">Разложить карты</span>
-            </button>
-        </div>
-        
-        <p class="stack-note"><strong>Наведите на карту, чтобы увидеть название</strong></p>
-        <p style="margin-top: 20px; text-align: center; color: #FFD700;"><strong>Карты скоро появятся в отделениях банка</strong></p>
+        <div class="cards-stack" id="cards-stack-container"></div>
     </div>
 
     <!-- Контакты -->
@@ -706,18 +670,16 @@
             
             isStackExpanded = false;
             container.classList.remove('expanded');
-            document.getElementById('stack-toggle-text').textContent = 'Разложить карты';
             
             container.innerHTML = cardList.map((card, index) => {
-                // В сложенном состоянии
-                const rotations = [-5, 2, 8];
-                const offsets = [-15, 0, 15];
+                const rotations = [-6, 3, 10];
+                const offsets = [-20, 0, 20];
                 
                 return `
                     <div class="stack-card" style="
                         transform: rotate(${rotations[index]}deg) translateX(${offsets[index]}px);
                         z-index: ${index + 1};
-                    " data-index="${index}" data-name="${card.name}">
+                    " data-index="${index}" onclick="handleStackClick(event)">
                         <img src="${card.img}" alt="${card.name}">
                         <div class="stack-card-name">${card.name}</div>
                     </div>
@@ -725,21 +687,18 @@
             }).join('');
         }
 
-        window.toggleCardsStack = function(event) {
-            // Не переключаем, если кликнули на кнопку внутри стопки
-            if (event.target.closest('.stack-toggle-btn')) return;
+        window.handleStackClick = function(event) {
+            // Останавливаем всплытие, чтобы не срабатывало несколько раз
+            event.stopPropagation();
             
             const container = document.getElementById('cards-stack-container');
             const cards = container.querySelectorAll('.stack-card');
-            const toggleText = document.getElementById('stack-toggle-text');
             
             if (!isStackExpanded) {
-                // Разложить карты веером
+                // Разложить карты
                 container.classList.add('expanded');
-                toggleText.textContent = 'Сложить карты';
                 
                 cards.forEach((card, index) => {
-                    // Красивое разлетание веером
                     const xOffset = (index - 1) * 180;
                     const rotation = (index - 1) * 8;
                     const yOffset = Math.abs(index - 1) * 10;
@@ -750,12 +709,11 @@
                 
                 isStackExpanded = true;
             } else {
-                // Сложить обратно в стопку
+                // Сложить обратно
                 container.classList.remove('expanded');
-                toggleText.textContent = 'Разложить карты';
                 
-                const rotations = [-5, 2, 8];
-                const offsets = [-15, 0, 15];
+                const rotations = [-6, 3, 10];
+                const offsets = [-20, 0, 20];
                 
                 cards.forEach((card, index) => {
                     card.style.transform = `rotate(${rotations[index]}deg) translateX(${offsets[index]}px)`;
@@ -959,7 +917,7 @@
         window.sendResetEmail = sendResetEmail;
         window.logout = logout;
         window.toggleSection = toggleSection;
-        window.toggleCardsStack = toggleCardsStack;
+        window.handleStackClick = handleStackClick;
         window.sendFriendRequest = sendFriendRequest;
         window.acceptFriendRequest = acceptFriendRequest;
         window.declineFriendRequest = declineFriendRequest;
