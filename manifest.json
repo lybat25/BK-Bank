@@ -9,15 +9,7 @@
   "start_url": "/",
   "orientation": "portrait",
   "icons": [
-    {
-      "src": "png/2025-01-31_14-13-47-Photoroom.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "png/2025-01-31_14-13-47-Photoroom.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "png/2025-01-31_14-13-47-Photoroom.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "png/2025-01-31_14-13-47-Photoroom.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
