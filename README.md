@@ -46,7 +46,6 @@
             z-index: -1;
         }
 
-        /* Анимированные частицы фона */
         .particle {
             position: fixed;
             width: 2px;
@@ -225,40 +224,66 @@
             text-decoration-color: #FFD700 !important;
         }
 
-        .image-showcase {
+        /* Сетка для 4 изображений в одном блоке */
+        .image-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-            margin: 40px 0;
+            gap: 24px;
+            margin: 30px 0;
         }
 
-        .image-block {
+        .image-grid-item {
             background: rgba(255, 215, 0, 0.02);
-            border-radius: 24px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 16px;
             border: 1px solid rgba(255, 215, 0, 0.08);
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            cursor: default;
         }
 
-        .image-block:hover {
+        .image-grid-item:hover {
             transform: scale(1.02) translateY(-5px);
             border-color: rgba(255, 215, 0, 0.3);
             box-shadow: 0 20px 40px -15px rgba(255, 215, 0, 0.15);
         }
 
-        .image-block img {
+        .image-grid-item img {
             width: 100%;
             height: auto;
-            border-radius: 16px;
+            border-radius: 14px;
             display: block;
             background: transparent;
             mix-blend-mode: lighten;
             transition: filter 0.3s ease;
         }
 
-        .image-block:hover img {
+        .image-grid-item:hover img {
             filter: brightness(1.1);
+        }
+
+        /* Блок с преимуществами */
+        .advantages-block {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 215, 0, 0.03);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .advantages-quote {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: #FFD700;
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 25px;
+            padding: 0 20px;
+        }
+
+        .advantages-text {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            text-align: center;
+            color: #e0e0e0;
         }
 
         /* Карточки карт - стопка */
@@ -598,7 +623,6 @@
             background: transparent !important;
         }
 
-        /* Добавлено от себя: стильный статус-бар */
         .status-badge {
             display: inline-block;
             background: rgba(255, 215, 0, 0.1);
@@ -640,26 +664,32 @@
         <h2>Ваш надёжный финансовый партнёр</h2>
         <div class="divider"></div>
         <p style="font-size: 1.2rem; margin-bottom: 30px;"><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни.</strong></p>
-        <p style="margin-bottom: 20px;"><strong>«Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление.»</strong></p>
-        <p><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью.</strong></p>
         
-        <div class="image-showcase">
-            <div class="image-block">
+        <!-- 4 изображения в одном блоке -->
+        <div class="image-grid">
+            <div class="image-grid-item">
                 <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-13-31-Photoroom.png?raw=true" alt="БК-Банк карта 1">
             </div>
-            <div class="image-block">
+            <div class="image-grid-item">
                 <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-58-26-Photoroom.png?raw=true" alt="БК-Банк карта 2">
+            </div>
+            <div class="image-grid-item">
+                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_21-48-25-Photoroom.png?raw=true" alt="БК-Банк карта 3">
+            </div>
+            <div class="image-grid-item">
+                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_22-57-01-Photoroom.png?raw=true" alt="БК-Банк карта 4">
             </div>
         </div>
 
-        <h3 style="margin-top: 40px;">Наши преимущества</h3>
-        <div class="divider"></div>
-        <div class="image-showcase">
-            <div class="image-block">
-                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_21-48-25-Photoroom.png?raw=true" alt="БК-Банк карта 3">
+        <!-- Блок "Наши преимущества" с текстом -->
+        <div class="advantages-block">
+            <h3 style="color: #FFD700; text-align: center; margin-bottom: 25px; font-size: 1.8rem;">Наши преимущества</h3>
+            <div class="divider" style="margin-left: auto; margin-right: auto; width: 60px;"></div>
+            <div class="advantages-quote">
+                «Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление.»
             </div>
-            <div class="image-block">
-                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_22-57-01-Photoroom.png?raw=true" alt="БК-Банк карта 4">
+            <div class="advantages-text">
+                <strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью.</strong>
             </div>
         </div>
     </div>
