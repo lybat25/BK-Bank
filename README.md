@@ -224,7 +224,6 @@
             text-decoration-color: #FFD700 !important;
         }
 
-        /* Сетка для 4 изображений в одном блоке */
         .image-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -260,7 +259,6 @@
             filter: brightness(1.1);
         }
 
-        /* Блок с преимуществами */
         .advantages-block {
             margin-top: 40px;
             padding: 30px;
@@ -293,13 +291,13 @@
             align-items: center;
             margin: 40px 0 20px;
             position: relative;
-            min-height: 450px;
+            min-height: 500px;
             perspective: 1200px;
         }
 
         .stack-card {
             position: absolute;
-            width: 340px;
+            width: 300px;
             background: transparent;
             border-radius: 20px;
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -330,7 +328,7 @@
             right: 0;
             text-align: center;
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #FFD700;
             text-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
             opacity: 0;
@@ -355,7 +353,6 @@
             z-index: 100 !important;
         }
 
-        /* Стили для списка услуг */
         .services-list {
             list-style: none;
             font-size: 1.3rem;
@@ -665,7 +662,6 @@
         <div class="divider"></div>
         <p style="font-size: 1.2rem; margin-bottom: 30px;"><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни.</strong></p>
         
-        <!-- 4 изображения в одном блоке -->
         <div class="image-grid">
             <div class="image-grid-item">
                 <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-13-31-Photoroom.png?raw=true" alt="БК-Банк карта 1">
@@ -681,7 +677,6 @@
             </div>
         </div>
 
-        <!-- Блок "Наши преимущества" с текстом -->
         <div class="advantages-block">
             <h3 style="color: #FFD700; text-align: center; margin-bottom: 25px; font-size: 1.8rem;">Наши преимущества</h3>
             <div class="divider" style="margin-left: auto; margin-right: auto; width: 60px;"></div>
@@ -732,10 +727,15 @@
         let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
         let isStackExpanded = false;
 
+        // Обновлённый список из 7 карт
         const cardList = [
-            { name: 'Золотая карта', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-01-20-Photoroom.png?raw=true' },
-            { name: 'Платиновая карта', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-05-01-Photoroom.png?raw=true' },
-            { name: 'Бизнес карта', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-06-40-Photoroom.png?raw=true' }
+            { name: 'Стандарт', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-13-31-Photoroom.png?raw=true' },
+            { name: 'Голд', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-58-26-Photoroom.png?raw=true' },
+            { name: 'Платинум', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_21-48-25-Photoroom.png?raw=true' },
+            { name: 'Блэк', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_22-57-01-Photoroom.png?raw=true' },
+            { name: 'Золотая', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-01-20-Photoroom.png?raw=true' },
+            { name: 'Платиновая', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-05-01-Photoroom.png?raw=true' },
+            { name: 'Бизнес', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-06-40-Photoroom.png?raw=true' }
         ];
 
         function renderCardsStack() {
@@ -746,8 +746,9 @@
             container.classList.remove('expanded');
             
             container.innerHTML = cardList.map((card, index) => {
-                const rotations = [-6, 3, 10];
-                const offsets = [-20, 0, 20];
+                // Разные углы для 7 карт
+                const rotations = [-8, -4, 0, 4, 8, 12, 16];
+                const offsets = [-30, -20, -10, 0, 10, 20, 30];
                 
                 return `
                     <div class="stack-card" style="
@@ -771,9 +772,11 @@
                 container.classList.add('expanded');
                 
                 cards.forEach((card, index) => {
-                    const xOffset = (index - 1) * 180;
-                    const rotation = (index - 1) * 8;
-                    const yOffset = Math.abs(index - 1) * 10;
+                    // Центр — индекс 3 (4-я карта)
+                    const centerIndex = 3;
+                    const xOffset = (index - centerIndex) * 130;
+                    const rotation = (index - centerIndex) * 6;
+                    const yOffset = Math.abs(index - centerIndex) * 8;
                     
                     card.style.transform = `translateX(${xOffset}px) translateY(${yOffset}px) rotate(${rotation}deg)`;
                     card.style.zIndex = index + 1;
@@ -783,8 +786,8 @@
             } else {
                 container.classList.remove('expanded');
                 
-                const rotations = [-6, 3, 10];
-                const offsets = [-20, 0, 20];
+                const rotations = [-8, -4, 0, 4, 8, 12, 16];
+                const offsets = [-30, -20, -10, 0, 10, 20, 30];
                 
                 cards.forEach((card, index) => {
                     card.style.transform = `rotate(${rotations[index]}deg) translateX(${offsets[index]}px)`;
