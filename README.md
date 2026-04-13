@@ -233,15 +233,15 @@
             text-align: center;
         }
 
-        /* Карточки карт - единая стопка */
+        /* Карточки карт - стопка с разлетанием */
         .cards-stack {
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 60px 0 40px;
             position: relative;
-            min-height: 450px;
-            perspective: 1000px;
+            min-height: 500px;
+            perspective: 1200px;
         }
 
         .stack-card {
@@ -249,7 +249,7 @@
             width: 340px;
             background: transparent;
             border-radius: 20px;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: pointer;
             filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
         }
@@ -262,35 +262,83 @@
             background: transparent;
             mix-blend-mode: lighten;
             border: 2px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .stack-card:hover {
-            transform: translateY(-30px) rotate(0deg) !important;
-            z-index: 100 !important;
-            filter: drop-shadow(0 30px 50px rgba(255, 215, 0, 0.3));
+            transition: all 0.3s ease;
         }
 
         .stack-card:hover img {
             border-color: #FFD700;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
         }
 
         .stack-card-name {
             position: absolute;
-            bottom: -35px;
+            bottom: -40px;
             left: 0;
             right: 0;
             text-align: center;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #FFD700;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
+            background: linear-gradient(135deg, rgba(0,0,0,0.5), transparent);
+            padding: 8px;
+            border-radius: 20px;
         }
 
         .stack-card:hover .stack-card-name {
             opacity: 1;
+        }
+
+        /* Состояние "разлетелись" */
+        .cards-stack.expanded .stack-card {
+            pointer-events: auto;
+        }
+
+        .cards-stack.expanded .stack-card:hover {
+            transform: scale(1.05) translateY(-10px) !important;
+            z-index: 100 !important;
+        }
+
+        .stack-control {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .stack-toggle-btn {
+            background: transparent;
+            border: 2px solid #FFD700;
+            color: #FFD700;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .stack-toggle-btn:hover {
+            background: #FFD700;
+            color: #0a0a0a;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Индикатор клика */
+        .click-hint {
+            text-align: center;
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-style: italic;
+            opacity: 0.8;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
 
         /* Формы */
@@ -530,11 +578,10 @@
         .stack-note {
             text-align: center;
             color: #FFD700;
-            margin-top: 60px;
+            margin-top: 20px;
             font-style: italic;
         }
 
-        /* Убираем белый фон у всех изображений */
         img {
             background: transparent !important;
         }
@@ -605,14 +652,24 @@
         </ul>
     </div>
 
-    <!-- Карты - единая стопка -->
+    <!-- Карты - стопка с разлетанием -->
     <div id="cards-section" class="content-card hidden">
         <h2>Эксклюзивные карты</h2>
         <div class="divider"></div>
         
-        <div class="cards-stack" id="cards-stack-container"></div>
+        <div class="click-hint">
+            <strong>👆 Нажмите на стопку, чтобы разложить карты</strong>
+        </div>
         
-        <p class="stack-note"><strong>Наведите на стопку — карты разойдутся веером</strong></p>
+        <div class="cards-stack" id="cards-stack-container" onclick="toggleCardsStack(event)"></div>
+        
+        <div class="stack-control">
+            <button class="stack-toggle-btn" onclick="toggleCardsStack(event)">
+                <span id="stack-toggle-text">Разложить карты</span>
+            </button>
+        </div>
+        
+        <p class="stack-note"><strong>Наведите на карту, чтобы увидеть название</strong></p>
         <p style="margin-top: 20px; text-align: center; color: #FFD700;"><strong>Карты скоро появятся в отделениях банка</strong></p>
     </div>
 
@@ -635,8 +692,8 @@
         let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
         let currentUser = null;
         let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
+        let isStackExpanded = false;
 
-        // Карты для стопки
         const cardList = [
             { name: 'Золотая карта', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-01-20-Photoroom.png?raw=true' },
             { name: 'Платиновая карта', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-05-01-Photoroom.png?raw=true' },
@@ -647,8 +704,12 @@
             const container = document.getElementById('cards-stack-container');
             if (!container) return;
             
+            isStackExpanded = false;
+            container.classList.remove('expanded');
+            document.getElementById('stack-toggle-text').textContent = 'Разложить карты';
+            
             container.innerHTML = cardList.map((card, index) => {
-                // Карты лежат стопкой, слегка повёрнуты
+                // В сложенном состоянии
                 const rotations = [-5, 2, 8];
                 const offsets = [-15, 0, 15];
                 
@@ -656,13 +717,54 @@
                     <div class="stack-card" style="
                         transform: rotate(${rotations[index]}deg) translateX(${offsets[index]}px);
                         z-index: ${index + 1};
-                    " data-index="${index}">
+                    " data-index="${index}" data-name="${card.name}">
                         <img src="${card.img}" alt="${card.name}">
                         <div class="stack-card-name">${card.name}</div>
                     </div>
                 `;
             }).join('');
         }
+
+        window.toggleCardsStack = function(event) {
+            // Не переключаем, если кликнули на кнопку внутри стопки
+            if (event.target.closest('.stack-toggle-btn')) return;
+            
+            const container = document.getElementById('cards-stack-container');
+            const cards = container.querySelectorAll('.stack-card');
+            const toggleText = document.getElementById('stack-toggle-text');
+            
+            if (!isStackExpanded) {
+                // Разложить карты веером
+                container.classList.add('expanded');
+                toggleText.textContent = 'Сложить карты';
+                
+                cards.forEach((card, index) => {
+                    // Красивое разлетание веером
+                    const xOffset = (index - 1) * 180;
+                    const rotation = (index - 1) * 8;
+                    const yOffset = Math.abs(index - 1) * 10;
+                    
+                    card.style.transform = `translateX(${xOffset}px) translateY(${yOffset}px) rotate(${rotation}deg)`;
+                    card.style.zIndex = index + 1;
+                });
+                
+                isStackExpanded = true;
+            } else {
+                // Сложить обратно в стопку
+                container.classList.remove('expanded');
+                toggleText.textContent = 'Разложить карты';
+                
+                const rotations = [-5, 2, 8];
+                const offsets = [-15, 0, 15];
+                
+                cards.forEach((card, index) => {
+                    card.style.transform = `rotate(${rotations[index]}deg) translateX(${offsets[index]}px)`;
+                    card.style.zIndex = index + 1;
+                });
+                
+                isStackExpanded = false;
+            }
+        };
 
         window.onload = function() {
             const session = localStorage.getItem('currentSession');
@@ -857,6 +959,7 @@
         window.sendResetEmail = sendResetEmail;
         window.logout = logout;
         window.toggleSection = toggleSection;
+        window.toggleCardsStack = toggleCardsStack;
         window.sendFriendRequest = sendFriendRequest;
         window.acceptFriendRequest = acceptFriendRequest;
         window.declineFriendRequest = declineFriendRequest;
