@@ -222,6 +222,8 @@
             height: auto;
             border-radius: 16px;
             display: block;
+            background: transparent;
+            mix-blend-mode: lighten;
         }
 
         .image-caption {
@@ -231,47 +233,64 @@
             text-align: center;
         }
 
-        /* Карточки карт - эффект стопки на столе */
+        /* Карточки карт - единая стопка */
         .cards-stack {
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 60px 0 40px;
             position: relative;
-            min-height: 500px;
+            min-height: 450px;
+            perspective: 1000px;
         }
 
         .stack-card {
             position: absolute;
-            width: 320px;
-            background: rgba(40, 40, 40, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 20px;
-            border: 2px solid rgba(255, 215, 0, 0.2);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            width: 340px;
+            background: transparent;
+            border-radius: 20px;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             cursor: pointer;
-        }
-
-        .stack-card:hover {
-            transform: translateY(-20px) rotate(0deg) !important;
-            border-color: #FFD700;
-            box-shadow: 0 30px 60px rgba(255, 215, 0, 0.2);
-            z-index: 100 !important;
+            filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
         }
 
         .stack-card img {
             width: 100%;
-            border-radius: 16px;
-            margin-bottom: 16px;
+            height: auto;
+            border-radius: 20px;
+            display: block;
+            background: transparent;
+            mix-blend-mode: lighten;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .stack-card:hover {
+            transform: translateY(-30px) rotate(0deg) !important;
+            z-index: 100 !important;
+            filter: drop-shadow(0 30px 50px rgba(255, 215, 0, 0.3));
+        }
+
+        .stack-card:hover img {
+            border-color: #FFD700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
         }
 
         .stack-card-name {
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #FFD700;
+            position: absolute;
+            bottom: -35px;
+            left: 0;
+            right: 0;
             text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #FFD700;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stack-card:hover .stack-card-name {
+            opacity: 1;
         }
 
         /* Формы */
@@ -411,6 +430,7 @@
             border: 3px solid #FFD700;
             padding: 3px;
             background: #1a1a1a;
+            mix-blend-mode: normal;
         }
 
         .logout-btn {
@@ -510,8 +530,13 @@
         .stack-note {
             text-align: center;
             color: #FFD700;
-            margin-top: 30px;
+            margin-top: 60px;
             font-style: italic;
+        }
+
+        /* Убираем белый фон у всех изображений */
+        img {
+            background: transparent !important;
         }
     </style>
 </head>
@@ -542,7 +567,6 @@
         <p style="margin-bottom: 20px;"><strong>«Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление.»</strong></p>
         <p><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью.</strong></p>
         
-        <!-- Новые изображения -->
         <div class="image-showcase">
             <div class="image-block">
                 <img src="https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-13-31-Photoroom.png?raw=true" alt="БК-Банк карта 1">
@@ -581,14 +605,14 @@
         </ul>
     </div>
 
-    <!-- Карты - стопкой -->
+    <!-- Карты - единая стопка -->
     <div id="cards-section" class="content-card hidden">
         <h2>Эксклюзивные карты</h2>
         <div class="divider"></div>
         
         <div class="cards-stack" id="cards-stack-container"></div>
         
-        <p class="stack-note"><strong>Наведите на карту — она поднимется над остальными</strong></p>
+        <p class="stack-note"><strong>Наведите на стопку — карты разойдутся веером</strong></p>
         <p style="margin-top: 20px; text-align: center; color: #FFD700;"><strong>Карты скоро появятся в отделениях банка</strong></p>
     </div>
 
@@ -608,12 +632,11 @@
 
 <script>
     (function(){
-        // --- Данные и состояние ---
         let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
         let currentUser = null;
         let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
 
-        // Новый список карт
+        // Карты для стопки
         const cardList = [
             { name: 'Золотая карта', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-01-20-Photoroom.png?raw=true' },
             { name: 'Платиновая карта', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_23-05-01-Photoroom.png?raw=true' },
@@ -625,16 +648,15 @@
             if (!container) return;
             
             container.innerHTML = cardList.map((card, index) => {
-                // Разные углы поворота и смещения для эффекта стопки
-                const rotations = [-8, 3, -4];
-                const offsets = [-20, 0, 20];
-                const zIndices = [1, 2, 3];
+                // Карты лежат стопкой, слегка повёрнуты
+                const rotations = [-5, 2, 8];
+                const offsets = [-15, 0, 15];
                 
                 return `
                     <div class="stack-card" style="
                         transform: rotate(${rotations[index]}deg) translateX(${offsets[index]}px);
-                        z-index: ${zIndices[index]};
-                    ">
+                        z-index: ${index + 1};
+                    " data-index="${index}">
                         <img src="${card.img}" alt="${card.name}">
                         <div class="stack-card-name">${card.name}</div>
                     </div>
@@ -642,7 +664,6 @@
             }).join('');
         }
 
-        // Проверка сессии при загрузке
         window.onload = function() {
             const session = localStorage.getItem('currentSession');
             if (session) {
@@ -829,7 +850,6 @@
         function showError(el, msg) { if(!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
         function showSuccess(el, msg) { if(!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 5000); }
 
-        // Глобальные ссылки
         window.login = login;
         window.register = register;
         window.showForgotPasswordForm = showForgotPasswordForm;
