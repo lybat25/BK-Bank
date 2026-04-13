@@ -15,122 +15,81 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a; color: #ffffff; overflow-x: hidden; line-height: 1.5; -webkit-font-smoothing: antialiased;
-        }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; overflow-x: hidden; line-height: 1.5; -webkit-font-smoothing: antialiased; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #1a1a1a; }
         ::-webkit-scrollbar-thumb { background: #FFD700; border-radius: 10px; }
         .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.04) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.03) 0%, transparent 50%); pointer-events: none; z-index: -1; }
         .particle { position: fixed; width: 2px; height: 2px; background: #FFD700; border-radius: 50%; opacity: 0.15; pointer-events: none; z-index: -1; animation: float 20s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0) translateX(0); } 25% { transform: translateY(-30px) translateX(15px); } 50% { transform: translateY(-15px) translateX(-20px); } 75% { transform: translateY(20px) translateX(10px); } }
-        .glass-header { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); background-color: rgba(18, 18, 18, 0.85); border-bottom: 1px solid rgba(255, 215, 0, 0.15); padding: 16px 32px; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
+        .glass-header { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); background-color: rgba(18, 18, 18, 0.85); border-bottom: 1px solid rgba(255, 215, 0, 0.15); padding: 16px 32px; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
         .logo-wrapper { display: flex; align-items: center; gap: 12px; }
-        .logo-img { width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); transition: all 0.3s ease; }
-        .logo-img:hover { transform: scale(1.08); filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.7)); }
-        .bank-name { font-size: 1.9rem; font-weight: 800; background: linear-gradient(135deg, #FFD700 0%, #FFC200 50%, #FFE44D 100%); background-size: 200% 200%; -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -0.5px; animation: gradientShift 4s ease infinite; }
+        .logo-img { width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
+        .bank-name { font-size: 1.9rem; font-weight: 800; background: linear-gradient(135deg, #FFD700, #FFC200, #FFE44D); background-size: 200% 200%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradientShift 4s ease infinite; }
         @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
         .nav-links { display: flex; gap: 8px; }
-        .nav-link { background: transparent; border: none; color: #e0e0e0; padding: 12px 24px; margin: 0 4px; border-radius: 40px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.25s ease; backdrop-filter: blur(5px); position: relative; overflow: hidden; }
-        .nav-link::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, transparent 80%); opacity: 0; transition: opacity 0.25s ease; z-index: -1; }
-        .nav-link:hover { color: #FFD700; transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(255, 215, 0, 0.2); }
-        .nav-link:hover::before { opacity: 1; }
+        .nav-link { background: transparent; border: none; color: #e0e0e0; padding: 12px 24px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+        .nav-link:hover { color: #FFD700; transform: translateY(-2px); background: rgba(255,215,0,0.1); }
         .main-container { max-width: 1300px; margin: 30px auto; padding: 0 24px; }
-        .content-card { background: rgba(25, 25, 25, 0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.12); border-radius: 32px; padding: 36px; margin-bottom: 30px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transition: all 0.4s ease; animation: fadeInUp 0.6s ease-out; }
-        .content-card:hover { border-color: rgba(255, 215, 0, 0.25); }
+        .content-card { background: rgba(25, 25, 25, 0.75); backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.12); border-radius: 32px; padding: 36px; margin-bottom: 30px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); animation: fadeInUp 0.6s ease-out; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 24px; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -0.5px; }
+        h2 { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .divider { height: 4px; width: 80px; background: linear-gradient(90deg, #FFD700, transparent); border-radius: 4px; margin-bottom: 32px; }
         p, li, span, div { color: #ffffff; }
-        a, .text-link, .nav-link { color: #FFD700 !important; text-decoration: none !important; }
-        a:hover, .text-link:hover { color: #FFE44D !important; text-decoration: underline !important; text-underline-offset: 4px; text-decoration-color: #FFD700 !important; }
+        a, .text-link { color: #FFD700 !important; text-decoration: none; }
         .image-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin: 30px 0; }
-        .image-grid-item { background: rgba(255, 215, 0, 0.02); border-radius: 20px; padding: 16px; border: 1px solid rgba(255, 215, 0, 0.08); transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
-        .image-grid-item:hover { transform: scale(1.02) translateY(-5px); border-color: rgba(255, 215, 0, 0.3); box-shadow: 0 20px 40px -15px rgba(255, 215, 0, 0.15); }
-        .image-grid-item img { width: 100%; height: auto; border-radius: 14px; display: block; background: transparent; mix-blend-mode: lighten; transition: filter 0.3s ease; }
-        .image-grid-item:hover img { filter: brightness(1.1); }
-        .advantages-block { margin-top: 40px; padding: 30px; background: rgba(255, 215, 0, 0.03); border-radius: 24px; border: 1px solid rgba(255, 215, 0, 0.1); }
-        .advantages-quote { font-size: 1.3rem; line-height: 1.6; color: #FFD700; text-align: center; font-style: italic; margin-bottom: 25px; padding: 0 20px; }
-        .advantages-text { font-size: 1.15rem; line-height: 1.7; text-align: center; color: #e0e0e0; }
-        .cards-stack { display: flex; justify-content: center; align-items: center; margin: 40px 0 20px; position: relative; min-height: 500px; perspective: 1200px; }
-        .stack-card { position: absolute; width: 300px; background: transparent; border-radius: 20px; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6)); }
-        .stack-card img { width: 100%; height: auto; border-radius: 20px; display: block; background: transparent; mix-blend-mode: lighten; border: 2px solid rgba(255, 215, 0, 0.3); transition: all 0.3s ease; }
-        .stack-card:hover img { border-color: #FFD700; box-shadow: 0 0 35px rgba(255, 215, 0, 0.25); }
-        .stack-card-name { position: absolute; bottom: -40px; left: 0; right: 0; text-align: center; font-weight: 700; font-size: 1.1rem; color: #FFD700; text-shadow: 0 2px 15px rgba(0, 0, 0, 0.8); opacity: 0; transition: opacity 0.3s ease; background: linear-gradient(135deg, rgba(0,0,0,0.5), transparent); padding: 8px; border-radius: 20px; pointer-events: none; }
-        .cards-stack.expanded .stack-card:hover .stack-card-name, .stack-card:hover .stack-card-name { opacity: 1; }
-        .cards-stack.expanded .stack-card { pointer-events: auto; }
-        .cards-stack.expanded .stack-card:hover { transform: scale(1.05) translateY(-10px) !important; z-index: 100 !important; }
-        .cards-footer { text-align: center; margin-top: 60px; padding: 20px; }
-        .cards-footer-text { display: inline-block; background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 60px; padding: 16px 40px; font-size: 1.1rem; color: #FFD700; backdrop-filter: blur(5px); transition: all 0.3s ease; }
-        .cards-footer-text:hover { background: rgba(255, 215, 0, 0.1); border-color: #FFD700; transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15); }
-        .services-list { list-style: none; font-size: 1.3rem; }
-        .services-list li { padding: 16px 20px; margin: 8px 0; background: rgba(255, 215, 0, 0.02); border-radius: 60px; border: 1px solid rgba(255, 215, 0, 0.08); transition: all 0.3s ease; cursor: default; display: flex; align-items: center; }
-        .services-list li::before { content: '✦'; color: #FFD700; margin-right: 15px; font-size: 1.4rem; }
-        .services-list li:hover { background: rgba(255, 215, 0, 0.06); border-color: rgba(255, 215, 0, 0.2); transform: translateX(8px); }
-        .modal-form { background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 40px; padding: 40px 32px; width: 420px; max-width: 90%; box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 215, 0, 0.1) inset; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000; animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes modalPop { from { opacity: 0; transform: translate(-50%, -48%); } to { opacity: 1; transform: translate(-50%, -50%); } }
-        .form-title { font-size: 2rem; font-weight: 700; color: #FFD700; text-align: center; margin-bottom: 30px; }
-        .form-input { width: 100%; padding: 16px 20px; margin-bottom: 16px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 215, 0, 0.2); border-radius: 60px; color: white; font-size: 1rem; font-weight: 500; transition: all 0.2s ease; outline: none; }
-        .form-input:focus { border-color: #FFD700; background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.1); }
-        .form-input::placeholder { color: #999; font-weight: 400; }
-        .gold-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #FFD700 0%, #FFB300 100%); border: none; border-radius: 60px; color: #0a0a0a; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2); margin-bottom: 16px; }
-        .gold-button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255, 215, 0, 0.35); background: linear-gradient(135deg, #FFE44D 0%, #FFC200 100%); }
-        .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 12px 0; cursor: pointer; font-weight: 600; text-decoration: none !important; transition: all 0.2s; }
-        .text-link:hover { color: #FFE44D !important; text-decoration: underline !important; }
-        .toast-message { position: fixed; top: 100px; right: 30px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(20px); border-left: 6px solid #FFD700; padding: 20px 30px; border-radius: 60px 16px 16px 60px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); z-index: 2500; font-weight: 600; color: #FFD700; animation: slideIn 0.4s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
-        .fade-out { opacity: 0; transition: opacity 0.8s ease; }
-        .profile-header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; padding: 20px; background: rgba(255, 215, 0, 0.03); border-radius: 40px; }
-        .profile-avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #FFD700; padding: 3px; background: #1a1a1a; }
-        .logout-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700 !important; padding: 10px 24px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-left: auto; }
-        .logout-btn:hover { background: #FFD700; color: #0a0a0a !important; }
-        .friend-actions { display: flex; gap: 12px; margin: 20px 0; }
-        .friend-input { flex: 1; padding: 14px 20px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 60px; color: white; }
-        .small-gold-btn { background: #FFD700; border: none; padding: 14px 24px; border-radius: 60px; font-weight: 700; color: #0a0a0a; cursor: pointer; transition: 0.2s; }
-        .small-gold-btn:hover { background: #FFE44D; }
-        .friend-list { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
-        .friend-tag { background: rgba(255, 215, 0, 0.1); padding: 8px 18px; border-radius: 40px; border: 1px solid rgba(255, 215, 0, 0.2); font-weight: 500; color: #ffffff; }
-        .friend-tag button { background: transparent; border: none; color: #FFD700; cursor: pointer; margin-left: 8px; font-size: 1.1rem; }
+        .image-grid-item { background: rgba(255, 215, 0, 0.02); border-radius: 20px; padding: 16px; border: 1px solid rgba(255, 215, 0, 0.08); }
+        .image-grid-item img { width: 100%; border-radius: 14px; mix-blend-mode: lighten; }
+        .advantages-block { margin-top: 40px; padding: 30px; background: rgba(255, 215, 0, 0.03); border-radius: 24px; }
+        .advantages-quote { font-size: 1.3rem; color: #FFD700; text-align: center; font-style: italic; }
+        .cards-stack { display: flex; justify-content: center; margin: 40px 0; position: relative; min-height: 500px; perspective: 1200px; }
+        .stack-card { position: absolute; width: 300px; transition: all 0.5s; cursor: pointer; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); }
+        .stack-card img { width: 100%; border-radius: 20px; border: 2px solid rgba(255,215,0,0.3); mix-blend-mode: lighten; }
+        .stack-card:hover img { border-color: #FFD700; box-shadow: 0 0 35px rgba(255,215,0,0.25); }
+        .stack-card-name { position: absolute; bottom: -40px; text-align: center; width: 100%; color: #FFD700; opacity: 0; }
+        .stack-card:hover .stack-card-name { opacity: 1; }
+        .cards-footer-text { background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 60px; padding: 16px 40px; color: #FFD700; display: inline-block; }
+        .services-list { list-style: none; }
+        .services-list li { padding: 16px; margin: 8px 0; background: rgba(255,215,0,0.02); border-radius: 60px; }
+        .services-list li::before { content: '✦'; color: #FFD700; margin-right: 15px; }
+        .modal-form { background: rgba(20,20,20,0.95); backdrop-filter: blur(25px); border: 1px solid rgba(255,215,0,0.2); border-radius: 40px; padding: 40px; width: 420px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000; }
+        .form-title { font-size: 2rem; color: #FFD700; text-align: center; margin-bottom: 30px; }
+        .form-input { width: 100%; padding: 16px; margin-bottom: 16px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 60px; color: white; }
+        .gold-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 60px; font-weight: 700; cursor: pointer; }
+        .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 12px 0; cursor: pointer; }
+        .toast-message { position: fixed; top: 100px; right: 30px; background: rgba(20,20,20,0.95); border-left: 6px solid #FFD700; padding: 20px 30px; border-radius: 60px; z-index: 2500; }
         .hidden { display: none !important; }
-        .error-text { color: #ff5e5e; text-align: center; margin-bottom: 12px; font-weight: 500; }
-        .success-text { color: #4ade80; text-align: center; margin-bottom: 12px; font-weight: 500; }
-        strong { color: #ffffff; }
-        img { background: transparent !important; }
-        .support-panel { display: flex; gap: 20px; margin-top: 20px; }
+        .error-text { color: #ff5e5e; }
+        .success-text { color: #4ade80; }
+        .profile-header { display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255,215,0,0.03); border-radius: 40px; }
+        .profile-avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #FFD700; object-fit: cover; cursor: pointer; }
+        .logout-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 10px 24px; border-radius: 40px; cursor: pointer; }
+        .friend-list { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+        .friend-tag { background: rgba(255,215,0,0.1); padding: 8px 18px; border-radius: 40px; }
+        .support-panel { display: flex; gap: 20px; }
         .users-list { width: 260px; background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; }
-        .users-list h3 { color: #FFD700; margin-bottom: 15px; display: flex; justify-content: space-between; }
-        .user-item { padding: 12px 15px; margin-bottom: 8px; background: rgba(255,215,0,0.05); border-radius: 10px; cursor: pointer; border: 1px solid transparent; }
-        .user-item:hover { background: rgba(255,215,0,0.1); border-color: #FFD700; }
-        .user-item.active { background: rgba(255,215,0,0.15); border-color: #FFD700; }
+        .user-item { padding: 12px; margin-bottom: 8px; background: rgba(255,215,0,0.05); border-radius: 10px; cursor: pointer; }
+        .user-item.active { background: rgba(255,215,0,0.15); border: 1px solid #FFD700; }
         .chat-area { flex: 1; }
-        .chat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .clear-chat-btn { background: rgba(255, 100, 100, 0.2); border: 1px solid #ff6b6b; color: #ff6b6b; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 0.9rem; }
-        .clear-chat-btn:hover { background: rgba(255, 100, 100, 0.3); }
-        .support-chat { padding: 20px; background: rgba(255, 215, 0, 0.03); border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.1); }
-        .chat-messages { max-height: 350px; overflow-y: auto; margin-bottom: 20px; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 15px; }
-        .chat-message { margin-bottom: 12px; padding: 12px 16px; border-radius: 18px; max-width: 80%; position: relative; word-wrap: break-word; }
-        .chat-message.client { background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1)); margin-left: auto; border: 1px solid rgba(255, 215, 0, 0.2); }
-        .chat-message.support { background: rgba(255, 255, 255, 0.06); margin-right: auto; border: 1px solid rgba(255, 255, 255, 0.1); }
-        .chat-message small { display: block; font-size: 0.7rem; color: #888; margin-top: 5px; }
-        .delete-msg-btn { position: absolute; top: 5px; right: 5px; width: 22px; height: 22px; background: rgba(255, 100, 100, 0.5); border: none; border-radius: 50%; color: white; font-size: 14px; cursor: pointer; display: none; align-items: center; justify-content: center; opacity: 0.7; }
-        .chat-message:hover .delete-msg-btn { display: flex; }
-        .delete-msg-btn:hover { opacity: 1; background: #ff4444; }
+        .chat-messages { max-height: 350px; overflow-y: auto; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 15px; margin-bottom: 20px; }
+        .chat-message { margin-bottom: 12px; padding: 12px; border-radius: 18px; max-width: 80%; }
+        .chat-message.client { background: rgba(255,215,0,0.15); margin-left: auto; }
+        .chat-message.support { background: rgba(255,255,255,0.06); }
         .chat-input-area { display: flex; gap: 10px; }
-        .chat-input { flex: 1; padding: 14px 18px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 215, 0, 0.2); border-radius: 30px; color: white; font-size: 1rem; outline: none; }
-        .chat-input:focus { border-color: #FFD700; background: rgba(255, 255, 255, 0.08); }
-        .chat-send-btn { padding: 14px 28px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 30px; font-weight: 700; cursor: pointer; color: #0a0a0a; }
-        .chat-send-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2); }
+        .chat-input { flex: 1; padding: 14px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 30px; color: white; }
+        .chat-send-btn { padding: 14px 28px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 30px; font-weight: 700; cursor: pointer; }
+        .edit-profile-btn { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 8px 16px; border-radius: 30px; margin-left: 10px; cursor: pointer; }
+        .public-profile-link { color: #FFD700; text-decoration: underline; cursor: pointer; }
+        .private-chat-item { padding: 10px; margin: 5px 0; background: rgba(255,215,0,0.05); border-radius: 10px; cursor: pointer; }
+        .private-chat-item:hover { background: rgba(255,215,0,0.1); }
     </style>
 </head>
 <body>
 
 <div class="bg-glow"></div>
-<div class="particle" style="top: 15%; left: 10%; animation-delay: 0s;"></div>
-<div class="particle" style="top: 45%; left: 85%; animation-delay: 3s;"></div>
-<div class="particle" style="top: 75%; left: 20%; animation-delay: 6s;"></div>
-<div class="particle" style="top: 30%; left: 60%; animation-delay: 9s;"></div>
-<div class="particle" style="top: 85%; left: 70%; animation-delay: 12s;"></div>
+<div class="particle" style="top: 15%; left: 10%;"></div>
+<div class="particle" style="top: 45%; left: 85%;"></div>
+<div class="particle" style="top: 75%; left: 20%;"></div>
 
 <header class="glass-header hidden">
     <div class="logo-wrapper">
@@ -142,6 +101,7 @@
         <button class="nav-link" onclick="toggleSection('services')">Услуги</button>
         <button class="nav-link" onclick="toggleSection('cards')">Карты</button>
         <button class="nav-link" onclick="toggleSection('support')">Поддержка</button>
+        <button class="nav-link" onclick="toggleSection('chats')">Чаты</button>
         <button class="nav-link" onclick="toggleSection('profile')">Кабинет</button>
     </nav>
 </header>
@@ -150,7 +110,7 @@
     <div id="about-section" class="content-card">
         <h2>Ваш надёжный финансовый партнёр</h2>
         <div class="divider"></div>
-        <p style="font-size: 1.2rem; margin-bottom: 30px;"><strong>В BK-Bank мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни.</strong></p>
+        <p style="font-size: 1.2rem;"><strong>В BK-Bank мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни.</strong></p>
         <div class="image-grid">
             <div class="image-grid-item"><img src="png/2025-01-30_15-13-31-Photoroom.png" alt="Карта"></div>
             <div class="image-grid-item"><img src="png/2025-01-30_15-58-26-Photoroom.png" alt="Карта"></div>
@@ -158,10 +118,9 @@
             <div class="image-grid-item"><img src="png/2025-01-30_22-57-01-Photoroom.png" alt="Карта"></div>
         </div>
         <div class="advantages-block">
-            <h3 style="color: #FFD700; text-align: center; margin-bottom: 25px; font-size: 1.8rem;">Наши преимущества</h3>
-            <div class="divider" style="margin-left: auto; margin-right: auto; width: 60px;"></div>
+            <h3 style="color: #FFD700; text-align: center;">Наши преимущества</h3>
             <div class="advantages-quote">«Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление.»</div>
-            <div class="advantages-text"><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью.</strong></div>
+            <div class="advantages-text" style="text-align: center;"><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью.</strong></div>
         </div>
     </div>
 
@@ -173,7 +132,7 @@
     <div id="cards-section" class="content-card hidden">
         <h2>Эксклюзивные карты</h2><div class="divider"></div>
         <div class="cards-stack" id="cards-stack-container"></div>
-        <div class="cards-footer"><div class="cards-footer-text"><strong>✨ Все представленные карты доступны для оформления в отделениях BK-Bank ✨</strong><br><i style="color: #FFD700; opacity: 0.8; font-size: 0.95rem;">Выберите свою идеальную карту из нашей эксклюзивной коллекции</i></div></div>
+        <div style="text-align: center; margin-top: 60px;"><div class="cards-footer-text"><strong>✨ Все карты доступны для оформления ✨</strong></div></div>
     </div>
 
     <div id="support-section" class="content-card hidden">
@@ -181,21 +140,29 @@
         <div id="support-container"></div>
     </div>
 
+    <div id="chats-section" class="content-card hidden">
+        <h2>Личные чаты</h2><div class="divider"></div>
+        <div id="chats-container"></div>
+    </div>
+
     <div id="profile-section" class="content-card hidden"></div>
+    
+    <div id="public-profile-section" class="content-card hidden"></div>
 </main>
 
 <script>
     const HIDDEN_ACCOUNTS = { admin: { username: "lybat25", password: "BKAdmin2024!Secure" }, support: { username: "BK_Support", password: "HelpDesk2024!Bank" } };
     let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
     let currentUser = null;
-    let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
     let isStackExpanded = false;
     let allSupportChats = JSON.parse(localStorage.getItem('allSupportChats')) || {};
+    let privateChats = JSON.parse(localStorage.getItem('privateChats')) || {};
     let selectedClient = null;
+    let selectedPrivateChat = null;
 
     function initHiddenAccounts() {
-        if (!users[HIDDEN_ACCOUNTS.admin.username]) users[HIDDEN_ACCOUNTS.admin.username] = { name: "Администратор", email: "admin@bk-bank.ru", password: HIDDEN_ACCOUNTS.admin.password, balance: 999999, friends: [], friendRequests: [], registrationDate: new Date().toISOString(), isAdmin: true };
-        if (!users[HIDDEN_ACCOUNTS.support.username]) users[HIDDEN_ACCOUNTS.support.username] = { name: "Служба поддержки", email: "support@bk-bank.ru", password: HIDDEN_ACCOUNTS.support.password, balance: 0, friends: [], friendRequests: [], registrationDate: new Date().toISOString(), isSupport: true };
+        if (!users[HIDDEN_ACCOUNTS.admin.username]) users[HIDDEN_ACCOUNTS.admin.username] = { name: "Администратор", email: "admin@bk-bank.ru", phone: "+79000000001", password: HIDDEN_ACCOUNTS.admin.password, balance: 999999, friends: [], friendRequests: [], registrationDate: new Date().toISOString(), isAdmin: true, avatar: null };
+        if (!users[HIDDEN_ACCOUNTS.support.username]) users[HIDDEN_ACCOUNTS.support.username] = { name: "Служба поддержки", email: "support@bk-bank.ru", phone: "+79000000002", password: HIDDEN_ACCOUNTS.support.password, balance: 0, friends: [], friendRequests: [], registrationDate: new Date().toISOString(), isSupport: true, avatar: null };
         localStorage.setItem('bankUsers', JSON.stringify(users));
     }
     initHiddenAccounts();
@@ -212,8 +179,7 @@
 
     function renderCardsStack() {
         const c = document.getElementById('cards-stack-container'); if (!c) return;
-        isStackExpanded = false; c.classList.remove('expanded');
-        c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="transform: rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px); z-index: ${i+1};" onclick="handleStackClick(event)"><img src="${card.img}"><div class="stack-card-name">${card.name}</div></div>`).join('');
+        c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="transform: rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px);" onclick="handleStackClick(event)"><img src="${card.img}"><div class="stack-card-name">${card.name}</div></div>`).join('');
     }
 
     window.handleStackClick = (e) => {
@@ -232,6 +198,14 @@
 
     window.onload = () => {
         const s = localStorage.getItem('currentSession');
+        const urlParams = new URLSearchParams(window.location.search);
+        const viewUser = urlParams.get('user');
+        
+        if (viewUser && users[viewUser]) {
+            showPublicProfile(viewUser);
+            return;
+        }
+        
         if (s) { const d = JSON.parse(s); if (Date.now() - d.timestamp < 86400000) { currentUser = d.username; showMainContent(); showWelcomeMessage(users[currentUser].name); return; } }
         showLoginForm();
     };
@@ -239,126 +213,190 @@
     function showLoginForm() {
         removeModals();
         const m = document.createElement('div'); m.className = 'modal-form';
-        m.innerHTML = `<div class="form-title">Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="login()">Войти</button><span class="text-link" onclick="showForgotPasswordForm()">Забыли пароль?</span><span class="text-link" onclick="showRegistrationForm()">Регистрация</span>`;
+        m.innerHTML = `<div class="form-title">Вход</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="login()">Войти</button><span class="text-link" onclick="showRegistrationForm()">Регистрация</span>`;
         document.body.appendChild(m);
-    }
-
-    function showForgotPasswordForm() {
-        removeModals();
-        const m = document.createElement('div'); m.className = 'modal-form';
-        m.innerHTML = `<div class="form-title">Восстановление</div><div id="resetError" class="error-text hidden"></div><div id="resetSuccess" class="success-text hidden"></div><input type="email" id="resetEmail" class="form-input" placeholder="Ваш email"><button class="gold-button" onclick="sendResetEmail()">Отправить</button><span class="text-link" onclick="showLoginForm()">← Назад</span>`;
-        document.body.appendChild(m);
-    }
-
-    function sendResetEmail() {
-        const email = document.getElementById('resetEmail')?.value; const errEl = document.getElementById('resetError'); const sucEl = document.getElementById('resetSuccess');
-        if (!email) return showError(errEl, 'Введите email');
-        let found = null; for (let u in users) if (users[u].email === email) { found = u; break; }
-        if (!found) return showError(errEl, 'Email не найден');
-        const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
-        resetTokens[token] = { username: found, email, expires: Date.now() + 3600000 };
-        localStorage.setItem('resetTokens', JSON.stringify(resetTokens));
-        showSuccess(sucEl, `Ссылка: ${location.origin}${location.pathname}?resetToken=${token}`);
     }
 
     function showRegistrationForm() {
         removeModals();
         const m = document.createElement('div'); m.className = 'modal-form';
-        m.innerHTML = `<div class="form-title">Регистрация</div><div id="registerError" class="error-text hidden"></div><input id="regName" class="form-input" placeholder="Имя"><input id="regUsername" class="form-input" placeholder="Никнейм"><input id="regEmail" class="form-input" placeholder="Email"><input type="password" id="regPassword" class="form-input" placeholder="Пароль"><input type="password" id="regConfirmPassword" class="form-input" placeholder="Подтверждение"><button class="gold-button" onclick="register()">Зарегистрироваться</button><span class="text-link" onclick="showLoginForm()">← Войти</span>`;
+        m.innerHTML = `<div class="form-title">Регистрация</div><div id="registerError" class="error-text hidden"></div><input id="regName" class="form-input" placeholder="Имя"><input id="regUsername" class="form-input" placeholder="Уникальный никнейм"><input id="regPhone" class="form-input" placeholder="Телефон (+7...)" value="+7"><input id="regEmail" class="form-input" placeholder="Email"><input type="password" id="regPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="register()">Зарегистрироваться</button><span class="text-link" onclick="showLoginForm()">← Войти</span>`;
         document.body.appendChild(m);
     }
 
     function login() {
-        const u = document.getElementById('loginUsername')?.value.trim(); const p = document.getElementById('loginPassword')?.value; const err = document.getElementById('loginError');
+        let u = document.getElementById('loginUsername')?.value.trim();
+        const p = document.getElementById('loginPassword')?.value;
+        const err = document.getElementById('loginError');
         if (!u || !p) return showError(err, 'Заполните поля');
-        if (!users[u] || users[u].password !== p) return showError(err, 'Неверные данные');
-        currentUser = u; localStorage.setItem('currentSession', JSON.stringify({username: u, timestamp: Date.now()}));
-        removeModals(); showMainContent(); showWelcomeMessage(users[u].name);
+        
+        let foundUser = null;
+        if (users[u]) foundUser = u;
+        else { for (let un in users) if (users[un].phone === u) { foundUser = un; break; } }
+        
+        if (!foundUser || users[foundUser].password !== p) return showError(err, 'Неверные данные');
+        currentUser = foundUser;
+        localStorage.setItem('currentSession', JSON.stringify({username: foundUser, timestamp: Date.now()}));
+        removeModals(); showMainContent(); showWelcomeMessage(users[foundUser].name);
     }
 
     function register() {
-        const name = document.getElementById('regName')?.value.trim(); const username = document.getElementById('regUsername')?.value.trim(); const email = document.getElementById('regEmail')?.value.trim();
-        const pass = document.getElementById('regPassword')?.value; const confirm = document.getElementById('regConfirmPassword')?.value; const err = document.getElementById('registerError');
-        if (!name || !username || !email || !pass || !confirm) return showError(err, 'Все поля обязательны');
-        if (!/[a-zA-Zа-яА-ЯЁё]/.test(name)) return showError(err, 'Имя должно содержать буквы');
+        const name = document.getElementById('regName')?.value.trim();
+        const username = document.getElementById('regUsername')?.value.trim();
+        const phone = document.getElementById('regPhone')?.value.trim();
+        const email = document.getElementById('regEmail')?.value.trim();
+        const pass = document.getElementById('regPassword')?.value;
+        const err = document.getElementById('registerError');
+        
+        if (!name || !username || !phone || !email || !pass) return showError(err, 'Все поля обязательны');
+        if (!/^\+7\d{10}$/.test(phone)) return showError(err, 'Телефон: +7XXXXXXXXXX (11 цифр)');
         if (pass.length < 6) return showError(err, 'Пароль от 6 символов');
-        if (pass !== confirm) return showError(err, 'Пароли не совпадают');
         if (users[username]) return showError(err, 'Никнейм занят');
-        users[username] = { name, email, password: pass, balance: 0, friends: [], friendRequests: [], registrationDate: new Date().toISOString() };
-        localStorage.setItem('bankUsers', JSON.stringify(users)); currentUser = username;
+        for (let u in users) if (users[u].phone === phone) return showError(err, 'Телефон уже зарегистрирован');
+        
+        users[username] = { name, email, phone, password: pass, balance: 0, friends: [], friendRequests: [], registrationDate: new Date().toISOString(), avatar: null };
+        localStorage.setItem('bankUsers', JSON.stringify(users));
+        currentUser = username;
         localStorage.setItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
         removeModals(); showMainContent(); showWelcomeMessage(name);
     }
 
     function showMainContent() { document.querySelector('header')?.classList.remove('hidden'); document.querySelector('.main-container')?.classList.remove('hidden'); toggleSection('about'); }
-    function showWelcomeMessage(n) { const t = document.createElement('div'); t.className = 'toast-message'; t.innerHTML = `<strong>✨ Добро пожаловать, ${n}!</strong>`; document.body.appendChild(t); setTimeout(() => { t.classList.add('fade-out'); setTimeout(() => t.remove(), 800); }, 3000); }
+    function showWelcomeMessage(n) { const t = document.createElement('div'); t.className = 'toast-message'; t.innerHTML = `<strong>✨ Добро пожаловать, ${n}!</strong>`; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
 
     window.toggleSection = (s) => {
-        ['about','services','cards','support','profile'].forEach(id => document.getElementById(id+'-section')?.classList.add('hidden'));
+        ['about','services','cards','support','chats','profile','public-profile'].forEach(id => document.getElementById(id+'-section')?.classList.add('hidden'));
         if (s === 'about') document.getElementById('about-section')?.classList.remove('hidden');
         else if (s === 'services') document.getElementById('services-section')?.classList.remove('hidden');
         else if (s === 'cards') { document.getElementById('cards-section')?.classList.remove('hidden'); renderCardsStack(); }
         else if (s === 'support') { document.getElementById('support-section')?.classList.remove('hidden'); renderSupportPanel(); }
+        else if (s === 'chats') { document.getElementById('chats-section')?.classList.remove('hidden'); renderPrivateChats(); }
         else if (s === 'profile') showProfile();
     };
 
-    function renderSupportPanel() {
-        const c = document.getElementById('support-container');
-        if (users[currentUser]?.isSupport) {
-            const clients = Object.keys(allSupportChats).filter(u => u !== 'BK_Support' && allSupportChats[u]?.length);
-            let h = `<div class="support-panel"><div class="users-list"><h3>👥 Обращения</h3>`;
-            clients.forEach(cl => h += `<div class="user-item ${selectedClient===cl?'active':''}" onclick="selectClient('${cl}')"><strong>${cl}</strong></div>`);
-            h += `</div><div class="chat-area">`;
-            if (selectedClient) {
-                h += `<div class="chat-header"><span>Чат с ${selectedClient}</span><button class="clear-chat-btn" onclick="clearChat('${selectedClient}')">🗑️ Очистить</button></div><div class="support-chat"><div class="chat-messages">`;
-                allSupportChats[selectedClient].forEach((msg, i) => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':selectedClient}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small><button class="delete-msg-btn" onclick="deleteMessage('${selectedClient}', ${i})">✕</button></div>`);
-                h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Ответить..." onkeypress="if(event.key==='Enter') sendOperatorMessage()"><button class="chat-send-btn" onclick="sendOperatorMessage()">Отправить</button></div></div>`;
-            } else h += `<p style="padding:40px;text-align:center;color:#888;">Выберите пользователя</p>`;
-            h += `</div></div>`; c.innerHTML = h;
-        } else {
-            if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'support', text: 'Здравствуйте! Чем могу помочь?', time: new Date().toISOString() }];
-            let h = `<div class="support-chat"><div class="chat-messages">`;
-            allSupportChats[currentUser].forEach(msg => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':'Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`);
-            h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Сообщение..." onkeypress="if(event.key==='Enter') sendClientMessage()"><button class="chat-send-btn" onclick="sendClientMessage()">Отправить</button></div></div>`;
-            c.innerHTML = h;
-        }
-    }
-
-    window.selectClient = (c) => { selectedClient = c; renderSupportPanel(); };
-    window.clearChat = (client) => { if (confirm(`Очистить чат с ${client}?`)) { allSupportChats[client] = [{ from: 'support', text: 'Чат очищен.', time: new Date().toISOString() }]; localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); } };
-    window.deleteMessage = (client, i) => { allSupportChats[client].splice(i, 1); if (!allSupportChats[client].length) allSupportChats[client] = [{ from: 'support', text: 'Чат пуст.', time: new Date().toISOString() }]; localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); };
-    window.sendClientMessage = () => {
-        const inp = document.getElementById('chat-input'); const txt = inp.value.trim(); if (!txt) return;
-        allSupportChats[currentUser].push({ from: currentUser, text: txt, time: new Date().toISOString() });
-        localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel();
-        setTimeout(() => { allSupportChats[currentUser].push({ from: 'support', text: 'Спасибо за обращение! Оператор скоро ответит.', time: new Date().toISOString() }); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); }, 1000);
-    };
-    window.sendOperatorMessage = () => {
-        const inp = document.getElementById('chat-input'); const txt = inp.value.trim(); if (!txt || !selectedClient) return;
-        allSupportChats[selectedClient].push({ from: 'support', text: txt, time: new Date().toISOString() });
-        localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel();
-    };
-
-    function showProfile() {
-        const u = users[currentUser]; const c = document.getElementById('profile-section');
-        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="png/2025-01-30_17-50-13-Photoroom.png" class="profile-avatar"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>${currentUser}</div><button class="logout-btn" onclick="logout()">Выйти</button></div><p><strong>Email:</strong> ${u.email} | <strong>Баланс:</strong> ${u.balance} ₽</p><p><strong>Дата регистрации:</strong> ${new Date(u.registrationDate).toLocaleDateString()}</p><div class="friend-actions"><input id="friendName" class="friend-input" placeholder="Имя или Email друга"><button class="small-gold-btn" onclick="sendFriendRequest()">Добавить</button></div><h3>Друзья</h3><div class="friend-list">${u.friends.length ? u.friends.map(f => `<span class="friend-tag">${f}</span>`).join('') : 'Пока нет друзей'}</div><h3>Запросы в друзья</h3><div class="friend-list">${u.friendRequests.length ? u.friendRequests.map(r => `<span class="friend-tag">${r} <button onclick="acceptFriendRequest('${r}')">✓</button><button onclick="declineFriendRequest('${r}')">✗</button></span>`).join('') : 'Нет запросов'}</div>`;
+    function showPublicProfile(username) {
+        const user = users[username];
+        if (!user) return;
+        document.querySelector('header')?.classList.add('hidden');
+        document.querySelector('.main-container')?.classList.remove('hidden');
+        ['about','services','cards','support','chats','profile'].forEach(id => document.getElementById(id+'-section')?.classList.add('hidden'));
+        const c = document.getElementById('public-profile-section');
+        c.innerHTML = `<h2>Профиль ${user.name}</h2><div class="divider"></div><div style="display: flex; gap: 30px;"><img src="${user.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" style="width: 150px; height: 150px; border-radius: 50%; border: 3px solid #FFD700;"><div><p><strong>Никнейм:</strong> ${username}</p><p><strong>Имя:</strong> ${user.name}</p><p><strong>Дата регистрации:</strong> ${new Date(user.registrationDate).toLocaleDateString()}</p><button class="gold-button" onclick="window.location.href='/'">Вернуться</button></div></div>`;
         c.classList.remove('hidden');
     }
 
-    function logout() { localStorage.removeItem('currentSession'); location.reload(); }
-    function sendFriendRequest() { const v = document.getElementById('friendName')?.value.trim(); if (!v) return alert('Введите данные'); let f = null; for (let u in users) if (u === v || users[u].email === v) { f = u; break; } if (!f) return alert('Не найден'); if (f === currentUser) return alert('Нельзя себя'); if (users[currentUser].friends.includes(f)) return alert('Уже друг'); users[f].friendRequests.push(currentUser); localStorage.setItem('bankUsers', JSON.stringify(users)); alert('Запрос отправлен'); showProfile(); }
-    function acceptFriendRequest(f) { const u = users[currentUser]; u.friendRequests = u.friendRequests.filter(r => r !== f); if (!u.friends.includes(f)) u.friends.push(f); if (!users[f].friends.includes(currentUser)) users[f].friends.push(currentUser); localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); }
-    function declineFriendRequest(f) { users[currentUser].friendRequests = users[currentUser].friendRequests.filter(r => r !== f); localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); }
-    function removeModals() { document.querySelectorAll('.modal-form').forEach(m => m.remove()); }
-    function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
-    function showSuccess(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 5000); }
+    function showProfile() {
+        const u = users[currentUser]; const c = document.getElementById('profile-section');
+        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" id="avatarImg" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}<br><span class="public-profile-link" onclick="copyProfileLink()">📋 Копировать ссылку</span></div><button class="logout-btn" onclick="logout()">Выйти</button></div><button class="edit-profile-btn" onclick="showEditProfileForm()">✏️ Редактировать</button><p><strong>Email:</strong> ${u.email}</p><p><strong>Телефон:</strong> ${u.phone || 'Не указан'}</p><p><strong>Баланс:</strong> ${u.balance} ₽</p><div class="friend-actions"><input id="friendName" class="form-input" placeholder="Никнейм друга" style="width: auto; display: inline;"><button class="gold-button" onclick="sendFriendRequest()" style="width: auto;">Добавить</button></div><h3>Друзья</h3><div class="friend-list">${u.friends.length ? u.friends.map(f => `<span class="friend-tag" onclick="showPublicProfile('${f}')">${f}</span>`).join('') : 'Пока нет друзей'}</div><h3>Запросы</h3><div class="friend-list">${u.friendRequests.length ? u.friendRequests.map(r => `<span class="friend-tag">${r} <button onclick="acceptFriendRequest('${r}')">✓</button><button onclick="declineFriendRequest('${r}')">✗</button></span>`).join('') : 'Нет запросов'}</div>`;
+        c.classList.remove('hidden');
+    }
 
-    window.login = login; window.register = register; window.showForgotPasswordForm = showForgotPasswordForm; window.showRegistrationForm = showRegistrationForm; window.sendResetEmail = sendResetEmail; window.logout = logout; window.sendFriendRequest = sendFriendRequest; window.acceptFriendRequest = acceptFriendRequest; window.declineFriendRequest = declineFriendRequest;
+    function showEditProfileForm() {
+        const u = users[currentUser];
+        const m = document.createElement('div'); m.className = 'modal-form';
+        m.innerHTML = `<div class="form-title">Редактирование</div><input id="editName" class="form-input" placeholder="Имя" value="${u.name}"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email}"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone || ''}"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль (оставьте пустым)"><button class="gold-button" onclick="saveProfile()">Сохранить</button><button class="gold-button" onclick="removeModals(); showProfile();">Отмена</button>`;
+        document.body.appendChild(m);
+    }
+
+    window.saveProfile = function() {
+        const name = document.getElementById('editName')?.value.trim();
+        const email = document.getElementById('editEmail')?.value.trim();
+        const phone = document.getElementById('editPhone')?.value.trim();
+        const pass = document.getElementById('editPassword')?.value;
+        if (name) users[currentUser].name = name;
+        if (email) users[currentUser].email = email;
+        if (phone && /^\+7\d{10}$/.test(phone)) users[currentUser].phone = phone;
+        if (pass && pass.length >= 6) users[currentUser].password = pass;
+        localStorage.setItem('bankUsers', JSON.stringify(users));
+        removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!');
+    };
+
+    window.uploadAvatar = function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                users[currentUser].avatar = e.target.result;
+                localStorage.setItem('bankUsers', JSON.stringify(users));
+                showProfile();
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    window.copyProfileLink = function() {
+        const link = `${location.origin}${location.pathname}?user=${currentUser}`;
+        navigator.clipboard?.writeText(link);
+        alert(`Ссылка скопирована: ${link}`);
+    };
+
+    function renderPrivateChats() {
+        const c = document.getElementById('chats-container');
+        const myChats = Object.keys(privateChats).filter(chatId => chatId.includes(currentUser));
+        let h = `<div style="display: flex; gap: 20px;"><div style="width: 250px;"><h3>Чаты</h3><button class="gold-button" onclick="startNewChat()" style="margin-bottom: 15px;">+ Новый чат</button>`;
+        myChats.forEach(chatId => {
+            const other = chatId.split('-').find(u => u !== currentUser);
+            h += `<div class="private-chat-item" onclick="openPrivateChat('${chatId}')"><strong>${other}</strong><br><small>${privateChats[chatId].slice(-1)[0]?.text?.substring(0,20) || 'Нет сообщений'}</small></div>`;
+        });
+        h += `</div><div class="chat-area" id="private-chat-area">`;
+        if (selectedPrivateChat) {
+            const other = selectedPrivateChat.split('-').find(u => u !== currentUser);
+            h += `<h3>Чат с ${other}</h3><div class="chat-messages">`;
+            (privateChats[selectedPrivateChat] || []).forEach(msg => h += `<div class="chat-message ${msg.from===currentUser?'client':'support'}"><strong>${msg.from}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`);
+            h += `</div><div class="chat-input-area"><input class="chat-input" id="private-chat-input" placeholder="Сообщение..." onkeypress="if(event.key==='Enter') sendPrivateMessage()"><button class="chat-send-btn" onclick="sendPrivateMessage()">Отправить</button></div>`;
+        } else h += `<p>Выберите чат</p>`;
+        h += `</div></div>`; c.innerHTML = h;
+    }
+
+    window.startNewChat = function() {
+        const username = prompt('Введите никнейм пользователя:');
+        if (!username) return;
+        if (!users[username]) return alert('Пользователь не найден');
+        if (username === currentUser) return alert('Нельзя с собой');
+        const chatId = [currentUser, username].sort().join('-');
+        if (!privateChats[chatId]) privateChats[chatId] = [];
+        localStorage.setItem('privateChats', JSON.stringify(privateChats));
+        selectedPrivateChat = chatId;
+        renderPrivateChats();
+    };
+
+    window.openPrivateChat = function(chatId) { selectedPrivateChat = chatId; renderPrivateChats(); };
+    
+    window.sendPrivateMessage = function() {
+        const inp = document.getElementById('private-chat-input'); const txt = inp.value.trim();
+        if (!txt || !selectedPrivateChat) return;
+        if (!privateChats[selectedPrivateChat]) privateChats[selectedPrivateChat] = [];
+        privateChats[selectedPrivateChat].push({ from: currentUser, text: txt, time: new Date().toISOString() });
+        localStorage.setItem('privateChats', JSON.stringify(privateChats));
+        renderPrivateChats();
+    };
+
+    function sendFriendRequest() { 
+        const v = document.getElementById('friendName')?.value.trim(); if (!v) return alert('Введите никнейм'); 
+        if (!users[v]) return alert('Не найден'); if (v === currentUser) return alert('Нельзя себя'); 
+        if (users[currentUser].friends.includes(v)) return alert('Уже друг');
+        users[v].friendRequests = users[v].friendRequests || [];
+        users[v].friendRequests.push(currentUser); localStorage.setItem('bankUsers', JSON.stringify(users)); alert('Запрос отправлен'); showProfile(); 
+    }
+    function acceptFriendRequest(f) { 
+        const u = users[currentUser]; u.friendRequests = u.friendRequests.filter(r => r !== f); 
+        u.friends = u.friends || []; if (!u.friends.includes(f)) u.friends.push(f);
+        users[f].friends = users[f].friends || []; if (!users[f].friends.includes(currentUser)) users[f].friends.push(currentUser);
+        localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); 
+    }
+    function declineFriendRequest(f) { users[currentUser].friendRequests = users[currentUser].friendRequests.filter(r => r !== f); localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); }
+    function logout() { localStorage.removeItem('currentSession'); location.reload(); }
+    function removeModals() { document.querySelectorAll('.modal-form').forEach(m => m.remove()); }
+    function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); }
+
+    window.login = login; window.register = register; window.showRegistrationForm = showRegistrationForm; window.logout = logout;
+    window.sendFriendRequest = sendFriendRequest; window.acceptFriendRequest = acceptFriendRequest; window.declineFriendRequest = declineFriendRequest;
+    window.showPublicProfile = showPublicProfile;
 </script>
 
 <script>
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').then(() => console.log('✅ SW зарегистрирован')).catch(err => console.log('❌ SW ошибка:', err));
+        navigator.serviceWorker.register('/sw.js').then(() => console.log('✅ SW зарегистрирован'));
     }
 </script>
 </body>
