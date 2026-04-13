@@ -1,0 +1,31 @@
+name: Build iOS App
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - run: npm install
+      
+      - run: npx cap sync ios
+      
+      - name: Build iOS
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace \
+                     -scheme App \
+                     -sdk iphoneos \
+                     -configuration Release \
+                     -archivePath $PWD/build/App.xcarchive \
+                     archive
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BK-Bank.xcarchive
+          path: ios/App/build/App.xcarchive

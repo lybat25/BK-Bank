@@ -1,0 +1,20 @@
+{
+  "appId": "com.bkbank.app",
+  "appName": "БК-Банк",
+  "webDir": "www",
+  "server": {
+    "iosScheme": "https",
+    "allowNavigation": [
+      "mail.ru",
+      "discord.gg",
+      "t.me",
+      "youtube.com",
+      "github.com"
+    ]
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#121212",
+    "preferredContentMode": "mobile"
+  }
+}
