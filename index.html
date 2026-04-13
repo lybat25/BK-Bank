@@ -3,8 +3,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>BK-Bank — Финансы нового поколения</title>
-    
-    <!-- PWA Support - Полноэкранный режим -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,7 +10,7 @@
     <meta name="theme-color" content="#0a0a0a">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="apple-touch-icon" href="png/2025-01-31_14-13-47-Photoroom.png">
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; height: 100%; }
@@ -53,7 +51,8 @@
         .services-list li::before { content: '✦'; color: #FFD700; margin-right: 15px; }
         .modal-form { background: rgba(20,20,20,0.95); backdrop-filter: blur(25px); border: 1px solid rgba(255,215,0,0.2); border-radius: 40px; padding: 40px; width: 420px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; }
         .form-title { font-size: 2rem; color: #FFD700; text-align: center; margin-bottom: 30px; }
-        .form-input { width: 100%; padding: 16px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 60px; color: white; }
+        .form-input, .form-select { width: 100%; padding: 16px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 60px; color: white; }
+        .form-select option { background: #1a1a1a; }
         .gold-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 60px; font-weight: 700; cursor: pointer; margin-top: 10px; }
         .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 15px 0; cursor: pointer; }
         .toast-message { position: fixed; top: 100px; right: 30px; background: rgba(20,20,20,0.95); border-left: 6px solid #FFD700; padding: 20px 30px; border-radius: 60px; z-index: 9998; }
@@ -82,6 +81,12 @@
         .profile-info { margin: 25px 0; }
         .profile-info p { margin: 15px 0; font-size: 1.1rem; }
         .edit-field { margin-bottom: 25px; }
+        .token-balance { font-size: 2rem; color: #FFD700; margin: 20px 0; }
+        .order-book { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+        .order-side { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; }
+        .order-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid rgba(255,215,0,0.1); }
+        .buy { color: #4ade80; }
+        .sell { color: #ff5e5e; }
     </style>
 </head>
 <body>
@@ -100,6 +105,7 @@
         <button class="nav-link" onclick="toggleSection('about')">Главная</button>
         <button class="nav-link" onclick="toggleSection('services')">Услуги</button>
         <button class="nav-link" onclick="toggleSection('cards')">Карты</button>
+        <button class="nav-link" onclick="toggleSection('bktok')">BKtok</button>
         <button class="nav-link" onclick="toggleSection('support')">Поддержка</button>
         <button class="nav-link" onclick="toggleSection('chats')">Чаты</button>
         <button class="nav-link" onclick="toggleSection('profile')">Кабинет</button>
@@ -135,6 +141,21 @@
         <div style="text-align: center; margin-top: 60px;"><div class="cards-footer-text"><strong>✨ Все карты доступны для оформления ✨</strong></div></div>
     </div>
 
+    <div id="bktok-section" class="content-card hidden">
+        <h2>BKtok P2P Биржа</h2><div class="divider"></div>
+        <div class="token-balance" id="token-balance-display">0 BK</div>
+        <div class="order-book">
+            <div class="order-side"><h3 style="color:#4ade80;">Покупка</h3><div id="buy-orders"></div></div>
+            <div class="order-side"><h3 style="color:#ff5e5e;">Продажа</h3><div id="sell-orders"></div></div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+            <div><input type="number" id="order-price" class="form-input" placeholder="Цена BK" style="margin-bottom:10px;"><input type="number" id="order-amount" class="form-input" placeholder="Количество BK"></div>
+            <div style="display: flex; gap: 10px;"><button class="gold-button" onclick="createOrder('buy')" style="background:#4ade80;">Купить</button><button class="gold-button" onclick="createOrder('sell')" style="background:#ff5e5e;">Продать</button></div>
+        </div>
+        <h3 style="margin-top:30px;">Мои ордера</h3><div id="my-orders"></div>
+        <h3 style="margin-top:30px;">История сделок</h3><div id="trade-history"></div>
+    </div>
+
     <div id="support-section" class="content-card hidden">
         <h2>Поддержка</h2><div class="divider"></div>
         <div id="support-container"></div>
@@ -150,6 +171,10 @@
 </main>
 
 <script>
+(function() {
+    "use strict";
+    const _0x6f2b = ['HIDDEN_ACCOUNTS', 'admin', 'username', 'lybat25', 'password', 'BKAdmin2024!Secure', 'support', 'BK_Support', 'HelpDesk2024!Bank', 'bankUsers', 'currentUser', 'isStackExpanded', 'allSupportChats', 'privateChats', 'selectedClient', 'selectedPrivateChat', 'bktokOrders', 'bktokTrades', 'bktokBalances', 'initHiddenAccounts', 'localStorage', 'getItem', 'JSON', 'parse', 'users', 'name', 'email', 'phone', 'balance', 'registrationDate', 'Date', 'toISOString', 'isAdmin', 'avatar', 'isSupport', 'setItem', 'stringify', 'cardList', 'img', 'renderCardsStack', 'document', 'getElementById', 'classList', 'remove', 'innerHTML', 'map', 'rotate', 'translateX', 'z-index', 'onclick', 'handleStackClick', 'querySelectorAll', 'expanded', 'add', 'forEach', 'centerIndex', 'xOffset', 'yOffset', 'Math', 'abs', 'style', 'transform', 'onload', 'session', 'currentSession', 'd', 'now', 'timestamp', 'showMainContent', 'showWelcomeMessage', 'urlParams', 'URLSearchParams', 'window', 'location', 'search', 'viewUser', 'get', 'showPublicProfile', 'showLoginForm', 'removeModals', 'modal-form', 'createElement', 'className', 'form-title', 'loginError', 'error-text', 'hidden', 'loginUsername', 'form-input', 'loginPassword', 'gold-button', 'login()', 'text-link', 'showRegistrationForm', 'appendChild', 'body', 'registerError', 'regName', 'regUsername', 'regPhone', 'regEmail', 'regPassword', 'register()', 'Войти', 'Регистрация', 'Заполните поля', 'found', 'un', 'users[un].phone', 'showError', 'Неверные данные', 'foundUser', 'value', 'trim', 'pass', 'test', 'Пароль от 6 символов', 'Никнейм занят', 'Телефон уже зарегистрирован', 'Телефон: +7XXXXXXXXXX (11 цифр)', 'Все поля обязательны', 'toggleSection', 'about', 'services', 'cards', 'bktok', 'support', 'chats', 'profile', 'public-profile', 'querySelector', 'main-container', 'container', 'user', 'div', 'flex', 'gap', 'px', 'src', '||', 'png/2025-01-30_17-50-13-Photoroom.png', 'width', 'height', 'border-radius', 'border', 'solid', '#FFD700', 'p', 'strong', '@', 'button', 'window.location.href', 'Вернуться', 'u', 'c', 'profile-avatar', 'avatarInput', 'click', 'file', 'accept', 'image/*', 'display', 'none', 'onchange', 'uploadAvatar(event)', 'style', 'font-size', '1.5rem', 'logout-btn', 'logout()', 'Выйти', 'edit-profile-btn', 'showEditProfileForm()', 'Редактировать профиль', 'profile-info', 'Баланс:', 'BK', 'friend-actions', 'friend-input', 'Никнейм друга', 'padding', '14px', 'border-radius', '60px', 'background', 'rgba(255,255,255,0.05)', '1px solid rgba(255,215,0,0.2)', 'color', 'white', 'margin-right', '10px', 'small-gold-btn', 'Добавить', 'edit-field', 'editName', 'editEmail', 'editPhone', 'editPassword', 'saveProfile()', 'removeModals(); showProfile();', 'Отмена', 'Редактирование', 'Новый пароль (оставьте пустым)', 'Сохранить', 'readAsDataURL', 'support-container', 'clients', 'Object', 'keys', 'filter', 'length', 'h', 'support-panel', 'users-list', '👥 Обращения', 'user-item', 'active', 'selectClient', 'chat-area', 'chat-header', 'Чат с', 'clear-chat-btn', 'clearChat', 'Очистить', 'support-chat', 'chat-messages', 'msg', 'i', 'chat-message', 'from', 'client', 'Поддержка:', 'text', 'small', 'toLocaleTimeString', 'slice', 'delete-msg-btn', 'deleteMessage', 'chat-input-area', 'chat-input', 'chat-send-btn', 'sendOperatorMessage()', 'Отправить', 'Выберите пользователя', 'padding:40px', 'Здравствуйте! Чем могу помочь?', 'time', 'Вы:', 'sendClientMessage()', 'Спасибо! Оператор скоро ответит.', 'chats-container', 'myChats', 'includes', 'id', '+ Новый чат', 'private-chat-item', 'openPrivateChat', 'other', 'split', 'find', 'Нет сообщений', 'substring', 'chat-area', 'Чат с', 'private-chat-input', 'sendPrivateMessage()', 'Выберите чат', 'startNewChat()', 'Пользователь не найден', 'Нельзя с собой', 'sort', 'join', 'private-chat-input', 'sendPrivateMessage', 'saveProfile', 'avatar', 'result', 'bktokBalances', 'bktokOrders', 'bktokTrades', 'loadBKtok', 'balance', 'token-balance-display', 'buy-orders', 'sell-orders', 'my-orders', 'trade-history', 'side', 'price', 'amount', 'total', 'order-book', 'Покупка', 'Продажа', 'Мои ордера', 'История сделок', 'createOrder', 'buy', 'sell', 'parseFloat', 'order-price', 'order-amount', 'push', 'seller', 'buyer', 'matchOrders', 'indexOf', 'splice', 'toFixed', 'shift', 'unshift', 'encryptData', 'CryptoJS.AES.encrypt', 'decryptData', 'CryptoJS.AES.decrypt', 'utf8', 'toString', 'SECRET_KEY', 'BKbankSecretKey2024', '2fa', 'type', 'question', 'answer', 'pet', 'city', 'game', 'code', 'year', 'ip', '2FA', 'Ответ:', 'Неверный 2FA код', 'sendClientMessage', 'inp', 'sendOperatorMessage', 'startNewChat', 'prompt', 'u', 'alert', 'acceptFriendRequest', 'declineFriendRequest', 'f', 'friendRequests', 'filter', 'friends', 'friendName', 'sendFriendRequest', 'logout', 'reload', 'showError', 'el', 'msg', 'textContent', 'setTimeout', 'login', 'register', 'showForgotPasswordForm', 'sendResetEmail', 'copyProfileLink', 'showPublicProfile', 'navigator', 'serviceWorker', 'register', '/sw.js', 'console', 'log', 'err'];
+    const _0x5a2c = function(_0x1f8a, _0x4b2c) { return _0x6f2b[_0x1f8a - 0x1b3]; };
     const HIDDEN_ACCOUNTS = { admin: { username: "lybat25", password: "BKAdmin2024!Secure" }, support: { username: "BK_Support", password: "HelpDesk2024!Bank" } };
     let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
     let currentUser = null;
@@ -158,193 +183,79 @@
     let privateChats = JSON.parse(localStorage.getItem('privateChats')) || {};
     let selectedClient = null;
     let selectedPrivateChat = null;
+    let bktokOrders = JSON.parse(localStorage.getItem('bktokOrders')) || { buy: [], sell: [] };
+    let bktokTrades = JSON.parse(localStorage.getItem('bktokTrades')) || [];
+    let bktokBalances = JSON.parse(localStorage.getItem('bktokBalances')) || {};
+    const SECRET_KEY = "BKbankSecretKey2024";
+    
+    function encryptData(data) { return CryptoJS.AES.encrypt(JSON.stringify(data), SECRET_KEY).toString(); }
+    function decryptData(encrypted) { try { const bytes = CryptoJS.AES.decrypt(encrypted, SECRET_KEY); return JSON.parse(bytes.toString(CryptoJS.enc.Utf8)); } catch(e) { return null; } }
 
     function initHiddenAccounts() {
-        if (!users[HIDDEN_ACCOUNTS.admin.username]) users[HIDDEN_ACCOUNTS.admin.username] = { name: "Администратор", email: "admin@bk-bank.ru", phone: "+79000000001", password: HIDDEN_ACCOUNTS.admin.password, balance: 999999, registrationDate: new Date().toISOString(), isAdmin: true, avatar: null };
-        if (!users[HIDDEN_ACCOUNTS.support.username]) users[HIDDEN_ACCOUNTS.support.username] = { name: "Служба поддержки", email: "support@bk-bank.ru", phone: "+79000000002", password: HIDDEN_ACCOUNTS.support.password, balance: 0, registrationDate: new Date().toISOString(), isSupport: true, avatar: null };
-        localStorage.setItem('bankUsers', JSON.stringify(users));
+        if (!users[HIDDEN_ACCOUNTS.admin.username]) users[HIDDEN_ACCOUNTS.admin.username] = { name: "Администратор", email: "admin@bk-bank.ru", phone: "+79000000001", password: HIDDEN_ACCOUNTS.admin.password, balance: 999999, registrationDate: new Date().toISOString(), isAdmin: true, avatar: null, twoFA: null };
+        if (!users[HIDDEN_ACCOUNTS.support.username]) users[HIDDEN_ACCOUNTS.support.username] = { name: "Служба поддержки", email: "support@bk-bank.ru", phone: "+79000000002", password: HIDDEN_ACCOUNTS.support.password, balance: 0, registrationDate: new Date().toISOString(), isSupport: true, avatar: null, twoFA: null };
+        localStorage.setItem('bankUsers', encryptData(users));
     }
     initHiddenAccounts();
 
-    const cardList = [
-        { img: 'png/2025-01-30_15-13-31-Photoroom.png' },
-        { img: 'png/2025-01-30_15-58-26-Photoroom.png' },
-        { img: 'png/2025-01-30_21-48-25-Photoroom.png' },
-        { img: 'png/2025-01-30_22-57-01-Photoroom.png' },
-        { img: 'png/2025-01-30_23-01-20-Photoroom.png' },
-        { img: 'png/classkr.png' },
-        { img: 'png/Bk-bakcl.png' }
-    ];
+    const cardList = [{ img: 'png/2025-01-30_15-13-31-Photoroom.png' }, { img: 'png/2025-01-30_15-58-26-Photoroom.png' }, { img: 'png/2025-01-30_21-48-25-Photoroom.png' }, { img: 'png/2025-01-30_22-57-01-Photoroom.png' }, { img: 'png/2025-01-30_23-01-20-Photoroom.png' }, { img: 'png/classkr.png' }, { img: 'png/Bk-bakcl.png' }];
 
-    function renderCardsStack() {
-        const c = document.getElementById('cards-stack-container'); if (!c) return;
-        isStackExpanded = false; c.classList.remove('expanded');
-        c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="transform: rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px); z-index: ${i+1};" onclick="handleStackClick(event)"><img src="${card.img}"></div>`).join('');
-    }
-
-    window.handleStackClick = (e) => {
-        e.stopPropagation();
-        const c = document.getElementById('cards-stack-container'); const cards = c.querySelectorAll('.stack-card');
-        if (!isStackExpanded) {
-            c.classList.add('expanded');
-            cards.forEach((card, i) => { const x = (i - 3) * 130; card.style.transform = `translateX(${x}px) translateY(${Math.abs(i-3)*8}px) rotate(${(i-3)*6}deg)`; });
-            isStackExpanded = true;
-        } else {
-            c.classList.remove('expanded');
-            cards.forEach((card, i) => { card.style.transform = `rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px)`; });
-            isStackExpanded = false;
-        }
-    };
+    function renderCardsStack() { const c = document.getElementById('cards-stack-container'); if (!c) return; isStackExpanded = false; c.classList.remove('expanded'); c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="transform: rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px); z-index: ${i+1};" onclick="handleStackClick(event)"><img src="${card.img}"></div>`).join(''); }
+    window.handleStackClick = (e) => { e.stopPropagation(); const c = document.getElementById('cards-stack-container'); const cards = c.querySelectorAll('.stack-card'); if (!isStackExpanded) { c.classList.add('expanded'); cards.forEach((card, i) => { const x = (i - 3) * 130; card.style.transform = `translateX(${x}px) translateY(${Math.abs(i-3)*8}px) rotate(${(i-3)*6}deg)`; }); isStackExpanded = true; } else { c.classList.remove('expanded'); cards.forEach((card, i) => { card.style.transform = `rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px)`; }); isStackExpanded = false; } };
 
     window.onload = () => {
         const s = localStorage.getItem('currentSession');
-        const urlParams = new URLSearchParams(window.location.search);
-        const viewUser = urlParams.get('user');
+        const urlParams = new URLSearchParams(window.location.search); const viewUser = urlParams.get('user');
         if (viewUser && users[viewUser]) { showPublicProfile(viewUser); return; }
         if (s) { const d = JSON.parse(s); if (Date.now() - d.timestamp < 86400000) { currentUser = d.username; showMainContent(); showWelcomeMessage(users[currentUser].name); return; } }
         showLoginForm();
     };
 
-    function showLoginForm() {
-        removeModals();
-        const m = document.createElement('div'); m.className = 'modal-form';
-        m.innerHTML = `<div class="form-title">Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="login()">Войти</button><span class="text-link" onclick="showRegistrationForm()">Регистрация</span>`;
-        document.body.appendChild(m);
-    }
+    function showLoginForm() { removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="login()">Войти</button><span class="text-link" onclick="showRegistrationForm()">Регистрация</span>`; document.body.appendChild(m); }
+    function showRegistrationForm() { removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Регистрация</div><div id="registerError" class="error-text hidden"></div><input id="regName" class="form-input" placeholder="Имя"><input id="regUsername" class="form-input" placeholder="Уникальный никнейм"><input id="regPhone" class="form-input" placeholder="Телефон +7XXXXXXXXXX" value="+7"><input id="regEmail" class="form-input" placeholder="Email"><input type="password" id="regPassword" class="form-input" placeholder="Пароль"><select id="twoFAType" class="form-select"><option value="pet">Имя питомца</option><option value="city">Любимый город</option><option value="game">Любимая игра</option><option value="code">Цифровой код (6 цифр)</option><option value="year">Любимый год</option><option value="ip">Любимый IP</option></select><input id="twoFAAnswer" class="form-input" placeholder="Ответ для 2FA"><button class="gold-button" onclick="register()">Зарегистрироваться</button><span class="text-link" onclick="showLoginForm()">← Войти</span>`; document.body.appendChild(m); }
 
-    function showRegistrationForm() {
-        removeModals();
-        const m = document.createElement('div'); m.className = 'modal-form';
-        m.innerHTML = `<div class="form-title">Регистрация</div><div id="registerError" class="error-text hidden"></div><input id="regName" class="form-input" placeholder="Имя"><input id="regUsername" class="form-input" placeholder="Уникальный никнейм"><input id="regPhone" class="form-input" placeholder="Телефон +7XXXXXXXXXX" value="+7"><input id="regEmail" class="form-input" placeholder="Email"><input type="password" id="regPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="register()">Зарегистрироваться</button><span class="text-link" onclick="showLoginForm()">← Войти</span>`;
-        document.body.appendChild(m);
-    }
-
-    function login() {
-        let u = document.getElementById('loginUsername')?.value.trim(); const p = document.getElementById('loginPassword')?.value; const err = document.getElementById('loginError');
-        if (!u || !p) return showError(err, 'Заполните поля');
-        let found = null; if (users[u]) found = u; else { for (let un in users) if (users[un].phone === u) { found = un; break; } }
-        if (!found || users[found].password !== p) return showError(err, 'Неверные данные');
-        currentUser = found; localStorage.setItem('currentSession', JSON.stringify({username: found, timestamp: Date.now()}));
-        removeModals(); showMainContent(); showWelcomeMessage(users[found].name);
-    }
-
-    function register() {
-        const name = document.getElementById('regName')?.value.trim(); const username = document.getElementById('regUsername')?.value.trim(); const phone = document.getElementById('regPhone')?.value.trim();
-        const email = document.getElementById('regEmail')?.value.trim(); const pass = document.getElementById('regPassword')?.value; const err = document.getElementById('registerError');
-        if (!name || !username || !phone || !email || !pass) return showError(err, 'Все поля обязательны');
-        if (!/^\+7\d{10}$/.test(phone)) return showError(err, 'Телефон: +7XXXXXXXXXX (11 цифр)');
-        if (pass.length < 6) return showError(err, 'Пароль от 6 символов');
-        if (users[username]) return showError(err, 'Никнейм занят');
-        for (let u in users) if (users[u].phone === phone) return showError(err, 'Телефон уже зарегистрирован');
-        users[username] = { name, email, phone, password: pass, balance: 0, registrationDate: new Date().toISOString(), avatar: null };
-        localStorage.setItem('bankUsers', JSON.stringify(users)); currentUser = username;
-        localStorage.setItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
-        removeModals(); showMainContent(); showWelcomeMessage(name);
-    }
+    function login() { let u = document.getElementById('loginUsername')?.value.trim(); const p = document.getElementById('loginPassword')?.value; const err = document.getElementById('loginError'); if (!u || !p) return showError(err, 'Заполните поля'); let found = null; if (users[u]) found = u; else { for (let un in users) if (users[un].phone === u) { found = un; break; } } if (!found || users[found].password !== p) return showError(err, 'Неверные данные'); currentUser = found; localStorage.setItem('currentSession', JSON.stringify({username: found, timestamp: Date.now()})); removeModals(); showMainContent(); showWelcomeMessage(users[found].name); }
+    function register() { const name = document.getElementById('regName')?.value.trim(); const username = document.getElementById('regUsername')?.value.trim(); const phone = document.getElementById('regPhone')?.value.trim(); const email = document.getElementById('regEmail')?.value.trim(); const pass = document.getElementById('regPassword')?.value; const twoFAType = document.getElementById('twoFAType')?.value; const twoFAAnswer = document.getElementById('twoFAAnswer')?.value.trim(); const err = document.getElementById('registerError'); if (!name || !username || !phone || !email || !pass || !twoFAAnswer) return showError(err, 'Все поля обязательны'); if (!/^\+7\d{10}$/.test(phone)) return showError(err, 'Телефон: +7XXXXXXXXXX (11 цифр)'); if (pass.length < 6) return showError(err, 'Пароль от 6 символов'); if (users[username]) return showError(err, 'Никнейм занят'); for (let u in users) if (users[u].phone === phone) return showError(err, 'Телефон уже зарегистрирован'); if (twoFAType === 'code' && !/^\d{6}$/.test(twoFAAnswer)) return showError(err, 'Код должен быть 6 цифр'); if (twoFAType === 'year' && !/^\d{4}$/.test(twoFAAnswer)) return showError(err, 'Год должен быть 4 цифры'); if (twoFAType === 'ip' && !/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(twoFAAnswer)) return showError(err, 'Неверный формат IP'); users[username] = { name, email, phone, password: pass, balance: 0, registrationDate: new Date().toISOString(), avatar: null, twoFA: { type: twoFAType, answer: twoFAAnswer } }; localStorage.setItem('bankUsers', encryptData(users)); currentUser = username; bktokBalances[username] = 100; localStorage.setItem('bktokBalances', encryptData(bktokBalances)); localStorage.setItem('currentSession', JSON.stringify({username, timestamp: Date.now()})); removeModals(); showMainContent(); showWelcomeMessage(name); }
 
     function showMainContent() { document.querySelector('header')?.classList.remove('hidden'); document.querySelector('.main-container')?.classList.remove('hidden'); toggleSection('about'); }
     function showWelcomeMessage(n) { const t = document.createElement('div'); t.className = 'toast-message'; t.innerHTML = `<strong>✨ Добро пожаловать, ${n}!</strong>`; document.body.appendChild(t); setTimeout(() => { t.classList.add('fade-out'); setTimeout(() => t.remove(), 800); }, 3000); }
 
-    window.toggleSection = (s) => {
-        ['about','services','cards','support','chats','profile','public-profile'].forEach(id => document.getElementById(id+'-section')?.classList.add('hidden'));
-        if (s === 'about') document.getElementById('about-section')?.classList.remove('hidden');
-        else if (s === 'services') document.getElementById('services-section')?.classList.remove('hidden');
-        else if (s === 'cards') { document.getElementById('cards-section')?.classList.remove('hidden'); renderCardsStack(); }
-        else if (s === 'support') { document.getElementById('support-section')?.classList.remove('hidden'); renderSupportPanel(); }
-        else if (s === 'chats') { document.getElementById('chats-section')?.classList.remove('hidden'); renderPrivateChats(); }
-        else if (s === 'profile') showProfile();
-    };
+    window.toggleSection = (s) => { ['about','services','cards','bktok','support','chats','profile','public-profile'].forEach(id => document.getElementById(id+'-section')?.classList.add('hidden')); if (s === 'about') document.getElementById('about-section')?.classList.remove('hidden'); else if (s === 'services') document.getElementById('services-section')?.classList.remove('hidden'); else if (s === 'cards') { document.getElementById('cards-section')?.classList.remove('hidden'); renderCardsStack(); } else if (s === 'bktok') { document.getElementById('bktok-section')?.classList.remove('hidden'); loadBKtok(); } else if (s === 'support') { document.getElementById('support-section')?.classList.remove('hidden'); renderSupportPanel(); } else if (s === 'chats') { document.getElementById('chats-section')?.classList.remove('hidden'); renderPrivateChats(); } else if (s === 'profile') showProfile(); };
 
-    function showPublicProfile(username) {
-        const user = users[username]; if (!user) return;
-        document.querySelector('header')?.classList.add('hidden');
-        ['about','services','cards','support','chats','profile'].forEach(id => document.getElementById(id+'-section')?.classList.add('hidden'));
-        const c = document.getElementById('public-profile-section');
-        c.innerHTML = `<h2>Профиль ${user.name}</h2><div class="divider"></div><div style="display: flex; gap: 30px;"><img src="${user.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" style="width: 150px; height: 150px; border-radius: 50%; border: 3px solid #FFD700;"><div><p><strong>Никнейм:</strong> @${username}</p><p><strong>Имя:</strong> ${user.name}</p><button class="gold-button" onclick="window.location.href='/'">Вернуться</button></div></div>`;
-        c.classList.remove('hidden');
-    }
+    function loadBKtok() { if (!bktokBalances[currentUser]) bktokBalances[currentUser] = 100; document.getElementById('token-balance-display').textContent = bktokBalances[currentUser] + ' BK'; updateOrderBook(); }
+    function updateOrderBook() { let buyHtml = '', sellHtml = ''; bktokOrders.buy.sort((a,b) => b.price - a.price).forEach(o => { buyHtml += `<div class="order-item buy">${o.amount} BK @ ${o.price} <button onclick="cancelOrder('buy', ${o.id})">✕</button></div>`; }); bktokOrders.sell.sort((a,b) => a.price - b.price).forEach(o => { sellHtml += `<div class="order-item sell">${o.amount} BK @ ${o.price} <button onclick="cancelOrder('sell', ${o.id})">✕</button></div>`; }); document.getElementById('buy-orders').innerHTML = buyHtml || 'Нет ордеров'; document.getElementById('sell-orders').innerHTML = sellHtml || 'Нет ордеров'; let myHtml = ''; [...bktokOrders.buy, ...bktokOrders.sell].filter(o => o.user === currentUser).forEach(o => { myHtml += `<div class="order-item ${o.side}">${o.side}: ${o.amount} BK @ ${o.price}</div>`; }); document.getElementById('my-orders').innerHTML = myHtml || 'Нет ордеров'; let tradeHtml = ''; bktokTrades.slice(-10).reverse().forEach(t => { tradeHtml += `<div class="order-item">${t.buyer} купил ${t.amount} BK у ${t.seller} @ ${t.price}</div>`; }); document.getElementById('trade-history').innerHTML = tradeHtml || 'Нет сделок'; }
 
-    function showProfile() {
-        const u = users[currentUser]; const c = document.getElementById('profile-section');
-        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" id="avatarImg" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}</div><button class="logout-btn" onclick="logout()">Выйти</button></div><button class="edit-profile-btn" onclick="showEditProfileForm()">✏️ Редактировать профиль</button><div class="profile-info"><p><strong>Email:</strong> ${u.email}</p><p><strong>Телефон:</strong> ${u.phone || 'Не указан'}</p><p><strong>Баланс:</strong> ${u.balance} ₽</p></div>`;
-        c.classList.remove('hidden');
-    }
+    window.createOrder = (side) => { const price = parseFloat(document.getElementById('order-price').value); const amount = parseFloat(document.getElementById('order-amount').value); if (!price || !amount || price <= 0 || amount <= 0) return; if (side === 'buy' && bktokBalances[currentUser] < amount * price) return alert('Недостаточно BK'); if (side === 'sell' && bktokBalances[currentUser] < amount) return alert('Недостаточно BK'); const order = { id: Date.now() + Math.random(), user: currentUser, side, price, amount }; bktokOrders[side].push(order); if (side === 'buy') bktokBalances[currentUser] -= amount * price; else bktokBalances[currentUser] -= amount; matchOrders(); localStorage.setItem('bktokOrders', encryptData(bktokOrders)); localStorage.setItem('bktokBalances', encryptData(bktokBalances)); loadBKtok(); };
 
-    function showEditProfileForm() {
-        const u = users[currentUser];
-        const m = document.createElement('div'); m.className = 'modal-form';
-        m.innerHTML = `<div class="form-title">Редактирование</div><div class="edit-field"><input id="editName" class="form-input" placeholder="Имя" value="${u.name}"></div><div class="edit-field"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email}"></div><div class="edit-field"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone || ''}"></div><div class="edit-field"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль (оставьте пустым)"></div><button class="gold-button" onclick="saveProfile()">Сохранить</button><button class="gold-button" onclick="removeModals(); showProfile();" style="margin-top:10px;">Отмена</button>`;
-        document.body.appendChild(m);
-    }
+    function matchOrders() { bktokOrders.buy.sort((a,b) => b.price - a.price); bktokOrders.sell.sort((a,b) => a.price - b.price); for (let buy of bktokOrders.buy) { for (let sell of bktokOrders.sell) { if (buy.price >= sell.price && buy.user !== sell.user) { const matchAmount = Math.min(buy.amount, sell.amount); const matchPrice = sell.price; bktokBalances[buy.user] = (bktokBalances[buy.user] || 0) + matchAmount; bktokBalances[sell.user] = (bktokBalances[sell.user] || 0) + matchAmount * matchPrice; bktokTrades.push({ buyer: buy.user, seller: sell.user, amount: matchAmount, price: matchPrice, time: new Date().toISOString() }); buy.amount -= matchAmount; sell.amount -= matchAmount; if (buy.amount <= 0.0001) bktokOrders.buy = bktokOrders.buy.filter(o => o.id !== buy.id); if (sell.amount <= 0.0001) bktokOrders.sell = bktokOrders.sell.filter(o => o.id !== sell.id); localStorage.setItem('bktokTrades', encryptData(bktokTrades)); break; } } } bktokOrders.buy = bktokOrders.buy.filter(o => o.amount > 0.0001); bktokOrders.sell = bktokOrders.sell.filter(o => o.amount > 0.0001); }
 
-    window.saveProfile = function() {
-        const name = document.getElementById('editName')?.value.trim(); const email = document.getElementById('editEmail')?.value.trim();
-        const phone = document.getElementById('editPhone')?.value.trim(); const pass = document.getElementById('editPassword')?.value;
-        if (name) users[currentUser].name = name; if (email) users[currentUser].email = email;
-        if (phone && /^\+7\d{10}$/.test(phone)) users[currentUser].phone = phone;
-        if (pass && pass.length >= 6) users[currentUser].password = pass;
-        localStorage.setItem('bankUsers', JSON.stringify(users)); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!');
-    };
+    window.cancelOrder = (side, id) => { const order = bktokOrders[side].find(o => o.id === id); if (!order || order.user !== currentUser) return; if (side === 'buy') bktokBalances[currentUser] += order.amount * order.price; else bktokBalances[currentUser] += order.amount; bktokOrders[side] = bktokOrders[side].filter(o => o.id !== id); localStorage.setItem('bktokOrders', encryptData(bktokOrders)); localStorage.setItem('bktokBalances', encryptData(bktokBalances)); loadBKtok(); };
 
-    window.uploadAvatar = function(event) {
-        const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (e) => { users[currentUser].avatar = e.target.result; localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); }; reader.readAsDataURL(file); }
-    };
+    function showPublicProfile(username) { const user = users[username]; if (!user) return; document.querySelector('header')?.classList.add('hidden'); ['about','services','cards','bktok','support','chats','profile'].forEach(id => document.getElementById(id+'-section')?.classList.add('hidden')); const c = document.getElementById('public-profile-section'); c.innerHTML = `<h2>Профиль ${user.name}</h2><div class="divider"></div><div style="display: flex; gap: 30px;"><img src="${user.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" style="width: 150px; height: 150px; border-radius: 50%; border: 3px solid #FFD700;"><div><p><strong>Никнейм:</strong> @${username}</p><p><strong>Имя:</strong> ${user.name}</p><button class="gold-button" onclick="window.location.href='/'">Вернуться</button></div></div>`; c.classList.remove('hidden'); }
+    function showProfile() { const u = users[currentUser]; const c = document.getElementById('profile-section'); c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" id="avatarImg" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}</div><button class="logout-btn" onclick="logout()">Выйти</button></div><button class="edit-profile-btn" onclick="showEditProfileForm()">✏️ Редактировать профиль</button><div class="profile-info"><p><strong>Email:</strong> ${u.email}</p><p><strong>Телефон:</strong> ${u.phone || 'Не указан'}</p><p><strong>Баланс BK:</strong> ${bktokBalances[currentUser] || 0} BK</p></div>`; c.classList.remove('hidden'); }
+    function showEditProfileForm() { const u = users[currentUser]; const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Редактирование</div><div class="edit-field"><input id="editName" class="form-input" placeholder="Имя" value="${u.name}"></div><div class="edit-field"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email}"></div><div class="edit-field"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone || ''}"></div><div class="edit-field"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль (оставьте пустым)"></div><button class="gold-button" onclick="saveProfile()">Сохранить</button><button class="gold-button" onclick="removeModals(); showProfile();" style="margin-top:10px;">Отмена</button>`; document.body.appendChild(m); }
+    window.saveProfile = function() { const name = document.getElementById('editName')?.value.trim(); const email = document.getElementById('editEmail')?.value.trim(); const phone = document.getElementById('editPhone')?.value.trim(); const pass = document.getElementById('editPassword')?.value; if (name) users[currentUser].name = name; if (email) users[currentUser].email = email; if (phone && /^\+7\d{10}$/.test(phone)) users[currentUser].phone = phone; if (pass && pass.length >= 6) users[currentUser].password = pass; localStorage.setItem('bankUsers', encryptData(users)); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!'); };
+    window.uploadAvatar = function(event) { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (e) => { users[currentUser].avatar = e.target.result; localStorage.setItem('bankUsers', encryptData(users)); showProfile(); }; reader.readAsDataURL(file); } };
 
-    function renderSupportPanel() {
-        const c = document.getElementById('support-container');
-        if (users[currentUser]?.isSupport) {
-            const clients = Object.keys(allSupportChats).filter(u => u !== 'BK_Support' && allSupportChats[u]?.length);
-            let h = `<div class="support-panel"><div class="users-list"><h3>👥 Обращения</h3>`;
-            clients.forEach(cl => h += `<div class="user-item ${selectedClient===cl?'active':''}" onclick="selectClient('${cl}')"><strong>${cl}</strong></div>`);
-            h += `</div><div class="chat-area">`;
-            if (selectedClient) {
-                h += `<div class="chat-header"><span>Чат с ${selectedClient}</span><button class="clear-chat-btn" onclick="clearChat('${selectedClient}')">🗑️ Очистить</button></div><div class="support-chat"><div class="chat-messages">`;
-                (allSupportChats[selectedClient] || []).forEach((msg, i) => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':selectedClient}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small><button class="delete-msg-btn" onclick="deleteMessage('${selectedClient}', ${i})">✕</button></div>`);
-                h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Ответить..."><button class="chat-send-btn" onclick="sendOperatorMessage()">Отправить</button></div></div>`;
-            } else h += `<p style="padding:40px;">Выберите пользователя</p>`;
-            h += `</div></div>`; c.innerHTML = h;
-        } else {
-            if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'support', text: 'Здравствуйте! Чем могу помочь?', time: new Date().toISOString() }];
-            let h = `<div class="support-chat"><div class="chat-messages">`;
-            allSupportChats[currentUser].forEach(msg => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':'Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`);
-            h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendClientMessage()">Отправить</button></div></div>`;
-            c.innerHTML = h;
-        }
-    }
-
+    function renderSupportPanel() { const c = document.getElementById('support-container'); if (users[currentUser]?.isSupport) { const clients = Object.keys(allSupportChats).filter(u => u !== 'BK_Support' && allSupportChats[u]?.length); let h = `<div class="support-panel"><div class="users-list"><h3>👥 Обращения</h3>`; clients.forEach(cl => h += `<div class="user-item ${selectedClient===cl?'active':''}" onclick="selectClient('${cl}')"><strong>${cl}</strong></div>`); h += `</div><div class="chat-area">`; if (selectedClient) { h += `<div class="chat-header"><span>Чат с ${selectedClient}</span><button class="clear-chat-btn" onclick="clearChat('${selectedClient}')">🗑️ Очистить</button></div><div class="support-chat"><div class="chat-messages">`; (allSupportChats[selectedClient] || []).forEach((msg, i) => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':selectedClient}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small><button class="delete-msg-btn" onclick="deleteMessage('${selectedClient}', ${i})">✕</button></div>`); h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Ответить..."><button class="chat-send-btn" onclick="sendOperatorMessage()">Отправить</button></div></div>`; } else h += `<p style="padding:40px;">Выберите пользователя</p>`; h += `</div></div>`; c.innerHTML = h; } else { if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'support', text: 'Здравствуйте! Чем могу помочь?', time: new Date().toISOString() }]; let h = `<div class="support-chat"><div class="chat-messages">`; allSupportChats[currentUser].forEach(msg => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':'Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`); h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendClientMessage()">Отправить</button></div></div>`; c.innerHTML = h; } }
     window.selectClient = (c) => { selectedClient = c; renderSupportPanel(); };
-    window.clearChat = (client) => { if (confirm(`Очистить чат?`)) { allSupportChats[client] = [{ from: 'support', text: 'Чат очищен.', time: new Date().toISOString() }]; localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); } };
-    window.deleteMessage = (client, i) => { allSupportChats[client].splice(i, 1); if (!allSupportChats[client].length) allSupportChats[client] = [{ from: 'support', text: 'Чат пуст.', time: new Date().toISOString() }]; localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); };
-    window.sendClientMessage = () => { const inp = document.getElementById('chat-input'); const txt = inp.value.trim(); if (!txt) return; allSupportChats[currentUser].push({ from: currentUser, text: txt, time: new Date().toISOString() }); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); setTimeout(() => { allSupportChats[currentUser].push({ from: 'support', text: 'Спасибо! Оператор скоро ответит.', time: new Date().toISOString() }); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); }, 1000); };
-    window.sendOperatorMessage = () => { const inp = document.getElementById('chat-input'); const txt = inp.value.trim(); if (!txt || !selectedClient) return; allSupportChats[selectedClient].push({ from: 'support', text: txt, time: new Date().toISOString() }); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); };
+    window.clearChat = (client) => { if (confirm(`Очистить чат?`)) { allSupportChats[client] = [{ from: 'support', text: 'Чат очищен.', time: new Date().toISOString() }]; localStorage.setItem('allSupportChats', encryptData(allSupportChats)); renderSupportPanel(); } };
+    window.deleteMessage = (client, i) => { allSupportChats[client].splice(i, 1); if (!allSupportChats[client].length) allSupportChats[client] = [{ from: 'support', text: 'Чат пуст.', time: new Date().toISOString() }]; localStorage.setItem('allSupportChats', encryptData(allSupportChats)); renderSupportPanel(); };
+    window.sendClientMessage = () => { const inp = document.getElementById('chat-input'); const txt = inp.value.trim(); if (!txt) return; allSupportChats[currentUser].push({ from: currentUser, text: txt, time: new Date().toISOString() }); localStorage.setItem('allSupportChats', encryptData(allSupportChats)); renderSupportPanel(); setTimeout(() => { allSupportChats[currentUser].push({ from: 'support', text: 'Спасибо! Оператор скоро ответит.', time: new Date().toISOString() }); localStorage.setItem('allSupportChats', encryptData(allSupportChats)); renderSupportPanel(); }, 1000); };
+    window.sendOperatorMessage = () => { const inp = document.getElementById('chat-input'); const txt = inp.value.trim(); if (!txt || !selectedClient) return; allSupportChats[selectedClient].push({ from: 'support', text: txt, time: new Date().toISOString() }); localStorage.setItem('allSupportChats', encryptData(allSupportChats)); renderSupportPanel(); };
 
-    function renderPrivateChats() {
-        const c = document.getElementById('chats-container'); const myChats = Object.keys(privateChats).filter(id => id.includes(currentUser));
-        let h = `<div style="display: flex; gap: 20px;"><div style="width: 250px;"><h3>Чаты</h3><button class="gold-button" onclick="startNewChat()" style="margin-bottom:15px;">+ Новый чат</button>`;
-        myChats.forEach(id => { const other = id.split('-').find(u => u !== currentUser); h += `<div class="private-chat-item" onclick="openPrivateChat('${id}')"><strong>${other}</strong><br><small>${privateChats[id]?.slice(-1)[0]?.text?.substring(0,20) || 'Нет сообщений'}</small></div>`; });
-        h += `</div><div class="chat-area">`;
-        if (selectedPrivateChat) {
-            const other = selectedPrivateChat.split('-').find(u => u !== currentUser);
-            h += `<h3>Чат с ${other}</h3><div class="chat-messages">`;
-            (privateChats[selectedPrivateChat] || []).forEach(msg => h += `<div class="chat-message ${msg.from===currentUser?'client':'support'}"><strong>${msg.from}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`);
-            h += `</div><div class="chat-input-area"><input class="chat-input" id="private-chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendPrivateMessage()">Отправить</button></div>`;
-        } else h += `<p style="padding:40px;">Выберите чат</p>`;
-        h += `</div></div>`; c.innerHTML = h;
-    }
-
-    window.startNewChat = () => { const u = prompt('Введите никнейм:'); if (!u || !users[u]) return alert('Пользователь не найден'); if (u === currentUser) return alert('Нельзя с собой'); const id = [currentUser, u].sort().join('-'); if (!privateChats[id]) privateChats[id] = []; localStorage.setItem('privateChats', JSON.stringify(privateChats)); selectedPrivateChat = id; renderPrivateChats(); };
+    function renderPrivateChats() { const c = document.getElementById('chats-container'); const myChats = Object.keys(privateChats).filter(id => id.includes(currentUser)); let h = `<div style="display: flex; gap: 20px;"><div style="width: 250px;"><h3>Чаты</h3><button class="gold-button" onclick="startNewChat()" style="margin-bottom:15px;">+ Новый чат</button>`; myChats.forEach(id => { const other = id.split('-').find(u => u !== currentUser); h += `<div class="private-chat-item" onclick="openPrivateChat('${id}')"><strong>${other}</strong><br><small>${privateChats[id]?.slice(-1)[0]?.text?.substring(0,20) || 'Нет сообщений'}</small></div>`; }); h += `</div><div class="chat-area">`; if (selectedPrivateChat) { const other = selectedPrivateChat.split('-').find(u => u !== currentUser); h += `<h3>Чат с ${other}</h3><div class="chat-messages">`; (privateChats[selectedPrivateChat] || []).forEach(msg => h += `<div class="chat-message ${msg.from===currentUser?'client':'support'}"><strong>${msg.from}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`); h += `</div><div class="chat-input-area"><input class="chat-input" id="private-chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendPrivateMessage()">Отправить</button></div>`; } else h += `<p style="padding:40px;">Выберите чат</p>`; h += `</div></div>`; c.innerHTML = h; }
+    window.startNewChat = () => { const u = prompt('Введите никнейм:'); if (!u || !users[u]) return alert('Пользователь не найден'); if (u === currentUser) return alert('Нельзя с собой'); const id = [currentUser, u].sort().join('-'); if (!privateChats[id]) privateChats[id] = []; localStorage.setItem('privateChats', encryptData(privateChats)); selectedPrivateChat = id; renderPrivateChats(); };
     window.openPrivateChat = (id) => { selectedPrivateChat = id; renderPrivateChats(); };
-    window.sendPrivateMessage = () => { const inp = document.getElementById('private-chat-input'); const txt = inp.value.trim(); if (!txt || !selectedPrivateChat) return; if (!privateChats[selectedPrivateChat]) privateChats[selectedPrivateChat] = []; privateChats[selectedPrivateChat].push({ from: currentUser, text: txt, time: new Date().toISOString() }); localStorage.setItem('privateChats', JSON.stringify(privateChats)); renderPrivateChats(); };
+    window.sendPrivateMessage = () => { const inp = document.getElementById('private-chat-input'); const txt = inp.value.trim(); if (!txt || !selectedPrivateChat) return; if (!privateChats[selectedPrivateChat]) privateChats[selectedPrivateChat] = []; privateChats[selectedPrivateChat].push({ from: currentUser, text: txt, time: new Date().toISOString() }); localStorage.setItem('privateChats', encryptData(privateChats)); renderPrivateChats(); };
 
     function logout() { localStorage.removeItem('currentSession'); location.reload(); }
     function removeModals() { document.querySelectorAll('.modal-form').forEach(m => m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
 
     window.login = login; window.register = register; window.showRegistrationForm = showRegistrationForm; window.logout = logout; window.showPublicProfile = showPublicProfile;
-</script>
-
-<script>
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }
+})();
 </script>
 </body>
 </html>
