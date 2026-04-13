@@ -654,7 +654,7 @@
         }
 
         .chat-messages {
-            max-height: 300px;
+            max-height: 350px;
             overflow-y: auto;
             margin-bottom: 20px;
             padding: 15px;
@@ -664,21 +664,32 @@
 
         .chat-message {
             margin-bottom: 12px;
-            padding: 10px 15px;
-            border-radius: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
             max-width: 80%;
+            word-wrap: break-word;
         }
 
         .chat-message.user {
-            background: rgba(255, 215, 0, 0.15);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
             margin-left: auto;
             border-bottom-right-radius: 5px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
         }
 
         .chat-message.support {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.06);
             margin-right: auto;
             border-bottom-left-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-message small {
+            display: block;
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 5px;
+            text-align: right;
         }
 
         .chat-input-area {
@@ -688,21 +699,35 @@
 
         .chat-input {
             flex: 1;
-            padding: 12px 15px;
+            padding: 14px 18px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            border: 1.5px solid rgba(255, 215, 0, 0.2);
             border-radius: 30px;
             color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: #FFD700;
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .chat-send-btn {
-            padding: 12px 25px;
-            background: #FFD700;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #FFD700, #FFB300);
             border: none;
             border-radius: 30px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             color: #0a0a0a;
+            transition: all 0.2s;
+        }
+
+        .chat-send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
         }
     </style>
 </head>
@@ -795,14 +820,9 @@
         <p style="font-size: 1.2rem; margin-bottom: 20px;"><strong>Свяжитесь с нашей службой поддержки</strong></p>
         
         <div class="support-chat" id="support-chat">
-            <div class="chat-messages" id="chat-messages">
-                <div class="chat-message support">
-                    <strong>Поддержка БК-Банк:</strong><br>
-                    Здравствуйте! Чем могу помочь?
-                </div>
-            </div>
+            <div class="chat-messages" id="chat-messages"></div>
             <div class="chat-input-area">
-                <input type="text" class="chat-input" id="chat-input" placeholder="Введите ваше сообщение...">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Введите ваше сообщение..." onkeypress="if(event.key==='Enter') sendSupportMessage()">
                 <button class="chat-send-btn" onclick="sendSupportMessage()">Отправить</button>
             </div>
         </div>
@@ -822,9 +842,10 @@
     let currentUser = null;
     let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
     let isStackExpanded = false;
-    let supportChat = JSON.parse(localStorage.getItem('supportChat')) || [];
+    
+    // Личные сообщения поддержки для КАЖДОГО пользователя
+    let allSupportChats = JSON.parse(localStorage.getItem('allSupportChats')) || {};
 
-    // Инициализация скрытых аккаунтов
     function initHiddenAccounts() {
         if (!users[HIDDEN_ACCOUNTS.admin.username]) {
             users[HIDDEN_ACCOUNTS.admin.username] = {
@@ -853,6 +874,26 @@
         localStorage.setItem('bankUsers', JSON.stringify(users));
     }
     initHiddenAccounts();
+
+    // Получить чат текущего пользователя
+    function getUserChat() {
+        if (!currentUser) return [];
+        if (!allSupportChats[currentUser]) {
+            allSupportChats[currentUser] = [{
+                from: 'support',
+                text: 'Здравствуйте! Чем могу помочь?',
+                time: new Date().toISOString()
+            }];
+            localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats));
+        }
+        return allSupportChats[currentUser];
+    }
+
+    // Сохранить чат пользователя
+    function saveUserChat(chat) {
+        allSupportChats[currentUser] = chat;
+        localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats));
+    }
 
     const cardList = [
         { name: 'Стандарт', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-13-31-Photoroom.png?raw=true' },
@@ -1070,18 +1111,24 @@
 
     function loadSupportChat() {
         const chatMessages = document.getElementById('chat-messages');
-        if (!chatMessages) return;
+        if (!chatMessages || !currentUser) return;
         
-        let html = `<div class="chat-message support">
-            <strong>Поддержка БК-Банк:</strong><br>
-            Здравствуйте! Чем могу помочь?
-        </div>`;
+        const chat = getUserChat();
+        let html = '';
         
-        supportChat.forEach(msg => {
-            if (msg.user === currentUser || msg.user === 'support') {
-                html += `<div class="chat-message ${msg.user === currentUser ? 'user' : 'support'}">
-                    <strong>${msg.user === currentUser ? 'Вы' : 'Поддержка БК-Банк'}:</strong><br>
+        chat.forEach(msg => {
+            const time = new Date(msg.time).toLocaleTimeString().slice(0, 5);
+            if (msg.from === 'support') {
+                html += `<div class="chat-message support">
+                    <strong>Поддержка БК-Банк:</strong><br>
                     ${msg.text}
+                    <small>${time}</small>
+                </div>`;
+            } else {
+                html += `<div class="chat-message user">
+                    <strong>Вы:</strong><br>
+                    ${msg.text}
+                    <small>${time}</small>
                 </div>`;
             }
         });
@@ -1093,27 +1140,44 @@
     window.sendSupportMessage = function() {
         const input = document.getElementById('chat-input');
         const text = input.value.trim();
-        if (!text) return;
+        if (!text || !currentUser) return;
         
-        supportChat.push({ user: currentUser, text: text });
+        const chat = getUserChat();
         
+        // Добавляем сообщение пользователя
+        chat.push({
+            from: currentUser,
+            text: text,
+            time: new Date().toISOString()
+        });
+        
+        saveUserChat(chat);
+        input.value = '';
+        loadSupportChat();
+        
+        // Автоответ от поддержки
         setTimeout(() => {
             const responses = [
                 "Спасибо за обращение! Я проверю информацию.",
                 "Ваш запрос принят в обработку. Ответ придёт в течение 24 часов.",
                 "Для уточнения деталей, пожалуйста, напишите на почту поддержки.",
                 "Я передал ваш вопрос специалистам. Ожидайте ответа.",
-                "Благодарим за ожидание. Чем ещё могу помочь?"
+                "Благодарим за ожидание. Чем ещё могу помочь?",
+                "Ваше обращение зарегистрировано под номером #" + Math.floor(Math.random() * 10000),
+                "Пожалуйста, уточните детали вашего вопроса."
             ];
             const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-            supportChat.push({ user: 'support', text: randomResponse });
-            localStorage.setItem('supportChat', JSON.stringify(supportChat));
+            
+            const updatedChat = getUserChat();
+            updatedChat.push({
+                from: 'support',
+                text: randomResponse,
+                time: new Date().toISOString()
+            });
+            
+            saveUserChat(updatedChat);
             loadSupportChat();
         }, 1000);
-        
-        localStorage.setItem('supportChat', JSON.stringify(supportChat));
-        input.value = '';
-        loadSupportChat();
     };
 
     function showProfile() {
