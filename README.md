@@ -1,10 +1,8 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>БК-Банк — Финансы нового поколения</title>
-    <!-- Современный плавный скролл -->
     <style>
         * {
             margin: 0;
@@ -50,7 +48,7 @@
             z-index: -1;
         }
 
-        /* Хедер с эффектом размытия (Glassmorphism) */
+        /* Хедер с эффектом размытия */
         .glass-header {
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -188,6 +186,58 @@
             margin-bottom: 32px;
         }
 
+        /* Стили для текста и ссылок - убираем синий цвет */
+        p, li, span, div {
+            color: #ffffff;
+        }
+
+        a, .text-link, .nav-link {
+            color: #FFD700 !important;
+            text-decoration: none !important;
+        }
+
+        a:hover, .text-link:hover {
+            color: #FFE44D !important;
+            text-decoration: underline !important;
+            text-underline-offset: 4px;
+            text-decoration-color: #FFD700 !important;
+        }
+
+        /* Изображения на главной - отдельные блоки */
+        .image-showcase {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .image-block {
+            background: rgba(255, 215, 0, 0.03);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .image-block:hover {
+            transform: scale(1.02);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .image-block img {
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            display: block;
+        }
+
+        .image-caption {
+            margin-top: 15px;
+            font-weight: 600;
+            color: #FFD700;
+            text-align: center;
+        }
+
         /* Карточки карт в сетке */
         .cards-grid {
             display: grid;
@@ -229,7 +279,7 @@
             text-align: center;
         }
 
-        /* Формы (логин, регистрация, сброс) — современный стиль */
+        /* Формы - современный стиль */
         .modal-form {
             background: rgba(20, 20, 20, 0.9);
             backdrop-filter: blur(25px);
@@ -308,20 +358,19 @@
         }
 
         .text-link {
-            color: #FFD700;
+            color: #FFD700 !important;
             text-align: center;
             display: block;
             margin: 12px 0;
             cursor: pointer;
             font-weight: 600;
-            text-decoration: underline;
-            text-underline-offset: 4px;
-            text-decoration-color: transparent;
-            transition: text-decoration-color 0.2s;
+            text-decoration: none !important;
+            transition: all 0.2s;
         }
 
         .text-link:hover {
-            text-decoration-color: #FFD700;
+            color: #FFE44D !important;
+            text-decoration: underline !important;
         }
 
         /* Приветственное сообщение */
@@ -374,7 +423,7 @@
         .logout-btn {
             background: transparent;
             border: 1.5px solid #FFD700;
-            color: #FFD700;
+            color: #FFD700 !important;
             padding: 10px 24px;
             border-radius: 40px;
             font-weight: 600;
@@ -385,7 +434,7 @@
 
         .logout-btn:hover {
             background: #FFD700;
-            color: #0a0a0a;
+            color: #0a0a0a !important;
         }
 
         /* Друзья и запросы */
@@ -432,6 +481,16 @@
             border-radius: 40px;
             border: 1px solid rgba(255, 215, 0, 0.2);
             font-weight: 500;
+            color: #ffffff;
+        }
+
+        .friend-tag button {
+            background: transparent;
+            border: none;
+            color: #FFD700;
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 1.1rem;
         }
 
         /* Утилиты */
@@ -451,6 +510,10 @@
             text-align: center;
             margin-bottom: 12px;
             font-weight: 500;
+        }
+
+        strong {
+            color: #ffffff;
         }
     </style>
 </head>
@@ -478,13 +541,29 @@
     <div id="about-section" class="content-card">
         <h2>Ваш надёжный финансовый партнёр</h2>
         <div class="divider"></div>
-        <p style="font-size: 1.2rem; margin-bottom: 30px; color: #ccc;"><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни.</strong></p>
+        <p style="font-size: 1.2rem; margin-bottom: 30px;"><strong>В БК-Банке мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни.</strong></p>
         <p style="margin-bottom: 20px;"><strong>«Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление.»</strong></p>
         <p><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью.</strong></p>
         
-        <div style="display: flex; gap: 20px; margin-top: 40px; flex-wrap: wrap;">
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" style="max-width: 48%; border-radius: 24px;" alt="О банке">
-            <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" style="max-width: 48%; border-radius: 24px;" alt="О банке">
+        <!-- Изображения как отдельные блоки -->
+        <div class="image-showcase">
+            <div class="image-block">
+                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="О банке">
+                <div class="image-caption">БК-Банк — ваш выбор</div>
+            </div>
+            <div class="image-block">
+                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_105015270.png?raw=true" alt="О банке">
+                <div class="image-caption">Надёжность и стабильность</div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 40px;">Наши преимущества</h3>
+        <div class="divider"></div>
+        <div class="image-showcase">
+            <div class="image-block">
+                <img src="https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-12_102355995.png?raw=true" alt="Наши карты">
+                <div class="image-caption">Современные решения</div>
+            </div>
         </div>
     </div>
 
@@ -513,10 +592,10 @@
     <div id="contact-section" class="content-card hidden">
         <h2>Связь с нами</h2>
         <div class="divider"></div>
-        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>Email:</strong> <a href="mailto:hgaraew@mail.ru" style="color: #FFD700;">БК-Банк email</a></p>
-        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank" style="color: #FFD700;">Сервер БК-Банк</a></p>
-        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank" style="color: #FFD700;">Канал БК-Банк</a></p>
-        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank" style="color: #FFD700;">БК-Банк YouTube</a></p>
+        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>Email:</strong> <a href="mailto:hgaraew@mail.ru">БК-Банк email</a></p>
+        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">Сервер БК-Банк</a></p>
+        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">Канал БК-Банк</a></p>
+        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p>
     </div>
 
     <!-- Профиль -->
@@ -525,12 +604,12 @@
 
 <script>
     (function(){
-        // --- Данные и состояние (без изменений в логике) ---
+        // --- Данные и состояние ---
         let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
         let currentUser = null;
         let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
 
-        // Список карт (для отрисовки)
+        // Список карт
         const cardList = [
             { name: 'Тень и свет', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_092441724.png?raw=true' },
             { name: 'Чёрно-жёлтая энергия', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_093348500.png?raw=true' },
@@ -541,7 +620,6 @@
             { name: 'БКашная светлый', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_2025-02-14_102653372.png?raw=true' }
         ];
 
-        // Рендер карточек карт
         function renderCards() {
             const container = document.getElementById('cards-container');
             if (!container) return;
@@ -553,7 +631,7 @@
             `).join('');
         }
 
-        // Инициализация
+        // Проверка сессии при загрузке
         window.onload = function() {
             const session = localStorage.getItem('currentSession');
             if (session) {
@@ -723,7 +801,7 @@
         }
 
         window.logout = function() { localStorage.removeItem('currentSession'); location.reload(); };
-        window.sendFriendRequest = function() { /* логика без изменений */ 
+        window.sendFriendRequest = function() { 
             const val = document.getElementById('friendName')?.value.trim(); if(!val) return alert('Введите данные'); 
             let found = null; for(let u in users) if(u === val || users[u].email === val) { found = u; break; } 
             if(!found) return alert('Не найден'); if(found === currentUser) return alert('Нельзя себя'); 
@@ -740,7 +818,7 @@
         function showError(el, msg) { if(!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
         function showSuccess(el, msg) { if(!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 5000); }
 
-        // Глобальные ссылки для onclick
+        // Глобальные ссылки
         window.login = login;
         window.register = register;
         window.showForgotPasswordForm = showForgotPasswordForm;
