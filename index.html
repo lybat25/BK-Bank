@@ -53,26 +53,23 @@
         .services-list li::before { content: '✦'; color: #FFD700; margin-right: 15px; }
         .modal-form { background: rgba(20,20,20,0.95); backdrop-filter: blur(25px); border: 1px solid rgba(255,215,0,0.2); border-radius: 40px; padding: 40px; width: 420px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; }
         .form-title { font-size: 2rem; color: #FFD700; text-align: center; margin-bottom: 30px; }
-        .form-input { width: 100%; padding: 16px; margin-bottom: 16px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 60px; color: white; }
-        .gold-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 60px; font-weight: 700; cursor: pointer; }
-        .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 12px 0; cursor: pointer; }
+        .form-input { width: 100%; padding: 16px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 60px; color: white; }
+        .gold-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 60px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+        .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 15px 0; cursor: pointer; }
         .toast-message { position: fixed; top: 100px; right: 30px; background: rgba(20,20,20,0.95); border-left: 6px solid #FFD700; padding: 20px 30px; border-radius: 60px; z-index: 9998; }
         .hidden { display: none !important; }
         .error-text { color: #ff5e5e; }
         .profile-header { display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255,215,0,0.03); border-radius: 40px; flex-wrap: wrap; }
         .profile-avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #FFD700; object-fit: cover; cursor: pointer; }
         .logout-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 10px 24px; border-radius: 40px; cursor: pointer; }
-        .edit-profile-btn { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 8px 16px; border-radius: 30px; cursor: pointer; }
-        .friend-list { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
-        .friend-tag { background: rgba(255,215,0,0.1); padding: 8px 18px; border-radius: 40px; cursor: pointer; }
-        .public-profile-link { color: #FFD700; text-decoration: underline; cursor: pointer; }
+        .edit-profile-btn { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 10px 20px; border-radius: 30px; cursor: pointer; margin-top: 15px; }
         .support-panel { display: flex; gap: 20px; }
         .users-list { width: 260px; background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; }
         .user-item { padding: 12px; margin-bottom: 8px; background: rgba(255,215,0,0.05); border-radius: 10px; cursor: pointer; }
         .user-item.active { background: rgba(255,215,0,0.15); border: 1px solid #FFD700; }
         .chat-area { flex: 1; }
         .chat-messages { max-height: 350px; overflow-y: auto; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 15px; margin-bottom: 20px; }
-        .chat-message { margin-bottom: 12px; padding: 12px; border-radius: 18px; max-width: 80%; }
+        .chat-message { margin-bottom: 12px; padding: 12px; border-radius: 18px; max-width: 80%; position: relative; }
         .chat-message.client { background: rgba(255,215,0,0.15); margin-left: auto; }
         .chat-message.support { background: rgba(255,255,255,0.06); }
         .chat-input-area { display: flex; gap: 10px; }
@@ -82,7 +79,9 @@
         .clear-chat-btn { background: rgba(255,100,100,0.2); border: 1px solid #ff6b6b; color: #ff6b6b; padding: 8px 16px; border-radius: 30px; cursor: pointer; }
         .delete-msg-btn { position: absolute; top: 5px; right: 5px; width: 22px; height: 22px; background: rgba(255,100,100,0.5); border: none; border-radius: 50%; color: white; font-size: 14px; cursor: pointer; display: none; }
         .chat-message:hover .delete-msg-btn { display: flex; align-items: center; justify-content: center; }
-        .chat-message { position: relative; }
+        .profile-info { margin: 25px 0; }
+        .profile-info p { margin: 15px 0; font-size: 1.1rem; }
+        .edit-field { margin-bottom: 25px; }
     </style>
 </head>
 <body>
@@ -161,8 +160,8 @@
     let selectedPrivateChat = null;
 
     function initHiddenAccounts() {
-        if (!users[HIDDEN_ACCOUNTS.admin.username]) users[HIDDEN_ACCOUNTS.admin.username] = { name: "Администратор", email: "admin@bk-bank.ru", phone: "+79000000001", password: HIDDEN_ACCOUNTS.admin.password, balance: 999999, friends: [], friendRequests: [], registrationDate: new Date().toISOString(), isAdmin: true, avatar: null };
-        if (!users[HIDDEN_ACCOUNTS.support.username]) users[HIDDEN_ACCOUNTS.support.username] = { name: "Служба поддержки", email: "support@bk-bank.ru", phone: "+79000000002", password: HIDDEN_ACCOUNTS.support.password, balance: 0, friends: [], friendRequests: [], registrationDate: new Date().toISOString(), isSupport: true, avatar: null };
+        if (!users[HIDDEN_ACCOUNTS.admin.username]) users[HIDDEN_ACCOUNTS.admin.username] = { name: "Администратор", email: "admin@bk-bank.ru", phone: "+79000000001", password: HIDDEN_ACCOUNTS.admin.password, balance: 999999, registrationDate: new Date().toISOString(), isAdmin: true, avatar: null };
+        if (!users[HIDDEN_ACCOUNTS.support.username]) users[HIDDEN_ACCOUNTS.support.username] = { name: "Служба поддержки", email: "support@bk-bank.ru", phone: "+79000000002", password: HIDDEN_ACCOUNTS.support.password, balance: 0, registrationDate: new Date().toISOString(), isSupport: true, avatar: null };
         localStorage.setItem('bankUsers', JSON.stringify(users));
     }
     initHiddenAccounts();
@@ -237,7 +236,7 @@
         if (pass.length < 6) return showError(err, 'Пароль от 6 символов');
         if (users[username]) return showError(err, 'Никнейм занят');
         for (let u in users) if (users[u].phone === phone) return showError(err, 'Телефон уже зарегистрирован');
-        users[username] = { name, email, phone, password: pass, balance: 0, friends: [], friendRequests: [], registrationDate: new Date().toISOString(), avatar: null };
+        users[username] = { name, email, phone, password: pass, balance: 0, registrationDate: new Date().toISOString(), avatar: null };
         localStorage.setItem('bankUsers', JSON.stringify(users)); currentUser = username;
         localStorage.setItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
         removeModals(); showMainContent(); showWelcomeMessage(name);
@@ -267,14 +266,14 @@
 
     function showProfile() {
         const u = users[currentUser]; const c = document.getElementById('profile-section');
-        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" id="avatarImg" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}<br><span class="public-profile-link" onclick="copyProfileLink()">📋 Копировать ссылку</span></div><button class="logout-btn" onclick="logout()">Выйти</button></div><button class="edit-profile-btn" onclick="showEditProfileForm()">✏️ Редактировать</button><p><strong>Email:</strong> ${u.email}</p><p><strong>Телефон:</strong> ${u.phone || 'Не указан'}</p><p><strong>Баланс:</strong> ${u.balance} ₽</p><div class="friend-actions"><input id="friendName" class="friend-input" placeholder="Никнейм друга" style="padding:14px; border-radius:60px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,215,0,0.2); color:white; margin-right:10px;"><button class="small-gold-btn" onclick="sendFriendRequest()">Добавить</button></div><h3>Друзья</h3><div class="friend-list">${u.friends?.length ? u.friends.map(f => `<span class="friend-tag" onclick="showPublicProfile('${f}')">${f}</span>`).join('') : 'Пока нет друзей'}</div><h3>Запросы</h3><div class="friend-list">${u.friendRequests?.length ? u.friendRequests.map(r => `<span class="friend-tag">${r} <button onclick="acceptFriendRequest('${r}')">✓</button><button onclick="declineFriendRequest('${r}')">✗</button></span>`).join('') : 'Нет запросов'}</div>`;
+        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" id="avatarImg" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}</div><button class="logout-btn" onclick="logout()">Выйти</button></div><button class="edit-profile-btn" onclick="showEditProfileForm()">✏️ Редактировать профиль</button><div class="profile-info"><p><strong>Email:</strong> ${u.email}</p><p><strong>Телефон:</strong> ${u.phone || 'Не указан'}</p><p><strong>Баланс:</strong> ${u.balance} ₽</p></div>`;
         c.classList.remove('hidden');
     }
 
     function showEditProfileForm() {
         const u = users[currentUser];
         const m = document.createElement('div'); m.className = 'modal-form';
-        m.innerHTML = `<div class="form-title">Редактирование</div><input id="editName" class="form-input" placeholder="Имя" value="${u.name}"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email}"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone || ''}"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль"><button class="gold-button" onclick="saveProfile()">Сохранить</button><button class="gold-button" onclick="removeModals(); showProfile();">Отмена</button>`;
+        m.innerHTML = `<div class="form-title">Редактирование</div><div class="edit-field"><input id="editName" class="form-input" placeholder="Имя" value="${u.name}"></div><div class="edit-field"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email}"></div><div class="edit-field"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone || ''}"></div><div class="edit-field"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль (оставьте пустым)"></div><button class="gold-button" onclick="saveProfile()">Сохранить</button><button class="gold-button" onclick="removeModals(); showProfile();" style="margin-top:10px;">Отмена</button>`;
         document.body.appendChild(m);
     }
 
@@ -284,14 +283,12 @@
         if (name) users[currentUser].name = name; if (email) users[currentUser].email = email;
         if (phone && /^\+7\d{10}$/.test(phone)) users[currentUser].phone = phone;
         if (pass && pass.length >= 6) users[currentUser].password = pass;
-        localStorage.setItem('bankUsers', JSON.stringify(users)); removeModals(); showProfile();
+        localStorage.setItem('bankUsers', JSON.stringify(users)); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!');
     };
 
     window.uploadAvatar = function(event) {
         const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (e) => { users[currentUser].avatar = e.target.result; localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); }; reader.readAsDataURL(file); }
     };
-
-    window.copyProfileLink = function() { const link = `${location.origin}${location.pathname}?user=${currentUser}`; navigator.clipboard?.writeText(link); alert('Ссылка скопирована!'); };
 
     function renderSupportPanel() {
         const c = document.getElementById('support-container');
@@ -339,14 +336,11 @@
     window.openPrivateChat = (id) => { selectedPrivateChat = id; renderPrivateChats(); };
     window.sendPrivateMessage = () => { const inp = document.getElementById('private-chat-input'); const txt = inp.value.trim(); if (!txt || !selectedPrivateChat) return; if (!privateChats[selectedPrivateChat]) privateChats[selectedPrivateChat] = []; privateChats[selectedPrivateChat].push({ from: currentUser, text: txt, time: new Date().toISOString() }); localStorage.setItem('privateChats', JSON.stringify(privateChats)); renderPrivateChats(); };
 
-    function sendFriendRequest() { const v = document.getElementById('friendName')?.value.trim(); if (!v) return alert('Введите никнейм'); if (!users[v]) return alert('Не найден'); if (v === currentUser) return alert('Нельзя себя'); if (users[currentUser].friends?.includes(v)) return alert('Уже друг'); users[v].friendRequests = users[v].friendRequests || []; users[v].friendRequests.push(currentUser); localStorage.setItem('bankUsers', JSON.stringify(users)); alert('Запрос отправлен'); showProfile(); }
-    function acceptFriendRequest(f) { const u = users[currentUser]; u.friendRequests = u.friendRequests.filter(r => r !== f); u.friends = u.friends || []; if (!u.friends.includes(f)) u.friends.push(f); users[f].friends = users[f].friends || []; if (!users[f].friends.includes(currentUser)) users[f].friends.push(currentUser); localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); }
-    function declineFriendRequest(f) { users[currentUser].friendRequests = users[currentUser].friendRequests.filter(r => r !== f); localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); }
     function logout() { localStorage.removeItem('currentSession'); location.reload(); }
     function removeModals() { document.querySelectorAll('.modal-form').forEach(m => m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
 
-    window.login = login; window.register = register; window.showRegistrationForm = showRegistrationForm; window.logout = logout; window.sendFriendRequest = sendFriendRequest; window.acceptFriendRequest = acceptFriendRequest; window.declineFriendRequest = declineFriendRequest; window.showPublicProfile = showPublicProfile;
+    window.login = login; window.register = register; window.showRegistrationForm = showRegistrationForm; window.logout = logout; window.showPublicProfile = showPublicProfile;
 </script>
 
 <script>
