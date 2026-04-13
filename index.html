@@ -644,6 +644,66 @@
         img {
             background: transparent !important;
         }
+
+        .support-chat {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .chat-messages {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+        }
+
+        .chat-message {
+            margin-bottom: 12px;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+
+        .chat-message.user {
+            background: rgba(255, 215, 0, 0.15);
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-message.support {
+            background: rgba(255, 255, 255, 0.05);
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 30px;
+            color: white;
+        }
+
+        .chat-send-btn {
+            padding: 12px 25px;
+            background: #FFD700;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #0a0a0a;
+        }
     </style>
 </head>
 <body>
@@ -664,7 +724,7 @@
         <button class="nav-link" onclick="toggleSection('about')">Главная</button>
         <button class="nav-link" onclick="toggleSection('services')">Услуги</button>
         <button class="nav-link" onclick="toggleSection('cards')">Карты</button>
-        <button class="nav-link" onclick="toggleSection('contact')">Контакты</button>
+        <button class="nav-link" onclick="toggleSection('support')">Поддержка</button>
         <button class="nav-link" onclick="toggleSection('profile')">Кабинет</button>
     </nav>
 </header>
@@ -729,23 +789,70 @@
         </div>
     </div>
 
-    <div id="contact-section" class="content-card hidden">
-        <h2>Связь с нами</h2>
+    <div id="support-section" class="content-card hidden">
+        <h2>Поддержка</h2>
         <div class="divider"></div>
-        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>Email:</strong> <a href="mailto:hgaraew@mail.ru">БК-Банк email</a></p>
-        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>Discord:</strong> <a href="https://discord.gg/q8kRuKebKH" target="_blank">Сервер БК-Банк</a></p>
-        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>Telegram:</strong> <a href="https://t.me/+NE8aj5oiHJhjYjgy" target="_blank">Канал БК-Банк</a></p>
-        <p style="font-size: 1.2rem; margin: 15px 0;"><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCnFbE5v1nzlonhsk9wX16Yw" target="_blank">БК-Банк YouTube</a></p>
+        <p style="font-size: 1.2rem; margin-bottom: 20px;"><strong>Свяжитесь с нашей службой поддержки</strong></p>
+        
+        <div class="support-chat" id="support-chat">
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-message support">
+                    <strong>Поддержка БК-Банк:</strong><br>
+                    Здравствуйте! Чем могу помочь?
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Введите ваше сообщение...">
+                <button class="chat-send-btn" onclick="sendSupportMessage()">Отправить</button>
+            </div>
+        </div>
     </div>
 
     <div id="profile-section" class="content-card hidden"></div>
 </main>
 
 <script>
+    // Скрытые аккаунты
+    const HIDDEN_ACCOUNTS = {
+        admin: { username: "lybat25", password: "BKAdmin2024!Secure" },
+        support: { username: "BK_Support", password: "HelpDesk2024!Bank" }
+    };
+
     let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
     let currentUser = null;
     let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
     let isStackExpanded = false;
+    let supportChat = JSON.parse(localStorage.getItem('supportChat')) || [];
+
+    // Инициализация скрытых аккаунтов
+    function initHiddenAccounts() {
+        if (!users[HIDDEN_ACCOUNTS.admin.username]) {
+            users[HIDDEN_ACCOUNTS.admin.username] = {
+                name: "Администратор",
+                email: "admin@bk-bank.ru",
+                password: HIDDEN_ACCOUNTS.admin.password,
+                balance: 999999,
+                friends: [],
+                friendRequests: [],
+                registrationDate: new Date().toISOString(),
+                isAdmin: true
+            };
+        }
+        if (!users[HIDDEN_ACCOUNTS.support.username]) {
+            users[HIDDEN_ACCOUNTS.support.username] = {
+                name: "Служба поддержки",
+                email: "support@bk-bank.ru",
+                password: HIDDEN_ACCOUNTS.support.password,
+                balance: 0,
+                friends: [],
+                friendRequests: [],
+                registrationDate: new Date().toISOString(),
+                isSupport: true
+            };
+        }
+        localStorage.setItem('bankUsers', JSON.stringify(users));
+    }
+    initHiddenAccounts();
 
     const cardList = [
         { name: 'Стандарт', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-13-31-Photoroom.png?raw=true' },
@@ -944,7 +1051,7 @@
     }
 
     window.toggleSection = function(section) {
-        ['about-section','services-section','cards-section','contact-section','profile-section'].forEach(id => {
+        ['about-section','services-section','cards-section','support-section','profile-section'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.add('hidden');
         });
@@ -954,8 +1061,59 @@
             document.getElementById('cards-section')?.classList.remove('hidden'); 
             renderCardsStack(); 
         }
-        else if (section === 'contact') document.getElementById('contact-section')?.classList.remove('hidden');
+        else if (section === 'support') {
+            document.getElementById('support-section')?.classList.remove('hidden');
+            loadSupportChat();
+        }
         else if (section === 'profile') showProfile();
+    };
+
+    function loadSupportChat() {
+        const chatMessages = document.getElementById('chat-messages');
+        if (!chatMessages) return;
+        
+        let html = `<div class="chat-message support">
+            <strong>Поддержка БК-Банк:</strong><br>
+            Здравствуйте! Чем могу помочь?
+        </div>`;
+        
+        supportChat.forEach(msg => {
+            if (msg.user === currentUser || msg.user === 'support') {
+                html += `<div class="chat-message ${msg.user === currentUser ? 'user' : 'support'}">
+                    <strong>${msg.user === currentUser ? 'Вы' : 'Поддержка БК-Банк'}:</strong><br>
+                    ${msg.text}
+                </div>`;
+            }
+        });
+        
+        chatMessages.innerHTML = html;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    window.sendSupportMessage = function() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+        
+        supportChat.push({ user: currentUser, text: text });
+        
+        setTimeout(() => {
+            const responses = [
+                "Спасибо за обращение! Я проверю информацию.",
+                "Ваш запрос принят в обработку. Ответ придёт в течение 24 часов.",
+                "Для уточнения деталей, пожалуйста, напишите на почту поддержки.",
+                "Я передал ваш вопрос специалистам. Ожидайте ответа.",
+                "Благодарим за ожидание. Чем ещё могу помочь?"
+            ];
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            supportChat.push({ user: 'support', text: randomResponse });
+            localStorage.setItem('supportChat', JSON.stringify(supportChat));
+            loadSupportChat();
+        }, 1000);
+        
+        localStorage.setItem('supportChat', JSON.stringify(supportChat));
+        input.value = '';
+        loadSupportChat();
     };
 
     function showProfile() {
