@@ -353,6 +353,37 @@
             z-index: 100 !important;
         }
 
+        /* Подпись под стопкой карт */
+        .cards-footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px;
+        }
+
+        .cards-footer-text {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 60px;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            color: #FFD700;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .cards-footer-text:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: #FFD700;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15);
+        }
+
+        .cards-footer-text i {
+            font-style: italic;
+            opacity: 0.8;
+        }
+
         .services-list {
             list-style: none;
             font-size: 1.3rem;
@@ -706,6 +737,14 @@
         <div class="divider"></div>
         
         <div class="cards-stack" id="cards-stack-container"></div>
+        
+        <div class="cards-footer">
+            <div class="cards-footer-text">
+                <strong>✨ Все представленные карты доступны для оформления в отделениях БК-Банка ✨</strong>
+                <br>
+                <i style="color: #FFD700; opacity: 0.8; font-size: 0.95rem;">Выберите свою идеальную карту из нашей эксклюзивной коллекции</i>
+            </div>
+        </div>
     </div>
 
     <div id="contact-section" class="content-card hidden">
@@ -727,7 +766,6 @@
         let resetTokens = JSON.parse(localStorage.getItem('resetTokens')) || {};
         let isStackExpanded = false;
 
-        // Обновлённый список из 7 карт
         const cardList = [
             { name: 'Стандарт', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-13-31-Photoroom.png?raw=true' },
             { name: 'Голд', img: 'https://github.com/lybat25/BK-Bank/blob/main/png/2025-01-30_15-58-26-Photoroom.png?raw=true' },
@@ -746,7 +784,6 @@
             container.classList.remove('expanded');
             
             container.innerHTML = cardList.map((card, index) => {
-                // Разные углы для 7 карт
                 const rotations = [-8, -4, 0, 4, 8, 12, 16];
                 const offsets = [-30, -20, -10, 0, 10, 20, 30];
                 
@@ -772,7 +809,6 @@
                 container.classList.add('expanded');
                 
                 cards.forEach((card, index) => {
-                    // Центр — индекс 3 (4-я карта)
                     const centerIndex = 3;
                     const xOffset = (index - centerIndex) * 130;
                     const rotation = (index - centerIndex) * 6;
