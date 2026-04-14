@@ -93,20 +93,14 @@
         .chat-input-area { display: flex; gap: 10px; }
         .chat-input { flex: 1; padding: 14px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 30px; color: white; }
         .chat-send-btn { padding: 14px 28px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 30px; font-weight: 700; cursor: pointer; }
+        
+        /* СТОПКА КАРТ - ВЕЕР */
         .cards-stack { display: flex; justify-content: center; margin: 40px 0; position: relative; min-height: 450px; perspective: 1200px; }
-        .stack-card { position: absolute; width: 300px; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); animation: cardFloat 4s ease-in-out infinite; }
-        .stack-card:nth-child(1) { animation-delay: 0s; }
-        .stack-card:nth-child(2) { animation-delay: 0.3s; }
-        .stack-card:nth-child(3) { animation-delay: 0.6s; }
-        .stack-card:nth-child(4) { animation-delay: 0.9s; }
-        .stack-card:nth-child(5) { animation-delay: 1.2s; }
-        .stack-card:nth-child(6) { animation-delay: 1.5s; }
-        .stack-card:nth-child(7) { animation-delay: 1.8s; }
-        @keyframes cardFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        .stack-card { position: absolute; width: 300px; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); }
         .stack-card img { width: 100%; border-radius: 20px; border: 2px solid rgba(255,215,0,0.3); mix-blend-mode: lighten; transition: all 0.3s; }
         body.light-theme .stack-card img { mix-blend-mode: normal; border: 2px solid rgba(0,0,0,0.3); }
-        .stack-card:hover { transform: scale(1.05) translateY(-15px) !important; z-index: 100 !important; animation: none; }
         .stack-card:hover img { border-color: #FFD700; box-shadow: 0 0 35px rgba(255,215,0,0.25); }
+        
         .chart-container { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 25px; margin: 25px 0; }
         .chart-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 220px; padding: 10px 0; }
@@ -115,7 +109,6 @@
         .chart-bar.red { background: linear-gradient(180deg, #ff5e5e, #cc0000); box-shadow: 0 0 15px rgba(255,94,94,0.3); }
         body.light-theme .chart-bar { background: linear-gradient(180deg, #0a0a0a, #333); box-shadow: 0 0 15px rgba(0,0,0,0.2); }
         body.light-theme .chart-bar.red { background: linear-gradient(180deg, #cc0000, #990000); }
-        .chart-bar-label { font-size: 0.8rem; color: #888; }
         .chart-bar-value { font-size: 0.85rem; font-weight: 600; color: #FFD700; }
         body.light-theme .chart-bar-value { color: #0a0a0a; }
         .chart-stats { display: flex; justify-content: space-around; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,215,0,0.15); }
@@ -308,6 +301,7 @@
     function renderCardsStack() {
         const c = document.getElementById('cards-stack-container');
         if (!c) return;
+        isStackExpanded = false;
         c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="transform:rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px); z-index:${i+1};" onclick="window.handleStackClick(event)"><img src="${card.img}"></div>`).join('');
     }
     
@@ -316,10 +310,10 @@
         const c = document.getElementById('cards-stack-container');
         const cards = c.querySelectorAll('.stack-card');
         if (!isStackExpanded) {
-            cards.forEach((card, i) => { card.style.transform = `translateX(${(i-3)*130}px) translateY(${Math.abs(i-3)*8}px) rotate(${(i-3)*6}deg)`; });
+            cards.forEach((card, i) => { card.style.transform = `translateX(${(i-3)*130}px) translateY(${Math.abs(i-3)*8}px) rotate(${(i-3)*6}deg)`; card.style.zIndex = i + 10; });
             isStackExpanded = true;
         } else {
-            cards.forEach((card, i) => { card.style.transform = `rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px)`; });
+            cards.forEach((card, i) => { card.style.transform = `rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px)`; card.style.zIndex = i + 1; });
             isStackExpanded = false;
         }
     };
@@ -509,12 +503,10 @@
     function renderChart() {
         const container = document.getElementById('chart-bars');
         if (!container) return;
-        
         let trades = [...bktokTrades].reverse();
         const periodMs = { '1H': 3600000, '6H': 21600000, '24H': 86400000, '7D': 604800000 };
         const cutoff = Date.now() - (periodMs[chartPeriod] || 86400000);
         trades = trades.filter(t => new Date(t.time).getTime() > cutoff);
-        
         if (trades.length === 0) {
             container.innerHTML = '<p style="text-align:center; width:100%; padding:40px;">Нет данных за выбранный период</p>';
             document.getElementById('chart-open').textContent = '0';
@@ -523,44 +515,25 @@
             document.getElementById('chart-change').textContent = '0%';
             return;
         }
-        
         const bars = [];
         const barCount = Math.min(12, trades.length);
         const step = Math.floor(trades.length / barCount) || 1;
-        
         for (let i = 0; i < barCount; i++) {
             const slice = trades.slice(i * step, (i + 1) * step);
             if (slice.length === 0) continue;
             const prices = slice.map(t => t.price);
-            bars.push({
-                open: prices[prices.length - 1],
-                close: prices[0],
-                high: Math.max(...prices),
-                low: Math.min(...prices),
-                isRed: prices[0] < prices[prices.length - 1]
-            });
+            bars.push({ open: prices[prices.length - 1], close: prices[0], high: Math.max(...prices), low: Math.min(...prices), isRed: prices[0] < prices[prices.length - 1] });
         }
-        
         const allPrices = bars.flatMap(b => [b.high, b.low]);
-        const max = Math.max(...allPrices);
-        const min = Math.min(...allPrices);
-        const range = max - min || 1;
-        
+        const max = Math.max(...allPrices), min = Math.min(...allPrices), range = max - min || 1;
         let html = '';
         bars.forEach(bar => {
             const height = ((bar.close - min) / range) * 180 + 20;
-            html += `<div class="chart-bar-wrapper">`;
-            html += `<div class="chart-bar ${bar.isRed ? 'red' : ''}" style="height: ${height}px;" title="O:${bar.open} H:${bar.high} L:${bar.low} C:${bar.close}"></div>`;
-            html += `<div class="chart-bar-value">${bar.close.toFixed(2)}</div>`;
-            html += `</div>`;
+            html += `<div class="chart-bar-wrapper"><div class="chart-bar ${bar.isRed ? 'red' : ''}" style="height: ${height}px;" title="O:${bar.open} H:${bar.high} L:${bar.low} C:${bar.close}"></div><div class="chart-bar-value">${bar.close.toFixed(2)}</div></div>`;
         });
         container.innerHTML = html;
-        
-        const firstPrice = bars[0]?.open || 0;
-        const lastPrice = bars[bars.length - 1]?.close || 0;
-        const change = lastPrice - firstPrice;
+        const firstPrice = bars[0]?.open || 0, lastPrice = bars[bars.length - 1]?.close || 0, change = lastPrice - firstPrice;
         const changePercent = firstPrice ? ((change / firstPrice) * 100).toFixed(2) : 0;
-        
         document.getElementById('chart-open').textContent = firstPrice.toFixed(2);
         document.getElementById('chart-high').textContent = max.toFixed(2);
         document.getElementById('chart-low').textContent = min.toFixed(2);
