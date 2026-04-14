@@ -122,16 +122,16 @@
     <div class="logo-wrapper">
         <img src="png/2025-01-31_14-13-47-Photoroom.png" class="logo-img" alt="BK-Bank">
         <span class="bank-name">BK-Bank</span>
-        <button class="theme-toggle" onclick="toggleTheme()">🌙 Тема</button>
+        <button class="theme-toggle" onclick="window.toggleTheme()">🌙 Тема</button>
     </div>
     <nav class="nav-links">
-        <button class="nav-link" onclick="toggleSection('about')">Главная</button>
-        <button class="nav-link" onclick="toggleSection('services')">Услуги</button>
-        <button class="nav-link" onclick="toggleSection('cards')">Карты</button>
-        <button class="nav-link" onclick="toggleSection('bktok')">BKtok</button>
-        <button class="nav-link" onclick="toggleSection('support')">Поддержка</button>
-        <button class="nav-link" onclick="toggleSection('chats')">Чаты</button>
-        <button class="nav-link" onclick="toggleSection('profile')">Кабинет</button>
+        <button class="nav-link" onclick="window.toggleSection('about')">Главная</button>
+        <button class="nav-link" onclick="window.toggleSection('services')">Услуги</button>
+        <button class="nav-link" onclick="window.toggleSection('cards')">Карты</button>
+        <button class="nav-link" onclick="window.toggleSection('bktok')">BKtok</button>
+        <button class="nav-link" onclick="window.toggleSection('support')">Поддержка</button>
+        <button class="nav-link" onclick="window.toggleSection('chats')">Чаты</button>
+        <button class="nav-link" onclick="window.toggleSection('profile')">Кабинет</button>
     </nav>
 </header>
 
@@ -168,8 +168,8 @@
         <h2>BKtok P2P Биржа</h2><div class="divider"></div>
         <div style="display:flex; justify-content:space-between;">
             <div class="token-balance" id="token-balance-display">0 BK</div>
-            <button class="gold-button" style="width:auto; padding:12px 30px;" onclick="toggleSection('tasks')">📋 Задания</button>
-            <button class="gold-button" style="width:auto; padding:12px 30px;" onclick="toggleSection('cases')">🎁 Кейсы</button>
+            <button class="gold-button" style="width:auto; padding:12px 30px;" onclick="window.toggleSection('tasks')">📋 Задания</button>
+            <button class="gold-button" style="width:auto; padding:12px 30px;" onclick="window.toggleSection('cases')">🎁 Кейсы</button>
         </div>
         <div id="price-chart" style="background:rgba(0,0,0,0.3); border-radius:15px; padding:20px; margin:20px 0; height:200px; display:flex; align-items:flex-end; gap:4px;"></div>
         <div class="order-book">
@@ -178,7 +178,7 @@
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px;">
             <div><input type="number" id="order-price" class="form-input" placeholder="Цена BK"><input type="number" id="order-amount" class="form-input" placeholder="Количество BK"></div>
-            <div style="display:flex; gap:10px;"><button class="gold-button" onclick="createOrder('buy')">Купить</button><button class="dark-button" onclick="createOrder('sell')">Продать</button></div>
+            <div style="display:flex; gap:10px;"><button class="gold-button" onclick="window.createOrder('buy')">Купить</button><button class="dark-button" onclick="window.createOrder('sell')">Продать</button></div>
         </div>
         <h3 style="margin-top:30px;">Мои ордера</h3><div id="my-orders"></div>
     </div>
@@ -186,13 +186,13 @@
     <div id="tasks-section" class="content-card hidden">
         <h2>📋 Задания</h2><div class="divider"></div>
         <div class="tasks-grid" id="tasks-container"></div>
-        <button class="gold-button" onclick="toggleSection('bktok')">← На биржу</button>
+        <button class="gold-button" onclick="window.toggleSection('bktok')">← На биржу</button>
     </div>
 
     <div id="cases-section" class="content-card hidden">
         <h2>🎁 Кейсы</h2><div class="divider"></div>
         <div class="cases-grid" id="cases-container"></div>
-        <button class="gold-button" onclick="toggleSection('bktok')">← На биржу</button>
+        <button class="gold-button" onclick="window.toggleSection('bktok')">← На биржу</button>
     </div>
 
     <div id="support-section" class="content-card hidden">
@@ -259,7 +259,7 @@
     function renderCardsStack() {
         const c = document.getElementById('cards-stack-container');
         if (!c) return;
-        c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="transform:rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px); z-index:${i+1};" onclick="handleStackClick(event)"><img src="${card.img}"></div>`).join('');
+        c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="transform:rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px); z-index:${i+1};" onclick="window.handleStackClick(event)"><img src="${card.img}"></div>`).join('');
     }
     
     window.handleStackClick = (e) => {
@@ -281,7 +281,7 @@
         const s = localStorage.getItem('currentSession');
         const urlParams = new URLSearchParams(window.location.search);
         const viewUser = urlParams.get('user');
-        if (viewUser && users[viewUser]) { showPublicProfile(viewUser); return; }
+        if (viewUser && users[viewUser]) { window.showPublicProfile(viewUser); return; }
         if (s) {
             const d = JSON.parse(s);
             if (Date.now() - d.timestamp < 86400000) {
@@ -291,7 +291,7 @@
                 return;
             }
         }
-        showLoginForm();
+        window.showLoginForm();
     };
 
     window.toggleTheme = () => {
@@ -299,13 +299,13 @@
         localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
     };
 
-    function showLoginForm() {
+    window.showLoginForm = function() {
         removeModals();
         const m = document.createElement('div'); m.className = 'modal-form';
         m.innerHTML = `<div class="form-title">Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="window.login()">Войти</button><span class="text-link" onclick="window.showRegistrationForm()">Регистрация</span><div id="failedAttemptsWarning" style="color:#ff5e5e; font-size:0.9rem; text-align:center;"></div>`;
         document.body.appendChild(m);
         updateFailedAttemptsWarning();
-    }
+    };
     
     function updateFailedAttemptsWarning() {
         const w = document.getElementById('failedAttemptsWarning');
@@ -442,7 +442,7 @@
     function showMainContent() {
         document.querySelector('header')?.classList.remove('hidden');
         document.querySelector('.main-container')?.classList.remove('hidden');
-        toggleSection('about');
+        window.toggleSection('about');
     }
 
     function showWelcomeMessage(n) {
@@ -654,7 +654,7 @@
         loadPrivateChatMessages();
     };
 
-    function showPublicProfile(username) {
+    window.showPublicProfile = function(username) {
         const user = users[username];
         if (!user) return;
         document.querySelector('header')?.classList.add('hidden');
@@ -662,7 +662,7 @@
         const c = document.getElementById('public-profile-section');
         c.innerHTML = `<h2>Профиль ${user.name}</h2><div class="divider"></div><div style="display:flex; gap:30px;"><img src="${user.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" style="width:150px; height:150px; border-radius:50%; border:3px solid #FFD700;"><div><p><strong>Никнейм:</strong> @${username}</p><p><strong>Имя:</strong> ${user.name}</p><button class="gold-button" onclick="window.location.href='/'">Вернуться</button></div></div>`;
         c.classList.remove('hidden');
-    }
+    };
 
     function showProfile() {
         if (!currentUser) return;
@@ -720,7 +720,7 @@
             delete users[currentUser]; delete bktokBalances[currentUser];
             localStorage.setItem('bankUsers', JSON.stringify(users));
             localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances));
-            logout();
+            window.logout();
         }
     };
 
@@ -773,11 +773,10 @@
         renderSupportPanel();
     };
 
-    function logout() { localStorage.removeItem('currentSession'); location.reload(); }
+    window.logout = function() { localStorage.removeItem('currentSession'); location.reload(); };
     function removeModals() { document.querySelectorAll('.modal-form').forEach(m => m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
 
-    window.logout = logout;
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }
 })();
 </script>
