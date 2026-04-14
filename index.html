@@ -123,6 +123,7 @@
         .fade-out { opacity: 0; transition: opacity 0.8s ease; }
         .hidden { display: none !important; }
         .error-text { color: #ff5e5e; }
+        .success-text { color: #4ade80; }
         .profile-header { display: flex; align-items: center; gap: 20px; padding: 25px; background: rgba(255,215,0,0.03); border-radius: 40px; flex-wrap: wrap; margin-bottom: 30px; }
         .profile-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #FFD700; object-fit: cover; cursor: pointer; transition: all 0.3s ease; }
         .profile-avatar:hover { transform: scale(1.05); border-color: #FFE44D; }
@@ -192,6 +193,13 @@
         body.light-theme .case-item:hover { border-color: #0a0a0a; box-shadow: 0 0 30px rgba(0,0,0,0.3); }
         .case-price { color: #FFD700; font-weight: 700; margin-top: 15px; }
         .failed-attempts-warning { color: #ff5e5e; font-size: 0.9rem; margin-top: 10px; text-align: center; }
+        .step-indicator { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        .step-dot { width: 12px; height: 12px; border-radius: 50%; background: #333; transition: all 0.3s; }
+        .step-dot.active { background: #FFD700; width: 30px; border-radius: 10px; }
+        .step-dot.completed { background: #FFD700; }
+        body.light-theme .step-dot { background: #ccc; }
+        body.light-theme .step-dot.active { background: #0a0a0a; }
+        body.light-theme .step-dot.completed { background: #0a0a0a; }
     </style>
 </head>
 <body>
@@ -365,11 +373,111 @@
     function showLoginForm() { removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="login()">Войти</button><span class="text-link" onclick="showRegistrationForm()">Регистрация</span><div class="failed-attempts-warning" id="failedAttemptsWarning"></div>`; updateFailedAttemptsWarning(); document.body.appendChild(m); }
     function updateFailedAttemptsWarning() { const w = document.getElementById('failedAttemptsWarning'); if (w) w.textContent = failedAttempts > 0 ? `⚠️ Неудачных попыток: ${failedAttempts}/5` : ''; }
     
-    function showRegistrationForm() { removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Регистрация</div><div id="registerError" class="error-text hidden"></div><input id="regName" class="form-input" placeholder="Имя"><input id="regUsername" class="form-input" placeholder="Уникальный никнейм"><input id="regPhone" class="form-input" placeholder="Телефон +7XXXXXXXXXX" value="+7"><input id="regEmail" class="form-input" placeholder="Email"><input type="password" id="regPassword" class="form-input" placeholder="Пароль"><select id="twoFAType" class="form-select"><option value="pet">Имя питомца</option><option value="city">Любимый город</option><option value="game">Любимая игра</option><option value="code">Цифровой код (6 цифр)</option><option value="year">Любимый год</option><option value="ip">Любимый IP</option></select><input id="twoFAAnswer" class="form-input" placeholder="Ответ для 2FA"><button class="gold-button" onclick="register()">Зарегистрироваться</button><span class="text-link" onclick="showLoginForm()">← Войти</span>`; document.body.appendChild(m); }
+    let regStep = 1;
+    let regData = {};
+
+    function showRegistrationForm() { 
+        removeModals(); 
+        regStep = 1;
+        regData = {};
+        renderRegStep(); 
+    }
+    
+    function renderRegStep() {
+        const m = document.createElement('div'); m.className = 'modal-form';
+        let html = `<div class="form-title">Регистрация</div>`;
+        html += `<div class="step-indicator">`;
+        for (let i = 1; i <= 3; i++) {
+            html += `<div class="step-dot ${i === regStep ? 'active' : ''} ${i < regStep ? 'completed' : ''}"></div>`;
+        }
+        html += `</div><div id="registerError" class="error-text hidden"></div>`;
+        
+        if (regStep === 1) {
+            html += `<input id="regName" class="form-input" placeholder="Ваше имя" value="${regData.name || ''}">`;
+            html += `<input id="regUsername" class="form-input" placeholder="Уникальный никнейм" value="${regData.username || ''}">`;
+            html += `<input type="password" id="regPassword" class="form-input" placeholder="Пароль (минимум 6 символов)">`;
+            html += `<button class="gold-button" onclick="nextRegStep()">Далее</button>`;
+        } else if (regStep === 2) {
+            html += `<input id="regPhone" class="form-input" placeholder="Телефон +7XXXXXXXXXX" value="${regData.phone || '+7'}">`;
+            html += `<input id="regEmail" class="form-input" placeholder="Email" value="${regData.email || ''}">`;
+            html += `<button class="gold-button" onclick="nextRegStep()">Далее</button>`;
+            html += `<button class="dark-button" onclick="prevRegStep()">Назад</button>`;
+        } else if (regStep === 3) {
+            html += `<p style="text-align:center; margin-bottom:20px;">Хотите добавить 2FA?</p>`;
+            html += `<button class="gold-button" onclick="skip2FA()">Пропустить</button>`;
+            html += `<button class="dark-button" onclick="show2FAForm()">Добавить защиту</button>`;
+            html += `<button class="dark-button" onclick="prevRegStep()" style="margin-top:10px;">Назад</button>`;
+        }
+        
+        html += `<span class="text-link" onclick="showLoginForm()">← Войти</span>`;
+        m.innerHTML = html;
+        document.body.appendChild(m);
+    }
+    
+    window.nextRegStep = function() {
+        const err = document.getElementById('registerError');
+        if (regStep === 1) {
+            const name = document.getElementById('regName')?.value.trim();
+            const username = document.getElementById('regUsername')?.value.trim();
+            const pass = document.getElementById('regPassword')?.value;
+            if (!name || !username || !pass) return showError(err, 'Все поля обязательны');
+            if (pass.length < 6) return showError(err, 'Пароль от 6 символов');
+            if (users[username]) return showError(err, 'Никнейм занят');
+            regData = { name, username, password: pass };
+            regStep = 2;
+            renderRegStep();
+        } else if (regStep === 2) {
+            const phone = document.getElementById('regPhone')?.value.trim();
+            const email = document.getElementById('regEmail')?.value.trim();
+            if (!phone || !email) return showError(err, 'Все поля обязательны');
+            if (!/^\+7\d{10}$/.test(phone)) return showError(err, 'Телефон: +7XXXXXXXXXX (11 цифр)');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError(err, 'Некорректный email');
+            for (let u in users) if (users[u].phone === phone) return showError(err, 'Телефон уже зарегистрирован');
+            for (let u in users) if (users[u].email === email) return showError(err, 'Email уже зарегистрирован');
+            regData.phone = phone;
+            regData.email = email;
+            regStep = 3;
+            renderRegStep();
+        }
+    };
+    
+    window.prevRegStep = function() { regStep--; renderRegStep(); };
+    
+    window.skip2FA = function() {
+        completeRegistration(null);
+    };
+    
+    window.show2FAForm = function() {
+        const m = document.querySelector('.modal-form');
+        m.innerHTML = `<div class="form-title">2FA защита</div><div id="registerError" class="error-text hidden"></div><select id="twoFAType" class="form-select"><option value="code">Цифровой код (6 цифр)</option></select><input id="twoFAAnswer" class="form-input" placeholder="Введите 6 цифр"><button class="gold-button" onclick="completeRegistrationWith2FA()">Завершить</button><button class="dark-button" onclick="renderRegStep()">Назад</button>`;
+    };
+    
+    window.completeRegistrationWith2FA = function() {
+        const twoFAType = document.getElementById('twoFAType')?.value;
+        const twoFAAnswer = document.getElementById('twoFAAnswer')?.value.trim();
+        const err = document.getElementById('registerError');
+        if (!twoFAAnswer) return showError(err, 'Введите код');
+        if (!/^\d{6}$/.test(twoFAAnswer)) return showError(err, 'Код должен быть 6 цифр');
+        completeRegistration({ type: twoFAType, answer: twoFAAnswer });
+    };
+    
+    function completeRegistration(twoFA) {
+        const { name, username, phone, email, password } = regData;
+        users[username] = { name, email, phone, passwordHash: hashPassword(password), balance: 0, registrationDate: new Date().toISOString(), avatar: null, twoFA };
+        localStorage.setItem('bankUsers', JSON.stringify(users));
+        currentUser = username;
+        bktokBalances[username] = 0;
+        localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances));
+        const userKey = deriveKey(password);
+        userEncryptionKeys[username] = userKey;
+        sessionStorage.setItem(`key_${username}`, userKey);
+        localStorage.setItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
+        removeModals();
+        showMainContent();
+        showWelcomeMessage(name);
+    }
 
     function login() { let u = document.getElementById('loginUsername')?.value.trim(); const p = document.getElementById('loginPassword')?.value; const err = document.getElementById('loginError'); if (!u || !p) return showError(err, 'Заполните поля'); let found = null; if (users[u]) found = u; else { for (let un in users) if (users[un].phone === u) { found = un; break; } } if (!found) return showError(err, 'Пользователь не найден'); const passHash = users[found].passwordHash || hashPassword(users[found].password || ''); if (passHash !== hashPassword(p)) { failedAttempts++; localStorage.setItem('failedAttempts', failedAttempts); updateFailedAttemptsWarning(); if (failedAttempts >= 5) { localStorage.clear(); sessionStorage.clear(); alert("Слишком много попыток! Данные удалены."); window.close(); } return showError(err, 'Неверные данные'); } failedAttempts = 0; localStorage.setItem('failedAttempts', '0'); const userKey = deriveKey(p); userEncryptionKeys[found] = userKey; sessionStorage.setItem(`key_${found}`, userKey); currentUser = found; if (bktokBalances[found] === undefined) { bktokBalances[found] = 0; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); } localStorage.setItem('currentSession', JSON.stringify({username: found, timestamp: Date.now()})); removeModals(); showMainContent(); showWelcomeMessage(users[found].name); }
-    
-    function register() { const name = document.getElementById('regName')?.value.trim(); const username = document.getElementById('regUsername')?.value.trim(); const phone = document.getElementById('regPhone')?.value.trim(); const email = document.getElementById('regEmail')?.value.trim(); const pass = document.getElementById('regPassword')?.value; const twoFAType = document.getElementById('twoFAType')?.value; const twoFAAnswer = document.getElementById('twoFAAnswer')?.value.trim(); const err = document.getElementById('registerError'); if (!name || !username || !phone || !email || !pass || !twoFAAnswer) return showError(err, 'Все поля обязательны'); if (!/^\+7\d{10}$/.test(phone)) return showError(err, 'Телефон: +7XXXXXXXXXX (11 цифр)'); if (pass.length < 6) return showError(err, 'Пароль от 6 символов'); if (users[username]) return showError(err, 'Никнейм занят'); for (let u in users) if (users[u].phone === phone) return showError(err, 'Телефон уже зарегистрирован'); if (twoFAType === 'code' && !/^\d{6}$/.test(twoFAAnswer)) return showError(err, 'Код должен быть 6 цифр'); if (twoFAType === 'year' && !/^\d{4}$/.test(twoFAAnswer)) return showError(err, 'Год должен быть 4 цифры'); if (twoFAType === 'ip' && !/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(twoFAAnswer)) return showError(err, 'Неверный формат IP'); users[username] = { name, email, phone, passwordHash: hashPassword(pass), balance: 0, registrationDate: new Date().toISOString(), avatar: null, twoFA: { type: twoFAType, answer: twoFAAnswer } }; localStorage.setItem('bankUsers', JSON.stringify(users)); currentUser = username; bktokBalances[username] = 0; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); const userKey = deriveKey(pass); userEncryptionKeys[username] = userKey; sessionStorage.setItem(`key_${username}`, userKey); localStorage.setItem('currentSession', JSON.stringify({username, timestamp: Date.now()})); removeModals(); showMainContent(); showWelcomeMessage(name); }
 
     function showMainContent() { document.querySelector('header')?.classList.remove('hidden'); document.querySelector('.main-container')?.classList.remove('hidden'); toggleSection('about'); }
     function showWelcomeMessage(n) { const t = document.createElement('div'); t.className = 'toast-message'; t.innerHTML = `<strong>✨ Добро пожаловать, ${n}!</strong>`; document.body.appendChild(t); setTimeout(() => { t.classList.add('fade-out'); setTimeout(() => t.remove(), 800); }, 3000); }
@@ -389,37 +497,15 @@
         if (!task) return;
         if (!userTasks[currentUser]) userTasks[currentUser] = {};
         const completed = userTasks[currentUser][taskId];
-        if (completed) {
-            if (task.once) return;
-            if (task.cooldown && Date.now() - completed < task.cooldown) return;
-        }
-        // Проверка реального выполнения
-        if (taskId === 'profile') {
-            const u = users[currentUser];
-            if (!u.email || u.email === '' || !u.phone || u.phone === '+70000000000') {
-                alert('Заполните профиль полностью!');
-                return;
-            }
-        }
-        if (taskId === 'avatar') {
-            if (!users[currentUser].avatar) {
-                alert('Установите аватар!');
-                return;
-            }
-        }
-        if (taskId === 'trade') {
-            const hasTrade = bktokTrades.some(t => t.buyer === currentUser || t.seller === currentUser);
-            if (!hasTrade) {
-                alert('Совершите хотя бы одну сделку!');
-                return;
-            }
-        }
+        if (completed) { if (task.once) return; if (task.cooldown && Date.now() - completed < task.cooldown) return; }
+        if (taskId === 'profile') { const u = users[currentUser]; if (!u.email || u.email === '' || !u.phone || u.phone === '+70000000000') { alert('Заполните профиль полностью!'); return; } }
+        if (taskId === 'avatar') { if (!users[currentUser].avatar) { alert('Установите аватар!'); return; } }
+        if (taskId === 'trade') { const hasTrade = bktokTrades.some(t => t.buyer === currentUser || t.seller === currentUser); if (!hasTrade) { alert('Совершите хотя бы одну сделку!'); return; } }
         bktokBalances[currentUser] = (bktokBalances[currentUser] || 0) + task.reward;
         userTasks[currentUser][taskId] = Date.now();
         localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances));
         localStorage.setItem('userTasks', JSON.stringify(userTasks));
-        renderTasks();
-        showWelcomeMessage(`+${task.reward} BK!`);
+        renderTasks(); showWelcomeMessage(`+${task.reward} BK!`);
     };
 
     const cases = [{ name: 'Обычный', price: 50, rewards: [5, 10, 20, 30, 50, 100] }, { name: 'Редкий', price: 200, rewards: [50, 100, 150, 250, 500, 1000] }, { name: 'Легендарный', price: 1000, rewards: [200, 500, 1000, 2000, 5000, 10000] }];
@@ -438,10 +524,8 @@
     
     function showProfile() { 
         if (!currentUser) return;
-        const u = users[currentUser]; 
-        if (!u) return;
-        const c = document.getElementById('profile-section');
-        if (!c) return;
+        const u = users[currentUser]; if (!u) return;
+        const c = document.getElementById('profile-section'); if (!c) return;
         const userBalance = (bktokBalances && bktokBalances[currentUser] !== undefined) ? bktokBalances[currentUser] : 0;
         c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" id="avatarImg" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}</div><button class="logout-btn" onclick="logout()">Выйти</button></div><div class="profile-actions"><button class="profile-action-btn" onclick="showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="exportVault()">📤 Экспорт данных</button><button class="profile-action-btn" onclick="destroyAccount()">⚠️ Удалить аккаунт</button></div><div class="profile-info"><p><strong>📧 Email:</strong> ${u.email || 'Не указан'}</p><p><strong>📱 Телефон:</strong> ${u.phone || 'Не указан'}</p><p><strong>💰 Баланс BK:</strong> ${userBalance} BK</p></div>`;
         c.classList.remove('hidden');
@@ -454,7 +538,6 @@
     window.uploadAvatar = function(event) { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (e) => { users[currentUser].avatar = e.target.result; localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); }; reader.readAsDataURL(file); } };
 
     window.exportVault = function() { const data = { users, bktokBalances, bktokTrades, userTasks, privateChats }; const blob = new Blob([JSON.stringify(data)], {type: 'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `bkbank_vault_${Date.now()}.bkwallet`; a.click(); URL.revokeObjectURL(url); };
-    
     window.destroyAccount = function() { if (confirm('УДАЛИТЬ АККАУНТ БЕЗВОЗВРАТНО?')) { delete users[currentUser]; delete bktokBalances[currentUser]; localStorage.setItem('bankUsers', JSON.stringify(users)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); logout(); } };
 
     function renderSupportPanel() { const c = document.getElementById('support-container'); if (users[currentUser]?.isAdmin || users[currentUser]?.isSupport) { const clients = Object.keys(allSupportChats).filter(u => u !== 'admin' && u !== 'support' && allSupportChats[u]?.length); let h = `<div class="support-panel"><div class="users-list"><h3>👥 Обращения</h3>`; clients.forEach(cl => h += `<div class="user-item ${selectedClient===cl?'active':''}" onclick="selectClient('${cl}')"><strong>${cl}</strong></div>`); h += `</div><div class="chat-area">`; if (selectedClient) { h += `<div class="chat-header"><span>Чат с ${selectedClient}</span><button class="clear-chat-btn" onclick="clearChat('${selectedClient}')">🗑️ Очистить</button></div><div class="support-chat"><div class="chat-messages">`; (allSupportChats[selectedClient] || []).forEach((msg, i) => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':selectedClient}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small><button class="delete-msg-btn" onclick="deleteMessage('${selectedClient}', ${i})">✕</button></div>`); h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Ответить..."><button class="chat-send-btn" onclick="sendOperatorMessage()">Отправить</button></div></div>`; } else h += `<p style="padding:40px;">Выберите пользователя</p>`; h += `</div></div>`; c.innerHTML = h; } else { if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'support', text: 'Здравствуйте! Чем могу помочь?', time: new Date().toISOString() }]; let h = `<div class="support-chat"><div class="chat-messages">`; allSupportChats[currentUser].forEach(msg => h += `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':'Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`); h += `</div><div class="chat-input-area"><input class="chat-input" id="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendClientMessage()">Отправить</button></div></div>`; c.innerHTML = h; } }
