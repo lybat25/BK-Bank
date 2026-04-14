@@ -72,6 +72,8 @@
         .comparison-table { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0; }
         .comparison-item { background: rgba(255,215,0,0.05); border-radius: 20px; padding: 25px; border: 1px solid rgba(255,215,0,0.1); }
         .comparison-item h4 { color: #FFD700; margin-bottom: 15px; font-size: 1.3rem; }
+        .check { color: #FFD700; font-size: 1.2rem; margin-right: 8px; }
+        .cross { color: #ff5e5e; font-size: 1.2rem; margin-right: 8px; }
         .advantage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin: 30px 0; }
         .advantage-card { background: linear-gradient(135deg, rgba(255,215,0,0.05), rgba(255,215,0,0.02)); border: 1px solid rgba(255,215,0,0.15); border-radius: 24px; padding: 25px; transition: all 0.3s; }
         .advantage-card:hover { transform: translateY(-5px); border-color: #FFD700; background: rgba(255,215,0,0.08); }
@@ -169,15 +171,15 @@
         <div class="comparison-table">
             <div class="comparison-item">
                 <h4>Обычный токен (спекулятивный)</h4>
-                <p>❌ Цена зависит от новостей, хайпа и крупных держателей («китов»).</p>
-                <p>❌ Рост часто искусственный, за которым следует резкое падение («памп и дамп»).</p>
-                <p>❌ Ценность эфемерна.</p>
+                <p><span class="cross">✖</span> Цена зависит от новостей, хайпа и крупных держателей («китов»).</p>
+                <p><span class="cross">✖</span> Рост часто искусственный, за которым следует резкое падение («памп и дамп»).</p>
+                <p><span class="cross">✖</span> Ценность эфемерна.</p>
             </div>
             <div class="comparison-item">
                 <h4>BK-Token (трудовой)</h4>
-                <p>✅ Цена зависит от количества выполненных заданий и притока новых деятельных участников.</p>
-                <p>✅ Рост органический и постепенный. Каждый новый пользователь увеличивает «трудовую массу», стоящую за токеном.</p>
-                <p>✅ Ценность обеспечена реальной работой тысяч людей.</p>
+                <p><span class="check">✔</span> Цена зависит от количества выполненных заданий и притока новых деятельных участников.</p>
+                <p><span class="check">✔</span> Рост органический и постепенный. Каждый новый пользователь увеличивает «трудовую массу», стоящую за токеном.</p>
+                <p><span class="check">✔</span> Ценность обеспечена реальной работой тысяч людей.</p>
             </div>
         </div>
         
