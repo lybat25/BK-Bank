@@ -24,8 +24,8 @@
         body.light-theme p, body.light-theme li, body.light-theme span, body.light-theme div { color: #0a0a0a; }
         body.light-theme strong { color: #000; }
         body.light-theme .token-balance { color: #0a0a0a; }
-        body.light-theme .buy { color: #006400; }
-        body.light-theme .sell { color: #8b0000; }
+        body.light-theme .buy { color: #0a0a0a; }
+        body.light-theme .sell { color: #0a0a0a; }
         body.light-theme .chat-message.client { background: rgba(0,0,0,0.1); color: #0a0a0a; }
         body.light-theme .chat-message.support { background: rgba(0,0,0,0.05); color: #0a0a0a; }
         body.light-theme .form-input { background: rgba(0,0,0,0.05); border: 1.5px solid rgba(0,0,0,0.2); color: #0a0a0a; }
@@ -113,8 +113,8 @@
         body.light-theme .form-select option { background: #FFD700; color: #0a0a0a; }
         .gold-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 60px; font-weight: 700; cursor: pointer; margin-top: 10px; color: #0a0a0a; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(255,215,0,0.2); }
         .gold-button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255,215,0,0.35); }
-        .danger-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #ff4444, #cc0000); border: none; border-radius: 60px; font-weight: 700; cursor: pointer; margin-top: 10px; color: white; transition: all 0.3s ease; }
-        .danger-button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255,0,0,0.3); }
+        .dark-button { width: 100%; padding: 16px; background: linear-gradient(135deg, #0a0a0a, #333); border: none; border-radius: 60px; font-weight: 700; cursor: pointer; margin-top: 10px; color: #FFD700; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .dark-button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
         .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 15px 0; cursor: pointer; transition: all 0.2s; }
         .text-link:hover { color: #FFE44D !important; text-decoration: underline !important; }
         .toast-message { position: fixed; top: 100px; right: 30px; background: rgba(20,20,20,0.95); backdrop-filter: blur(20px); border-left: 6px solid #FFD700; padding: 20px 30px; border-radius: 60px 16px 16px 60px; z-index: 9998; box-shadow: 0 20px 40px rgba(0,0,0,0.5); animation: slideIn 0.4s ease; }
@@ -123,19 +123,19 @@
         .fade-out { opacity: 0; transition: opacity 0.8s ease; }
         .hidden { display: none !important; }
         .error-text { color: #ff5e5e; }
-        .profile-header { display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255,215,0,0.03); border-radius: 40px; flex-wrap: wrap; }
-        .profile-avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #FFD700; object-fit: cover; cursor: pointer; transition: all 0.3s ease; }
+        .profile-header { display: flex; align-items: center; gap: 20px; padding: 25px; background: rgba(255,215,0,0.03); border-radius: 40px; flex-wrap: wrap; margin-bottom: 30px; }
+        .profile-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #FFD700; object-fit: cover; cursor: pointer; transition: all 0.3s ease; }
         .profile-avatar:hover { transform: scale(1.05); border-color: #FFE44D; }
         body.light-theme .profile-avatar { border: 3px solid #0a0a0a; }
-        .logout-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 10px 24px; border-radius: 40px; cursor: pointer; transition: all 0.2s; }
+        .logout-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 12px 28px; border-radius: 40px; cursor: pointer; transition: all 0.2s; font-weight: 600; }
         .logout-btn:hover { background: #FFD700; color: #0a0a0a; }
         body.light-theme .logout-btn { border: 1.5px solid #0a0a0a; color: #0a0a0a; }
         body.light-theme .logout-btn:hover { background: #0a0a0a; color: #FFD700; }
-        .edit-profile-btn { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 10px 20px; border-radius: 30px; cursor: pointer; margin-top: 15px; transition: all 0.2s; }
-        .edit-profile-btn:hover { background: rgba(255,215,0,0.1); }
-        body.light-theme .edit-profile-btn { border: 1px solid #0a0a0a; color: #0a0a0a; }
-        .export-btn { background: transparent; border: 1px solid #4ade80; color: #4ade80; padding: 10px 20px; border-radius: 30px; cursor: pointer; margin-top: 15px; margin-left: 10px; transition: all 0.2s; }
-        .export-btn:hover { background: rgba(74,222,128,0.1); }
+        .profile-actions { display: flex; flex-direction: column; gap: 15px; margin: 25px 0; }
+        .profile-action-btn { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 14px 24px; border-radius: 40px; cursor: pointer; transition: all 0.2s; font-weight: 500; text-align: left; width: 100%; }
+        .profile-action-btn:hover { background: rgba(255,215,0,0.1); transform: translateX(5px); }
+        body.light-theme .profile-action-btn { border: 1px solid #0a0a0a; color: #0a0a0a; }
+        body.light-theme .profile-action-btn:hover { background: rgba(0,0,0,0.05); }
         .support-panel { display: flex; gap: 20px; }
         .users-list { width: 260px; background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; }
         .user-item { padding: 12px; margin-bottom: 8px; background: rgba(255,215,0,0.05); border-radius: 10px; cursor: pointer; transition: all 0.2s; }
@@ -162,8 +162,8 @@
         .delete-msg-btn { position: absolute; top: 5px; right: 5px; width: 22px; height: 22px; background: rgba(255,100,100,0.5); border: none; border-radius: 50%; color: white; font-size: 14px; cursor: pointer; display: none; align-items: center; justify-content: center; transition: all 0.2s; }
         .delete-msg-btn:hover { background: #ff4444; }
         .chat-message:hover .delete-msg-btn { display: flex; }
-        .profile-info { margin: 25px 0; }
-        .profile-info p { margin: 15px 0; font-size: 1.1rem; }
+        .profile-info { margin: 25px 0; padding: 20px; background: rgba(255,215,0,0.03); border-radius: 20px; }
+        .profile-info p { margin: 15px 0; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
         .edit-field { margin-bottom: 25px; }
         .token-balance { font-size: 2rem; color: #FFD700; margin: 20px 0; }
         body.light-theme .token-balance { color: #0a0a0a; }
@@ -171,19 +171,21 @@
         .order-side { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; }
         .order-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid rgba(255,215,0,0.1); animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .buy { color: #4ade80; }
-        .sell { color: #ff5e5e; }
-        body.light-theme .buy { color: #006400; }
-        body.light-theme .sell { color: #8b0000; }
+        .buy { color: #FFD700; }
+        .sell { color: #FFD700; }
+        body.light-theme .buy { color: #0a0a0a; }
+        body.light-theme .sell { color: #0a0a0a; }
         .chart-container { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px; margin: 20px 0; height: 200px; display: flex; align-items: flex-end; gap: 4px; }
-        .chart-candle { flex: 1; background: #4ade80; min-height: 1px; border-radius: 2px; transition: height 0.3s; }
-        .chart-candle.red { background: #ff5e5e; }
+        .chart-candle { flex: 1; background: #FFD700; min-height: 1px; border-radius: 2px; transition: height 0.3s; }
+        .chart-candle.red { background: #0a0a0a; }
+        body.light-theme .chart-candle { background: #0a0a0a; }
+        body.light-theme .chart-candle.red { background: #555; }
         .tasks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
         .task-item { background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.1); border-radius: 15px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; }
         .task-item:hover { background: rgba(255,215,0,0.1); border-color: #FFD700; transform: translateY(-3px); }
         .task-item.completed { opacity: 0.5; cursor: not-allowed; }
         .task-item.completed:hover { transform: none; }
-        .task-reward { color: #4ade80; font-weight: 700; margin-top: 10px; }
+        .task-reward { color: #FFD700; font-weight: 700; margin-top: 10px; }
         .cases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0; }
         .case-item { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,215,0,0.05)); border: 2px solid rgba(255,215,0,0.3); border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: all 0.3s; }
         .case-item:hover { transform: scale(1.05); border-color: #FFD700; box-shadow: 0 0 30px rgba(255,215,0,0.3); }
@@ -256,12 +258,12 @@
         </div>
         <div class="chart-container" id="price-chart"></div>
         <div class="order-book">
-            <div class="order-side"><h3 style="color:#4ade80;">Покупка</h3><div id="buy-orders"></div></div>
-            <div class="order-side"><h3 style="color:#ff5e5e;">Продажа</h3><div id="sell-orders"></div></div>
+            <div class="order-side"><h3>Покупка</h3><div id="buy-orders"></div></div>
+            <div class="order-side"><h3>Продажа</h3><div id="sell-orders"></div></div>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
             <div><input type="number" id="order-price" class="form-input" placeholder="Цена BK" style="margin-bottom:10px;"><input type="number" id="order-amount" class="form-input" placeholder="Количество BK"></div>
-            <div style="display: flex; gap: 10px;"><button class="gold-button" onclick="createOrder('buy')" style="background:#4ade80;">Купить</button><button class="gold-button" onclick="createOrder('sell')" style="background:#ff5e5e;">Продать</button></div>
+            <div style="display: flex; gap: 10px;"><button class="gold-button" onclick="createOrder('buy')">Купить</button><button class="dark-button" onclick="createOrder('sell')">Продать</button></div>
         </div>
         <h3 style="margin-top:30px;">Мои ордера</h3><div id="my-orders"></div>
     </div>
@@ -304,7 +306,6 @@
     
     let users = (() => { try { return JSON.parse(localStorage.getItem('bankUsers')) || {}; } catch(e) { return {}; } })();
     
-    // Исправление старых аккаунтов - добавляем недостающие поля
     let needsSave = false;
     for (let u in users) {
         if (!users[u].hasOwnProperty('avatar')) { users[u].avatar = null; needsSave = true; }
@@ -406,11 +407,11 @@
         const c = document.getElementById('profile-section');
         if (!c) return;
         const userBalance = (bktokBalances && bktokBalances[currentUser] !== undefined) ? bktokBalances[currentUser] : 0;
-        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" id="avatarImg" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}</div><button class="logout-btn" onclick="logout()">Выйти</button></div><button class="edit-profile-btn" onclick="showEditProfileForm()">✏️ Редактировать</button><button class="export-btn" onclick="exportVault()">📤 Экспорт</button><button class="danger-button" onclick="destroyAccount()" style="width:auto; margin-top:15px;">⚠️ Удалить аккаунт</button><div class="profile-info"><p><strong>Email:</strong> ${u.email || 'Не указан'}</p><p><strong>Телефон:</strong> ${u.phone || 'Не указан'}</p><p><strong>Баланс BK:</strong> ${userBalance} BK</p></div>`;
+        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" id="avatarImg" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}</div><button class="logout-btn" onclick="logout()">Выйти</button></div><div class="profile-actions"><button class="profile-action-btn" onclick="showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="exportVault()">📤 Экспорт данных</button><button class="profile-action-btn" onclick="destroyAccount()">⚠️ Удалить аккаунт</button></div><div class="profile-info"><p><strong>📧 Email:</strong> ${u.email || 'Не указан'}</p><p><strong>📱 Телефон:</strong> ${u.phone || 'Не указан'}</p><p><strong>💰 Баланс BK:</strong> ${userBalance} BK</p></div>`;
         c.classList.remove('hidden');
     }
     
-    function showEditProfileForm() { const u = users[currentUser]; const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Редактирование</div><div class="edit-field"><input id="editName" class="form-input" placeholder="Имя" value="${u.name || ''}"></div><div class="edit-field"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email || ''}"></div><div class="edit-field"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone || ''}"></div><div class="edit-field"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль (оставьте пустым)"></div><button class="gold-button" onclick="saveProfile()">Сохранить</button><button class="gold-button" onclick="removeModals(); showProfile();" style="margin-top:10px;">Отмена</button>`; document.body.appendChild(m); }
+    function showEditProfileForm() { const u = users[currentUser]; const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Редактирование</div><div class="edit-field"><input id="editName" class="form-input" placeholder="Имя" value="${u.name || ''}"></div><div class="edit-field"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email || ''}"></div><div class="edit-field"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone || ''}"></div><div class="edit-field"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль (оставьте пустым)"></div><button class="gold-button" onclick="saveProfile()">Сохранить</button><button class="dark-button" onclick="removeModals(); showProfile();">Отмена</button>`; document.body.appendChild(m); }
     
     window.saveProfile = function() { const name = document.getElementById('editName')?.value.trim(); const email = document.getElementById('editEmail')?.value.trim(); const phone = document.getElementById('editPhone')?.value.trim(); const pass = document.getElementById('editPassword')?.value; if (name) users[currentUser].name = name; if (email) users[currentUser].email = email; if (phone && /^\+7\d{10}$/.test(phone)) users[currentUser].phone = phone; if (pass && pass.length >= 6) { users[currentUser].passwordHash = hashPassword(pass); const newKey = deriveKey(pass); userEncryptionKeys[currentUser] = newKey; sessionStorage.setItem(`key_${currentUser}`, newKey); } localStorage.setItem('bankUsers', JSON.stringify(users)); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!'); };
     
