@@ -390,9 +390,10 @@
     
     function showProfile() { 
         const u = users[currentUser]; 
-        if (!u) return;
+        if (!u) { console.error('User not found'); return; }
         const c = document.getElementById('profile-section');
-        const userBalance = bktokBalances[currentUser] !== undefined ? bktokBalances[currentUser] : 0;
+        if (!c) { console.error('Profile section not found'); return; }
+        const userBalance = (bktokBalances && bktokBalances[currentUser] !== undefined) ? bktokBalances[currentUser] : 0;
         c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" id="avatarImg" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}</div><button class="logout-btn" onclick="logout()">Выйти</button></div><button class="edit-profile-btn" onclick="showEditProfileForm()">✏️ Редактировать</button><button class="export-btn" onclick="exportVault()">📤 Экспорт</button><button class="danger-button" onclick="destroyAccount()" style="width:auto; margin-top:15px;">⚠️ Удалить аккаунт</button><div class="profile-info"><p><strong>Email:</strong> ${u.email}</p><p><strong>Телефон:</strong> ${u.phone || 'Не указан'}</p><p><strong>Баланс BK:</strong> ${userBalance} BK</p></div>`;
         c.classList.remove('hidden');
     }
