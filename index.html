@@ -77,7 +77,9 @@
         h2 { font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 15px; }
         body.light-theme h2 { background: linear-gradient(135deg, #0a0a0a, #333); -webkit-background-clip: text; background-clip: text; color: transparent; }
         h3 { font-size: 1.4rem; font-weight: 600; color: #FFD700; margin: 20px 0 15px; }
+        body.light-theme h3 { color: #0a0a0a; }
         .divider { height: 3px; width: 60px; background: linear-gradient(90deg, #FFD700, transparent); border-radius: 4px; margin-bottom: 20px; }
+        body.light-theme .divider { background: linear-gradient(90deg, #0a0a0a, transparent); }
         p, li, span, div { color: #ffffff; line-height: 1.6; font-size: 0.95rem; }
         .highlight { color: #FFD700; font-weight: 600; }
         
@@ -90,21 +92,25 @@
         
         /* ПРЕИМУЩЕСТВА */
         .advantage-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin: 20px 0; }
-        .advantage-card { background: linear-gradient(135deg, rgba(255,215,0,0.05), rgba(255,215,0,0.02)); border: 1px solid rgba(255,215,0,0.15); border-radius: 16px; padding: 18px; transition: all 0.3s; }
+        .advantage-card { background: linear-gradient(135deg, rgba(255,215,0,0.05), rgba(255,215,0,0.02)); border: 1px solid rgba(255,215,0,0.15); border-radius: 16px; padding: 18px; transition: all 0.3s; position: relative; overflow: hidden; }
+        .advantage-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, transparent, rgba(255,215,0,0.05)); opacity: 0; transition: opacity 0.3s; }
         .advantage-card:hover { transform: translateY(-3px); border-color: #FFD700; }
+        .advantage-card:hover::before { opacity: 1; }
         .advantage-card h4 { color: #FFD700; font-size: 1.1rem; margin-bottom: 10px; }
         
         /* ШАГИ */
         .steps-container { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
         .step-item { flex: 1; min-width: 140px; background: rgba(255,215,0,0.03); border-radius: 16px; padding: 18px; text-align: center; border: 1px solid rgba(255,215,0,0.1); transition: all 0.3s; }
         .step-item:hover { transform: translateY(-5px); border-color: #FFD700; box-shadow: 0 15px 25px -10px rgba(255,215,0,0.2); }
-        .step-number { width: 40px; height: 40px; background: #FFD700; color: #0a0a0a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700; margin: 0 auto 15px; }
+        .step-number { width: 40px; height: 40px; background: #FFD700; color: #0a0a0a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700; margin: 0 auto 15px; transition: all 0.3s; }
         .step-item:hover .step-number { transform: scale(1.1); box-shadow: 0 0 15px #FFD700; }
         
         /* УСЛУГИ */
         .services-list { list-style: none; }
-        .services-list li { padding: 14px; margin: 8px 0; background: rgba(255,215,0,0.02); border-radius: 40px; transition: all 0.3s; cursor: default; font-size: 0.95rem; }
+        .services-list li { padding: 14px; margin: 8px 0; background: rgba(255,215,0,0.02); border-radius: 40px; transition: all 0.3s; cursor: default; font-size: 0.95rem; position: relative; overflow: hidden; }
+        .services-list li::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,215,0,0.05), transparent); transform: translateX(-100%); transition: transform 0.5s; }
         .services-list li:hover { background: rgba(255,215,0,0.06); transform: translateX(8px); }
+        .services-list li:hover::before { transform: translateX(100%); }
         
         /* КАРТЫ */
         .cards-stack { display: flex; justify-content: center; margin: 30px 0; position: relative; min-height: 350px; perspective: 1200px; }
@@ -136,10 +142,13 @@
         .form-title { font-size: 1.8rem; color: #FFD700; text-align: center; margin-bottom: 25px; font-weight: 700; }
         .form-input { width: 100%; padding: 14px; margin-bottom: 15px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,215,0,0.2); border-radius: 40px; color: white; font-size: 0.95rem; transition: all 0.2s; }
         .form-input:focus { border-color: #FFD700; outline: none; box-shadow: 0 0 0 3px rgba(255,215,0,0.1); }
-        .gold-button { width: 100%; padding: 14px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 40px; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 10px; color: #0a0a0a; transition: all 0.3s; }
+        .gold-button { width: 100%; padding: 14px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 40px; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 10px; color: #0a0a0a; transition: all 0.3s; position: relative; overflow: hidden; }
+        .gold-button::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.5s; }
         .gold-button:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255,215,0,0.3); }
+        .gold-button:hover::before { left: 100%; }
         .dark-button { width: 100%; padding: 14px; background: #333; border: none; border-radius: 40px; font-weight: 700; cursor: pointer; margin-top: 8px; color: #FFD700; }
-        .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 12px 0; cursor: pointer; font-size: 0.9rem; }
+        .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 12px 0; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
+        .text-link:hover { color: #FFE44D !important; text-decoration: underline; }
         .toast-message { position: fixed; top: 80px; right: 15px; background: rgba(20,20,20,0.95); border-left: 5px solid #FFD700; padding: 15px 20px; border-radius: 40px; z-index: 9997; animation: slideIn 0.4s ease; font-size: 0.9rem; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
         .hidden { display: none !important; }
@@ -149,12 +158,17 @@
         .step-dot.active { background: #FFD700; width: 25px; border-radius: 10px; box-shadow: 0 0 10px #FFD700; }
         .step-dot.completed { background: #FFD700; }
         .profile-header { display: flex; align-items: center; gap: 15px; padding: 18px; background: rgba(255,215,0,0.03); border-radius: 30px; flex-wrap: wrap; margin-bottom: 20px; }
-        .profile-avatar { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #FFD700; object-fit: cover; cursor: pointer; }
+        .profile-avatar { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #FFD700; object-fit: cover; cursor: pointer; transition: all 0.3s; }
+        .profile-avatar:hover { transform: scale(1.05); border-color: #FFE44D; box-shadow: 0 0 20px rgba(255,215,0,0.4); }
         .profile-info { padding: 15px; background: rgba(255,215,0,0.03); border-radius: 16px; }
         .token-balance { font-size: 1.8rem; color: #FFD700; }
         .blur-content { filter: blur(5px); pointer-events: none; user-select: none; }
-        .cta-section { text-align: center; margin-top: 30px; padding: 20px; background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.02)); border-radius: 30px; border: 1px solid rgba(255,215,0,0.2); }
-        .cta-button { background: linear-gradient(135deg, #FFD700, #FFB300); border: none; padding: 14px 30px; border-radius: 40px; font-weight: 700; font-size: 1rem; cursor: pointer; color: #0a0a0a; transition: all 0.3s; display: inline-block; margin-top: 15px; }
+        .cta-section { text-align: center; margin-top: 30px; padding: 20px; background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.02)); border-radius: 30px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s; }
+        .cta-section:hover { border-color: #FFD700; transform: scale(1.01); }
+        .cta-button { background: linear-gradient(135deg, #FFD700, #FFB300); border: none; padding: 14px 30px; border-radius: 40px; font-weight: 700; font-size: 1rem; cursor: pointer; color: #0a0a0a; transition: all 0.3s; display: inline-block; margin-top: 15px; position: relative; overflow: hidden; }
+        .cta-button::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: left 0.6s; }
+        .cta-button:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 20px 40px rgba(255,215,0,0.4); }
+        .cta-button:hover::before { left: 100%; }
         
         /* АДАПТИВ ДЛЯ ПЛАНШЕТОВ И ДЕСКТОПОВ */
         @media (min-width: 640px) {
@@ -204,7 +218,7 @@
     <div class="logo-wrapper">
         <img src="png/2025-01-31_14-13-47-Photoroom.png" class="logo-img" alt="BK-Bank">
         <span class="bank-name">BK-Bank</span>
-        <button class="theme-toggle" onclick="window.toggleTheme()">🌙</button>
+        <button class="theme-toggle" onclick="window.toggleTheme()">🌙 Тема</button>
     </div>
     <nav class="nav-links">
         <button class="nav-link" onclick="window.toggleSection('about')">Главная</button>
@@ -268,9 +282,11 @@
             <div class="step-item"><div class="step-number">4</div><h4>Рост</h4><p>Наблюдайте</p></div>
         </div>
         
-        <div class="cta-section">
+        <!-- CTA-блок только для гостей -->
+        <div class="cta-section" id="guest-cta">
             <h2 style="font-size: 1.8rem;">BK-BANK: ВАШ ТРУД — НАША ВАЛЮТА</h2>
             <p>Присоединяйтесь к BK-Bank сегодня. Превратите свою ежедневную активность в растущий капитал.</p>
+            <p style="margin-top: 10px; color: #FFD700;"><strong>BK-Bank. Ваш надёжный финансовый партнёр. Создавайте ценность. Управляйте будущим.</strong></p>
             <button class="cta-button" onclick="window.showRegistrationForm()">✨ Открыть счёт ✨</button>
         </div>
     </div>
@@ -390,8 +406,10 @@
 
     function updateUIForAuth() {
         const authBtns = document.getElementById('auth-buttons'), profileBtn = document.getElementById('profile-btn-header');
+        const guestCta = document.getElementById('guest-cta');
         if (currentUser) {
             authBtns.classList.add('hidden'); profileBtn.classList.remove('hidden');
+            if (guestCta) guestCta.classList.add('hidden');
             const u = users[currentUser];
             document.getElementById('header-username').textContent = u.name || currentUser;
             if (u.avatar) document.getElementById('header-avatar').src = u.avatar;
@@ -401,6 +419,7 @@
             });
         } else {
             authBtns.classList.remove('hidden'); profileBtn.classList.add('hidden');
+            if (guestCta) guestCta.classList.remove('hidden');
             ['bktok','tasks','cases','chats'].forEach(s => {
                 document.getElementById(s+'-guest-message')?.classList.remove('hidden');
                 document.getElementById(s+'-content')?.classList.add('blur-content', 'hidden');
