@@ -13,7 +13,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; height: 100%; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; overflow-x: hidden; line-height: 1.5; -webkit-font-smoothing: antialiased; min-height: 100vh; transition: background 0.3s; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; transition: background 0.3s; }
         body.light-theme { background: #FFD700; }
         body.light-theme .glass-header { background: rgba(255, 215, 0, 0.9); border-bottom: 1px solid #0a0a0a; }
         body.light-theme .bank-name { background: linear-gradient(135deg, #0a0a0a, #333); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -59,23 +59,31 @@
         .main-container { max-width: 1300px; margin: 30px auto; padding: 0 24px; }
         .content-card { background: rgba(25, 25, 25, 0.75); backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.12); border-radius: 32px; padding: 36px; margin-bottom: 30px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); animation: fadeInUp 0.6s ease-out; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        h2 { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        h2 { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 20px; }
         body.light-theme h2 { background: linear-gradient(135deg, #0a0a0a, #333); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        h3 { font-size: 1.8rem; font-weight: 600; color: #FFD700; margin: 30px 0 20px; }
+        body.light-theme h3 { color: #0a0a0a; }
         .divider { height: 4px; width: 80px; background: linear-gradient(90deg, #FFD700, transparent); border-radius: 4px; margin-bottom: 32px; }
         body.light-theme .divider { background: linear-gradient(90deg, #0a0a0a, transparent); }
-        p, li, span, div { color: #ffffff; }
+        p, li, span, div { color: #ffffff; line-height: 1.7; }
         a, .text-link { color: #FFD700 !important; text-decoration: none; }
         body.light-theme a, body.light-theme .text-link { color: #0a0a0a !important; }
-        
-        /* Затемнение фона для модальных окон */
+        .highlight { color: #FFD700; font-weight: 600; }
+        .comparison-table { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0; }
+        .comparison-item { background: rgba(255,215,0,0.05); border-radius: 20px; padding: 25px; border: 1px solid rgba(255,215,0,0.1); }
+        .comparison-item h4 { color: #FFD700; margin-bottom: 15px; font-size: 1.3rem; }
+        .advantage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin: 30px 0; }
+        .advantage-card { background: linear-gradient(135deg, rgba(255,215,0,0.05), rgba(255,215,0,0.02)); border: 1px solid rgba(255,215,0,0.15); border-radius: 24px; padding: 25px; transition: all 0.3s; }
+        .advantage-card:hover { transform: translateY(-5px); border-color: #FFD700; background: rgba(255,215,0,0.08); }
+        .advantage-card h4 { color: #FFD700; font-size: 1.3rem; margin-bottom: 15px; }
+        .steps-container { display: flex; flex-wrap: wrap; gap: 20px; margin: 30px 0; }
+        .step-item { flex: 1; min-width: 200px; background: rgba(255,215,0,0.03); border-radius: 20px; padding: 25px; text-align: center; border: 1px solid rgba(255,215,0,0.1); }
+        .step-number { width: 50px; height: 50px; background: #FFD700; color: #0a0a0a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; margin: 0 auto 20px; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 9998; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-form { background: rgba(20,20,20,0.98); backdrop-filter: blur(25px); border: 1px solid rgba(255,215,0,0.3); border-radius: 50px; padding: 45px; width: 450px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; max-height: 90vh; overflow-y: auto; animation: modalPop 0.4s; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
         @keyframes modalPop { from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
-        body.light-theme .modal-overlay { background: rgba(0,0,0,0.7); }
-        body.light-theme .modal-form { background: rgba(255,215,0,0.98); border: 1px solid rgba(0,0,0,0.2); }
         .form-title { font-size: 2.2rem; color: #FFD700; text-align: center; margin-bottom: 35px; font-weight: 700; }
-        body.light-theme .form-title { color: #0a0a0a; }
         .form-input { width: 100%; padding: 18px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,215,0,0.2); border-radius: 60px; color: white; font-size: 1rem; }
         .form-input:focus { border-color: #FFD700; outline: none; }
         .gold-button { width: 100%; padding: 18px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 60px; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 15px; color: #0a0a0a; }
@@ -83,15 +91,12 @@
         .dark-button { width: 100%; padding: 16px; background: #333; border: none; border-radius: 60px; font-weight: 700; cursor: pointer; margin-top: 10px; color: #FFD700; }
         .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 15px 0; cursor: pointer; }
         .toast-message { position: fixed; top: 100px; right: 30px; background: rgba(20,20,20,0.95); border-left: 6px solid #FFD700; padding: 20px 30px; border-radius: 60px; z-index: 9997; }
-        body.light-theme .toast-message { background: rgba(255,215,0,0.95); border-left: 6px solid #0a0a0a; }
         .hidden { display: none !important; }
         .error-text { color: #ff5e5e; }
         .step-indicator { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
         .step-dot { width: 12px; height: 12px; border-radius: 50%; background: #333; transition: all 0.3s; }
         .step-dot.active { background: #FFD700; width: 30px; border-radius: 10px; }
         .step-dot.completed { background: #FFD700; }
-        body.light-theme .step-dot { background: #ccc; }
-        body.light-theme .step-dot.active, body.light-theme .step-dot.completed { background: #0a0a0a; }
         .profile-header { display: flex; align-items: center; gap: 20px; padding: 25px; background: rgba(255,215,0,0.03); border-radius: 40px; flex-wrap: wrap; margin-bottom: 30px; }
         .profile-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #FFD700; object-fit: cover; cursor: pointer; }
         .profile-info { padding: 20px; background: rgba(255,215,0,0.03); border-radius: 20px; }
@@ -101,13 +106,10 @@
         .stack-card img { width: 100%; border-radius: 20px; border: 2px solid rgba(255,215,0,0.3); mix-blend-mode: lighten; transition: all 0.3s; }
         body.light-theme .stack-card img { mix-blend-mode: normal; border: 2px solid rgba(0,0,0,0.3); }
         .stack-card:hover img { border-color: #FFD700; box-shadow: 0 0 35px rgba(255,215,0,0.25); }
-        .chart-container { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 25px; margin: 25px 0; }
-        .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 220px; padding: 10px 0; }
-        .chart-bar-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .chart-bar { width: 100%; background: linear-gradient(180deg, #FFD700, #FFA500); border-radius: 8px 8px 4px 4px; min-height: 2px; transition: height 0.5s; }
-        .chart-bar.red { background: linear-gradient(180deg, #ff5e5e, #cc0000); }
-        .chart-bar-value { font-size: 0.85rem; font-weight: 600; color: #FFD700; }
         .blur-content { filter: blur(5px); pointer-events: none; user-select: none; }
+        .cta-section { text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.02)); border-radius: 40px; border: 1px solid rgba(255,215,0,0.2); }
+        .cta-button { background: linear-gradient(135deg, #FFD700, #FFB300); border: none; padding: 18px 45px; border-radius: 60px; font-weight: 700; font-size: 1.2rem; cursor: pointer; color: #0a0a0a; transition: all 0.3s; display: inline-block; margin-top: 20px; }
+        .cta-button:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 20px 40px rgba(255,215,0,0.4); }
     </style>
 </head>
 <body>
@@ -143,31 +145,129 @@
 
 <main class="main-container">
     <div id="about-section" class="content-card">
-        <h2>Ваш надёжный финансовый партнёр</h2>
+        <h2>BK-BANK<br><span style="font-size: 1.5rem;">Банк, в котором ваш труд становится валютой</span></h2>
         <div class="divider"></div>
-        <p style="font-size: 1.2rem;"><strong>В BK-Bank мы понимаем, что каждая покупка — это не просто транзакция, а часть Вашей жизни.</strong></p>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin: 30px 0;">
-            <div><img src="png/2025-01-30_15-13-31-Photoroom.png" style="width:100%; border-radius:14px;" alt="Карта"></div>
-            <div><img src="png/2025-01-30_15-58-26-Photoroom.png" style="width:100%; border-radius:14px;" alt="Карта"></div>
-            <div><img src="png/2025-01-30_21-48-25-Photoroom.png" style="width:100%; border-radius:14px;" alt="Карта"></div>
-            <div><img src="png/2025-01-30_22-57-01-Photoroom.png" style="width:100%; border-radius:14px;" alt="Карта"></div>
+        
+        <p style="font-size: 1.2rem; margin-bottom: 30px;"><strong>Ваш надёжный финансовый партнёр в мире, где ценность создаётся не печатным станком, а реальными действиями живых людей.</strong></p>
+        
+        <p>В BK-Bank мы понимаем: каждая покупка — это не просто транзакция, а часть Вашей жизни. Но мы пошли дальше. Мы первые, кто сказал: <span class="highlight">ваше время, ваше внимание и ваш ежедневный труд — это актив</span>. И мы научились превращать этот актив в реальную, растущую в цене валюту.</p>
+        
+        <p style="margin-top: 20px;"><strong>Добро пожаловать в первую в мире экосистему Labor-Backed Finance (Финансы, обеспеченные трудом).</strong></p>
+        
+        <h3>BK-TOKEN: ЭКОНОМИКА, ПОСТРОЕННАЯ НА ВАШИХ УСИЛИЯХ</h3>
+        
+        <p>Всё гениальное просто. В традиционной экономике вы работаете — вам платят зарплату. В криптоэкономике вы покупаете токен в надежде, что он вырастет. Мы объединили эти две модели и убрали слабое звено — спекуляцию.</p>
+        
+        <h4 style="color: #FFD700; margin: 25px 0 15px;">Как это работает?</h4>
+        
+        <p><span class="highlight">Токен даётся за задания.</span> Вы не покупаете BK-Token на бирже за свои кровные. Вы получаете его бесплатно, просто будучи активным участником экосистемы BK-Bank. Ежедневные задания, обучение финансовой грамотности, участие в опросах, приглашение друзей, верификация аккаунта, создание контента о банке — всё это приносит вам токены.</p>
+        
+        <p style="margin-top: 20px;"><span class="highlight">Цена строится из части труда.</span> В этом заключается наша фундаментальная инновация. Каждый выпущенный BK-Token — это не просто «напечатанная» цифра. Это оцифрованная и зафиксированная в блокчейне единица человеческого усилия. Выполняя задание, вы вкладываете в токен свой самый ценный и невосполнимый ресурс — время.</p>
+        
+        <p style="margin-top: 20px;">Вот почему цена BK-Token растёт иначе, чем у 99% криптовалют на рынке:</p>
+        
+        <div class="comparison-table">
+            <div class="comparison-item">
+                <h4>Обычный токен (спекулятивный)</h4>
+                <p>❌ Цена зависит от новостей, хайпа и крупных держателей («китов»).</p>
+                <p>❌ Рост часто искусственный, за которым следует резкое падение («памп и дамп»).</p>
+                <p>❌ Ценность эфемерна.</p>
+            </div>
+            <div class="comparison-item">
+                <h4>BK-Token (трудовой)</h4>
+                <p>✅ Цена зависит от количества выполненных заданий и притока новых деятельных участников.</p>
+                <p>✅ Рост органический и постепенный. Каждый новый пользователь увеличивает «трудовую массу», стоящую за токеном.</p>
+                <p>✅ Ценность обеспечена реальной работой тысяч людей.</p>
+            </div>
         </div>
-        <div style="margin-top:40px; padding:30px; background:rgba(255,215,0,0.03); border-radius:24px;">
-            <h3 style="color:#FFD700; text-align:center;">Наши преимущества</h3>
-            <div style="font-size:1.4rem; color:#fff; text-align:center; font-style:italic; font-weight:700; margin:25px 0;">«Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление.»</div>
-            <div style="text-align:center;"><strong>Мы гордимся тем, что предоставляем нашим клиентам не только услуги, но и возможность управлять своими финансами с уверенностью.</strong></div>
+        
+        <p style="margin-top: 20px;"><span class="highlight">Это экономика, где ваш ежедневный труд — это майнинг.</span> Вам не нужно дорогое оборудование и киловатты электричества. Ваш «майнер» — это ваше внимание и желание развиваться. Ваш «хешрейт» — это скорость выполнения заданий. Чем больше людей вовлечено в экосистему, чем сложнее и ценнее становятся задания, тем прочнее фундамент стоимости BK-Token.</p>
+        
+        <h3>ФИЛОСОФИЯ BK-BANK: НЕ ПРЯЧЕТ. ОФОРМЛЯЕТ. ВОЗНАГРАЖДАЕТ.</h3>
+        
+        <p>Помните наш манифест? Пришло время его расширить.</p>
+        
+        <div style="background: rgba(255,215,0,0.05); padding: 25px; border-radius: 20px; margin: 20px 0;">
+            <p style="font-size: 1.3rem; font-style: italic;">«Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление».</p>
+            <p style="margin-top: 15px;">Сегодня мы добавляем к этому важнейшую часть:</p>
+            <p style="font-size: 1.3rem; font-style: italic; margin-top: 10px;">«И эта карта платит мне за то, что я просто живу и действую».</p>
+        </div>
+        
+        <p>BK-Bank превращает рутину в капитал. Ваша финансовая история в нашем приложении — это не скучный перечень дебета и кредита. Это визуализированная летопись вашего труда и вашего роста. Каждый выполненный квест, каждый пройденный урок, каждый приведённый друг отображается не просто галочкой, а приростом вашего благосостояния. Мы создали интерфейс, в котором управлять финансами так же увлекательно и наглядно, как прокачивать персонажа в любимой игре. Только здесь вы прокачиваете свой реальный капитал.</p>
+        
+        <h3>НАШИ ПРЕИМУЩЕСТВА: БОЛЬШЕ, ЧЕМ ПРОСТО БАНК</h3>
+        
+        <p>Мы гордимся тем, что предоставляем клиентам не только услуги, но и инструмент для обретения финансового суверенитета через созидание.</p>
+        
+        <div class="advantage-grid">
+            <div class="advantage-card">
+                <h4>1. Технология, которая уважает вашу приватность</h4>
+                <p>BK-Bank построен на передовых криптографических протоколах. Мы используем технологии ZK-Rollups (доказательства с нулевым разглашением), чтобы ваши транзакции оставались вашей тайной. Ваши покупки не видит никто, кроме вас. Мы обеспечиваем анонимность действий, но при этом гарантируем абсолютную прозрачность происхождения и движения ваших средств лично для вас.</p>
+            </div>
+            <div class="advantage-card">
+                <h4>2. Мост между фиатным миром и Web3</h4>
+                <p>Забудьте о сложностях с вводом и выводом криптовалюты. Карта BK-Bank работает везде, где принимают Mastercard или Visa. Вы тратите свои активы в магазине у дома так же легко, как платите с обычного счета. Конвертация фиат ↔ крипта происходит мгновенно и по лучшему курсу внутри приложения. Вы живёте в реальном мире, а ваши финансы работают в мире будущего.</p>
+            </div>
+            <div class="advantage-card">
+                <h4>3. Эстетика финансов</h4>
+                <p>Ваша карта BK-Bank — это артефакт. Мы разработали дизайн, который вы захотите доставать из кошелька. Это не просто кусок пластика. Это символ вашей принадлежности к сообществу людей, которые понимают, что истинная ценность создаётся трудом, а не удачей.</p>
+            </div>
+            <div class="advantage-card">
+                <h4>4. Безопасность институционального уровня</h4>
+                <p>Ваши активы и ваши токены, заработанные трудом, находятся под защитой: MPC (Multi-Party Computation) — ваш приватный ключ физически не существует в одном месте. Страхование активов в ведущих мировых синдикатах. Полная регуляторная прозрачность в рамках глобальных стандартов (MiCA).</p>
+            </div>
+            <div class="advantage-card" style="grid-column: span 2;">
+                <h4>5. Сообщество, которое строит курс</h4>
+                <p>Вы не просто клиент. Вы — со-основатель ценности BK-Token. Участвуя в заданиях и голосуя за развитие экосистемы, вы напрямую влияете на капитализацию банка. Здесь нет Совета Директоров, который решает всё за вас. Здесь есть вы и тысячи таких же активных людей, чей совокупный труд и есть истинная капитализация BK-Bank.</p>
+            </div>
+        </div>
+        
+        <h3>КАК НАЧАТЬ ПРЯМО СЕЙЧАС?</h3>
+        
+        <p>Присоединиться к BK-Bank — это тоже ваше первое задание, за которое вы получите награду.</p>
+        
+        <div class="steps-container">
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <h4>Регистрация</h4>
+                <p>Займёт 2 минуты. Привяжите свой номер телефона и email.</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <h4>Верификация</h4>
+                <p>Пройдите простую KYC-процедуру — это повысит ваши лимиты и безопасность, а также откроет доступ к первым платным заданиям.</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <h4>Получите первый BK-Token</h4>
+                <p>Откройте раздел «Задания» и выполните любое действие на выбор.</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <h4>Наблюдайте за ростом</h4>
+                <p>Ваш баланс начинает расти не только от пополнений, но и от вашей активности.</p>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <h2 style="font-size: 2rem; margin-bottom: 15px;">BK-BANK: ВАШ ТРУД — НАША ВАЛЮТА</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 20px;">В мире, где банки зарабатывают на ваших деньгах, BK-Bank — это банк, который платит вам за ваше время. Мы создали финансовую систему, в которой справедливая оценка труда является краеугольным камнем ценообразования.</p>
+            <p style="font-size: 1.1rem;"><strong>Присоединяйтесь к BK-Bank сегодня. Превратите свою ежедневную активность в растущий капитал.</strong></p>
+            <p style="margin-top: 15px; color: #FFD700;"><strong>BK-Bank. Ваш надёжный финансовый партнёр. Создавайте ценность. Управляйте будущим.</strong></p>
+            <button class="cta-button" onclick="window.showRegistrationForm()">✨ Открыть счёт и получить первый токен ✨</button>
         </div>
     </div>
 
     <div id="services-section" class="content-card hidden">
         <h2>Наши услуги</h2><div class="divider"></div>
-        <ul style="list-style:none;"><li style="padding:16px; margin:8px 0; background:rgba(255,215,0,0.02); border-radius:60px;">✦ Кредитование</li><li style="padding:16px; margin:8px 0; background:rgba(255,215,0,0.02); border-radius:60px;">✦ Депозиты</li><li style="padding:16px; margin:8px 0; background:rgba(255,215,0,0.02); border-radius:60px;">✦ Инвестиционные услуги</li><li style="padding:16px; margin:8px 0; background:rgba(255,215,0,0.02); border-radius:60px;">✦ Консультации по финансам</li><li style="padding:16px; margin:8px 0; background:rgba(255,215,0,0.02); border-radius:60px;">✦ Онлайн-банкинг</li></ul>
+        <ul style="list-style:none; font-size:1.2rem;"><li style="padding:18px; margin:10px 0; background:rgba(255,215,0,0.02); border-radius:60px;">✦ Кредитование под залог BK-Token</li><li style="padding:18px; margin:10px 0; background:rgba(255,215,0,0.02); border-radius:60px;">✦ Стейкинг с доходностью до 12% годовых</li><li style="padding:18px; margin:10px 0; background:rgba(255,215,0,0.02); border-radius:60px;">✦ Инвестиционные корзины Web3</li><li style="padding:18px; margin:10px 0; background:rgba(255,215,0,0.02); border-radius:60px;">✦ Персональные финансовые консультации</li><li style="padding:18px; margin:10px 0; background:rgba(255,215,0,0.02); border-radius:60px;">✦ Мультивалютные карты BK-Bank</li></ul>
     </div>
 
     <div id="cards-section" class="content-card hidden">
-        <h2>Эксклюзивные карты</h2><div class="divider"></div>
+        <h2>Эксклюзивные карты BK-Bank</h2><div class="divider"></div>
+        <p style="margin-bottom:20px;">Каждая карта — это не просто платёжный инструмент. Это ваш пропуск в мир, где труд конвертируется в капитал.</p>
         <div class="cards-stack" id="cards-stack-container"></div>
-        <div style="text-align:center; margin-top:60px;"><div style="background:rgba(255,215,0,0.05); border:1px solid rgba(255,215,0,0.2); border-radius:60px; padding:16px 40px; color:#FFD700; display:inline-block;"><strong>✨ Все карты доступны для оформления ✨</strong></div></div>
+        <div style="text-align:center; margin-top:60px;"><div style="background:rgba(255,215,0,0.05); border:1px solid rgba(255,215,0,0.2); border-radius:60px; padding:16px 40px; color:#FFD700; display:inline-block;"><strong>✨ Выберите свою карту и начните зарабатывать ✨</strong></div></div>
     </div>
 
     <div id="bktok-section" class="content-card hidden">
@@ -183,10 +283,7 @@
                     <button class="gold-button" style="width:auto; padding:12px 25px;" onclick="window.toggleSection('cases')">🎁 Кейсы</button>
                 </div>
             </div>
-            <div class="chart-container">
-                <div class="chart-title"><h3 style="margin:0;">📊 График BK</h3><div class="chart-controls"><button class="chart-period active" onclick="window.changeChartPeriod('1H')">1Ч</button><button class="chart-period" onclick="window.changeChartPeriod('6H')">6Ч</button><button class="chart-period" onclick="window.changeChartPeriod('24H')">24Ч</button></div></div>
-                <div class="chart-bars" id="chart-bars"></div>
-            </div>
+            <div class="chart-container" style="display:none;"></div>
         </div>
     </div>
 
@@ -225,7 +322,6 @@
     
     let failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
     const SALT = "BKbankDynamicSalt";
-    let chartPeriod = '24H';
     
     function hashPassword(password) { return CryptoJS.SHA256(password + SALT).toString(); }
     
@@ -237,6 +333,7 @@
     let bktokOrders = JSON.parse(localStorage.getItem('bktokOrders')) || { buy: [], sell: [] };
     let bktokTrades = JSON.parse(localStorage.getItem('bktokTrades')) || [];
     let bktokBalances = JSON.parse(localStorage.getItem('bktokBalances')) || {};
+    let userTasks = JSON.parse(localStorage.getItem('userTasks')) || {};
     
     for (let u in users) {
         if (!users[u].hasOwnProperty('avatar')) users[u].avatar = null;
@@ -447,16 +544,8 @@
         showMainContent(); showWelcomeMessage(users[found].name); updateUIForAuth();
     };
 
-    function showMainContent() {
-        document.querySelector('.main-container').classList.remove('hidden');
-        window.toggleSection('about');
-    }
-
-    function showWelcomeMessage(n) {
-        const t = document.createElement('div'); t.className = 'toast-message';
-        t.innerHTML = `<strong>✨ Добро пожаловать, ${n}!</strong>`;
-        document.body.appendChild(t); setTimeout(() => t.remove(), 3000);
-    }
+    function showMainContent() { document.querySelector('.main-container').classList.remove('hidden'); window.toggleSection('about'); }
+    function showWelcomeMessage(n) { const t = document.createElement('div'); t.className = 'toast-message'; t.innerHTML = `<strong>✨ Добро пожаловать, ${n}!</strong>`; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
 
     window.toggleSection = (s) => {
         if (!currentUser && (s === 'profile' || s === 'chats')) { window.showLoginForm(); return; }
@@ -464,41 +553,13 @@
         if (s === 'about') document.getElementById('about-section')?.classList.remove('hidden');
         else if (s === 'services') document.getElementById('services-section')?.classList.remove('hidden');
         else if (s === 'cards') { document.getElementById('cards-section')?.classList.remove('hidden'); renderCardsStack(); }
-        else if (s === 'bktok') { document.getElementById('bktok-section')?.classList.remove('hidden'); if (currentUser) loadBKtok(); }
-        else if (s === 'tasks') { document.getElementById('tasks-section')?.classList.remove('hidden'); if (currentUser) renderTasks(); }
-        else if (s === 'cases') { document.getElementById('cases-section')?.classList.remove('hidden'); if (currentUser) renderCases(); }
-        else if (s === 'support') { document.getElementById('support-section')?.classList.remove('hidden'); renderSupportPanel(); }
-        else if (s === 'chats') { document.getElementById('chats-section')?.classList.remove('hidden'); if (currentUser) renderPrivateChats(); }
+        else if (s === 'bktok') { document.getElementById('bktok-section')?.classList.remove('hidden'); if (currentUser) { document.getElementById('token-balance-display').textContent = (bktokBalances[currentUser]||0) + ' BK'; } }
+        else if (s === 'tasks') { document.getElementById('tasks-section')?.classList.remove('hidden'); if (currentUser) document.getElementById('tasks-container').innerHTML = '<p style="padding:20px;">✅ Задания загружены</p>'; }
+        else if (s === 'cases') { document.getElementById('cases-section')?.classList.remove('hidden'); if (currentUser) document.getElementById('cases-container').innerHTML = '<p style="padding:20px;">🎁 Кейсы загружены</p>'; }
+        else if (s === 'support') { document.getElementById('support-section')?.classList.remove('hidden'); document.getElementById('support-container').innerHTML = '<p style="padding:20px;">🎧 Поддержка работает круглосуточно</p>'; }
+        else if (s === 'chats') { document.getElementById('chats-section')?.classList.remove('hidden'); if (currentUser) document.getElementById('chats-container').innerHTML = '<p style="padding:20px;">💬 Чаты загружены</p>'; }
         else if (s === 'profile') { if (currentUser) showProfile(); else window.showLoginForm(); }
     };
-
-    function loadBKtok() {
-        if (!currentUser) return;
-        if (bktokBalances[currentUser] === undefined) bktokBalances[currentUser] = 0;
-        document.getElementById('token-balance-display').textContent = bktokBalances[currentUser] + ' BK';
-        renderChart();
-    }
-
-    function renderChart() {
-        const container = document.getElementById('chart-bars'); if (!container) return;
-        let trades = [...bktokTrades].reverse().filter(t => new Date(t.time).getTime() > Date.now() - 86400000);
-        if (trades.length === 0) { container.innerHTML = '<p style="text-align:center;padding:40px;">Нет данных</p>'; return; }
-        const bars = []; const step = Math.floor(trades.length / 8) || 1;
-        for (let i = 0; i < 8; i++) {
-            const slice = trades.slice(i*step, (i+1)*step); if (!slice.length) continue;
-            const prices = slice.map(t=>t.price);
-            bars.push({ close: prices[0], isRed: prices[0] < prices[prices.length-1] });
-        }
-        const max = Math.max(...bars.map(b=>b.close)), min = Math.min(...bars.map(b=>b.close)), range = max-min||1;
-        container.innerHTML = bars.map(b => `<div class="chart-bar-wrapper"><div class="chart-bar ${b.isRed?'red':''}" style="height:${((b.close-min)/range)*160+30}px;"></div><div class="chart-bar-value">${b.close.toFixed(2)}</div></div>`).join('');
-    }
-
-    window.changeChartPeriod = (p) => { chartPeriod = p; renderChart(); };
-    
-    function renderTasks() { if (!currentUser) return; document.getElementById('tasks-container').innerHTML = '<p style="padding:20px;">✅ Задания загружены</p>'; }
-    function renderCases() { if (!currentUser) return; document.getElementById('cases-container').innerHTML = '<p style="padding:20px;">🎁 Кейсы загружены</p>'; }
-    function renderPrivateChats() { if (!currentUser) return; document.getElementById('chats-container').innerHTML = '<p style="padding:20px;">💬 Чаты загружены</p>'; }
-    function renderSupportPanel() { document.getElementById('support-container').innerHTML = '<p style="padding:20px;">🎧 Поддержка работает круглосуточно</p>'; }
 
     function showProfile() {
         if (!currentUser) return;
@@ -511,9 +572,7 @@
     window.logout = function() { localStorage.removeItem('currentSession'); currentUser = null; updateUIForAuth(); window.toggleSection('about'); showWelcomeMessage('Вы вышли из аккаунта'); };
     window.showPublicProfile = function(u) { if (!users[u]) return; const c = document.getElementById('public-profile-section'); c.innerHTML = `<h2>${users[u].name}</h2><div class="divider"></div><p>@${u}</p><button class="gold-button" onclick="window.location.href='/'">Назад</button>`; c.classList.remove('hidden'); };
 
-    function removeModals() { 
-        document.querySelectorAll('.modal-form').forEach(m=>m.remove()); 
-    }
+    function removeModals() { document.querySelectorAll('.modal-form').forEach(m=>m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 })();
