@@ -87,7 +87,7 @@
         body.light-theme .image-grid-item img { mix-blend-mode: normal; }
         .advantages-block { margin-top: 40px; padding: 30px; background: rgba(255, 215, 0, 0.03); border-radius: 24px; border: 1px solid rgba(255, 215, 0, 0.1); }
         body.light-theme .advantages-block { background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.1); }
-        .advantages-quote { font-size: 1.3rem; color: #FFD700; text-align: center; font-style: italic; }
+        .advantages-quote { font-size: 1.4rem; line-height: 1.6; color: #ffffff; text-align: center; font-style: italic; margin-bottom: 25px; padding: 0 20px; font-weight: 700; }
         body.light-theme .advantages-quote { color: #0a0a0a; }
         .cards-stack { display: flex; justify-content: center; margin: 40px 0; position: relative; min-height: 450px; perspective: 1200px; }
         .stack-card { position: absolute; width: 300px; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); }
@@ -286,7 +286,7 @@
     </div>
 
     <div id="chats-section" class="content-card hidden">
-        <h2>Личные чаты (E2EE)</h2><div class="divider"></div>
+        <h2>Личные чаты</h2><div class="divider"></div>
         <div id="chats-container"></div>
     </div>
 
@@ -384,13 +384,49 @@
 
     const tasks = [{ id: 'daily', name: 'Ежедневный вход', reward: 10, cooldown: 86400000 }, { id: 'profile', name: 'Заполнить профиль', reward: 50, once: true }, { id: 'avatar', name: 'Установить аватар', reward: 30, once: true }, { id: 'trade', name: 'Совершить сделку', reward: 20, cooldown: 3600000 }];
     function renderTasks() { if (!userTasks[currentUser]) userTasks[currentUser] = {}; const container = document.getElementById('tasks-container'); let html = ''; tasks.forEach(t => { const completed = userTasks[currentUser][t.id]; const canDo = !completed || (t.cooldown && Date.now() - completed > t.cooldown); html += `<div class="task-item ${!canDo ? 'completed' : ''}" onclick="${canDo ? `completeTask('${t.id}')` : ''}"><strong>${t.name}</strong><div class="task-reward">+${t.reward} BK</div></div>`; }); container.innerHTML = html; }
-    window.completeTask = (taskId) => { const task = tasks.find(t => t.id === taskId); if (!task) return; if (!userTasks[currentUser]) userTasks[currentUser] = {}; const completed = userTasks[currentUser][taskId]; if (completed) { if (task.once) return; if (task.cooldown && Date.now() - completed < task.cooldown) return; } bktokBalances[currentUser] = (bktokBalances[currentUser] || 0) + task.reward; userTasks[currentUser][taskId] = Date.now(); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('userTasks', JSON.stringify(userTasks)); renderTasks(); showWelcomeMessage(`+${task.reward} BK!`); };
+    window.completeTask = (taskId) => {
+        const task = tasks.find(t => t.id === taskId);
+        if (!task) return;
+        if (!userTasks[currentUser]) userTasks[currentUser] = {};
+        const completed = userTasks[currentUser][taskId];
+        if (completed) {
+            if (task.once) return;
+            if (task.cooldown && Date.now() - completed < task.cooldown) return;
+        }
+        // Проверка реального выполнения
+        if (taskId === 'profile') {
+            const u = users[currentUser];
+            if (!u.email || u.email === '' || !u.phone || u.phone === '+70000000000') {
+                alert('Заполните профиль полностью!');
+                return;
+            }
+        }
+        if (taskId === 'avatar') {
+            if (!users[currentUser].avatar) {
+                alert('Установите аватар!');
+                return;
+            }
+        }
+        if (taskId === 'trade') {
+            const hasTrade = bktokTrades.some(t => t.buyer === currentUser || t.seller === currentUser);
+            if (!hasTrade) {
+                alert('Совершите хотя бы одну сделку!');
+                return;
+            }
+        }
+        bktokBalances[currentUser] = (bktokBalances[currentUser] || 0) + task.reward;
+        userTasks[currentUser][taskId] = Date.now();
+        localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances));
+        localStorage.setItem('userTasks', JSON.stringify(userTasks));
+        renderTasks();
+        showWelcomeMessage(`+${task.reward} BK!`);
+    };
 
     const cases = [{ name: 'Обычный', price: 50, rewards: [5, 10, 20, 30, 50, 100] }, { name: 'Редкий', price: 200, rewards: [50, 100, 150, 250, 500, 1000] }, { name: 'Легендарный', price: 1000, rewards: [200, 500, 1000, 2000, 5000, 10000] }];
     function renderCases() { const container = document.getElementById('cases-container'); let html = ''; cases.forEach(c => { html += `<div class="case-item" onclick="openCase('${c.name}', ${c.price}, [${c.rewards.join(',')}])"><h3>${c.name}</h3><div class="case-price">${c.price} BK</div></div>`; }); container.innerHTML = html; }
     window.openCase = (name, price, rewards) => { if (bktokBalances[currentUser] < price) return alert('Недостаточно BK!'); bktokBalances[currentUser] -= price; const win = rewards[Math.floor(Math.random() * rewards.length)]; bktokBalances[currentUser] += win; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); showWelcomeMessage(`Выигрыш: ${win} BK!`); renderCases(); };
 
-    function renderPrivateChats() { const c = document.getElementById('chats-container'); const myChats = Object.keys(privateChats).filter(id => id.includes(currentUser)); let h = `<div style="display: flex; gap: 20px;"><div style="width: 250px;"><h3>Чаты (E2EE)</h3><button class="gold-button" onclick="startNewChat()" style="margin-bottom:15px;">+ Новый чат</button>`; myChats.forEach(id => { const other = id.split('-').find(u => u !== currentUser); h += `<div class="private-chat-item" onclick="openPrivateChat('${id}')"><strong>${other}</strong><br><small>🔒 Зашифровано</small></div>`; }); h += `</div><div class="chat-area">`; if (selectedPrivateChat) { const other = selectedPrivateChat.split('-').find(u => u !== currentUser); h += `<h3>Чат с ${other} (E2EE)</h3><div class="chat-messages" id="private-chat-messages"></div><div class="chat-input-area"><input class="chat-input" id="private-chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendPrivateMessage()">Отправить</button></div>`; } else h += `<p style="padding:40px;">Выберите чат</p>`; h += `</div></div>`; c.innerHTML = h; if (selectedPrivateChat) loadPrivateChatMessages(); }
+    function renderPrivateChats() { const c = document.getElementById('chats-container'); const myChats = Object.keys(privateChats).filter(id => id.includes(currentUser)); let h = `<div style="display: flex; gap: 20px;"><div style="width: 250px;"><h3>Чаты</h3><button class="gold-button" onclick="startNewChat()" style="margin-bottom:15px;">+ Новый чат</button>`; myChats.forEach(id => { const other = id.split('-').find(u => u !== currentUser); h += `<div class="private-chat-item" onclick="openPrivateChat('${id}')"><strong>${other}</strong><br><small>${privateChats[id]?.slice(-1)[0]?.text?.substring(0,20) || 'Нет сообщений'}</small></div>`; }); h += `</div><div class="chat-area">`; if (selectedPrivateChat) { const other = selectedPrivateChat.split('-').find(u => u !== currentUser); h += `<h3>Чат с ${other}</h3><div class="chat-messages" id="private-chat-messages"></div><div class="chat-input-area"><input class="chat-input" id="private-chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendPrivateMessage()">Отправить</button></div>`; } else h += `<p style="padding:40px;">Выберите чат</p>`; h += `</div></div>`; c.innerHTML = h; if (selectedPrivateChat) loadPrivateChatMessages(); }
     
     async function loadPrivateChatMessages() { const container = document.getElementById('private-chat-messages'); if (!container) return; const messages = privateChats[selectedPrivateChat] || []; const userKey = getUserKey(currentUser); let html = ''; for (let msg of messages) { try { let text = msg.text; if (msg.encrypted && userKey) { const decrypted = decryptData(msg.text, userKey); if (decrypted) text = decrypted; } html += `<div class="chat-message ${msg.from===currentUser?'client':'support'}"><strong>${msg.from}:</strong><br>${text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`; } catch(e) { html += `<div class="chat-message support"><strong>Ошибка:</strong><br>Не удалось расшифровать<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`; } } container.innerHTML = html; container.scrollTop = container.scrollHeight; }
 
