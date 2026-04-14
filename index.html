@@ -34,7 +34,6 @@
         .particle { position: fixed; width: 2px; height: 2px; background: #FFD700; border-radius: 50%; opacity: 0.15; pointer-events: none; z-index: -1; animation: float 20s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0) translateX(0); } 25% { transform: translateY(-30px) translateX(15px); } 50% { transform: translateY(-15px) translateX(-20px); } 75% { transform: translateY(20px) translateX(10px); } }
         
-        /* АДАПТИВНЫЙ ХЕДЕР */
         .glass-header { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); background-color: rgba(18, 18, 18, 0.85); border-bottom: 1px solid rgba(255, 215, 0, 0.15); padding: 10px 16px; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); flex-wrap: wrap; }
         .logo-wrapper { display: flex; align-items: center; gap: 8px; }
         .logo-img { width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
@@ -69,7 +68,6 @@
         body.light-theme .profile-btn { border: 1.5px solid #0a0a0a; color: #0a0a0a; }
         body.light-theme .profile-btn:hover { background: #0a0a0a; color: #FFD700; }
         
-        /* АДАПТИВНЫЙ КОНТЕЙНЕР */
         .main-container { max-width: 1300px; margin: 20px auto; padding: 0 12px; }
         .content-card { background: rgba(25, 25, 25, 0.75); backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.12); border-radius: 24px; padding: 20px; margin-bottom: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); animation: fadeInUp 0.6s ease-out; transition: transform 0.3s ease, border-color 0.3s ease; }
         .content-card:hover { border-color: rgba(255, 215, 0, 0.3); transform: translateY(-3px); }
@@ -83,14 +81,12 @@
         p, li, span, div { color: #ffffff; line-height: 1.6; font-size: 0.95rem; }
         .highlight { color: #FFD700; font-weight: 600; }
         
-        /* СРАВНИТЕЛЬНАЯ ТАБЛИЦА */
         .comparison-table { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
         .comparison-item { background: rgba(255,215,0,0.05); border-radius: 16px; padding: 15px; border: 1px solid rgba(255,215,0,0.1); transition: all 0.3s ease; }
         .comparison-item:hover { transform: scale(1.01); border-color: #FFD700; background: rgba(255,215,0,0.08); }
         .comparison-item h4 { color: #FFD700; margin-bottom: 10px; font-size: 1.1rem; }
         .check, .cross { color: #FFD700; font-size: 1rem; margin-right: 6px; }
         
-        /* ПРЕИМУЩЕСТВА */
         .advantage-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin: 20px 0; }
         .advantage-card { background: linear-gradient(135deg, rgba(255,215,0,0.05), rgba(255,215,0,0.02)); border: 1px solid rgba(255,215,0,0.15); border-radius: 16px; padding: 18px; transition: all 0.3s; position: relative; overflow: hidden; }
         .advantage-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, transparent, rgba(255,215,0,0.05)); opacity: 0; transition: opacity 0.3s; }
@@ -98,28 +94,24 @@
         .advantage-card:hover::before { opacity: 1; }
         .advantage-card h4 { color: #FFD700; font-size: 1.1rem; margin-bottom: 10px; }
         
-        /* ШАГИ */
         .steps-container { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
         .step-item { flex: 1; min-width: 140px; background: rgba(255,215,0,0.03); border-radius: 16px; padding: 18px; text-align: center; border: 1px solid rgba(255,215,0,0.1); transition: all 0.3s; }
         .step-item:hover { transform: translateY(-5px); border-color: #FFD700; box-shadow: 0 15px 25px -10px rgba(255,215,0,0.2); }
         .step-number { width: 40px; height: 40px; background: #FFD700; color: #0a0a0a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700; margin: 0 auto 15px; transition: all 0.3s; }
         .step-item:hover .step-number { transform: scale(1.1); box-shadow: 0 0 15px #FFD700; }
         
-        /* УСЛУГИ */
         .services-list { list-style: none; }
         .services-list li { padding: 14px; margin: 8px 0; background: rgba(255,215,0,0.02); border-radius: 40px; transition: all 0.3s; cursor: default; font-size: 0.95rem; position: relative; overflow: hidden; }
         .services-list li::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,215,0,0.05), transparent); transform: translateX(-100%); transition: transform 0.5s; }
         .services-list li:hover { background: rgba(255,215,0,0.06); transform: translateX(8px); }
         .services-list li:hover::before { transform: translateX(100%); }
         
-        /* КАРТЫ */
         .cards-stack { display: flex; justify-content: center; margin: 30px 0; position: relative; min-height: 350px; perspective: 1200px; }
         .stack-card { position: absolute; width: 220px; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); }
         .stack-card img { width: 100%; border-radius: 16px; border: 2px solid rgba(255,215,0,0.3); mix-blend-mode: lighten; transition: all 0.3s; }
         body.light-theme .stack-card img { mix-blend-mode: normal; border: 2px solid rgba(0,0,0,0.3); }
         .stack-card:hover img { border-color: #FFD700; box-shadow: 0 0 25px rgba(255,215,0,0.25); }
         
-        /* ПОДДЕРЖКА И ЧАТЫ */
         .support-panel { display: flex; flex-direction: column; gap: 15px; }
         .chat-messages { max-height: 300px; overflow-y: auto; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 16px; margin-bottom: 15px; }
         .chat-message { margin-bottom: 12px; padding: 12px; border-radius: 16px; max-width: 85%; }
@@ -134,7 +126,6 @@
         .user-item:hover { background: rgba(255,215,0,0.1); }
         .user-item.active { background: rgba(255,215,0,0.15); border: 1px solid #FFD700; }
         
-        /* МОДАЛЬНЫЕ ОКНА */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); z-index: 9998; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-form { background: rgba(20,20,20,0.98); backdrop-filter: blur(25px); border: 1px solid rgba(255,215,0,0.3); border-radius: 30px; padding: 25px; width: 90%; max-width: 400px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; max-height: 85vh; overflow-y: auto; animation: modalPop 0.4s; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
@@ -147,6 +138,7 @@
         .gold-button:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255,215,0,0.3); }
         .gold-button:hover::before { left: 100%; }
         .dark-button { width: 100%; padding: 14px; background: #333; border: none; border-radius: 40px; font-weight: 700; cursor: pointer; margin-top: 8px; color: #FFD700; }
+        .danger-button { width: 100%; padding: 14px; background: linear-gradient(135deg, #ff4444, #cc0000); border: none; border-radius: 40px; font-weight: 700; cursor: pointer; margin-top: 8px; color: white; }
         .text-link { color: #FFD700 !important; text-align: center; display: block; margin: 12px 0; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
         .text-link:hover { color: #FFE44D !important; text-decoration: underline; }
         .toast-message { position: fixed; top: 80px; right: 15px; background: rgba(20,20,20,0.95); border-left: 5px solid #FFD700; padding: 15px 20px; border-radius: 40px; z-index: 9997; animation: slideIn 0.4s ease; font-size: 0.9rem; }
@@ -160,8 +152,35 @@
         .profile-header { display: flex; align-items: center; gap: 15px; padding: 18px; background: rgba(255,215,0,0.03); border-radius: 30px; flex-wrap: wrap; margin-bottom: 20px; }
         .profile-avatar { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #FFD700; object-fit: cover; cursor: pointer; transition: all 0.3s; }
         .profile-avatar:hover { transform: scale(1.05); border-color: #FFE44D; box-shadow: 0 0 20px rgba(255,215,0,0.4); }
+        .profile-actions { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+        .profile-action-btn { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 12px 18px; border-radius: 30px; cursor: pointer; text-align: left; width: 100%; transition: all 0.2s; }
+        .profile-action-btn:hover { background: rgba(255,215,0,0.1); transform: translateX(5px); }
         .profile-info { padding: 15px; background: rgba(255,215,0,0.03); border-radius: 16px; }
         .token-balance { font-size: 1.8rem; color: #FFD700; }
+        .order-book { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0; }
+        .order-side { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; }
+        .tasks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .task-item { background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.1); border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .task-item:hover { background: rgba(255,215,0,0.1); border-color: #FFD700; transform: translateY(-3px); }
+        .task-item.completed { opacity: 0.5; cursor: not-allowed; }
+        .cases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .case-item { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,215,0,0.05)); border: 2px solid rgba(255,215,0,0.3); border-radius: 16px; padding: 18px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .case-item:hover { transform: scale(1.03); border-color: #FFD700; box-shadow: 0 0 25px rgba(255,215,0,0.3); }
+        .chart-container { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; margin: 15px 0; }
+        .chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 180px; padding: 10px 0; }
+        .chart-bar-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .chart-bar { width: 100%; background: linear-gradient(180deg, #FFD700, #FFA500); border-radius: 6px 6px 3px 3px; min-height: 2px; transition: height 0.4s; }
+        .chart-bar.red { background: linear-gradient(180deg, #ff5e5e, #cc0000); }
+        .chart-bar-value { font-size: 0.75rem; font-weight: 600; color: #FFD700; }
+        .chart-stats { display: flex; justify-content: space-around; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,215,0,0.15); }
+        .chart-stat { text-align: center; }
+        .chart-stat-label { font-size: 0.7rem; color: #888; }
+        .chart-stat-value { font-size: 1rem; font-weight: 700; color: #FFD700; }
+        .chart-stat-value.positive { color: #4ade80; }
+        .chart-stat-value.negative { color: #ff5e5e; }
+        .chart-controls { display: flex; gap: 6px; }
+        .chart-period { background: transparent; border: 1px solid rgba(255,215,0,0.3); color: #FFD700; padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; }
+        .chart-period.active { background: #FFD700; color: #0a0a0a; }
         .blur-content { filter: blur(5px); pointer-events: none; user-select: none; }
         .cta-section { text-align: center; margin-top: 30px; padding: 20px; background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.02)); border-radius: 30px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s; }
         .cta-section:hover { border-color: #FFD700; transform: scale(1.01); }
@@ -170,7 +189,6 @@
         .cta-button:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 20px 40px rgba(255,215,0,0.4); }
         .cta-button:hover::before { left: 100%; }
         
-        /* АДАПТИВ ДЛЯ ПЛАНШЕТОВ И ДЕСКТОПОВ */
         @media (min-width: 640px) {
             .glass-header { padding: 12px 24px; }
             .logo-img { width: 42px; height: 42px; }
@@ -192,6 +210,7 @@
             .users-list { width: 220px; }
             .chat-area { flex: 1; }
             .step-number { width: 45px; height: 45px; font-size: 1.4rem; }
+            .profile-avatar { width: 70px; height: 70px; }
         }
         
         @media (min-width: 1024px) {
@@ -282,7 +301,6 @@
             <div class="step-item"><div class="step-number">4</div><h4>Рост</h4><p>Наблюдайте</p></div>
         </div>
         
-        <!-- CTA-блок только для гостей -->
         <div class="cta-section" id="guest-cta">
             <h2 style="font-size: 1.8rem;">BK-BANK: ВАШ ТРУД — НАША ВАЛЮТА</h2>
             <p>Присоединяйтесь к BK-Bank сегодня. Превратите свою ежедневную активность в растущий капитал.</p>
@@ -308,7 +326,7 @@
         <div id="bktok-guest-message" style="text-align:center; padding:15px; background:rgba(255,215,0,0.05); border-radius:16px; margin-bottom:15px;">
             <span style="color:#FFD700;">🔒 Войдите для доступа к бирже</span>
         </div>
-        <div id="bktok-content" class="blur-content">
+        <div id="bktok-content">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div class="token-balance" id="token-balance-display">0 BK</div>
                 <div style="display:flex; gap:8px;">
@@ -316,20 +334,46 @@
                     <button class="gold-button" style="width:auto; padding:10px 18px;" onclick="window.toggleSection('cases')">🎁 Кейсы</button>
                 </div>
             </div>
+            <div class="chart-container">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h4 style="margin:0;">📊 График BK</h4>
+                    <div class="chart-controls">
+                        <button class="chart-period active" onclick="window.changeChartPeriod('1H')">1Ч</button>
+                        <button class="chart-period" onclick="window.changeChartPeriod('6H')">6Ч</button>
+                        <button class="chart-period" onclick="window.changeChartPeriod('24H')">24Ч</button>
+                    </div>
+                </div>
+                <div class="chart-bars" id="chart-bars"></div>
+                <div class="chart-stats">
+                    <div class="chart-stat"><div class="chart-stat-label">Открытие</div><div class="chart-stat-value" id="chart-open">0</div></div>
+                    <div class="chart-stat"><div class="chart-stat-label">Максимум</div><div class="chart-stat-value" id="chart-high">0</div></div>
+                    <div class="chart-stat"><div class="chart-stat-label">Минимум</div><div class="chart-stat-value" id="chart-low">0</div></div>
+                    <div class="chart-stat"><div class="chart-stat-label">Изменение</div><div class="chart-stat-value" id="chart-change">0%</div></div>
+                </div>
+            </div>
+            <div class="order-book">
+                <div class="order-side"><h4>Покупка</h4><div id="buy-orders"></div></div>
+                <div class="order-side"><h4>Продажа</h4><div id="sell-orders"></div></div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:15px;">
+                <div><input type="number" id="order-price" class="form-input" placeholder="Цена BK"><input type="number" id="order-amount" class="form-input" placeholder="Количество"></div>
+                <div style="display:flex; gap:8px;"><button class="gold-button" onclick="window.createOrder('buy')">Купить</button><button class="dark-button" onclick="window.createOrder('sell')">Продать</button></div>
+            </div>
+            <h4 style="margin-top:20px;">Мои ордера</h4><div id="my-orders"></div>
         </div>
     </div>
 
     <div id="tasks-section" class="content-card hidden">
         <h2>📋 Задания</h2><div class="divider"></div>
         <div id="tasks-guest-message" style="text-align:center; padding:15px;">🔒 Войдите для просмотра</div>
-        <div id="tasks-content" class="blur-content hidden"><div id="tasks-container"></div></div>
+        <div id="tasks-content"><div class="tasks-grid" id="tasks-container"></div></div>
         <button class="gold-button" onclick="window.toggleSection('bktok')">← На биржу</button>
     </div>
 
     <div id="cases-section" class="content-card hidden">
         <h2>🎁 Кейсы</h2><div class="divider"></div>
         <div id="cases-guest-message" style="text-align:center; padding:15px;">🔒 Войдите для открытия</div>
-        <div id="cases-content" class="blur-content hidden"><div id="cases-container"></div></div>
+        <div id="cases-content"><div class="cases-grid" id="cases-container"></div></div>
         <button class="gold-button" onclick="window.toggleSection('bktok')">← На биржу</button>
     </div>
 
@@ -341,7 +385,7 @@
     <div id="chats-section" class="content-card hidden">
         <h2>Чаты</h2><div class="divider"></div>
         <div id="chats-guest-message" style="text-align:center; padding:15px;">🔒 Войдите для доступа к чатам</div>
-        <div id="chats-content" class="blur-content hidden"><div id="chats-container"></div></div>
+        <div id="chats-content"><div id="chats-container"></div></div>
     </div>
 
     <div id="profile-section" class="content-card hidden"></div>
@@ -354,6 +398,7 @@
     
     let failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
     const SALT = "BKbankDynamicSalt";
+    let chartPeriod = '24H';
     function hashPassword(p) { return CryptoJS.SHA256(p + SALT).toString(); }
     
     let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
@@ -386,55 +431,22 @@
         { img: 'png/2025-01-30_23-01-20-Photoroom.png' }, { img: 'png/classkr.png' }, { img: 'png/Bk-bakcl.png' }
     ];
 
-    function renderCardsStack() {
-        const c = document.getElementById('cards-stack-container'); if (!c) return;
-        isStackExpanded = false;
-        c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="transform:rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px); z-index:${i+1};" onclick="window.handleStackClick(event)"><img src="${card.img}"></div>`).join('');
-    }
-    
-    window.handleStackClick = (e) => {
-        e.stopPropagation();
-        const c = document.getElementById('cards-stack-container'), cards = c.querySelectorAll('.stack-card');
-        if (!isStackExpanded) {
-            cards.forEach((card, i) => { card.style.transform = `translateX(${(i-3)*110}px) translateY(${Math.abs(i-3)*6}px) rotate(${(i-3)*5}deg)`; card.style.zIndex = i + 10; });
-            isStackExpanded = true;
-        } else {
-            cards.forEach((card, i) => { card.style.transform = `rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px)`; card.style.zIndex = i + 1; });
-            isStackExpanded = false;
-        }
-    };
+    function renderCardsStack() { const c = document.getElementById('cards-stack-container'); if (!c) return; isStackExpanded = false; c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="transform:rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px); z-index:${i+1};" onclick="window.handleStackClick(event)"><img src="${card.img}"></div>`).join(''); }
+    window.handleStackClick = (e) => { e.stopPropagation(); const c = document.getElementById('cards-stack-container'), cards = c.querySelectorAll('.stack-card'); if (!isStackExpanded) { cards.forEach((card, i) => { card.style.transform = `translateX(${(i-3)*110}px) translateY(${Math.abs(i-3)*6}px) rotate(${(i-3)*5}deg)`; card.style.zIndex = i + 10; }); isStackExpanded = true; } else { cards.forEach((card, i) => { card.style.transform = `rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px)`; card.style.zIndex = i + 1; }); isStackExpanded = false; } };
 
     function updateUIForAuth() {
-        const authBtns = document.getElementById('auth-buttons'), profileBtn = document.getElementById('profile-btn-header');
-        const guestCta = document.getElementById('guest-cta');
+        const authBtns = document.getElementById('auth-buttons'), profileBtn = document.getElementById('profile-btn-header'), guestCta = document.getElementById('guest-cta');
         if (currentUser) {
-            authBtns.classList.add('hidden'); profileBtn.classList.remove('hidden');
-            if (guestCta) guestCta.classList.add('hidden');
-            const u = users[currentUser];
-            document.getElementById('header-username').textContent = u.name || currentUser;
-            if (u.avatar) document.getElementById('header-avatar').src = u.avatar;
-            ['bktok','tasks','cases','chats'].forEach(s => {
-                document.getElementById(s+'-guest-message')?.classList.add('hidden');
-                document.getElementById(s+'-content')?.classList.remove('blur-content', 'hidden');
-            });
+            authBtns.classList.add('hidden'); profileBtn.classList.remove('hidden'); if (guestCta) guestCta.classList.add('hidden');
+            const u = users[currentUser]; document.getElementById('header-username').textContent = u.name || currentUser; if (u.avatar) document.getElementById('header-avatar').src = u.avatar;
+            ['bktok','tasks','cases','chats'].forEach(s => { document.getElementById(s+'-guest-message')?.classList.add('hidden'); document.getElementById(s+'-content')?.classList.remove('hidden'); });
         } else {
-            authBtns.classList.remove('hidden'); profileBtn.classList.add('hidden');
-            if (guestCta) guestCta.classList.remove('hidden');
-            ['bktok','tasks','cases','chats'].forEach(s => {
-                document.getElementById(s+'-guest-message')?.classList.remove('hidden');
-                document.getElementById(s+'-content')?.classList.add('blur-content', 'hidden');
-            });
+            authBtns.classList.remove('hidden'); profileBtn.classList.add('hidden'); if (guestCta) guestCta.classList.remove('hidden');
+            ['bktok','tasks','cases','chats'].forEach(s => { document.getElementById(s+'-guest-message')?.classList.remove('hidden'); document.getElementById(s+'-content')?.classList.add('hidden'); });
         }
     }
 
-    window.onload = () => {
-        if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme');
-        const s = localStorage.getItem('currentSession'), viewUser = new URLSearchParams(window.location.search).get('user');
-        if (viewUser && users[viewUser]) { window.showPublicProfile(viewUser); return; }
-        if (s) { const d = JSON.parse(s); if (Date.now() - d.timestamp < 86400000) { currentUser = d.username; showMainContent(); showWelcomeMessage(users[currentUser].name); updateUIForAuth(); return; } }
-        showMainContent(); updateUIForAuth(); window.toggleSection('about');
-    };
-
+    window.onload = () => { if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme'); const s = localStorage.getItem('currentSession'), viewUser = new URLSearchParams(window.location.search).get('user'); if (viewUser && users[viewUser]) { window.showPublicProfile(viewUser); return; } if (s) { const d = JSON.parse(s); if (Date.now() - d.timestamp < 86400000) { currentUser = d.username; showMainContent(); showWelcomeMessage(users[currentUser].name); updateUIForAuth(); return; } } showMainContent(); updateUIForAuth(); window.toggleSection('about'); };
     window.toggleTheme = () => { document.body.classList.toggle('light-theme'); localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
     function showModalOverlay() { const o = document.createElement('div'); o.className = 'modal-overlay'; o.id = 'modal-overlay'; o.onclick = () => { removeModals(); o.remove(); }; document.body.appendChild(o); }
     window.showLoginForm = function() { removeModals(); document.getElementById('modal-overlay')?.remove(); showModalOverlay(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Вход</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="window.login()">Войти</button><span class="text-link" onclick="window.showRegistrationForm()">Регистрация</span><div id="failedAttemptsWarning" style="color:#ff5e5e; text-align:center;"></div>`; document.body.appendChild(m); updateFailedAttemptsWarning(); };
@@ -457,61 +469,71 @@
         if (s==='about') document.getElementById('about-section')?.classList.remove('hidden');
         else if (s==='services') document.getElementById('services-section')?.classList.remove('hidden');
         else if (s==='cards') { document.getElementById('cards-section')?.classList.remove('hidden'); renderCardsStack(); }
-        else if (s==='bktok') { document.getElementById('bktok-section')?.classList.remove('hidden'); if (currentUser) document.getElementById('token-balance-display').textContent = (bktokBalances[currentUser]||0) + ' BK'; }
-        else if (s==='tasks') { document.getElementById('tasks-section')?.classList.remove('hidden'); if (currentUser) document.getElementById('tasks-container').innerHTML = '<p>✅ Задания</p>'; }
-        else if (s==='cases') { document.getElementById('cases-section')?.classList.remove('hidden'); if (currentUser) document.getElementById('cases-container').innerHTML = '<p>🎁 Кейсы</p>'; }
+        else if (s==='bktok') { document.getElementById('bktok-section')?.classList.remove('hidden'); if (currentUser) { loadBKtok(); } }
+        else if (s==='tasks') { document.getElementById('tasks-section')?.classList.remove('hidden'); if (currentUser) renderTasks(); }
+        else if (s==='cases') { document.getElementById('cases-section')?.classList.remove('hidden'); if (currentUser) renderCases(); }
         else if (s==='support') { document.getElementById('support-section')?.classList.remove('hidden'); renderSupportPanel(); }
         else if (s==='chats') { document.getElementById('chats-section')?.classList.remove('hidden'); if (currentUser) renderPrivateChats(); }
         else if (s==='profile') { if (currentUser) showProfile(); else window.showLoginForm(); }
     };
 
-    function renderSupportPanel() {
-        const c = document.getElementById('support-container');
-        if (users[currentUser]?.isAdmin || users[currentUser]?.isSupport) {
-            const clients = Object.keys(allSupportChats).filter(u => u!=='admin' && u!=='support' && allSupportChats[u]?.length);
-            let h = `<div class="support-panel"><div class="users-list"><h4>Обращения</h4>`;
-            clients.forEach(cl => h += `<div class="user-item ${selectedClient===cl?'active':''}" onclick="window.selectClient('${cl}')"><strong>${cl}</strong></div>`);
-            h += `</div><div class="chat-area">`;
-            if (selectedClient) {
-                h += `<div><span>Чат с ${selectedClient}</span><button onclick="window.clearChat('${selectedClient}')" style="margin-left:10px; background:transparent; border:1px solid #ff5e5e; color:#ff5e5e; padding:4px 10px; border-radius:20px;">Очистить</button></div><div class="chat-messages" id="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Ответ..."><button class="chat-send-btn" onclick="window.sendOperatorMessage()">Отправить</button></div>`;
-            } else h += `<p>Выберите пользователя</p>`;
-            h += `</div></div>`; c.innerHTML = h; if (selectedClient) loadSupportMessages();
-        } else {
-            if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'support', text: 'Здравствуйте! Чем могу помочь?', time: new Date().toISOString() }];
-            c.innerHTML = `<div class="chat-messages" id="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendClientMessage()">Отправить</button></div>`;
-            loadSupportMessages();
-        }
+    function loadBKtok() { if (!currentUser) return; if (bktokBalances[currentUser]===undefined) bktokBalances[currentUser]=0; document.getElementById('token-balance-display').textContent = bktokBalances[currentUser] + ' BK'; updateOrderBook(); renderChart(); }
+    window.changeChartPeriod = function(p) { chartPeriod = p; document.querySelectorAll('.chart-period').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); renderChart(); };
+    function renderChart() {
+        const container = document.getElementById('chart-bars'); if (!container) return;
+        let trades = [...bktokTrades].reverse(); const periodMs = { '1H': 3600000, '6H': 21600000, '24H': 86400000 };
+        const cutoff = Date.now() - (periodMs[chartPeriod] || 86400000); trades = trades.filter(t => new Date(t.time).getTime() > cutoff);
+        if (trades.length === 0) { container.innerHTML = '<p style="text-align:center;padding:20px;">Нет данных</p>'; document.getElementById('chart-open').textContent='0'; document.getElementById('chart-high').textContent='0'; document.getElementById('chart-low').textContent='0'; document.getElementById('chart-change').textContent='0%'; return; }
+        const bars = [], barCount = Math.min(10, trades.length), step = Math.floor(trades.length / barCount) || 1;
+        for (let i = 0; i < barCount; i++) { const slice = trades.slice(i*step, (i+1)*step); if (!slice.length) continue; const prices = slice.map(t=>t.price); bars.push({ open: prices[prices.length-1], close: prices[0], high: Math.max(...prices), low: Math.min(...prices), isRed: prices[0] < prices[prices.length-1] }); }
+        const max = Math.max(...bars.map(b=>b.high)), min = Math.min(...bars.map(b=>b.low)), range = max - min || 1;
+        container.innerHTML = bars.map(b => `<div class="chart-bar-wrapper"><div class="chart-bar ${b.isRed?'red':''}" style="height:${((b.close-min)/range)*130+30}px;" title="O:${b.open} H:${b.high} L:${b.low} C:${b.close}"></div><div class="chart-bar-value">${b.close.toFixed(2)}</div></div>`).join('');
+        const first = bars[0]?.open||0, last = bars[bars.length-1]?.close||0, change = last - first, percent = first ? ((change/first)*100).toFixed(2) : 0;
+        document.getElementById('chart-open').textContent = first.toFixed(2); document.getElementById('chart-high').textContent = max.toFixed(2); document.getElementById('chart-low').textContent = min.toFixed(2);
+        const ce = document.getElementById('chart-change'); ce.textContent = (change>=0?'+':'') + percent + '%'; ce.className = 'chart-stat-value ' + (change>=0?'positive':'negative');
     }
+    function updateOrderBook() {
+        let buyH = '', sellH = ''; bktokOrders.buy.sort((a,b)=>b.price-a.price).forEach(o => buyH += `<div style="display:flex; justify-content:space-between; padding:6px;">${o.amount} BK @ ${o.price}</div>`);
+        bktokOrders.sell.sort((a,b)=>a.price-b.price).forEach(o => sellH += `<div style="display:flex; justify-content:space-between; padding:6px;">${o.amount} BK @ ${o.price}</div>`);
+        document.getElementById('buy-orders').innerHTML = buyH || 'Нет'; document.getElementById('sell-orders').innerHTML = sellH || 'Нет';
+        document.getElementById('my-orders').innerHTML = [...bktokOrders.buy, ...bktokOrders.sell].filter(o=>o.user===currentUser).map(o => `<div>${o.side}: ${o.amount} BK @ ${o.price}</div>`).join('') || 'Нет';
+    }
+    window.createOrder = (side) => { const price = parseFloat(document.getElementById('order-price').value), amount = parseFloat(document.getElementById('order-amount').value); if (!price||!amount||price<=0||amount<=0) return; if (side==='buy' && bktokBalances[currentUser] < amount*price) return alert('Недостаточно BK'); if (side==='sell' && bktokBalances[currentUser] < amount) return alert('Недостаточно BK'); const order = { id: Date.now()+Math.random(), user: currentUser, side, price, amount }; bktokOrders[side].push(order); if (side==='buy') bktokBalances[currentUser] -= amount*price; else bktokBalances[currentUser] -= amount; matchOrders(); localStorage.setItem('bktokOrders', JSON.stringify(bktokOrders)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); loadBKtok(); };
+    function matchOrders() { bktokOrders.buy.sort((a,b)=>b.price-a.price); bktokOrders.sell.sort((a,b)=>a.price-b.price); for (let buy of bktokOrders.buy) { for (let sell of bktokOrders.sell) { if (buy.price >= sell.price && buy.user !== sell.user) { const amt = Math.min(buy.amount, sell.amount), pr = sell.price; bktokBalances[buy.user] = (bktokBalances[buy.user]||0) + amt; bktokBalances[sell.user] = (bktokBalances[sell.user]||0) + amt*pr; bktokTrades.push({ buyer: buy.user, seller: sell.user, amount: amt, price: pr, time: new Date().toISOString() }); buy.amount -= amt; sell.amount -= amt; if (buy.amount <= 0.0001) bktokOrders.buy = bktokOrders.buy.filter(o=>o.id!==buy.id); if (sell.amount <= 0.0001) bktokOrders.sell = bktokOrders.sell.filter(o=>o.id!==sell.id); localStorage.setItem('bktokTrades', JSON.stringify(bktokTrades)); break; } } } bktokOrders.buy = bktokOrders.buy.filter(o=>o.amount>0.0001); bktokOrders.sell = bktokOrders.sell.filter(o=>o.amount>0.0001); }
+
+    const tasks = [{id:'daily',name:'Ежедневный вход',reward:10,cooldown:86400000},{id:'profile',name:'Заполнить профиль',reward:50,once:true},{id:'avatar',name:'Установить аватар',reward:30,once:true},{id:'trade',name:'Совершить сделку',reward:20,cooldown:3600000}];
+    function renderTasks() { if (!currentUser) return; if (!userTasks[currentUser]) userTasks[currentUser] = {}; const c = document.getElementById('tasks-container'); c.innerHTML = tasks.map(t => { const comp = userTasks[currentUser][t.id], can = !comp || (t.cooldown && Date.now()-comp > t.cooldown); return `<div class="task-item ${!can?'completed':''}" onclick="${can?`window.completeTask('${t.id}')`:''}"><strong>${t.name}</strong><div style="color:#FFD700; margin-top:8px;">+${t.reward} BK</div></div>`; }).join(''); }
+    window.completeTask = (tid) => { const t = tasks.find(x=>x.id===tid); if (!t) return; if (!userTasks[currentUser]) userTasks[currentUser] = {}; const comp = userTasks[currentUser][tid]; if (comp) { if (t.once) return; if (t.cooldown && Date.now()-comp < t.cooldown) return; } if (tid==='profile' && (!users[currentUser].email || users[currentUser].phone==='+70000000000')) return alert('Заполните профиль!'); if (tid==='avatar' && !users[currentUser].avatar) return alert('Установите аватар!'); if (tid==='trade' && !bktokTrades.some(tr=>tr.buyer===currentUser||tr.seller===currentUser)) return alert('Совершите сделку!'); bktokBalances[currentUser] = (bktokBalances[currentUser]||0) + t.reward; userTasks[currentUser][tid] = Date.now(); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('userTasks', JSON.stringify(userTasks)); renderTasks(); showWelcomeMessage(`+${t.reward} BK!`); };
+
+    const cases = [{name:'Обычный',price:50,rewards:[5,10,20,30,50,100]},{name:'Редкий',price:200,rewards:[50,100,150,250,500,1000]},{name:'Легендарный',price:1000,rewards:[200,500,1000,2000,5000,10000]}];
+    function renderCases() { if (!currentUser) return; const c = document.getElementById('cases-container'); c.innerHTML = cases.map(cs => `<div class="case-item" onclick="window.openCase('${cs.name}',${cs.price},[${cs.rewards}])"><h4>${cs.name}</h4><div style="color:#FFD700; margin-top:10px;">${cs.price} BK</div></div>`).join(''); }
+    window.openCase = (n,p,r) => { if (bktokBalances[currentUser] < p) return alert('Недостаточно BK!'); bktokBalances[currentUser] -= p; const w = r[Math.floor(Math.random()*r.length)]; bktokBalances[currentUser] += w; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); showWelcomeMessage(`Выигрыш: ${w} BK!`); renderCases(); };
+
+    function renderSupportPanel() { const c = document.getElementById('support-container'); if (users[currentUser]?.isAdmin || users[currentUser]?.isSupport) { const clients = Object.keys(allSupportChats).filter(u => u!=='admin' && u!=='support' && allSupportChats[u]?.length); let h = `<div class="support-panel"><div class="users-list"><h4>Обращения</h4>`; clients.forEach(cl => h += `<div class="user-item ${selectedClient===cl?'active':''}" onclick="window.selectClient('${cl}')"><strong>${cl}</strong></div>`); h += `</div><div class="chat-area">`; if (selectedClient) { h += `<div><span>Чат с ${selectedClient}</span><button onclick="window.clearChat('${selectedClient}')" style="margin-left:10px; background:transparent; border:1px solid #ff5e5e; color:#ff5e5e; padding:4px 10px; border-radius:20px;">Очистить</button></div><div class="chat-messages" id="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Ответ..."><button class="chat-send-btn" onclick="window.sendOperatorMessage()">Отправить</button></div>`; } else h += `<p>Выберите пользователя</p>`; h += `</div></div>`; c.innerHTML = h; if (selectedClient) loadSupportMessages(); } else { if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'support', text: 'Здравствуйте! Чем могу помочь?', time: new Date().toISOString() }]; c.innerHTML = `<div class="chat-messages" id="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendClientMessage()">Отправить</button></div>`; loadSupportMessages(); } }
     function loadSupportMessages() { const cont = document.getElementById('chat-messages'); if (!cont) return; const msgs = selectedClient ? allSupportChats[selectedClient] : allSupportChats[currentUser]; cont.innerHTML = (msgs||[]).map(msg => `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':msg.from}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join(''); cont.scrollTop = cont.scrollHeight; }
     window.selectClient = (c) => { selectedClient = c; renderSupportPanel(); };
     window.clearChat = (cl) => { if (confirm('Очистить?')) { allSupportChats[cl] = [{ from:'support', text:'Чат очищен.', time:new Date().toISOString() }]; localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); } };
     window.sendClientMessage = () => { const inp = document.getElementById('chat-input'), txt = inp.value.trim(); if (!txt) return; allSupportChats[currentUser].push({from:currentUser,text:txt,time:new Date().toISOString()}); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); setTimeout(() => { allSupportChats[currentUser].push({from:'support',text:'Спасибо! Оператор скоро ответит.',time:new Date().toISOString()}); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); }, 1000); };
     window.sendOperatorMessage = () => { const inp = document.getElementById('chat-input'), txt = inp.value.trim(); if (!txt||!selectedClient) return; allSupportChats[selectedClient].push({from:'support',text:txt,time:new Date().toISOString()}); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); };
 
-    function renderPrivateChats() {
-        const c = document.getElementById('chats-container'), my = Object.keys(privateChats).filter(id => id.includes(currentUser));
-        let h = `<div class="support-panel"><div class="users-list"><h4>Чаты</h4><button class="gold-button" onclick="window.startNewChat()" style="margin-bottom:10px;">+ Новый</button>`;
-        my.forEach(id => { const o = id.split('-').find(u => u!==currentUser); h += `<div class="user-item" onclick="window.openPrivateChat('${id}')"><strong>${o}</strong></div>`; });
-        h += `</div><div class="chat-area">`;
-        if (selectedPrivateChat) {
-            const o = selectedPrivateChat.split('-').find(u => u!==currentUser);
-            h += `<h4>Чат с ${o}</h4><div class="chat-messages" id="private-chat-messages"></div><div class="chat-input-area"><input id="private-chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendPrivateMessage()">Отправить</button></div>`;
-        } else h += `<p>Выберите чат</p>`;
-        h += `</div></div>`; c.innerHTML = h; if (selectedPrivateChat) loadPrivateChatMessages();
-    }
+    function renderPrivateChats() { const c = document.getElementById('chats-container'), my = Object.keys(privateChats).filter(id => id.includes(currentUser)); let h = `<div class="support-panel"><div class="users-list"><h4>Чаты</h4><button class="gold-button" onclick="window.startNewChat()" style="margin-bottom:10px;">+ Новый</button>`; my.forEach(id => { const o = id.split('-').find(u => u!==currentUser); h += `<div class="user-item" onclick="window.openPrivateChat('${id}')"><strong>${o}</strong></div>`; }); h += `</div><div class="chat-area">`; if (selectedPrivateChat) { const o = selectedPrivateChat.split('-').find(u => u!==currentUser); h += `<h4>Чат с ${o}</h4><div class="chat-messages" id="private-chat-messages"></div><div class="chat-input-area"><input id="private-chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendPrivateMessage()">Отправить</button></div>`; } else h += `<p>Выберите чат</p>`; h += `</div></div>`; c.innerHTML = h; if (selectedPrivateChat) loadPrivateChatMessages(); }
     function loadPrivateChatMessages() { const cont = document.getElementById('private-chat-messages'); if (!cont) return; cont.innerHTML = (privateChats[selectedPrivateChat]||[]).map(msg => `<div class="chat-message ${msg.from===currentUser?'client':'support'}"><strong>${msg.from}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join(''); cont.scrollTop = cont.scrollHeight; }
     window.startNewChat = () => { const u = prompt('Никнейм:'); if (!u||!users[u]) return alert('Не найден'); if (u===currentUser) return alert('Нельзя'); const id = [currentUser,u].sort().join('-'); if (!privateChats[id]) privateChats[id]=[]; localStorage.setItem('privateChats', JSON.stringify(privateChats)); selectedPrivateChat=id; renderPrivateChats(); };
     window.openPrivateChat = (id) => { selectedPrivateChat=id; renderPrivateChats(); };
     window.sendPrivateMessage = () => { const inp = document.getElementById('private-chat-input'), txt = inp.value.trim(); if (!txt||!selectedPrivateChat) return; if (!privateChats[selectedPrivateChat]) privateChats[selectedPrivateChat]=[]; privateChats[selectedPrivateChat].push({from:currentUser,text:txt,time:new Date().toISOString()}); localStorage.setItem('privateChats', JSON.stringify(privateChats)); inp.value=''; loadPrivateChatMessages(); };
 
     function showProfile() {
-        if (!currentUser) return;
-        const u = users[currentUser], c = document.getElementById('profile-section');
-        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar||'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="window.uploadAvatar(event)"><div><strong>${u.name}</strong><br>@${currentUser}</div><button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:10px 20px; border-radius:30px; cursor:pointer;" onclick="window.logout()">Выйти</button></div><div class="profile-info"><p>📧 ${u.email||'Не указан'}</p><p>📱 ${u.phone||'Не указан'}</p><p>💰 ${bktokBalances[currentUser]||0} BK</p></div>`;
-        c.classList.remove('hidden');
+        if (!currentUser) return; const u = users[currentUser], c = document.getElementById('profile-section');
+        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar||'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="window.uploadAvatar(event)"><div><strong>${u.name}</strong><br>@${currentUser}</div><button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:10px 20px; border-radius:30px; cursor:pointer;" onclick="window.logout()">Выйти</button></div>
+        <div class="profile-actions"><button class="profile-action-btn" onclick="window.showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="window.exportVault()">📤 Экспорт данных</button><button class="profile-action-btn" onclick="window.destroyAccount()">⚠️ Удалить аккаунт</button></div>
+        <div class="profile-info"><p>📧 ${u.email||'Не указан'}</p><p>📱 ${u.phone||'Не указан'}</p><p>💰 ${bktokBalances[currentUser]||0} BK</p></div>`; c.classList.remove('hidden');
     }
-
+    window.showEditProfileForm = () => { const u = users[currentUser]; removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Редактирование</div><input id="editName" class="form-input" placeholder="Имя" value="${u.name||''}"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email||''}"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone||''}"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль"><button class="gold-button" onclick="window.saveProfile()">Сохранить</button><button class="dark-button" onclick="window.cancelEditProfile()">Отмена</button>`; document.body.appendChild(m); };
+    window.cancelEditProfile = () => { removeModals(); showProfile(); };
+    window.saveProfile = () => { const n = document.getElementById('editName').value.trim(), e = document.getElementById('editEmail').value.trim(), p = document.getElementById('editPhone').value.trim(), pass = document.getElementById('editPassword').value; if (n) users[currentUser].name = n; if (e) users[currentUser].email = e; if (p && /^\+7\d{10}$/.test(p)) users[currentUser].phone = p; if (pass && pass.length>=6) users[currentUser].passwordHash = hashPassword(pass); localStorage.setItem('bankUsers', JSON.stringify(users)); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!'); };
     window.uploadAvatar = (e) => { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => { users[currentUser].avatar = ev.target.result; localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); updateUIForAuth(); }; r.readAsDataURL(f); } };
+    window.exportVault = () => { const d = { users, bktokBalances, bktokTrades, userTasks, privateChats }; const b = new Blob([JSON.stringify(d)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `bkbank_${Date.now()}.bkwallet`; a.click(); };
+    window.destroyAccount = () => { if (confirm('УДАЛИТЬ АККАУНТ?')) { delete users[currentUser]; delete bktokBalances[currentUser]; localStorage.setItem('bankUsers', JSON.stringify(users)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); logout(); } };
     window.logout = function() { localStorage.removeItem('currentSession'); currentUser = null; updateUIForAuth(); window.toggleSection('about'); showWelcomeMessage('Вы вышли'); };
     window.showPublicProfile = function(u) { if (!users[u]) return; const c = document.getElementById('public-profile-section'); c.innerHTML = `<h2>${users[u].name}</h2><div class="divider"></div><p>@${u}</p><button class="gold-button" onclick="window.location.href='/'">Назад</button>`; c.classList.remove('hidden'); };
 
