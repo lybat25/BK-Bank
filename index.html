@@ -25,7 +25,6 @@
         body.light-theme .form-input { background: rgba(0,0,0,0.05); border: 1.5px solid rgba(0,0,0,0.2); color: #0a0a0a; }
         body.light-theme .form-input::placeholder { color: #333; }
         body.light-theme .gold-button { background: linear-gradient(135deg, #0a0a0a, #333); color: #FFD700; }
-        body.light-theme .dark-button { background: #333; color: #FFD700; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #1a1a1a; }
         ::-webkit-scrollbar-thumb { background: #FFD700; border-radius: 10px; }
@@ -94,6 +93,22 @@
         .chat-input-area { display: flex; gap: 10px; }
         .chat-input { flex: 1; padding: 14px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 30px; color: white; }
         .chat-send-btn { padding: 14px 28px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 30px; font-weight: 700; cursor: pointer; }
+        
+        /* АНИМИРОВАННАЯ СТОПКА КАРТ */
+        .cards-stack { display: flex; justify-content: center; margin: 40px 0; position: relative; min-height: 450px; perspective: 1200px; }
+        .stack-card { position: absolute; width: 300px; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); animation: cardFloat 4s ease-in-out infinite; }
+        .stack-card:nth-child(1) { animation-delay: 0s; }
+        .stack-card:nth-child(2) { animation-delay: 0.3s; }
+        .stack-card:nth-child(3) { animation-delay: 0.6s; }
+        .stack-card:nth-child(4) { animation-delay: 0.9s; }
+        .stack-card:nth-child(5) { animation-delay: 1.2s; }
+        .stack-card:nth-child(6) { animation-delay: 1.5s; }
+        .stack-card:nth-child(7) { animation-delay: 1.8s; }
+        @keyframes cardFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        .stack-card img { width: 100%; border-radius: 20px; border: 2px solid rgba(255,215,0,0.3); mix-blend-mode: lighten; transition: all 0.3s; }
+        body.light-theme .stack-card img { mix-blend-mode: normal; border: 2px solid rgba(0,0,0,0.3); }
+        .stack-card:hover { transform: scale(1.05) translateY(-15px) !important; z-index: 100 !important; animation: none; }
+        .stack-card:hover img { border-color: #FFD700; box-shadow: 0 0 35px rgba(255,215,0,0.25); }
     </style>
 </head>
 <body>
@@ -145,7 +160,7 @@
 
     <div id="cards-section" class="content-card hidden">
         <h2>Эксклюзивные карты</h2><div class="divider"></div>
-        <div id="cards-stack-container" style="display:flex; justify-content:center; margin:40px 0; position:relative; min-height:450px;"></div>
+        <div class="cards-stack" id="cards-stack-container"></div>
         <div style="text-align:center; margin-top:60px;"><div style="background:rgba(255,215,0,0.05); border:1px solid rgba(255,215,0,0.2); border-radius:60px; padding:16px 40px; color:#FFD700; display:inline-block;"><strong>✨ Все карты доступны для оформления ✨</strong></div></div>
     </div>
 
@@ -244,13 +259,13 @@
     function renderCardsStack() {
         const c = document.getElementById('cards-stack-container');
         if (!c) return;
-        c.innerHTML = cardList.map((card, i) => `<div style="position:absolute; width:300px; transform:rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px); z-index:${i+1}; cursor:pointer;" onclick="handleStackClick(event)"><img src="${card.img}" style="width:100%; border-radius:20px; border:2px solid rgba(255,215,0,0.3);"></div>`).join('');
+        c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="transform:rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-30,-20,-10,0,10,20,30][i]}px); z-index:${i+1};" onclick="handleStackClick(event)"><img src="${card.img}"></div>`).join('');
     }
     
     window.handleStackClick = (e) => {
         e.stopPropagation();
         const c = document.getElementById('cards-stack-container');
-        const cards = c.querySelectorAll('div');
+        const cards = c.querySelectorAll('.stack-card');
         if (!isStackExpanded) {
             cards.forEach((card, i) => { card.style.transform = `translateX(${(i-3)*130}px) translateY(${Math.abs(i-3)*8}px) rotate(${(i-3)*6}deg)`; });
             isStackExpanded = true;
@@ -287,7 +302,7 @@
     function showLoginForm() {
         removeModals();
         const m = document.createElement('div'); m.className = 'modal-form';
-        m.innerHTML = `<div class="form-title">Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="login()">Войти</button><span class="text-link" onclick="showRegistrationForm()">Регистрация</span><div id="failedAttemptsWarning" style="color:#ff5e5e; font-size:0.9rem; text-align:center;"></div>`;
+        m.innerHTML = `<div class="form-title">Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="window.login()">Войти</button><span class="text-link" onclick="window.showRegistrationForm()">Регистрация</span><div id="failedAttemptsWarning" style="color:#ff5e5e; font-size:0.9rem; text-align:center;"></div>`;
         document.body.appendChild(m);
         updateFailedAttemptsWarning();
     }
@@ -301,12 +316,12 @@
     let regData = {};
     let captchaAnswer = 0;
 
-    function showRegistrationForm() {
+    window.showRegistrationForm = function() {
         removeModals();
         regStep = 1;
         regData = {};
         renderRegStep();
-    }
+    };
 
     function renderRegStep() {
         removeModals();
@@ -323,12 +338,12 @@
             html += `<input id="regUsername" class="form-input" placeholder="Уникальный никнейм" value="${regData.username || ''}">`;
             html += `<input type="password" id="regPassword" class="form-input" placeholder="Пароль (минимум 6 символов)">`;
             html += `<input type="password" id="regConfirmPassword" class="form-input" placeholder="Подтвердите пароль">`;
-            html += `<button class="gold-button" onclick="nextRegStep()">Далее</button>`;
+            html += `<button class="gold-button" onclick="window.nextRegStep()">Далее</button>`;
         } else if (regStep === 2) {
             html += `<input id="regEmail" class="form-input" placeholder="Email (необязательно)" value="${regData.email || ''}">`;
             html += `<input id="regPhone" class="form-input" placeholder="Телефон +7XXXXXXXXXX" value="${regData.phone || '+7'}">`;
-            html += `<button class="gold-button" onclick="nextRegStep()">Далее</button>`;
-            html += `<button class="dark-button" onclick="prevRegStep()">Назад</button>`;
+            html += `<button class="gold-button" onclick="window.nextRegStep()">Далее</button>`;
+            html += `<button class="dark-button" onclick="window.prevRegStep()">Назад</button>`;
         } else if (regStep === 3) {
             const num1 = Math.floor(Math.random() * 10) + 1;
             const num2 = Math.floor(Math.random() * 10) + 1;
@@ -338,11 +353,11 @@
             html += `<span style="font-size:2rem; font-weight:700;">${num1} + ${num2} = ?</span>`;
             html += `</div>`;
             html += `<input id="captchaInput" class="form-input" placeholder="Введите ответ цифрами">`;
-            html += `<button class="gold-button" onclick="completeRegistration()">Зарегистрироваться</button>`;
-            html += `<button class="dark-button" onclick="prevRegStep()">Назад</button>`;
+            html += `<button class="gold-button" onclick="window.completeRegistration()">Зарегистрироваться</button>`;
+            html += `<button class="dark-button" onclick="window.prevRegStep()">Назад</button>`;
         }
 
-        html += `<span class="text-link" onclick="showLoginForm()">← Войти</span>`;
+        html += `<span class="text-link" onclick="window.showLoginForm()">← Войти</span>`;
         m.innerHTML = html;
         document.body.appendChild(m);
     }
@@ -398,7 +413,7 @@
         showWelcomeMessage(name);
     };
 
-    function login() {
+    window.login = function() {
         let u = document.getElementById('loginUsername')?.value.trim();
         const p = document.getElementById('loginPassword')?.value;
         const err = document.getElementById('loginError');
@@ -422,7 +437,7 @@
         removeModals();
         showMainContent();
         showWelcomeMessage(users[found].name);
-    }
+    };
 
     function showMainContent() {
         document.querySelector('header')?.classList.remove('hidden');
@@ -538,7 +553,7 @@
         tasks.forEach(t => {
             const completed = userTasks[currentUser][t.id];
             const canDo = !completed || (t.cooldown && Date.now() - completed > t.cooldown);
-            html += `<div class="task-item ${!canDo ? 'completed' : ''}" onclick="${canDo ? `completeTask('${t.id}')` : ''}"><strong>${t.name}</strong><div style="color:#FFD700; margin-top:10px;">+${t.reward} BK</div></div>`;
+            html += `<div class="task-item ${!canDo ? 'completed' : ''}" onclick="${canDo ? `window.completeTask('${t.id}')` : ''}"><strong>${t.name}</strong><div style="color:#FFD700; margin-top:10px;">+${t.reward} BK</div></div>`;
         });
         container.innerHTML = html;
     }
@@ -570,7 +585,7 @@
         const container = document.getElementById('cases-container');
         let html = '';
         cases.forEach(c => {
-            html += `<div class="case-item" onclick="openCase('${c.name}', ${c.price}, [${c.rewards}])"><h3>${c.name}</h3><div style="color:#FFD700; margin-top:15px;">${c.price} BK</div></div>`;
+            html += `<div class="case-item" onclick="window.openCase('${c.name}', ${c.price}, [${c.rewards}])"><h3>${c.name}</h3><div style="color:#FFD700; margin-top:15px;">${c.price} BK</div></div>`;
         });
         container.innerHTML = html;
     }
@@ -588,15 +603,15 @@
     function renderPrivateChats() {
         const c = document.getElementById('chats-container');
         const myChats = Object.keys(privateChats).filter(id => id.includes(currentUser));
-        let h = `<div style="display:flex; gap:20px;"><div style="width:250px;"><h3>Чаты</h3><button class="gold-button" onclick="startNewChat()">+ Новый чат</button>`;
+        let h = `<div style="display:flex; gap:20px;"><div style="width:250px;"><h3>Чаты</h3><button class="gold-button" onclick="window.startNewChat()">+ Новый чат</button>`;
         myChats.forEach(id => {
             const other = id.split('-').find(u => u !== currentUser);
-            h += `<div style="padding:12px; margin:8px 0; background:rgba(255,215,0,0.05); border-radius:10px; cursor:pointer;" onclick="openPrivateChat('${id}')"><strong>${other}</strong></div>`;
+            h += `<div style="padding:12px; margin:8px 0; background:rgba(255,215,0,0.05); border-radius:10px; cursor:pointer;" onclick="window.openPrivateChat('${id}')"><strong>${other}</strong></div>`;
         });
         h += `</div><div style="flex:1;">`;
         if (selectedPrivateChat) {
             const other = selectedPrivateChat.split('-').find(u => u !== currentUser);
-            h += `<h3>Чат с ${other}</h3><div id="private-chat-messages" class="chat-messages"></div><div class="chat-input-area"><input id="private-chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendPrivateMessage()">Отправить</button></div>`;
+            h += `<h3>Чат с ${other}</h3><div id="private-chat-messages" class="chat-messages"></div><div class="chat-input-area"><input id="private-chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendPrivateMessage()">Отправить</button></div>`;
         } else h += `<p>Выберите чат</p>`;
         h += `</div></div>`;
         c.innerHTML = h;
@@ -653,15 +668,21 @@
         if (!currentUser) return;
         const u = users[currentUser];
         const c = document.getElementById('profile-section');
-        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}</div><button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:12px 28px; border-radius:40px; cursor:pointer;" onclick="logout()">Выйти</button></div><div class="profile-actions"><button class="profile-action-btn" onclick="showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="exportVault()">📤 Экспорт данных</button><button class="profile-action-btn" onclick="destroyAccount()">⚠️ Удалить аккаунт</button></div><div class="profile-info"><p><strong>📧 Email:</strong> ${u.email || 'Не указан'}</p><p><strong>📱 Телефон:</strong> ${u.phone || 'Не указан'}</p><p><strong>💰 Баланс BK:</strong> ${bktokBalances[currentUser] || 0} BK</p></div>`;
+        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="window.uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}</div><button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:12px 28px; border-radius:40px; cursor:pointer;" onclick="window.logout()">Выйти</button></div><div class="profile-actions"><button class="profile-action-btn" onclick="window.showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="window.exportVault()">📤 Экспорт данных</button><button class="profile-action-btn" onclick="window.destroyAccount()">⚠️ Удалить аккаунт</button></div><div class="profile-info"><p><strong>📧 Email:</strong> ${u.email || 'Не указан'}</p><p><strong>📱 Телефон:</strong> ${u.phone || 'Не указан'}</p><p><strong>💰 Баланс BK:</strong> ${bktokBalances[currentUser] || 0} BK</p></div>`;
         c.classList.remove('hidden');
     }
 
     window.showEditProfileForm = () => {
         const u = users[currentUser];
+        removeModals();
         const m = document.createElement('div'); m.className = 'modal-form';
-        m.innerHTML = `<div class="form-title">Редактирование</div><input id="editName" class="form-input" placeholder="Имя" value="${u.name || ''}"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email || ''}"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone || ''}"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль"><button class="gold-button" onclick="saveProfile()">Сохранить</button><button class="dark-button" onclick="removeModals(); showProfile();">Отмена</button>`;
+        m.innerHTML = `<div class="form-title">Редактирование</div><input id="editName" class="form-input" placeholder="Имя" value="${u.name || ''}"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email || ''}"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone || ''}"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль"><button class="gold-button" onclick="window.saveProfile()">Сохранить</button><button class="dark-button" onclick="window.cancelEditProfile()">Отмена</button>`;
         document.body.appendChild(m);
+    };
+
+    window.cancelEditProfile = function() {
+        removeModals();
+        showProfile();
     };
 
     window.saveProfile = () => {
@@ -674,7 +695,9 @@
         if (phone && /^\+7\d{10}$/.test(phone)) users[currentUser].phone = phone;
         if (pass && pass.length >= 6) users[currentUser].passwordHash = hashPassword(pass);
         localStorage.setItem('bankUsers', JSON.stringify(users));
-        removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!');
+        removeModals();
+        showProfile();
+        showWelcomeMessage('Профиль обновлён!');
     };
 
     window.uploadAvatar = (event) => {
@@ -706,17 +729,17 @@
         if (users[currentUser]?.isAdmin || users[currentUser]?.isSupport) {
             const clients = Object.keys(allSupportChats).filter(u => u !== 'admin' && u !== 'support' && allSupportChats[u]?.length);
             let h = `<div style="display:flex; gap:20px;"><div style="width:260px;"><h3>Обращения</h3>`;
-            clients.forEach(cl => h += `<div style="padding:12px; margin-bottom:8px; background:${selectedClient===cl?'rgba(255,215,0,0.15)':'rgba(255,215,0,0.05)'}; border-radius:10px; cursor:pointer;" onclick="selectClient('${cl}')"><strong>${cl}</strong></div>`);
+            clients.forEach(cl => h += `<div style="padding:12px; margin-bottom:8px; background:${selectedClient===cl?'rgba(255,215,0,0.15)':'rgba(255,215,0,0.05)'}; border-radius:10px; cursor:pointer;" onclick="window.selectClient('${cl}')"><strong>${cl}</strong></div>`);
             h += `</div><div style="flex:1;">`;
             if (selectedClient) {
-                h += `<div><span>Чат с ${selectedClient}</span><button onclick="clearChat('${selectedClient}')">Очистить</button></div><div id="chat-messages" class="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Ответить..."><button class="chat-send-btn" onclick="sendOperatorMessage()">Отправить</button></div>`;
+                h += `<div><span>Чат с ${selectedClient}</span><button onclick="window.clearChat('${selectedClient}')">Очистить</button></div><div id="chat-messages" class="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Ответить..."><button class="chat-send-btn" onclick="window.sendOperatorMessage()">Отправить</button></div>`;
             } else h += `<p>Выберите пользователя</p>`;
             h += `</div></div>`;
             c.innerHTML = h;
             if (selectedClient) loadSupportMessages();
         } else {
             if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'support', text: 'Здравствуйте! Чем могу помочь?', time: new Date().toISOString() }];
-            let h = `<div id="chat-messages" class="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="sendClientMessage()">Отправить</button></div>`;
+            let h = `<div id="chat-messages" class="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendClientMessage()">Отправить</button></div>`;
             c.innerHTML = h;
             loadSupportMessages();
         }
@@ -754,11 +777,7 @@
     function removeModals() { document.querySelectorAll('.modal-form').forEach(m => m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
 
-    window.login = login;
-    window.showRegistrationForm = showRegistrationForm;
     window.logout = logout;
-    window.showPublicProfile = showPublicProfile;
-
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }
 })();
 </script>
