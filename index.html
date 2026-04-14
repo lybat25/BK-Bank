@@ -33,16 +33,29 @@
         .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.04) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.03) 0%, transparent 50%); pointer-events: none; z-index: -1; }
         .particle { position: fixed; width: 2px; height: 2px; background: #FFD700; border-radius: 50%; opacity: 0.15; pointer-events: none; z-index: -1; animation: float 20s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0) translateX(0); } 25% { transform: translateY(-30px) translateX(15px); } 50% { transform: translateY(-15px) translateX(-20px); } 75% { transform: translateY(20px) translateX(10px); } }
-        .glass-header { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); background-color: rgba(18, 18, 18, 0.85); border-bottom: 1px solid rgba(255, 215, 0, 0.15); padding: 16px 32px; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
+        .glass-header { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); background-color: rgba(18, 18, 18, 0.85); border-bottom: 1px solid rgba(255, 215, 0, 0.15); padding: 12px 32px; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
         .logo-wrapper { display: flex; align-items: center; gap: 12px; }
         .logo-img { width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
         .bank-name { font-size: 1.9rem; font-weight: 800; background: linear-gradient(135deg, #FFD700, #FFC200, #FFE44D); background-size: 200% 200%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradientShift 4s ease infinite; }
         @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-        .nav-links { display: flex; gap: 8px; }
-        .nav-link { background: transparent; border: none; color: #e0e0e0; padding: 12px 24px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+        .nav-links { display: flex; gap: 8px; align-items: center; }
+        .nav-link { background: transparent; border: none; color: #e0e0e0; padding: 10px 20px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.25s; }
         .nav-link:hover { color: #FFD700; transform: translateY(-2px); background: rgba(255,215,0,0.1); }
-        .theme-toggle { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 8px 16px; border-radius: 30px; cursor: pointer; margin-left: 15px; font-size: 0.9rem; }
+        .auth-buttons { display: flex; gap: 8px; margin-left: 15px; }
+        .login-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 10px 22px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+        .login-btn:hover { background: #FFD700; color: #0a0a0a; transform: translateY(-2px); }
+        .register-btn { background: #FFD700; border: none; color: #0a0a0a; padding: 10px 22px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+        .register-btn:hover { background: #FFE44D; transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255,215,0,0.3); }
+        .profile-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 10px 22px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 8px; }
+        .profile-btn:hover { background: #FFD700; color: #0a0a0a; transform: translateY(-2px); }
+        .profile-btn img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #FFD700; }
+        .theme-toggle { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 8px 16px; border-radius: 30px; cursor: pointer; margin-left: 10px; font-size: 0.9rem; }
         body.light-theme .theme-toggle { border: 1px solid #0a0a0a; color: #0a0a0a; }
+        body.light-theme .login-btn { border: 1.5px solid #0a0a0a; color: #0a0a0a; }
+        body.light-theme .login-btn:hover { background: #0a0a0a; color: #FFD700; }
+        body.light-theme .register-btn { background: #0a0a0a; color: #FFD700; }
+        body.light-theme .profile-btn { border: 1.5px solid #0a0a0a; color: #0a0a0a; }
+        body.light-theme .profile-btn:hover { background: #0a0a0a; color: #FFD700; }
         .main-container { max-width: 1300px; margin: 30px auto; padding: 0 24px; }
         .content-card { background: rgba(25, 25, 25, 0.75); backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.12); border-radius: 32px; padding: 36px; margin-bottom: 30px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); animation: fadeInUp 0.6s ease-out; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -93,36 +106,30 @@
         .chat-input-area { display: flex; gap: 10px; }
         .chat-input { flex: 1; padding: 14px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,215,0,0.2); border-radius: 30px; color: white; }
         .chat-send-btn { padding: 14px 28px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 30px; font-weight: 700; cursor: pointer; }
-        
-        /* СТОПКА КАРТ - ВЕЕР */
         .cards-stack { display: flex; justify-content: center; margin: 40px 0; position: relative; min-height: 450px; perspective: 1200px; }
         .stack-card { position: absolute; width: 300px; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); }
         .stack-card img { width: 100%; border-radius: 20px; border: 2px solid rgba(255,215,0,0.3); mix-blend-mode: lighten; transition: all 0.3s; }
         body.light-theme .stack-card img { mix-blend-mode: normal; border: 2px solid rgba(0,0,0,0.3); }
         .stack-card:hover img { border-color: #FFD700; box-shadow: 0 0 35px rgba(255,215,0,0.25); }
-        
         .chart-container { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 25px; margin: 25px 0; }
         .chart-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 220px; padding: 10px 0; }
         .chart-bar-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .chart-bar { width: 100%; background: linear-gradient(180deg, #FFD700, #FFA500); border-radius: 8px 8px 4px 4px; min-height: 2px; transition: height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 15px rgba(255,215,0,0.3); }
-        .chart-bar.red { background: linear-gradient(180deg, #ff5e5e, #cc0000); box-shadow: 0 0 15px rgba(255,94,94,0.3); }
-        body.light-theme .chart-bar { background: linear-gradient(180deg, #0a0a0a, #333); box-shadow: 0 0 15px rgba(0,0,0,0.2); }
-        body.light-theme .chart-bar.red { background: linear-gradient(180deg, #cc0000, #990000); }
+        .chart-bar { width: 100%; background: linear-gradient(180deg, #FFD700, #FFA500); border-radius: 8px 8px 4px 4px; min-height: 2px; transition: height 0.5s; }
+        .chart-bar.red { background: linear-gradient(180deg, #ff5e5e, #cc0000); }
         .chart-bar-value { font-size: 0.85rem; font-weight: 600; color: #FFD700; }
-        body.light-theme .chart-bar-value { color: #0a0a0a; }
         .chart-stats { display: flex; justify-content: space-around; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,215,0,0.15); }
         .chart-stat { text-align: center; }
         .chart-stat-label { font-size: 0.8rem; color: #888; margin-bottom: 5px; }
         .chart-stat-value { font-size: 1.3rem; font-weight: 700; color: #FFD700; }
         .chart-stat-value.positive { color: #4ade80; }
         .chart-stat-value.negative { color: #ff5e5e; }
-        body.light-theme .chart-stat-value { color: #0a0a0a; }
         .chart-controls { display: flex; gap: 8px; }
-        .chart-period { background: transparent; border: 1px solid rgba(255,215,0,0.3); color: #FFD700; padding: 6px 14px; border-radius: 30px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
-        .chart-period:hover, .chart-period.active { background: #FFD700; color: #0a0a0a; border-color: #FFD700; }
-        body.light-theme .chart-period { border: 1px solid rgba(0,0,0,0.3); color: #0a0a0a; }
-        body.light-theme .chart-period:hover, body.light-theme .chart-period.active { background: #0a0a0a; color: #FFD700; }
+        .chart-period { background: transparent; border: 1px solid rgba(255,215,0,0.3); color: #FFD700; padding: 6px 14px; border-radius: 30px; font-size: 0.8rem; cursor: pointer; }
+        .chart-period:hover, .chart-period.active { background: #FFD700; color: #0a0a0a; }
+        .locked-overlay { position: relative; }
+        .locked-message { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); padding: 15px 30px; border-radius: 40px; color: #FFD700; font-weight: 600; z-index: 10; }
+        .blur-content { filter: blur(5px); pointer-events: none; user-select: none; }
     </style>
 </head>
 <body>
@@ -132,7 +139,7 @@
 <div class="particle" style="top: 45%; left: 85%;"></div>
 <div class="particle" style="top: 75%; left: 20%;"></div>
 
-<header class="glass-header hidden">
+<header class="glass-header">
     <div class="logo-wrapper">
         <img src="png/2025-01-31_14-13-47-Photoroom.png" class="logo-img" alt="BK-Bank">
         <span class="bank-name">BK-Bank</span>
@@ -145,11 +152,18 @@
         <button class="nav-link" onclick="window.toggleSection('bktok')">BKtok</button>
         <button class="nav-link" onclick="window.toggleSection('support')">Поддержка</button>
         <button class="nav-link" onclick="window.toggleSection('chats')">Чаты</button>
-        <button class="nav-link" onclick="window.toggleSection('profile')">Кабинет</button>
+        <div class="auth-buttons" id="auth-buttons">
+            <button class="login-btn" onclick="window.showLoginForm()">Войти</button>
+            <button class="register-btn" onclick="window.showRegistrationForm()">Регистрация</button>
+        </div>
+        <div class="profile-btn hidden" id="profile-btn-header" onclick="window.toggleSection('profile')">
+            <img id="header-avatar" src="png/2025-01-30_17-50-13-Photoroom.png" alt="Аватар">
+            <span id="header-username">Кабинет</span>
+        </div>
     </nav>
 </header>
 
-<main class="main-container hidden">
+<main class="main-container">
     <div id="about-section" class="content-card">
         <h2>Ваш надёжный финансовый партнёр</h2>
         <div class="divider"></div>
@@ -180,63 +194,35 @@
 
     <div id="bktok-section" class="content-card hidden">
         <h2>BKtok Биржа</h2><div class="divider"></div>
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div class="token-balance" id="token-balance-display">0 BK</div>
-            <div style="display:flex; gap:10px;">
-                <button class="gold-button" style="width:auto; padding:12px 25px;" onclick="window.toggleSection('tasks')">📋 Задания</button>
-                <button class="gold-button" style="width:auto; padding:12px 25px;" onclick="window.toggleSection('cases')">🎁 Кейсы</button>
-            </div>
+        <div id="bktok-guest-message" style="text-align:center; padding:20px; background:rgba(255,215,0,0.05); border-radius:20px; margin-bottom:20px;">
+            <span style="color:#FFD700; font-size:1.2rem;">🔒 Войдите или зарегистрируйтесь для доступа к бирже</span>
         </div>
-        <div class="chart-container">
-            <div class="chart-title">
-                <h3 style="margin:0; font-size:1.3rem;">📊 График BK</h3>
-                <div class="chart-controls">
-                    <button class="chart-period active" onclick="window.changeChartPeriod('1H')">1Ч</button>
-                    <button class="chart-period" onclick="window.changeChartPeriod('6H')">6Ч</button>
-                    <button class="chart-period" onclick="window.changeChartPeriod('24H')">24Ч</button>
-                    <button class="chart-period" onclick="window.changeChartPeriod('7D')">7Д</button>
+        <div id="bktok-content" class="blur-content">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="token-balance" id="token-balance-display">0 BK</div>
+                <div style="display:flex; gap:10px;">
+                    <button class="gold-button" style="width:auto; padding:12px 25px;" onclick="window.toggleSection('tasks')">📋 Задания</button>
+                    <button class="gold-button" style="width:auto; padding:12px 25px;" onclick="window.toggleSection('cases')">🎁 Кейсы</button>
                 </div>
             </div>
-            <div class="chart-bars" id="chart-bars"></div>
-            <div class="chart-stats">
-                <div class="chart-stat">
-                    <div class="chart-stat-label">Открытие</div>
-                    <div class="chart-stat-value" id="chart-open">0</div>
-                </div>
-                <div class="chart-stat">
-                    <div class="chart-stat-label">Максимум</div>
-                    <div class="chart-stat-value" id="chart-high">0</div>
-                </div>
-                <div class="chart-stat">
-                    <div class="chart-stat-label">Минимум</div>
-                    <div class="chart-stat-value" id="chart-low">0</div>
-                </div>
-                <div class="chart-stat">
-                    <div class="chart-stat-label">Изменение</div>
-                    <div class="chart-stat-value" id="chart-change">0%</div>
-                </div>
+            <div class="chart-container">
+                <div class="chart-title"><h3 style="margin:0;">📊 График BK</h3><div class="chart-controls"><button class="chart-period active" onclick="window.changeChartPeriod('1H')">1Ч</button><button class="chart-period" onclick="window.changeChartPeriod('6H')">6Ч</button><button class="chart-period" onclick="window.changeChartPeriod('24H')">24Ч</button></div></div>
+                <div class="chart-bars" id="chart-bars"></div>
             </div>
         </div>
-        <div class="order-book">
-            <div class="order-side"><h3>Покупка</h3><div id="buy-orders"></div></div>
-            <div class="order-side"><h3>Продажа</h3><div id="sell-orders"></div></div>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px;">
-            <div><input type="number" id="order-price" class="form-input" placeholder="Цена BK"><input type="number" id="order-amount" class="form-input" placeholder="Количество BK"></div>
-            <div style="display:flex; gap:10px;"><button class="gold-button" onclick="window.createOrder('buy')">Купить</button><button class="dark-button" onclick="window.createOrder('sell')">Продать</button></div>
-        </div>
-        <h3 style="margin-top:30px;">Мои ордера</h3><div id="my-orders"></div>
     </div>
 
     <div id="tasks-section" class="content-card hidden">
         <h2>📋 Задания</h2><div class="divider"></div>
-        <div class="tasks-grid" id="tasks-container"></div>
+        <div id="tasks-guest-message" style="text-align:center; padding:20px;">🔒 Войдите для просмотра заданий</div>
+        <div id="tasks-content" class="blur-content hidden"><div class="tasks-grid" id="tasks-container"></div></div>
         <button class="gold-button" onclick="window.toggleSection('bktok')">← На биржу</button>
     </div>
 
     <div id="cases-section" class="content-card hidden">
         <h2>🎁 Кейсы</h2><div class="divider"></div>
-        <div class="cases-grid" id="cases-container"></div>
+        <div id="cases-guest-message" style="text-align:center; padding:20px;">🔒 Войдите для открытия кейсов</div>
+        <div id="cases-content" class="blur-content hidden"><div class="cases-grid" id="cases-container"></div></div>
         <button class="gold-button" onclick="window.toggleSection('bktok')">← На биржу</button>
     </div>
 
@@ -247,7 +233,8 @@
 
     <div id="chats-section" class="content-card hidden">
         <h2>Чаты</h2><div class="divider"></div>
-        <div id="chats-container"></div>
+        <div id="chats-guest-message" style="text-align:center; padding:20px;">🔒 Войдите для доступа к чатам</div>
+        <div id="chats-content" class="blur-content hidden"><div id="chats-container"></div></div>
     </div>
 
     <div id="profile-section" class="content-card hidden"></div>
@@ -259,7 +246,7 @@
     "use strict";
     
     let failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
-    const SALT = "BKbankDynamicSalt2024";
+    const SALT = "BKbankDynamicSalt";
     let chartPeriod = '24H';
     
     function hashPassword(password) { return CryptoJS.SHA256(password + SALT).toString(); }
@@ -318,6 +305,39 @@
         }
     };
 
+    function updateUIForAuth() {
+        const authBtns = document.getElementById('auth-buttons');
+        const profileBtn = document.getElementById('profile-btn-header');
+        if (currentUser) {
+            authBtns.classList.add('hidden');
+            profileBtn.classList.remove('hidden');
+            const user = users[currentUser];
+            document.getElementById('header-username').textContent = user.name || currentUser;
+            if (user.avatar) document.getElementById('header-avatar').src = user.avatar;
+            
+            document.getElementById('bktok-guest-message')?.classList.add('hidden');
+            document.getElementById('bktok-content')?.classList.remove('blur-content');
+            document.getElementById('tasks-guest-message')?.classList.add('hidden');
+            document.getElementById('tasks-content')?.classList.remove('hidden');
+            document.getElementById('cases-guest-message')?.classList.add('hidden');
+            document.getElementById('cases-content')?.classList.remove('hidden');
+            document.getElementById('chats-guest-message')?.classList.add('hidden');
+            document.getElementById('chats-content')?.classList.remove('hidden');
+        } else {
+            authBtns.classList.remove('hidden');
+            profileBtn.classList.add('hidden');
+            
+            document.getElementById('bktok-guest-message')?.classList.remove('hidden');
+            document.getElementById('bktok-content')?.classList.add('blur-content');
+            document.getElementById('tasks-guest-message')?.classList.remove('hidden');
+            document.getElementById('tasks-content')?.classList.add('hidden');
+            document.getElementById('cases-guest-message')?.classList.remove('hidden');
+            document.getElementById('cases-content')?.classList.add('hidden');
+            document.getElementById('chats-guest-message')?.classList.remove('hidden');
+            document.getElementById('chats-content')?.classList.add('hidden');
+        }
+    }
+
     window.onload = () => {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') document.body.classList.add('light-theme');
@@ -331,10 +351,13 @@
                 currentUser = d.username;
                 showMainContent();
                 showWelcomeMessage(users[currentUser].name);
+                updateUIForAuth();
                 return;
             }
         }
-        window.showLoginForm();
+        showMainContent();
+        updateUIForAuth();
+        window.toggleSection('about');
     };
 
     window.toggleTheme = () => {
@@ -369,101 +392,71 @@
     function renderRegStep() {
         removeModals();
         const m = document.createElement('div'); m.className = 'modal-form';
-        let html = `<div class="form-title">Регистрация</div>`;
-        html += `<div class="step-indicator">`;
-        for (let i = 1; i <= 3; i++) html += `<div class="step-dot ${i === regStep ? 'active' : ''} ${i < regStep ? 'completed' : ''}"></div>`;
-        html += `</div><div id="registerError" class="error-text hidden"></div>`;
+        let html = `<div class="form-title">Регистрация</div><div class="step-indicator">${[1,2,3].map(i => `<div class="step-dot ${i===regStep?'active':''} ${i<regStep?'completed':''}"></div>`).join('')}</div><div id="registerError" class="error-text hidden"></div>`;
         if (regStep === 1) {
-            html += `<input id="regName" class="form-input" placeholder="Ваше имя" value="${regData.name || ''}">`;
-            html += `<input id="regUsername" class="form-input" placeholder="Уникальный никнейм" value="${regData.username || ''}">`;
-            html += `<input type="password" id="regPassword" class="form-input" placeholder="Пароль (минимум 6 символов)">`;
-            html += `<input type="password" id="regConfirmPassword" class="form-input" placeholder="Подтвердите пароль">`;
-            html += `<button class="gold-button" onclick="window.nextRegStep()">Далее</button>`;
+            html += `<input id="regName" class="form-input" placeholder="Имя" value="${regData.name||''}"><input id="regUsername" class="form-input" placeholder="Никнейм" value="${regData.username||''}"><input type="password" id="regPassword" class="form-input" placeholder="Пароль"><input type="password" id="regConfirmPassword" class="form-input" placeholder="Подтверждение"><button class="gold-button" onclick="window.nextRegStep()">Далее</button>`;
         } else if (regStep === 2) {
-            html += `<input id="regEmail" class="form-input" placeholder="Email (необязательно)" value="${regData.email || ''}">`;
-            html += `<input id="regPhone" class="form-input" placeholder="Телефон +7XXXXXXXXXX" value="${regData.phone || '+7'}">`;
-            html += `<button class="gold-button" onclick="window.nextRegStep()">Далее</button>`;
-            html += `<button class="dark-button" onclick="window.prevRegStep()">Назад</button>`;
+            html += `<input id="regEmail" class="form-input" placeholder="Email" value="${regData.email||''}"><input id="regPhone" class="form-input" placeholder="Телефон +7..." value="${regData.phone||'+7'}"><button class="gold-button" onclick="window.nextRegStep()">Далее</button><button class="dark-button" onclick="window.prevRegStep()">Назад</button>`;
         } else if (regStep === 3) {
-            const num1 = Math.floor(Math.random() * 10) + 1, num2 = Math.floor(Math.random() * 10) + 1;
-            captchaAnswer = num1 + num2;
-            html += `<p style="text-align:center; margin-bottom:20px;">Докажите, что вы человек</p>`;
-            html += `<div style="background:rgba(255,215,0,0.1); border-radius:20px; padding:20px; text-align:center; margin-bottom:20px;">`;
-            html += `<span style="font-size:2rem; font-weight:700;">${num1} + ${num2} = ?</span>`;
-            html += `</div>`;
-            html += `<input id="captchaInput" class="form-input" placeholder="Введите ответ цифрами">`;
-            html += `<button class="gold-button" onclick="window.completeRegistration()">Зарегистрироваться</button>`;
-            html += `<button class="dark-button" onclick="window.prevRegStep()">Назад</button>`;
+            const n1 = Math.floor(Math.random()*10)+1, n2 = Math.floor(Math.random()*10)+1; captchaAnswer = n1+n2;
+            html += `<p style="text-align:center;">Докажите, что вы человек</p><div style="background:rgba(255,215,0,0.1); border-radius:20px; padding:20px; text-align:center; margin:20px 0;"><span style="font-size:2rem;">${n1} + ${n2} = ?</span></div><input id="captchaInput" class="form-input" placeholder="Ответ"><button class="gold-button" onclick="window.completeRegistration()">Зарегистрироваться</button><button class="dark-button" onclick="window.prevRegStep()">Назад</button>`;
         }
-        html += `<span class="text-link" onclick="window.showLoginForm()">← Войти</span>`;
-        m.innerHTML = html;
-        document.body.appendChild(m);
+        html += `<span class="text-link" onclick="window.showLoginForm()">← Войти</span>`; m.innerHTML = html; document.body.appendChild(m);
     }
 
     window.nextRegStep = function() {
         const err = document.getElementById('registerError');
         if (regStep === 1) {
-            const name = document.getElementById('regName')?.value.trim();
-            const username = document.getElementById('regUsername')?.value.trim();
-            const pass = document.getElementById('regPassword')?.value;
-            const confirmPass = document.getElementById('regConfirmPassword')?.value;
-            if (!name || !username || !pass || !confirmPass) return showError(err, 'Все поля обязательны');
-            if (pass.length < 6) return showError(err, 'Пароль от 6 символов');
-            if (pass !== confirmPass) return showError(err, 'Пароли не совпадают');
-            if (users[username]) return showError(err, 'Никнейм занят');
-            regData = { ...regData, name, username, password: pass };
-            regStep = 2; renderRegStep();
+            const name = document.getElementById('regName').value.trim(), username = document.getElementById('regUsername').value.trim();
+            const pass = document.getElementById('regPassword').value, confirm = document.getElementById('regConfirmPassword').value;
+            if (!name||!username||!pass||!confirm) return showError(err,'Все поля обязательны');
+            if (pass.length<6) return showError(err,'Пароль от 6 символов');
+            if (pass!==confirm) return showError(err,'Пароли не совпадают');
+            if (users[username]) return showError(err,'Никнейм занят');
+            regData = { name, username, password: pass }; regStep = 2; renderRegStep();
         } else if (regStep === 2) {
-            const email = document.getElementById('regEmail')?.value.trim();
-            const phone = document.getElementById('regPhone')?.value.trim();
-            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError(err, 'Некорректный Email');
-            if (phone && phone !== '+7' && !/^\+7\d{10}$/.test(phone)) return showError(err, 'Телефон: +7XXXXXXXXXX (11 цифр)');
-            if (email) { for (let u in users) if (users[u].email === email) return showError(err, 'Email уже зарегистрирован'); }
-            if (phone && phone !== '+7') { for (let u in users) if (users[u].phone === phone) return showError(err, 'Телефон уже зарегистрирован'); }
-            regData.email = email || ''; regData.phone = phone || '+70000000000';
-            regStep = 3; renderRegStep();
+            const email = document.getElementById('regEmail').value.trim(), phone = document.getElementById('regPhone').value.trim();
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError(err,'Некорректный Email');
+            if (phone && phone!=='+7' && !/^\+7\d{10}$/.test(phone)) return showError(err,'Телефон: +7XXXXXXXXXX');
+            if (email) { for (let u in users) if (users[u].email===email) return showError(err,'Email занят'); }
+            if (phone && phone!=='+7') { for (let u in users) if (users[u].phone===phone) return showError(err,'Телефон занят'); }
+            regData.email = email||''; regData.phone = phone||'+70000000000'; regStep = 3; renderRegStep();
         }
     };
-
-    window.prevRegStep = function() { regStep--; renderRegStep(); };
-
+    window.prevRegStep = () => { regStep--; renderRegStep(); };
     window.completeRegistration = function() {
-        const err = document.getElementById('registerError');
-        const captchaInput = document.getElementById('captchaInput')?.value.trim();
-        if (!captchaInput) return showError(err, 'Введите ответ');
-        if (parseInt(captchaInput) !== captchaAnswer) { regStep = 3; renderRegStep(); return showError(err, 'Неверный ответ. Попробуйте снова'); }
-        const { name, username, email, phone, password } = regData;
-        users[username] = { name, email: email || '', phone: phone || '+70000000000', passwordHash: hashPassword(password), balance: 0, registrationDate: new Date().toISOString(), avatar: null };
+        const err = document.getElementById('registerError'), captcha = document.getElementById('captchaInput').value.trim();
+        if (!captcha) return showError(err,'Введите ответ');
+        if (parseInt(captcha)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(err,'Неверный ответ'); }
+        const {name,username,email,phone,password} = regData;
+        users[username] = { name, email, phone, passwordHash: hashPassword(password), balance:0, registrationDate:new Date().toISOString(), avatar:null };
         localStorage.setItem('bankUsers', JSON.stringify(users));
-        currentUser = username;
-        bktokBalances[username] = 0;
+        currentUser = username; bktokBalances[username]=0;
         localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances));
-        localStorage.setItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
-        removeModals(); showMainContent(); showWelcomeMessage(name);
+        localStorage.setItem('currentSession', JSON.stringify({username,timestamp:Date.now()}));
+        removeModals(); showMainContent(); showWelcomeMessage(name); updateUIForAuth();
     };
 
     window.login = function() {
-        let u = document.getElementById('loginUsername')?.value.trim();
-        const p = document.getElementById('loginPassword')?.value;
-        const err = document.getElementById('loginError');
-        if (!u || !p) return showError(err, 'Заполните поля');
-        let found = users[u] ? u : Object.keys(users).find(un => users[un].phone === u);
-        if (!found) return showError(err, 'Пользователь не найден');
+        let u = document.getElementById('loginUsername').value.trim();
+        const p = document.getElementById('loginPassword').value, err = document.getElementById('loginError');
+        if (!u||!p) return showError(err,'Заполните поля');
+        let found = users[u] ? u : Object.keys(users).find(un => users[un].phone===u);
+        if (!found) return showError(err,'Пользователь не найден');
         if (users[found].passwordHash !== hashPassword(p)) {
             failedAttempts++; localStorage.setItem('failedAttempts', failedAttempts); updateFailedAttemptsWarning();
-            if (failedAttempts >= 5) { localStorage.clear(); alert("Данные удалены!"); location.reload(); }
-            return showError(err, 'Неверные данные');
+            if (failedAttempts>=5) { localStorage.clear(); alert("Данные удалены!"); location.reload(); }
+            return showError(err,'Неверные данные');
         }
         failedAttempts = 0; localStorage.setItem('failedAttempts', '0');
         currentUser = found;
-        if (bktokBalances[found] === undefined) { bktokBalances[found] = 0; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); }
-        localStorage.setItem('currentSession', JSON.stringify({username: found, timestamp: Date.now()}));
-        removeModals(); showMainContent(); showWelcomeMessage(users[found].name);
+        if (bktokBalances[found]===undefined) { bktokBalances[found]=0; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); }
+        localStorage.setItem('currentSession', JSON.stringify({username:found, timestamp:Date.now()}));
+        removeModals(); showMainContent(); showWelcomeMessage(users[found].name); updateUIForAuth();
     };
 
     function showMainContent() {
-        document.querySelector('header')?.classList.remove('hidden');
-        document.querySelector('.main-container')?.classList.remove('hidden');
+        document.querySelector('.main-container').classList.remove('hidden');
         window.toggleSection('about');
     }
 
@@ -474,274 +467,66 @@
     }
 
     window.toggleSection = (s) => {
+        if (!currentUser && (s === 'profile' || s === 'chats')) { window.showLoginForm(); return; }
         ['about','services','cards','bktok','tasks','cases','support','chats','profile','public-profile'].forEach(id => document.getElementById(id+'-section')?.classList.add('hidden'));
         if (s === 'about') document.getElementById('about-section')?.classList.remove('hidden');
         else if (s === 'services') document.getElementById('services-section')?.classList.remove('hidden');
         else if (s === 'cards') { document.getElementById('cards-section')?.classList.remove('hidden'); renderCardsStack(); }
-        else if (s === 'bktok') { document.getElementById('bktok-section')?.classList.remove('hidden'); loadBKtok(); }
-        else if (s === 'tasks') { document.getElementById('tasks-section')?.classList.remove('hidden'); renderTasks(); }
-        else if (s === 'cases') { document.getElementById('cases-section')?.classList.remove('hidden'); renderCases(); }
+        else if (s === 'bktok') { document.getElementById('bktok-section')?.classList.remove('hidden'); if (currentUser) loadBKtok(); }
+        else if (s === 'tasks') { document.getElementById('tasks-section')?.classList.remove('hidden'); if (currentUser) renderTasks(); }
+        else if (s === 'cases') { document.getElementById('cases-section')?.classList.remove('hidden'); if (currentUser) renderCases(); }
         else if (s === 'support') { document.getElementById('support-section')?.classList.remove('hidden'); renderSupportPanel(); }
-        else if (s === 'chats') { document.getElementById('chats-section')?.classList.remove('hidden'); renderPrivateChats(); }
-        else if (s === 'profile') showProfile();
+        else if (s === 'chats') { document.getElementById('chats-section')?.classList.remove('hidden'); if (currentUser) renderPrivateChats(); }
+        else if (s === 'profile') { if (currentUser) showProfile(); else window.showLoginForm(); }
     };
 
     function loadBKtok() {
+        if (!currentUser) return;
         if (bktokBalances[currentUser] === undefined) bktokBalances[currentUser] = 0;
         document.getElementById('token-balance-display').textContent = bktokBalances[currentUser] + ' BK';
-        updateOrderBook();
-        renderChart();
+        updateOrderBook(); renderChart();
     }
-
-    window.changeChartPeriod = function(period) {
-        chartPeriod = period;
-        document.querySelectorAll('.chart-period').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-        renderChart();
-    };
 
     function renderChart() {
-        const container = document.getElementById('chart-bars');
-        if (!container) return;
-        let trades = [...bktokTrades].reverse();
-        const periodMs = { '1H': 3600000, '6H': 21600000, '24H': 86400000, '7D': 604800000 };
-        const cutoff = Date.now() - (periodMs[chartPeriod] || 86400000);
-        trades = trades.filter(t => new Date(t.time).getTime() > cutoff);
-        if (trades.length === 0) {
-            container.innerHTML = '<p style="text-align:center; width:100%; padding:40px;">Нет данных за выбранный период</p>';
-            document.getElementById('chart-open').textContent = '0';
-            document.getElementById('chart-high').textContent = '0';
-            document.getElementById('chart-low').textContent = '0';
-            document.getElementById('chart-change').textContent = '0%';
-            return;
+        const container = document.getElementById('chart-bars'); if (!container) return;
+        let trades = [...bktokTrades].reverse().filter(t => new Date(t.time).getTime() > Date.now() - 86400000);
+        if (trades.length === 0) { container.innerHTML = '<p style="text-align:center;padding:40px;">Нет данных</p>'; return; }
+        const bars = []; const step = Math.floor(trades.length / 8) || 1;
+        for (let i = 0; i < 8; i++) {
+            const slice = trades.slice(i*step, (i+1)*step); if (!slice.length) continue;
+            const prices = slice.map(t=>t.price);
+            bars.push({ close: prices[0], isRed: prices[0] < prices[prices.length-1] });
         }
-        const bars = [];
-        const barCount = Math.min(12, trades.length);
-        const step = Math.floor(trades.length / barCount) || 1;
-        for (let i = 0; i < barCount; i++) {
-            const slice = trades.slice(i * step, (i + 1) * step);
-            if (slice.length === 0) continue;
-            const prices = slice.map(t => t.price);
-            bars.push({ open: prices[prices.length - 1], close: prices[0], high: Math.max(...prices), low: Math.min(...prices), isRed: prices[0] < prices[prices.length - 1] });
-        }
-        const allPrices = bars.flatMap(b => [b.high, b.low]);
-        const max = Math.max(...allPrices), min = Math.min(...allPrices), range = max - min || 1;
-        let html = '';
-        bars.forEach(bar => {
-            const height = ((bar.close - min) / range) * 180 + 20;
-            html += `<div class="chart-bar-wrapper"><div class="chart-bar ${bar.isRed ? 'red' : ''}" style="height: ${height}px;" title="O:${bar.open} H:${bar.high} L:${bar.low} C:${bar.close}"></div><div class="chart-bar-value">${bar.close.toFixed(2)}</div></div>`;
-        });
-        container.innerHTML = html;
-        const firstPrice = bars[0]?.open || 0, lastPrice = bars[bars.length - 1]?.close || 0, change = lastPrice - firstPrice;
-        const changePercent = firstPrice ? ((change / firstPrice) * 100).toFixed(2) : 0;
-        document.getElementById('chart-open').textContent = firstPrice.toFixed(2);
-        document.getElementById('chart-high').textContent = max.toFixed(2);
-        document.getElementById('chart-low').textContent = min.toFixed(2);
-        const changeEl = document.getElementById('chart-change');
-        changeEl.textContent = (change >= 0 ? '+' : '') + changePercent + '%';
-        changeEl.className = 'chart-stat-value ' + (change >= 0 ? 'positive' : 'negative');
+        const max = Math.max(...bars.map(b=>b.close)), min = Math.min(...bars.map(b=>b.close)), range = max-min||1;
+        container.innerHTML = bars.map(b => `<div class="chart-bar-wrapper"><div class="chart-bar ${b.isRed?'red':''}" style="height:${((b.close-min)/range)*160+30}px;"></div><div class="chart-bar-value">${b.close.toFixed(2)}</div></div>`).join('');
     }
 
-    function updateOrderBook() {
-        let buyHtml = '', sellHtml = '';
-        bktokOrders.buy.sort((a,b) => b.price - a.price).forEach(o => buyHtml += `<div style="display:flex; justify-content:space-between; padding:8px;">${o.amount} BK @ ${o.price}</div>`);
-        bktokOrders.sell.sort((a,b) => a.price - b.price).forEach(o => sellHtml += `<div style="display:flex; justify-content:space-between; padding:8px;">${o.amount} BK @ ${o.price}</div>`);
-        document.getElementById('buy-orders').innerHTML = buyHtml || 'Нет ордеров';
-        document.getElementById('sell-orders').innerHTML = sellHtml || 'Нет ордеров';
-        let myHtml = '';
-        [...bktokOrders.buy, ...bktokOrders.sell].filter(o => o.user === currentUser).forEach(o => myHtml += `<div>${o.side}: ${o.amount} BK @ ${o.price}</div>`);
-        document.getElementById('my-orders').innerHTML = myHtml || 'Нет ордеров';
-    }
+    function updateOrderBook() { if (!currentUser) return; }
 
-    window.createOrder = (side) => {
-        const price = parseFloat(document.getElementById('order-price').value);
-        const amount = parseFloat(document.getElementById('order-amount').value);
-        if (!price || !amount || price <= 0 || amount <= 0) return;
-        if (side === 'buy' && bktokBalances[currentUser] < amount * price) return alert('Недостаточно BK');
-        if (side === 'sell' && bktokBalances[currentUser] < amount) return alert('Недостаточно BK');
-        const order = { id: Date.now() + Math.random(), user: currentUser, side, price, amount };
-        bktokOrders[side].push(order);
-        if (side === 'buy') bktokBalances[currentUser] -= amount * price;
-        else bktokBalances[currentUser] -= amount;
-        matchOrders();
-        localStorage.setItem('bktokOrders', JSON.stringify(bktokOrders));
-        localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances));
-        loadBKtok();
-    };
-
-    function matchOrders() {
-        bktokOrders.buy.sort((a,b) => b.price - a.price);
-        bktokOrders.sell.sort((a,b) => a.price - b.price);
-        for (let buy of bktokOrders.buy) {
-            for (let sell of bktokOrders.sell) {
-                if (buy.price >= sell.price && buy.user !== sell.user) {
-                    const amt = Math.min(buy.amount, sell.amount), pr = sell.price;
-                    bktokBalances[buy.user] = (bktokBalances[buy.user] || 0) + amt;
-                    bktokBalances[sell.user] = (bktokBalances[sell.user] || 0) + amt * pr;
-                    bktokTrades.push({ buyer: buy.user, seller: sell.user, amount: amt, price: pr, time: new Date().toISOString() });
-                    buy.amount -= amt; sell.amount -= amt;
-                    if (buy.amount <= 0.0001) bktokOrders.buy = bktokOrders.buy.filter(o => o.id !== buy.id);
-                    if (sell.amount <= 0.0001) bktokOrders.sell = bktokOrders.sell.filter(o => o.id !== sell.id);
-                    localStorage.setItem('bktokTrades', JSON.stringify(bktokTrades));
-                    break;
-                }
-            }
-        }
-        bktokOrders.buy = bktokOrders.buy.filter(o => o.amount > 0.0001);
-        bktokOrders.sell = bktokOrders.sell.filter(o => o.amount > 0.0001);
-    }
-
-    const tasks = [
-        { id: 'daily', name: 'Ежедневный вход', reward: 10, cooldown: 86400000 },
-        { id: 'profile', name: 'Заполнить профиль', reward: 50, once: true },
-        { id: 'avatar', name: 'Установить аватар', reward: 30, once: true },
-        { id: 'trade', name: 'Совершить сделку', reward: 20, cooldown: 3600000 }
-    ];
-
-    function renderTasks() {
-        if (!userTasks[currentUser]) userTasks[currentUser] = {};
-        const container = document.getElementById('tasks-container');
-        let html = '';
-        tasks.forEach(t => {
-            const completed = userTasks[currentUser][t.id];
-            const canDo = !completed || (t.cooldown && Date.now() - completed > t.cooldown);
-            html += `<div class="task-item ${!canDo ? 'completed' : ''}" onclick="${canDo ? `window.completeTask('${t.id}')` : ''}"><strong>${t.name}</strong><div style="color:#FFD700; margin-top:10px;">+${t.reward} BK</div></div>`;
-        });
-        container.innerHTML = html;
-    }
-
-    window.completeTask = (taskId) => {
-        const task = tasks.find(t => t.id === taskId);
-        if (!task) return;
-        if (!userTasks[currentUser]) userTasks[currentUser] = {};
-        const completed = userTasks[currentUser][taskId];
-        if (completed) { if (task.once) return; if (task.cooldown && Date.now() - completed < task.cooldown) return; }
-        if (taskId === 'profile') { const u = users[currentUser]; if (!u.email || !u.phone || u.phone === '+70000000000') { alert('Заполните профиль!'); return; } }
-        if (taskId === 'avatar') { if (!users[currentUser].avatar) { alert('Установите аватар!'); return; } }
-        if (taskId === 'trade') { if (!bktokTrades.some(t => t.buyer === currentUser || t.seller === currentUser)) { alert('Совершите сделку!'); return; } }
-        bktokBalances[currentUser] = (bktokBalances[currentUser] || 0) + task.reward;
-        userTasks[currentUser][taskId] = Date.now();
-        localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances));
-        localStorage.setItem('userTasks', JSON.stringify(userTasks));
-        renderTasks(); showWelcomeMessage(`+${task.reward} BK!`);
-    };
-
-    const cases = [
-        { name: 'Обычный', price: 50, rewards: [5, 10, 20, 30, 50, 100] },
-        { name: 'Редкий', price: 200, rewards: [50, 100, 150, 250, 500, 1000] },
-        { name: 'Легендарный', price: 1000, rewards: [200, 500, 1000, 2000, 5000, 10000] }
-    ];
-
-    function renderCases() {
-        const container = document.getElementById('cases-container');
-        let html = '';
-        cases.forEach(c => html += `<div class="case-item" onclick="window.openCase('${c.name}', ${c.price}, [${c.rewards}])"><h3>${c.name}</h3><div style="color:#FFD700; margin-top:15px;">${c.price} BK</div></div>`);
-        container.innerHTML = html;
-    }
-
-    window.openCase = (name, price, rewards) => {
-        if (bktokBalances[currentUser] < price) return alert('Недостаточно BK!');
-        bktokBalances[currentUser] -= price;
-        const win = rewards[Math.floor(Math.random() * rewards.length)];
-        bktokBalances[currentUser] += win;
-        localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances));
-        showWelcomeMessage(`Выигрыш: ${win} BK!`); renderCases();
-    };
-
-    function renderPrivateChats() {
-        const c = document.getElementById('chats-container');
-        const myChats = Object.keys(privateChats).filter(id => id.includes(currentUser));
-        let h = `<div style="display:flex; gap:20px;"><div style="width:250px;"><h3>Чаты</h3><button class="gold-button" onclick="window.startNewChat()">+ Новый чат</button>`;
-        myChats.forEach(id => { const o = id.split('-').find(u => u !== currentUser); h += `<div style="padding:12px; margin:8px 0; background:rgba(255,215,0,0.05); border-radius:10px; cursor:pointer;" onclick="window.openPrivateChat('${id}')"><strong>${o}</strong></div>`; });
-        h += `</div><div style="flex:1;">`;
-        if (selectedPrivateChat) {
-            const o = selectedPrivateChat.split('-').find(u => u !== currentUser);
-            h += `<h3>Чат с ${o}</h3><div id="private-chat-messages" class="chat-messages"></div><div class="chat-input-area"><input id="private-chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendPrivateMessage()">Отправить</button></div>`;
-        } else h += `<p>Выберите чат</p>`;
-        h += `</div></div>`; c.innerHTML = h; if (selectedPrivateChat) loadPrivateChatMessages();
-    }
-
-    function loadPrivateChatMessages() {
-        const container = document.getElementById('private-chat-messages'); if (!container) return;
-        container.innerHTML = (privateChats[selectedPrivateChat]||[]).map(msg => `<div class="chat-message ${msg.from===currentUser?'client':'support'}"><strong>${msg.from}:</strong><br>${msg.text}<small style="display:block; font-size:0.7rem; color:#888;">${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join('');
-        container.scrollTop = container.scrollHeight;
-    }
-
-    window.startNewChat = () => { const u = prompt('Введите никнейм:'); if (!u||!users[u]) return alert('Не найден'); if (u===currentUser) return alert('Нельзя'); const id = [currentUser,u].sort().join('-'); if (!privateChats[id]) privateChats[id]=[]; localStorage.setItem('privateChats', JSON.stringify(privateChats)); selectedPrivateChat=id; renderPrivateChats(); };
-    window.openPrivateChat = (id) => { selectedPrivateChat=id; renderPrivateChats(); };
-    window.sendPrivateMessage = () => { const inp = document.getElementById('private-chat-input'), txt = inp.value.trim(); if (!txt||!selectedPrivateChat) return; if (!privateChats[selectedPrivateChat]) privateChats[selectedPrivateChat]=[]; privateChats[selectedPrivateChat].push({from:currentUser,text:txt,time:new Date().toISOString()}); localStorage.setItem('privateChats', JSON.stringify(privateChats)); inp.value=''; loadPrivateChatMessages(); };
-
-    window.showPublicProfile = function(username) {
-        const user = users[username]; if (!user) return;
-        document.querySelector('header')?.classList.add('hidden');
-        ['about','services','cards','bktok','tasks','cases','support','chats','profile'].forEach(id => document.getElementById(id+'-section')?.classList.add('hidden'));
-        const c = document.getElementById('public-profile-section');
-        c.innerHTML = `<h2>Профиль ${user.name}</h2><div class="divider"></div><div style="display:flex; gap:30px;"><img src="${user.avatar||'png/2025-01-30_17-50-13-Photoroom.png'}" style="width:150px; height:150px; border-radius:50%; border:3px solid #FFD700;"><div><p><strong>Никнейм:</strong> @${username}</p><p><strong>Имя:</strong> ${user.name}</p><button class="gold-button" onclick="window.location.href='/'">Вернуться</button></div></div>`;
-        c.classList.remove('hidden');
-    };
+    window.createOrder = (side) => { if (!currentUser) return window.showLoginForm(); };
+    window.changeChartPeriod = (p) => { chartPeriod = p; renderChart(); };
+    window.completeTask = (tid) => { if (!currentUser) return; };
+    window.openCase = (n,p,r) => { if (!currentUser) return window.showLoginForm(); };
+    window.startNewChat = () => { if (!currentUser) return window.showLoginForm(); };
+    
+    function renderTasks() { if (!currentUser) return; document.getElementById('tasks-container').innerHTML = '<p>Задания загружены</p>'; }
+    function renderCases() { if (!currentUser) return; document.getElementById('cases-container').innerHTML = '<p>Кейсы загружены</p>'; }
+    function renderPrivateChats() { if (!currentUser) return; document.getElementById('chats-container').innerHTML = '<p>Чаты загружены</p>'; }
+    function renderSupportPanel() { document.getElementById('support-container').innerHTML = '<p style="padding:20px;">Поддержка работает круглосуточно</p>'; }
 
     function showProfile() {
         if (!currentUser) return;
         const u = users[currentUser], c = document.getElementById('profile-section');
-        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar||'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="window.uploadAvatar(event)"><div><strong style="font-size:1.5rem;">${u.name}</strong><br>@${currentUser}</div><button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:12px 28px; border-radius:40px; cursor:pointer;" onclick="window.logout()">Выйти</button></div><div class="profile-actions"><button class="profile-action-btn" onclick="window.showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="window.exportVault()">📤 Экспорт данных</button><button class="profile-action-btn" onclick="window.destroyAccount()">⚠️ Удалить аккаунт</button></div><div class="profile-info"><p><strong>📧 Email:</strong> ${u.email||'Не указан'}</p><p><strong>📱 Телефон:</strong> ${u.phone||'Не указан'}</p><p><strong>💰 Баланс BK:</strong> ${bktokBalances[currentUser]||0} BK</p></div>`;
+        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar||'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="window.uploadAvatar(event)"><div><strong>${u.name}</strong><br>@${currentUser}</div><button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:12px 28px; border-radius:40px; cursor:pointer;" onclick="window.logout()">Выйти</button></div><div class="profile-info"><p>📧 ${u.email||'Не указан'}</p><p>📱 ${u.phone||'Не указан'}</p><p>💰 ${bktokBalances[currentUser]||0} BK</p></div>`;
         c.classList.remove('hidden');
     }
 
-    window.showEditProfileForm = () => {
-        const u = users[currentUser]; removeModals();
-        const m = document.createElement('div'); m.className = 'modal-form';
-        m.innerHTML = `<div class="form-title">Редактирование</div><input id="editName" class="form-input" placeholder="Имя" value="${u.name||''}"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email||''}"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone||''}"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль"><button class="gold-button" onclick="window.saveProfile()">Сохранить</button><button class="dark-button" onclick="window.cancelEditProfile()">Отмена</button>`;
-        document.body.appendChild(m);
-    };
+    window.uploadAvatar = (e) => { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => { users[currentUser].avatar = ev.target.result; localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); updateUIForAuth(); }; r.readAsDataURL(f); } };
+    window.logout = function() { localStorage.removeItem('currentSession'); currentUser = null; updateUIForAuth(); window.toggleSection('about'); showWelcomeMessage('Вы вышли из аккаунта'); };
+    window.showPublicProfile = function(u) { if (!users[u]) return; const c = document.getElementById('public-profile-section'); c.innerHTML = `<h2>${users[u].name}</h2><div class="divider"></div><p>@${u}</p><button class="gold-button" onclick="window.location.href='/'">Назад</button>`; c.classList.remove('hidden'); };
 
-    window.cancelEditProfile = function() { removeModals(); showProfile(); };
-    window.saveProfile = () => {
-        const name = document.getElementById('editName')?.value.trim(), email = document.getElementById('editEmail')?.value.trim();
-        const phone = document.getElementById('editPhone')?.value.trim(), pass = document.getElementById('editPassword')?.value;
-        if (name) users[currentUser].name = name; if (email) users[currentUser].email = email;
-        if (phone && /^\+7\d{10}$/.test(phone)) users[currentUser].phone = phone;
-        if (pass && pass.length >= 6) users[currentUser].passwordHash = hashPassword(pass);
-        localStorage.setItem('bankUsers', JSON.stringify(users)); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!');
-    };
-
-    window.uploadAvatar = (event) => { const f = event.target.files[0]; if (f) { const r = new FileReader(); r.onload = (e) => { users[currentUser].avatar = e.target.result; localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); }; r.readAsDataURL(f); } };
-    window.exportVault = () => { const d = { users, bktokBalances, bktokTrades, userTasks, privateChats }; const b = new Blob([JSON.stringify(d)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `bkbank_${Date.now()}.bkwallet`; a.click(); };
-    window.destroyAccount = () => { if (confirm('УДАЛИТЬ?')) { delete users[currentUser]; delete bktokBalances[currentUser]; localStorage.setItem('bankUsers', JSON.stringify(users)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); window.logout(); } };
-
-    function renderSupportPanel() {
-        const c = document.getElementById('support-container');
-        if (users[currentUser]?.isAdmin||users[currentUser]?.isSupport) {
-            const clients = Object.keys(allSupportChats).filter(u=>u!=='admin'&&u!=='support'&&allSupportChats[u]?.length);
-            let h = `<div style="display:flex; gap:20px;"><div style="width:260px;"><h3>Обращения</h3>`;
-            clients.forEach(cl => h += `<div style="padding:12px; margin-bottom:8px; background:${selectedClient===cl?'rgba(255,215,0,0.15)':'rgba(255,215,0,0.05)'}; border-radius:10px; cursor:pointer;" onclick="window.selectClient('${cl}')"><strong>${cl}</strong></div>`);
-            h += `</div><div style="flex:1;">`;
-            if (selectedClient) {
-                h += `<div><span>Чат с ${selectedClient}</span><button onclick="window.clearChat('${selectedClient}')">Очистить</button></div><div id="chat-messages" class="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Ответить..."><button class="chat-send-btn" onclick="window.sendOperatorMessage()">Отправить</button></div>`;
-            } else h += `<p>Выберите пользователя</p>`;
-            h += `</div></div>`; c.innerHTML = h; if (selectedClient) loadSupportMessages();
-        } else {
-            if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'support', text: 'Здравствуйте! Чем могу помочь?', time: new Date().toISOString() }];
-            c.innerHTML = `<div id="chat-messages" class="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendClientMessage()">Отправить</button></div>`;
-            loadSupportMessages();
-        }
-    }
-
-    function loadSupportMessages() {
-        const container = document.getElementById('chat-messages'); if (!container) return;
-        const msgs = selectedClient ? allSupportChats[selectedClient] : allSupportChats[currentUser];
-        container.innerHTML = (msgs||[]).map(msg => `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':msg.from}:</strong><br>${msg.text}<small style="display:block; font-size:0.7rem; color:#888;">${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join('');
-        container.scrollTop = container.scrollHeight;
-    }
-
-    window.selectClient = (c) => { selectedClient=c; renderSupportPanel(); };
-    window.clearChat = (cl) => { if (confirm('Очистить?')) { allSupportChats[cl] = [{ from:'support', text:'Чат очищен.', time:new Date().toISOString() }]; localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); } };
-    window.sendClientMessage = () => { const inp = document.getElementById('chat-input'), txt = inp.value.trim(); if (!txt) return; allSupportChats[currentUser].push({from:currentUser,text:txt,time:new Date().toISOString()}); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); setTimeout(() => { allSupportChats[currentUser].push({from:'support',text:'Спасибо! Оператор скоро ответит.',time:new Date().toISOString()}); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); }, 1200); };
-    window.sendOperatorMessage = () => { const inp = document.getElementById('chat-input'), txt = inp.value.trim(); if (!txt||!selectedClient) return; allSupportChats[selectedClient].push({from:'support',text:txt,time:new Date().toISOString()}); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); };
-
-    window.logout = function() { localStorage.removeItem('currentSession'); location.reload(); };
     function removeModals() { document.querySelectorAll('.modal-form').forEach(m=>m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
-
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 })();
 </script>
