@@ -217,6 +217,12 @@
         .rollback-btn.accept { border-color: #4ade80; color: #4ade80; }
         .rollback-btn:hover { opacity: 0.8; }
         
+        .pow-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; }
+        .pow-box { background: #1a1a1a; border: 2px solid #FFD700; border-radius: 20px; padding: 30px; text-align: center; max-width: 350px; }
+        .pow-box h3 { color: #FFD700; margin-bottom: 20px; }
+        .pow-progress { width: 100%; height: 8px; background: #333; border-radius: 4px; margin: 20px 0; overflow: hidden; }
+        .pow-progress-bar { height: 100%; background: #FFD700; width: 0%; transition: width 0.1s; }
+        
         @media (min-width: 640px) {
             .glass-header { padding: 12px 24px; }
             .logo-img { width: 42px; height: 42px; }
@@ -423,8 +429,128 @@
 (function() {
     "use strict";
     
+    // ========== УРОВЕНЬ 2: ЗАЩИТА LOCALSTORAGE ==========
+    const realStorage = window.localStorage;
+    const fakeStorage = {};
+    
+    // Подменяем localStorage для консоли
+    Object.defineProperty(window, 'localStorage', {
+        value: {
+            getItem: (key) => { console.warn('🔒 Доступ к хранилищу заблокирован'); return null; },
+            setItem: () => false,
+            removeItem: () => false,
+            clear: () => false,
+            get length() { return 0; },
+            key: () => null
+        },
+        writable: false,
+        configurable: false
+    });
+    
+    // Функции для работы с реальным хранилищем
+    function realGetItem(key) { return realStorage.getItem(key); }
+    function realSetItem(key, value) { realStorage.setItem(key, value); }
+    function realRemoveItem(key) { realStorage.removeItem(key); }
+    
+    // ========== ПЕРЕМЕННЫЕ ==========
     let MASTER_KEY = null;
     const SALT = "BKbankDynamicSalt";
+    
+    // Защищённые объекты (Уровень 1)
+    const protectedState = {
+        users: {},
+        currentUser: null,
+        bktokBalances: {},
+        allSupportChats: {},
+        privateChats: {},
+        bktokOrders: { buy: [], sell: [] },
+        bktokTrades: [],
+        userTasks: {}
+    };
+    Object.freeze(protectedState);
+    
+    // Рабочие переменные (не замораживаем, но они в замыкании)
+    let users = {};
+    let currentUser = null;
+    let bktokBalances = {};
+    let allSupportChats = {};
+    let privateChats = {};
+    let bktokOrders = { buy: [], sell: [] };
+    let bktokTrades = [];
+    let userTasks = {};
+    
+    let isStackExpanded = false;
+    let selectedPrivateChat = null;
+    let savedAccounts = JSON.parse(realGetItem('savedAccounts') || '{}');
+    let rollbackRequests = [];
+    
+    let failedAttempts = parseInt(realGetItem('failedAttempts') || '0');
+    let lockUntil = parseInt(realGetItem('lockUntil') || '0');
+    let blockLevel = parseInt(realGetItem('blockLevel') || '0');
+    let chartPeriod = '24H';
+    let chartInterval = null;
+    let loginCaptchaAnswer = 0;
+    let requireCaptcha = false;
+    
+    // ========== УРОВЕНЬ 3: MUTATIONOBSERVER ДЛЯ ЗАЩИТЫ DOM ==========
+    const domProtector = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'characterData' || mutation.type === 'childList') {
+                const el = mutation.target;
+                if (el.id === 'token-balance-display' && currentUser) {
+                    const realBalance = bktokBalances[currentUser]?.toFixed(2) || '0';
+                    if (el.textContent !== realBalance + ' BK') {
+                        el.textContent = realBalance + ' BK';
+                    }
+                }
+                if (el.id === 'header-username' && currentUser) {
+                    const realName = users[currentUser]?.name || currentUser;
+                    if (el.textContent !== realName) {
+                        el.textContent = realName;
+                    }
+                }
+            }
+            if (mutation.type === 'attributes' && mutation.attributeName === 'textContent') {
+                const el = mutation.target;
+                if (el.id === 'token-balance-display' && currentUser) {
+                    const realBalance = bktokBalances[currentUser]?.toFixed(2) || '0';
+                    if (el.textContent !== realBalance + ' BK') {
+                        el.textContent = realBalance + ' BK';
+                    }
+                }
+            }
+        });
+    });
+    
+    domProtector.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+        attributes: true,
+        attributeFilter: ['textContent']
+    });
+    
+    // ========== ФУНКЦИИ ШИФРОВАНИЯ ==========
+    async function proofOfWork(password, username, difficulty = 2000000) {
+        return new Promise((resolve) => {
+            const target = username + password + SALT;
+            let hash = target;
+            
+            function doWork(iteration = 0) {
+                if (iteration >= difficulty) {
+                    resolve(CryptoJS.SHA256(hash).toString());
+                    return;
+                }
+                hash = CryptoJS.SHA256(hash + iteration).toString();
+                if (iteration % 50000 === 0) {
+                    setTimeout(() => doWork(iteration + 1), 0);
+                } else {
+                    doWork(iteration + 1);
+                }
+            }
+            doWork();
+        });
+    }
     
     function setMasterKey(password, username) {
         MASTER_KEY = CryptoJS.PBKDF2(password, username + SALT, {
@@ -436,12 +562,12 @@
     function secureSetItem(key, value) {
         if (!MASTER_KEY) return;
         const encrypted = CryptoJS.AES.encrypt(JSON.stringify(value), MASTER_KEY).toString();
-        localStorage.setItem(key, encrypted);
+        realSetItem(key, encrypted);
     }
     
     function secureGetItem(key) {
         if (!MASTER_KEY) return null;
-        const encrypted = localStorage.getItem(key);
+        const encrypted = realGetItem(key);
         if (!encrypted) return null;
         try {
             const decrypted = CryptoJS.AES.decrypt(encrypted, MASTER_KEY).toString(CryptoJS.enc.Utf8);
@@ -452,32 +578,6 @@
     }
     
     function hashPassword(p) { return CryptoJS.SHA256(p + SALT).toString(); }
-    
-    // Инициализация пустых данных
-    let users = {};
-    let currentUser = null;
-    let isStackExpanded = false;
-    let allSupportChats = {};
-    let privateChats = {};
-    let selectedPrivateChat = null;
-    let bktokOrders = { buy: [], sell: [] };
-    let bktokTrades = [];
-    let bktokBalances = {};
-    let userTasks = {};
-    let savedAccounts = JSON.parse(localStorage.getItem('savedAccounts')) || {};
-    let rollbackRequests = [];
-    
-    let failedAttempts = 0;
-    let lockUntil = 0;
-    let blockLevel = 0;
-    let chartPeriod = '24H';
-    let chartInterval = null;
-    let loginCaptchaAnswer = 0;
-    let requireCaptcha = false;
-    
-    function verifyBalances() {
-        return true;
-    }
     
     function updateBalance(user, amount, operation) {
         if (!currentUser) return false;
@@ -492,10 +592,10 @@
     }
     
     function loadUnencryptedData() {
-        failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
-        lockUntil = parseInt(localStorage.getItem('lockUntil')) || 0;
-        blockLevel = parseInt(localStorage.getItem('blockLevel')) || 0;
-        rollbackRequests = JSON.parse(localStorage.getItem('rollbackRequests')) || [];
+        failedAttempts = parseInt(realGetItem('failedAttempts') || '0');
+        lockUntil = parseInt(realGetItem('lockUntil') || '0');
+        blockLevel = parseInt(realGetItem('blockLevel') || '0');
+        rollbackRequests = JSON.parse(realGetItem('rollbackRequests') || '[]');
     }
     loadUnencryptedData();
 
@@ -520,21 +620,78 @@
         }
     }
 
-    window.onload = () => { 
-        if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme'); 
-        showMainContent(); 
-        updateUIForAuth(); 
-        window.toggleSection('about'); 
+    window.onload = async () => { 
+        if (realGetItem('theme') === 'light') document.body.classList.add('light-theme');
+        
+        const savedSession = realGetItem('currentSession');
+        const savedMasterKey = sessionStorage.getItem('MASTER_KEY');
+        
+        if (savedSession && savedMasterKey) {
+            try {
+                const sessionData = JSON.parse(savedSession);
+                MASTER_KEY = savedMasterKey;
+                
+                const decryptedUsers = secureGetItem('bankUsers');
+                if (decryptedUsers && decryptedUsers[sessionData.username]) {
+                    users = decryptedUsers;
+                    currentUser = sessionData.username;
+                    bktokBalances = secureGetItem('bktokBalances') || {};
+                    allSupportChats = secureGetItem('allSupportChats') || {};
+                    privateChats = secureGetItem('privateChats') || {};
+                    bktokOrders = secureGetItem('bktokOrders') || { buy: [], sell: [] };
+                    bktokTrades = secureGetItem('bktokTrades') || [];
+                    userTasks = secureGetItem('userTasks') || {};
+                    
+                    showMainContent();
+                    updateUIForAuth();
+                    startChartUpdates();
+                    return;
+                }
+            } catch(e) {}
+        }
+        
+        showMainContent();
+        updateUIForAuth();
+        window.toggleSection('about');
     };
-    window.toggleTheme = () => { document.body.classList.toggle('light-theme'); localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
+    
+    window.toggleTheme = () => { document.body.classList.toggle('light-theme'); realSetItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
     function showModalOverlay() { 
         const existing = document.getElementById('modal-overlay');
         if (existing) existing.remove();
         const o = document.createElement('div'); 
         o.className = 'modal-overlay'; 
         o.id = 'modal-overlay'; 
-        o.onclick = () => { removeModals(); o.remove(); }; 
         document.body.appendChild(o); 
+    }
+    
+    function showPoWOverlay() {
+        const existing = document.getElementById('pow-overlay');
+        if (existing) existing.remove();
+        const o = document.createElement('div');
+        o.className = 'pow-overlay';
+        o.id = 'pow-overlay';
+        o.innerHTML = `
+            <div class="pow-box">
+                <h3>🔐 Проверка безопасности</h3>
+                <p style="color:#ccc; margin-bottom:20px;">Выполняется Proof-of-Work...</p>
+                <div class="pow-progress">
+                    <div class="pow-progress-bar" id="pow-progress-bar" style="width:0%"></div>
+                </div>
+                <p style="color:#888; font-size:0.85rem;">Это защищает от перебора паролей</p>
+            </div>
+        `;
+        document.body.appendChild(o);
+    }
+    
+    function updatePoWProgress(percent) {
+        const bar = document.getElementById('pow-progress-bar');
+        if (bar) bar.style.width = Math.min(percent, 100) + '%';
+    }
+    
+    function hidePoWOverlay() {
+        const o = document.getElementById('pow-overlay');
+        if (o) o.remove();
     }
     
     function getBlockTime(level) { const times = [30000, 60000, 300000, 900000, 1800000]; return times[Math.min(level, times.length - 1)]; }
@@ -577,12 +734,18 @@
         m.innerHTML = h; document.body.appendChild(m); updateFailedAttemptsWarning(); 
     };
     
-    window.quickLogin = function(username) {
+    window.quickLogin = async function(username) {
         const password = prompt(`Введите пароль для ${username}:`);
         if (!password) return;
         if (!savedAccounts[username]) return;
         
-        // Пробуем расшифровать с этим паролем
+        showPoWOverlay();
+        let progress = 0;
+        const progressInterval = setInterval(() => { progress += 2; updatePoWProgress(progress); }, 40);
+        await proofOfWork(password, username);
+        clearInterval(progressInterval);
+        hidePoWOverlay();
+        
         setMasterKey(password, username);
         const decryptedUsers = secureGetItem('bankUsers');
         
@@ -593,8 +756,6 @@
         }
         
         users = decryptedUsers;
-        
-        // Проверяем хэш пароля
         if (users[username].passwordHash !== hashPassword(password)) {
             alert('Неверный пароль');
             MASTER_KEY = null;
@@ -614,6 +775,9 @@
             secureSetItem('bktokBalances', bktokBalances);
         }
         
+        realSetItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
+        sessionStorage.setItem('MASTER_KEY', MASTER_KEY);
+        
         removeModals(); document.getElementById('modal-overlay')?.remove();
         showMainContent(); showWelcomeMessage(users[username].name); updateUIForAuth();
         startChartUpdates();
@@ -621,7 +785,7 @@
     
     window.removeSavedAccount = function(username) {
         delete savedAccounts[username];
-        localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts));
+        realSetItem('savedAccounts', JSON.stringify(savedAccounts));
         window.showLoginForm();
     };
     
@@ -677,31 +841,22 @@
     }
     window.nextRegStep = function() { const e = document.getElementById('registerError'); if (regStep === 1) { const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; if (!n||!u||!p||!c) return showError(e,'Все поля обязательны'); if (p.length<6) return showError(e,'Пароль должен быть не менее 6 символов'); if (p!==c) return showError(e,'Пароли не совпадают'); regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); } else if (regStep === 2) { const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Некорректный Email'); if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон: +7XXXXXXXXXX'); regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); } };
     window.prevRegStep = () => { regStep--; renderRegStep(); };
-    window.completeRegistration = function() { 
+    window.completeRegistration = async function() { 
         const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); 
         if (!c) return showError(e,'Введите ответ'); 
         if (parseInt(c)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(e,'Неверный ответ'); } 
         const {name, username, email, phone, password} = regData; 
         
-        // Создаём мастер-ключ
+        showPoWOverlay();
+        await proofOfWork(password, username);
+        hidePoWOverlay();
+        
         setMasterKey(password, username);
-        
-        // Пробуем загрузить существующих пользователей
         const existingUsers = secureGetItem('bankUsers') || {};
-        if (existingUsers[username]) { 
-            MASTER_KEY = null; 
-            return showError(e,'Этот никнейм уже занят'); 
-        }
+        if (existingUsers[username]) { MASTER_KEY = null; return showError(e,'Этот никнейм уже занят'); }
         
-        // Создаём нового пользователя
         users = existingUsers;
-        users[username] = { 
-            name, email, phone, 
-            passwordHash: hashPassword(password), 
-            balance: 0, 
-            registrationDate: new Date().toISOString(), 
-            avatar: null 
-        };
+        users[username] = { name, email, phone, passwordHash: hashPassword(password), balance: 0, registrationDate: new Date().toISOString(), avatar: null };
         secureSetItem('bankUsers', users);
         
         currentUser = username;
@@ -709,21 +864,18 @@
         bktokBalances[username] = 100;
         secureSetItem('bktokBalances', bktokBalances);
         
-        allSupportChats = {};
-        privateChats = {};
-        bktokOrders = { buy: [], sell: [] };
-        bktokTrades = [];
-        userTasks = {};
-        
+        allSupportChats = {}; privateChats = {}; bktokOrders = { buy: [], sell: [] }; bktokTrades = []; userTasks = {};
         savedAccounts[username] = true;
-        localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts));
+        realSetItem('savedAccounts', JSON.stringify(savedAccounts));
+        realSetItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
+        sessionStorage.setItem('MASTER_KEY', MASTER_KEY);
         
         removeModals(); document.getElementById('modal-overlay')?.remove();
         showMainContent(); showWelcomeMessage(name); updateUIForAuth();
         startChartUpdates();
     };
     
-    window.login = function() { 
+    window.login = async function() { 
         if (lockUntil > Date.now()) { 
             const sec = Math.ceil((lockUntil - Date.now()) / 1000); 
             showError(document.getElementById('loginError'), `Подождите ${sec} сек`); 
@@ -732,82 +884,51 @@
         
         let u = document.getElementById('loginUsername').value.trim(); 
         const p = document.getElementById('loginPassword').value, e = document.getElementById('loginError'); 
-        
         if (!u||!p) return showError(e,'Заполните все поля'); 
         
         if (requireCaptcha) { 
             const captcha = document.getElementById('loginCaptcha')?.value.trim(); 
             if (!captcha) return showError(e,'Введите ответ капчи'); 
             if (parseInt(captcha) !== loginCaptchaAnswer) { 
-                failedAttempts++; 
-                localStorage.setItem('failedAttempts', failedAttempts); 
+                failedAttempts++; realSetItem('failedAttempts', failedAttempts); 
                 if (failedAttempts >= 5) { 
-                    blockLevel++; 
-                    lockUntil = Date.now() + getBlockTime(blockLevel); 
-                    failedAttempts = 0; 
-                    localStorage.setItem('lockUntil', lockUntil); 
-                    localStorage.setItem('blockLevel', blockLevel); 
-                    localStorage.setItem('failedAttempts', '0'); 
-                    updateFailedAttemptsWarning(); 
-                    return showError(e, `Слишком много попыток. Подождите ${getBlockTime(blockLevel)/1000} сек`); 
+                    blockLevel++; lockUntil = Date.now() + getBlockTime(blockLevel); failedAttempts = 0; 
+                    realSetItem('lockUntil', lockUntil); realSetItem('blockLevel', blockLevel); realSetItem('failedAttempts', '0'); 
+                    updateFailedAttemptsWarning(); return showError(e, `Слишком много попыток. Подождите ${getBlockTime(blockLevel)/1000} сек`); 
                 } 
-                window.showLoginForm(); 
-                return showError(e,'Неверная капча'); 
+                window.showLoginForm(); return showError(e,'Неверная капча'); 
             } 
         } 
         
-        // Устанавливаем мастер-ключ и пробуем расшифровать
+        showPoWOverlay();
+        let progress = 0;
+        const progressInterval = setInterval(() => { progress += 2; updatePoWProgress(progress); }, 40);
+        await proofOfWork(p, u);
+        clearInterval(progressInterval); updatePoWProgress(100);
         setMasterKey(p, u);
         const decryptedUsers = secureGetItem('bankUsers');
+        hidePoWOverlay();
         
-        if (!decryptedUsers) { 
-            MASTER_KEY = null; 
-            return showError(e,'Не удалось расшифровать данные. Проверьте пароль.'); 
-        } 
-        
+        if (!decryptedUsers) { MASTER_KEY = null; return showError(e,'Не удалось расшифровать данные. Проверьте пароль.'); } 
         users = decryptedUsers;
         
-        // Ищем пользователя
         let f = users[u] ? u : Object.keys(users).find(un => users[un].phone === u);
-        if (!f) { 
-            MASTER_KEY = null; 
-            return showError(e,'Пользователь не найден'); 
-        }
+        if (!f) { MASTER_KEY = null; return showError(e,'Пользователь не найден'); }
         
-        // Проверяем пароль
-        const inputHash = hashPassword(p);
-        const storedHash = users[f].passwordHash;
-        
-        if (storedHash !== inputHash) { 
-            failedAttempts++; 
-            localStorage.setItem('failedAttempts', failedAttempts); 
+        if (users[f].passwordHash !== hashPassword(p)) { 
+            failedAttempts++; realSetItem('failedAttempts', failedAttempts); 
             if (failedAttempts >= 5) { 
-                blockLevel++; 
-                lockUntil = Date.now() + getBlockTime(blockLevel); 
-                failedAttempts = 0; 
-                localStorage.setItem('lockUntil', lockUntil); 
-                localStorage.setItem('blockLevel', blockLevel); 
-                localStorage.setItem('failedAttempts', '0'); 
-                updateFailedAttemptsWarning(); 
-                MASTER_KEY = null; 
-                return showError(e, `Слишком много попыток. Подождите ${getBlockTime(blockLevel)/1000} сек`); 
+                blockLevel++; lockUntil = Date.now() + getBlockTime(blockLevel); failedAttempts = 0; 
+                realSetItem('lockUntil', lockUntil); realSetItem('blockLevel', blockLevel); realSetItem('failedAttempts', '0'); 
+                updateFailedAttemptsWarning(); MASTER_KEY = null; return showError(e, `Слишком много попыток. Подождите ${getBlockTime(blockLevel)/1000} сек`); 
             } 
-            window.showLoginForm(); 
-            MASTER_KEY = null; 
-            return showError(e,'Неверный пароль'); 
+            window.showLoginForm(); MASTER_KEY = null; return showError(e,'Неверный пароль'); 
         } 
         
-        // Успешный вход
-        failedAttempts = 0; 
-        lockUntil = 0; 
-        blockLevel = 0; 
-        localStorage.setItem('failedAttempts', '0'); 
-        localStorage.setItem('lockUntil', '0'); 
-        localStorage.setItem('blockLevel', '0'); 
-        
+        failedAttempts = 0; lockUntil = 0; blockLevel = 0; 
+        realSetItem('failedAttempts', '0'); realSetItem('lockUntil', '0'); realSetItem('blockLevel', '0'); 
         currentUser = f;
         
-        // Загружаем остальные данные
         bktokBalances = secureGetItem('bktokBalances') || {};
         allSupportChats = secureGetItem('allSupportChats') || {};
         privateChats = secureGetItem('privateChats') || {};
@@ -816,18 +937,14 @@
         userTasks = secureGetItem('userTasks') || {};
         
         savedAccounts[f] = true;
-        localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts));
+        realSetItem('savedAccounts', JSON.stringify(savedAccounts));
+        if (bktokBalances[f] === undefined) { bktokBalances[f] = 100; secureSetItem('bktokBalances', bktokBalances); }
         
-        if (bktokBalances[f] === undefined) {
-            bktokBalances[f] = 100;
-            secureSetItem('bktokBalances', bktokBalances);
-        }
+        realSetItem('currentSession', JSON.stringify({username: f, timestamp: Date.now()}));
+        sessionStorage.setItem('MASTER_KEY', MASTER_KEY);
         
-        removeModals(); 
-        document.getElementById('modal-overlay')?.remove();
-        showMainContent(); 
-        showWelcomeMessage(users[f].name); 
-        updateUIForAuth();
+        removeModals(); document.getElementById('modal-overlay')?.remove();
+        showMainContent(); showWelcomeMessage(users[f].name); updateUIForAuth();
         startChartUpdates();
     };
 
@@ -848,7 +965,6 @@
         else if (s==='profile') { if (currentUser) showProfile(); else window.showLoginForm(); }
     };
 
-    // AI Support и остальные функции остаются без изменений
     function renderAISupport() {
         const c = document.getElementById('support-container');
         if (!currentUser) { c.innerHTML = '<p style="text-align:center; padding:20px;">🔒 Войдите, чтобы задать вопрос</p>'; return; }
@@ -881,30 +997,19 @@
             });
             h += `</div>`;
         }
-        
-        c.innerHTML = h;
-        loadAIMessages();
+        c.innerHTML = h; loadAIMessages();
     }
     
     function loadAIMessages() {
-        const cont = document.getElementById('ai-chat-messages');
-        if (!cont) return;
-        cont.innerHTML = allSupportChats[currentUser].map(msg => {
-            const isAI = msg.from === 'ai';
-            return `<div class="chat-message ${isAI ? 'support' : 'client'}"><strong>${isAI ? '🤖 BK-AI' : '👤 Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`;
-        }).join('');
+        const cont = document.getElementById('ai-chat-messages'); if (!cont) return;
+        cont.innerHTML = allSupportChats[currentUser].map(msg => `<div class="chat-message ${msg.from==='ai'?'support':'client'}"><strong>${msg.from==='ai'?'🤖 BK-AI':'👤 Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join('');
         cont.scrollTop = cont.scrollHeight;
     }
     
     window.sendAIMessage = function() {
-        const inp = document.getElementById('ai-chat-input');
-        const txt = inp.value.trim();
-        if (!txt) return;
+        const inp = document.getElementById('ai-chat-input'); const txt = inp.value.trim(); if (!txt) return;
         allSupportChats[currentUser].push({ from: currentUser, text: txt, time: new Date().toISOString() });
-        if (MASTER_KEY) secureSetItem('allSupportChats', allSupportChats);
-        inp.value = '';
-        loadAIMessages();
-        
+        if (MASTER_KEY) secureSetItem('allSupportChats', allSupportChats); inp.value = ''; loadAIMessages();
         setTimeout(() => {
             const response = generateAIResponse(txt);
             allSupportChats[currentUser].push({ from: 'ai', text: response.text, time: new Date().toISOString() });
@@ -916,37 +1021,22 @@
     
     function generateAIResponse(q) {
         const ql = q.toLowerCase();
-        
-        if (ql.includes('откат') || ql.includes('отменить сделку') || ql.includes('вернуть транзакцию')) {
-            const tradeMatch = ql.match(/#?(\d+)/);
-            const userMatch = ql.match(/с (@?\w+)/i) || ql.match(/пользовател[ья] (\w+)/i);
-            
+        if (ql.includes('откат') || ql.includes('отменить сделку')) {
+            const tradeMatch = ql.match(/#?(\d+)/), userMatch = ql.match(/с (@?\w+)/i) || ql.match(/пользовател[ья] (\w+)/i);
             if (tradeMatch && userMatch) {
-                const tradeId = tradeMatch[1];
-                const targetUser = userMatch[1].replace('@', '');
-                
+                const tradeId = tradeMatch[1], targetUser = userMatch[1].replace('@', '');
                 if (!users[targetUser]) return { text: `❌ Пользователь @${targetUser} не найден.`, rollbackRequest: false };
                 if (targetUser === currentUser) return { text: `❌ Нельзя запросить откат у самого себя.`, rollbackRequest: false };
-                
                 const trade = bktokTrades.find(t => t.buyer === currentUser || t.seller === currentUser);
                 if (!trade) return { text: `❌ Сделка #${tradeId} не найдена.`, rollbackRequest: false };
-                
                 const existing = rollbackRequests.find(r => r.tradeId === tradeId && r.from === currentUser && r.to === targetUser && r.status === 'pending');
-                if (existing) return { text: `⏳ Запрос уже отправлен и ожидает ответа.`, rollbackRequest: false };
-                
-                const request = {
-                    id: Date.now() + Math.random().toString(36),
-                    from: currentUser, to: targetUser, tradeId, amount: trade.amount, price: trade.price,
-                    time: new Date().toISOString(), status: 'pending'
-                };
-                rollbackRequests.push(request);
-                localStorage.setItem('rollbackRequests', JSON.stringify(rollbackRequests));
-                
+                if (existing) return { text: `⏳ Запрос уже отправлен.`, rollbackRequest: false };
+                const request = { id: Date.now() + Math.random().toString(36), from: currentUser, to: targetUser, tradeId, amount: trade.amount, price: trade.price, time: new Date().toISOString(), status: 'pending' };
+                rollbackRequests.push(request); realSetItem('rollbackRequests', JSON.stringify(rollbackRequests));
                 return { text: `✅ Запрос на откат сделки #${tradeId} отправлен @${targetUser}.`, rollbackRequest: true };
             }
             return { text: `📝 Укажите: "откат сделки #НОМЕР с @никнейм"`, rollbackRequest: false };
         }
-        
         if (ql.includes('баланс')) return { text: `💰 Баланс: ${bktokBalances[currentUser]?.toFixed(2) || '0'} BK.`, rollbackRequest: false };
         if (ql.includes('привет')) return { text: '👋 Здравствуйте! Чем могу помочь?', rollbackRequest: false };
         return { text: '🤔 Я могу помочь с балансом, картами, токенами или откатом сделок.', rollbackRequest: false };
@@ -955,15 +1045,9 @@
     window.respondRollback = function(requestId, action) {
         const request = rollbackRequests.find(r => r.id === requestId);
         if (!request || request.status !== 'pending' || request.to !== currentUser) return;
-        
-        if (action === 'accept') {
-            updateBalance(request.from, request.amount, 'rollback');
-            updateBalance(request.to, -request.amount, 'rollback');
-            request.status = 'accepted';
-        } else {
-            request.status = 'rejected';
-        }
-        localStorage.setItem('rollbackRequests', JSON.stringify(rollbackRequests));
+        if (action === 'accept') { updateBalance(request.from, request.amount, 'rollback'); updateBalance(request.to, -request.amount, 'rollback'); request.status = 'accepted'; }
+        else { request.status = 'rejected'; }
+        realSetItem('rollbackRequests', JSON.stringify(rollbackRequests));
         renderAISupport();
         alert(action === 'accept' ? 'Откат выполнен!' : 'Запрос отклонён.');
     };
@@ -1039,17 +1123,15 @@
         ${savedHtml}
         <div class="profile-actions">
             <button class="profile-action-btn" onclick="window.showEditProfileForm()">✏️ Редактировать профиль</button>
-            <button class="profile-action-btn" onclick="window.exportVault()">📤 Экспорт хранилища</button>
-            <button class="profile-action-btn" onclick="window.importVault()">📥 Импорт хранилища</button>
             <button class="profile-action-btn" onclick="window.destroyAccount()">⚠️ Удалить аккаунт</button>
         </div>
         <div class="profile-info"><p style="font-size:1rem;">📧 ${u.email||'Не указан'}</p><p style="font-size:1rem;">📱 ${u.phone||'Не указан'}</p><p style="font-size:1rem;">💰 ${bktokBalances[currentUser]||0} BK</p></div>`;
         c.classList.remove('hidden');
     }
     
-    window.switchToAccount = function(username) {
-        const password = prompt(`Введите пароль для ${username}:`);
-        if (!password) return;
+    window.switchToAccount = async function(username) {
+        const password = prompt(`Введите пароль для ${username}:`); if (!password) return;
+        showPoWOverlay(); await proofOfWork(password, username); hidePoWOverlay();
         setMasterKey(password, username);
         const decryptedUsers = secureGetItem('bankUsers');
         if (!decryptedUsers || !decryptedUsers[username]) { alert('Неверный пароль'); MASTER_KEY = null; return; }
@@ -1062,22 +1144,23 @@
         bktokOrders = secureGetItem('bktokOrders') || { buy: [], sell: [] };
         bktokTrades = secureGetItem('bktokTrades') || [];
         userTasks = secureGetItem('userTasks') || {};
-        updateUIForAuth();
-        showProfile();
+        realSetItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
+        sessionStorage.setItem('MASTER_KEY', MASTER_KEY);
+        updateUIForAuth(); showProfile();
         showWelcomeMessage(`Переключено на ${users[username].name}`);
     };
     
     window.removeAccount = function(username) {
         if (confirm(`Удалить аккаунт ${username} из сохранённых?`)) {
             delete savedAccounts[username];
-            localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts));
+            realSetItem('savedAccounts', JSON.stringify(savedAccounts));
             showProfile();
         }
     };
     
     window.switchAccount = function() { 
-        MASTER_KEY = null; 
-        currentUser = null; 
+        MASTER_KEY = null; currentUser = null;
+        realRemoveItem('currentSession'); sessionStorage.removeItem('MASTER_KEY');
         updateUIForAuth(); 
         document.querySelector('.main-container').classList.add('hidden');
         document.querySelector('header').classList.add('hidden');
@@ -1087,57 +1170,11 @@
     window.cancelEditProfile = () => { removeModals(); showProfile(); };
     window.saveProfile = () => { const n = document.getElementById('editName').value.trim(), e = document.getElementById('editEmail').value.trim(), p = document.getElementById('editPhone').value.trim(), pass = document.getElementById('editPassword').value; if (n) users[currentUser].name = n; if (e) users[currentUser].email = e; if (p && /^\+7\d{10}$/.test(p)) users[currentUser].phone = p; if (pass && pass.length>=6) users[currentUser].passwordHash = hashPassword(pass); if (MASTER_KEY) secureSetItem('bankUsers', users); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!'); };
     window.uploadAvatar = (e) => { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => { users[currentUser].avatar = ev.target.result; if (MASTER_KEY) secureSetItem('bankUsers', users); showProfile(); updateUIForAuth(); }; r.readAsDataURL(f); } };
-    window.exportVault = () => {
-        if (!MASTER_KEY) return alert('Войдите заново');
-        const d = { users, bktokBalances, bktokTrades, userTasks, privateChats, allSupportChats, rollbackRequests };
-        const encrypted = CryptoJS.AES.encrypt(JSON.stringify(d), MASTER_KEY).toString();
-        const b = new Blob([encrypted], {type: 'application/octet-stream'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(b);
-        a.download = `bkbank_${Date.now()}.enc.bkwallet`;
-        a.click();
-    };
-    window.importVault = () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.enc.bkwallet';
-        input.onchange = async (e) => {
-            const file = e.target.files[0];
-            const encrypted = await file.text();
-            const password = prompt('Введите пароль от хранилища:');
-            try {
-                const decrypted = CryptoJS.AES.decrypt(encrypted, password).toString(CryptoJS.enc.Utf8);
-                const data = JSON.parse(decrypted);
-                if (!data.users || !data.bktokBalances) throw new Error('Неверный формат');
-                users = data.users;
-                bktokBalances = data.bktokBalances;
-                bktokTrades = data.bktokTrades || [];
-                userTasks = data.userTasks || {};
-                privateChats = data.privateChats || {};
-                allSupportChats = data.allSupportChats || {};
-                rollbackRequests = data.rollbackRequests || [];
-                for (let u in users) { delete users[u].isAdmin; delete users[u].isSupport; }
-                MASTER_KEY = password;
-                secureSetItem('bankUsers', users);
-                secureSetItem('bktokBalances', bktokBalances);
-                secureSetItem('bktokTrades', bktokTrades);
-                secureSetItem('userTasks', userTasks);
-                secureSetItem('privateChats', privateChats);
-                secureSetItem('allSupportChats', allSupportChats);
-                localStorage.setItem('rollbackRequests', JSON.stringify(rollbackRequests));
-                alert('Хранилище загружено! Войдите снова.');
-                window.logout();
-            } catch(e) {
-                alert('Неверный пароль или повреждённый файл');
-            }
-        };
-        input.click();
-    };
-    window.destroyAccount = () => { if (confirm('УДАЛИТЬ АККАУНТ?')) { delete users[currentUser]; delete bktokBalances[currentUser]; delete savedAccounts[currentUser]; if (MASTER_KEY) { secureSetItem('bankUsers', users); secureSetItem('bktokBalances', bktokBalances); } localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts)); logout(); } };
+    window.destroyAccount = () => { if (confirm('УДАЛИТЬ АККАУНТ?')) { delete users[currentUser]; delete bktokBalances[currentUser]; delete savedAccounts[currentUser]; if (MASTER_KEY) { secureSetItem('bankUsers', users); secureSetItem('bktokBalances', bktokBalances); } realSetItem('savedAccounts', JSON.stringify(savedAccounts)); logout(); } };
     window.logout = function() { 
         if (chartInterval) clearInterval(chartInterval); 
-        MASTER_KEY = null; 
-        currentUser = null; 
+        MASTER_KEY = null; currentUser = null;
+        realRemoveItem('currentSession'); sessionStorage.removeItem('MASTER_KEY');
         updateUIForAuth(); 
         document.querySelector('.main-container').classList.add('hidden');
         document.querySelector('header').classList.add('hidden');
@@ -1148,6 +1185,31 @@
     function removeModals() { document.querySelectorAll('.modal-form').forEach(m=>m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+    
+    // ========== ПУБЛИЧНЫЕ ФУНКЦИИ (только необходимые) ==========
+    const publicAPI = {
+        toggleTheme, toggleSection, showLoginForm, showRegistrationForm,
+        login, register: window.completeRegistration, logout, switchAccount, quickLogin,
+        completeTask, openCase, createOrder, cancelOrder,
+        handleStackClick, changeChartPeriod, sendAIMessage,
+        startNewChat, openPrivateChat, sendPrivateMessage,
+        respondRollback, switchToAccount, removeAccount, removeSavedAccount,
+        showEditProfileForm, cancelEditProfile, saveProfile, uploadAvatar, destroyAccount,
+        showPublicProfile, completeRegistration: window.completeRegistration,
+        nextRegStep, prevRegStep
+    };
+    
+    Object.keys(publicAPI).forEach(key => {
+        if (publicAPI[key]) {
+            Object.defineProperty(window, key, {
+                value: publicAPI[key],
+                writable: false,
+                configurable: false,
+                enumerable: true
+            });
+        }
+    });
+    
 })();
 </script>
 </body>
