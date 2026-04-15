@@ -81,7 +81,6 @@
         p, li, span, div { color: #ffffff; line-height: 1.6; font-size: 0.95rem; }
         .highlight { color: #FFD700; font-weight: 600; }
         
-        /* Анимированные услуги */
         .services-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
         .service-card { background: rgba(255,215,0,0.03); border: 1px solid rgba(255,215,0,0.1); border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 15px; cursor: default; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); position: relative; overflow: hidden; }
         .service-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent); transition: left 0.6s; }
@@ -162,6 +161,10 @@
         .user-item { padding: 10px; margin-bottom: 6px; background: rgba(255,215,0,0.05); border-radius: 10px; cursor: pointer; font-size: 0.9rem; }
         .user-item:hover { background: rgba(255,215,0,0.1); }
         .user-item.active { background: rgba(255,215,0,0.15); border: 1px solid #FFD700; }
+        
+        .captcha-box { background: rgba(255,215,0,0.05); border: 2px solid rgba(255,215,0,0.3); border-radius: 20px; padding: 20px; margin: 20px 0; text-align: center; }
+        .captcha-question { font-size: 2rem; font-weight: 700; color: #FFD700; margin-bottom: 15px; letter-spacing: 5px; }
+        .captcha-emoji { font-size: 2.5rem; margin-right: 10px; }
         
         @media (min-width: 640px) {
             .glass-header { padding: 12px 24px; }
@@ -346,9 +349,13 @@
     
     let failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
     let lockUntil = parseInt(localStorage.getItem('lockUntil')) || 0;
+    let blockLevel = parseInt(localStorage.getItem('blockLevel')) || 0;
     const SALT = "BKbankDynamicSalt";
     let chartPeriod = '24H';
     let chartInterval = null;
+    let loginCaptchaAnswer = 0;
+    let requireCaptcha = false;
+    
     function hashPassword(p) { return CryptoJS.SHA256(p + SALT).toString(); }
     
     let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
@@ -399,18 +406,61 @@
     window.onload = () => { if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme'); const s = localStorage.getItem('currentSession'), viewUser = new URLSearchParams(window.location.search).get('user'); if (viewUser && users[viewUser]) { window.showPublicProfile(viewUser); return; } if (s) { const d = JSON.parse(s); if (Date.now() - d.timestamp < 86400000) { currentUser = d.username; showMainContent(); showWelcomeMessage(users[currentUser].name); updateUIForAuth(); return; } } showMainContent(); updateUIForAuth(); window.toggleSection('about'); startChartUpdates(); };
     window.toggleTheme = () => { document.body.classList.toggle('light-theme'); localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
     function showModalOverlay() { const o = document.createElement('div'); o.className = 'modal-overlay'; o.id = 'modal-overlay'; o.onclick = () => { removeModals(); o.remove(); }; document.body.appendChild(o); }
-    window.showLoginForm = function() { removeModals(); document.getElementById('modal-overlay')?.remove(); showModalOverlay(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Вход</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="window.login()">Войти</button><span class="text-link" onclick="window.showRegistrationForm()">Регистрация</span><div id="failedAttemptsWarning" style="color:#ff5e5e; text-align:center;"></div>`; document.body.appendChild(m); updateFailedAttemptsWarning(); };
-    function updateFailedAttemptsWarning() { const w = document.getElementById('failedAttemptsWarning'); if (w) { if (lockUntil > Date.now()) { const sec = Math.ceil((lockUntil - Date.now()) / 1000); w.textContent = `⏳ Заблокировано на ${sec} сек`; } else if (failedAttempts > 0) { w.textContent = `⚠️ ${failedAttempts}/5 попыток`; } else { w.textContent = ''; } } }
+    
+    function getBlockTime(level) { const times = [30000, 60000, 300000, 900000, 1800000]; return times[Math.min(level, times.length - 1)]; }
+    
+    window.showLoginForm = function() { 
+        removeModals(); document.getElementById('modal-overlay')?.remove(); showModalOverlay(); 
+        requireCaptcha = failedAttempts >= 2;
+        const m = document.createElement('div'); m.className = 'modal-form'; 
+        let h = `<div class="form-title">🔐 Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div>
+        <input id="loginUsername" class="form-input" placeholder="👤 Никнейм или телефон">
+        <input type="password" id="loginPassword" class="form-input" placeholder="🔑 Пароль">`;
+        if (requireCaptcha) {
+            const ops = ['+', '-', '×'];
+            const op = ops[Math.floor(Math.random() * ops.length)];
+            let n1, n2, ans;
+            if (op === '+') { n1 = Math.floor(Math.random() * 20) + 1; n2 = Math.floor(Math.random() * 20) + 1; ans = n1 + n2; }
+            else if (op === '-') { n1 = Math.floor(Math.random() * 20) + 11; n2 = Math.floor(Math.random() * 10) + 1; ans = n1 - n2; }
+            else { n1 = Math.floor(Math.random() * 10) + 1; n2 = Math.floor(Math.random() * 10) + 1; ans = n1 * n2; }
+            loginCaptchaAnswer = ans;
+            h += `<div class="captcha-box"><div style="font-size:1rem; color:#888; margin-bottom:10px;">🤖 Подтвердите, что вы человек</div>
+            <div class="captcha-question"><span class="captcha-emoji">🧮</span> ${n1} ${op} ${n2} = ?</div>
+            <input id="loginCaptcha" class="form-input" placeholder="Введите ответ" style="text-align:center;"></div>`;
+        }
+        h += `<button class="gold-button" onclick="window.login()">🚪 Войти</button>
+        <span class="text-link" onclick="window.showRegistrationForm()">✨ Создать аккаунт</span>
+        <div id="failedAttemptsWarning" style="color:#ff5e5e; text-align:center; margin-top:10px;"></div>`;
+        m.innerHTML = h; document.body.appendChild(m); updateFailedAttemptsWarning(); 
+    };
+    
+    function updateFailedAttemptsWarning() { 
+        const w = document.getElementById('failedAttemptsWarning'); 
+        if (w) { 
+            if (lockUntil > Date.now()) { 
+                const sec = Math.ceil((lockUntil - Date.now()) / 1000); 
+                w.textContent = `⏳ Заблокировано на ${sec} сек`; 
+            } else if (failedAttempts > 0) { 
+                w.textContent = `⚠️ ${failedAttempts}/5 попыток`; 
+            } else { w.textContent = ''; } 
+        } 
+    }
 
     let regStep = 1, regData = {}, captchaAnswer = 0;
     window.showRegistrationForm = function() { removeModals(); document.getElementById('modal-overlay')?.remove(); showModalOverlay(); regStep = 1; regData = {}; renderRegStep(); };
-    function renderRegStep() { removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; let h = `<div class="form-title">Регистрация</div><div class="step-indicator">${[1,2,3].map(i => `<div class="step-dot ${i===regStep?'active':''} ${i<regStep?'completed':''}"></div>`).join('')}</div><div id="registerError" class="error-text hidden"></div>`; if (regStep === 1) h += `<input id="regName" class="form-input" placeholder="Имя" value="${regData.name||''}"><input id="regUsername" class="form-input" placeholder="Никнейм" value="${regData.username||''}"><input type="password" id="regPassword" class="form-input" placeholder="Пароль"><input type="password" id="regConfirm" class="form-input" placeholder="Подтверждение"><button class="gold-button" onclick="window.nextRegStep()">Далее</button>`; else if (regStep === 2) h += `<input id="regEmail" class="form-input" placeholder="Email" value="${regData.email||''}"><input id="regPhone" class="form-input" placeholder="Телефон +7..." value="${regData.phone||'+7'}"><button class="gold-button" onclick="window.nextRegStep()">Далее</button><button class="dark-button" onclick="window.prevRegStep()">Назад</button>`; else { const n1 = Math.floor(Math.random()*10)+1, n2 = Math.floor(Math.random()*10)+1; captchaAnswer = n1+n2; h += `<p style="text-align:center;">${n1} + ${n2} = ?</p><input id="captchaInput" class="form-input" placeholder="Ответ"><button class="gold-button" onclick="window.completeRegistration()">Зарегистрироваться</button><button class="dark-button" onclick="window.prevRegStep()">Назад</button>`; } h += `<span class="text-link" onclick="window.showLoginForm()">← Войти</span>`; m.innerHTML = h; document.body.appendChild(m); }
-    window.nextRegStep = function() { const e = document.getElementById('registerError'); if (regStep === 1) { const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; if (!n||!u||!p||!c) return showError(e,'Все поля'); if (p.length<6) return showError(e,'Пароль от 6'); if (p!==c) return showError(e,'Не совпадают'); if (users[u]) return showError(e,'Занят'); regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); } else if (regStep === 2) { const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Email'); if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон'); if (em) { for (let u in users) if (users[u].email===em) return showError(e,'Email занят'); } if (ph && ph!=='+7') { for (let u in users) if (users[u].phone===ph) return showError(e,'Телефон занят'); } regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); } };
+    function renderRegStep() { removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; let h = `<div class="form-title">📝 Регистрация</div><div class="step-indicator">${[1,2,3].map(i => `<div class="step-dot ${i===regStep?'active':''} ${i<regStep?'completed':''}"></div>`).join('')}</div><div id="registerError" class="error-text hidden"></div>`; if (regStep === 1) h += `<input id="regName" class="form-input" placeholder="👤 Ваше имя" value="${regData.name||''}"><input id="regUsername" class="form-input" placeholder="📛 Никнейм" value="${regData.username||''}"><input type="password" id="regPassword" class="form-input" placeholder="🔒 Пароль"><input type="password" id="regConfirm" class="form-input" placeholder="🔒 Подтвердите пароль"><button class="gold-button" onclick="window.nextRegStep()">Далее →</button>`; else if (regStep === 2) h += `<input id="regEmail" class="form-input" placeholder="📧 Email" value="${regData.email||''}"><input id="regPhone" class="form-input" placeholder="📱 Телефон +7..." value="${regData.phone||'+7'}"><button class="gold-button" onclick="window.nextRegStep()">Далее →</button><button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`; else { const n1 = Math.floor(Math.random()*15)+1, n2 = Math.floor(Math.random()*15)+1; captchaAnswer = n1+n2; h += `<div class="captcha-box"><div style="font-size:1rem; color:#888; margin-bottom:10px;">🔐 Проверка безопасности</div><div class="captcha-question"><span class="captcha-emoji">🔢</span> ${n1} + ${n2} = ?</div><input id="captchaInput" class="form-input" placeholder="Введите ответ" style="text-align:center;"></div><button class="gold-button" onclick="window.completeRegistration()">✅ Зарегистрироваться</button><button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`; } h += `<span class="text-link" onclick="window.showLoginForm()">← Уже есть аккаунт</span>`; m.innerHTML = h; document.body.appendChild(m); }
+    window.nextRegStep = function() { const e = document.getElementById('registerError'); if (regStep === 1) { const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; if (!n||!u||!p||!c) return showError(e,'Все поля обязательны'); if (p.length<6) return showError(e,'Пароль должен быть не менее 6 символов'); if (p!==c) return showError(e,'Пароли не совпадают'); if (users[u]) return showError(e,'Этот никнейм уже занят'); regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); } else if (regStep === 2) { const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Некорректный Email'); if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон: +7XXXXXXXXXX'); if (em) { for (let u in users) if (users[u].email===em) return showError(e,'Email уже используется'); } if (ph && ph!=='+7') { for (let u in users) if (users[u].phone===ph) return showError(e,'Телефон уже используется'); } regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); } };
     window.prevRegStep = () => { regStep--; renderRegStep(); };
-    window.completeRegistration = function() { const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); if (!c) return showError(e,'Введите ответ'); if (parseInt(c)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(e,'Неверно'); } const {name,username,email,phone,password} = regData; users[username] = { name, email, phone, passwordHash: hashPassword(password), balance:0, registrationDate:new Date().toISOString(), avatar:null }; localStorage.setItem('bankUsers', JSON.stringify(users)); currentUser = username; bktokBalances[username]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('currentSession', JSON.stringify({username,timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(name); updateUIForAuth(); };
+    window.completeRegistration = function() { const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); if (!c) return showError(e,'Введите ответ'); if (parseInt(c)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(e,'Неверный ответ'); } const {name,username,email,phone,password} = regData; users[username] = { name, email, phone, passwordHash: hashPassword(password), balance:0, registrationDate:new Date().toISOString(), avatar:null }; localStorage.setItem('bankUsers', JSON.stringify(users)); currentUser = username; bktokBalances[username]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('currentSession', JSON.stringify({username,timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(name); updateUIForAuth(); };
+    
     window.login = function() { 
         if (lockUntil > Date.now()) { const sec = Math.ceil((lockUntil - Date.now()) / 1000); showError(document.getElementById('loginError'), `Подождите ${sec} сек`); return; }
-        let u = document.getElementById('loginUsername').value.trim(); const p = document.getElementById('loginPassword').value, e = document.getElementById('loginError'); if (!u||!p) return showError(e,'Заполните'); let f = users[u] ? u : Object.keys(users).find(un => users[un].phone===u); if (!f) return showError(e,'Не найден'); if (users[f].passwordHash !== hashPassword(p)) { failedAttempts++; localStorage.setItem('failedAttempts', failedAttempts); if (failedAttempts >= 5) { lockUntil = Date.now() + 30000; failedAttempts = 0; localStorage.setItem('lockUntil', lockUntil); localStorage.setItem('failedAttempts', '0'); updateFailedAttemptsWarning(); return showError(e, 'Слишком много попыток. Подождите 30 сек'); } updateFailedAttemptsWarning(); return showError(e,'Неверные данные'); } failedAttempts = 0; lockUntil = 0; localStorage.setItem('failedAttempts', '0'); localStorage.setItem('lockUntil', '0'); currentUser = f; if (bktokBalances[f]===undefined) { bktokBalances[f]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); } localStorage.setItem('currentSession', JSON.stringify({username:f, timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(users[f].name); updateUIForAuth(); };
+        let u = document.getElementById('loginUsername').value.trim(); const p = document.getElementById('loginPassword').value, e = document.getElementById('loginError'); 
+        if (!u||!p) return showError(e,'Заполните все поля'); 
+        if (requireCaptcha) { const captcha = document.getElementById('loginCaptcha')?.value.trim(); if (!captcha) return showError(e,'Введите ответ капчи'); if (parseInt(captcha) !== loginCaptchaAnswer) { failedAttempts++; localStorage.setItem('failedAttempts', failedAttempts); if (failedAttempts >= 5) { blockLevel++; lockUntil = Date.now() + getBlockTime(blockLevel); failedAttempts = 0; localStorage.setItem('lockUntil', lockUntil); localStorage.setItem('blockLevel', blockLevel); localStorage.setItem('failedAttempts', '0'); updateFailedAttemptsWarning(); return showError(e, `Слишком много попыток. Подождите ${getBlockTime(blockLevel)/1000} сек`); } window.showLoginForm(); return showError(e,'Неверная капча'); } }
+        let f = users[u] ? u : Object.keys(users).find(un => users[un].phone===u); if (!f) return showError(e,'Пользователь не найден'); 
+        if (users[f].passwordHash !== hashPassword(p)) { failedAttempts++; localStorage.setItem('failedAttempts', failedAttempts); if (failedAttempts >= 5) { blockLevel++; lockUntil = Date.now() + getBlockTime(blockLevel); failedAttempts = 0; localStorage.setItem('lockUntil', lockUntil); localStorage.setItem('blockLevel', blockLevel); localStorage.setItem('failedAttempts', '0'); updateFailedAttemptsWarning(); return showError(e, `Слишком много попыток. Подождите ${getBlockTime(blockLevel)/1000} сек`); } window.showLoginForm(); return showError(e,'Неверный пароль'); } 
+        failedAttempts = 0; lockUntil = 0; blockLevel = 0; localStorage.setItem('failedAttempts', '0'); localStorage.setItem('lockUntil', '0'); localStorage.setItem('blockLevel', '0'); currentUser = f; if (bktokBalances[f]===undefined) { bktokBalances[f]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); } localStorage.setItem('currentSession', JSON.stringify({username:f, timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(users[f].name); updateUIForAuth(); };
 
     function showMainContent() { document.querySelector('.main-container').classList.remove('hidden'); window.toggleSection('about'); }
     function showWelcomeMessage(n) { const t = document.createElement('div'); t.className = 'toast-message'; t.innerHTML = `<strong>✨ Добро пожаловать, ${n}!</strong>`; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
@@ -481,9 +531,19 @@
 
     function showProfile() {
         if (!currentUser) return; const u = users[currentUser], c = document.getElementById('profile-section');
-        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar||'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="window.uploadAvatar(event)"><div><strong>${u.name}</strong><br>@${currentUser}</div><button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:10px 20px; border-radius:30px; cursor:pointer;" onclick="window.logout()">Выйти</button></div>
-        <div class="profile-actions"><button class="profile-action-btn" onclick="window.showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="window.switchAccount()">🔄 Сменить аккаунт</button><button class="profile-action-btn" onclick="window.exportVault()">📤 Экспорт данных</button><button class="profile-action-btn" onclick="window.destroyAccount()">⚠️ Удалить аккаунт</button></div>
-        <div class="profile-info"><p>📧 ${u.email||'Не указан'}</p><p>📱 ${u.phone||'Не указан'}</p><p>💰 ${bktokBalances[currentUser]||0} BK</p></div>`; c.classList.remove('hidden');
+        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div>
+        <div class="profile-header">
+            <img src="${u.avatar||'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()">
+            <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="window.uploadAvatar(event)">
+            <div><strong>${u.name}</strong><br>@${currentUser}</div>
+            <div style="display:flex; gap:8px; margin-left:auto;">
+                <button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:10px 20px; border-radius:30px; cursor:pointer; font-weight:600;" onclick="window.switchAccount()">🔄 Сменить</button>
+                <button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:10px 20px; border-radius:30px; cursor:pointer; font-weight:600;" onclick="window.logout()">🚪 Выйти</button>
+            </div>
+        </div>
+        <div class="profile-actions"><button class="profile-action-btn" onclick="window.showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="window.exportVault()">📤 Экспорт данных</button><button class="profile-action-btn" onclick="window.destroyAccount()">⚠️ Удалить аккаунт</button></div>
+        <div class="profile-info"><p>📧 ${u.email||'Не указан'}</p><p>📱 ${u.phone||'Не указан'}</p><p>💰 ${bktokBalances[currentUser]||0} BK</p></div>`;
+        c.classList.remove('hidden');
     }
     window.switchAccount = function() { localStorage.removeItem('currentSession'); currentUser = null; updateUIForAuth(); window.showLoginForm(); };
     window.showEditProfileForm = () => { const u = users[currentUser]; removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Редактирование</div><input id="editName" class="form-input" placeholder="Имя" value="${u.name||''}"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email||''}"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone||''}"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль"><button class="gold-button" onclick="window.saveProfile()">Сохранить</button><button class="dark-button" onclick="window.cancelEditProfile()">Отмена</button>`; document.body.appendChild(m); };
