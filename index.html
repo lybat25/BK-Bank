@@ -81,6 +81,20 @@
         p, li, span, div { color: #ffffff; line-height: 1.6; font-size: 0.95rem; }
         .highlight { color: #FFD700; font-weight: 600; }
         
+        /* Анимированные услуги */
+        .services-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .service-card { background: rgba(255,215,0,0.03); border: 1px solid rgba(255,215,0,0.1); border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 15px; cursor: default; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); position: relative; overflow: hidden; }
+        .service-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent); transition: left 0.6s; }
+        .service-card:hover { transform: translateY(-5px) scale(1.02); border-color: #FFD700; box-shadow: 0 20px 40px -15px rgba(255,215,0,0.3); }
+        .service-card:hover::before { left: 100%; }
+        .service-icon { width: 50px; height: 50px; background: rgba(255,215,0,0.1); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; transition: all 0.3s; }
+        .service-card:hover .service-icon { transform: rotate(5deg) scale(1.1); background: #FFD700; color: #0a0a0a; }
+        .service-content { flex: 1; }
+        .service-title { font-size: 1.2rem; font-weight: 700; color: #FFD700; margin-bottom: 5px; }
+        .service-desc { font-size: 0.9rem; opacity: 0.8; }
+        .service-badge { background: #FFD700; color: #0a0a0a; padding: 4px 12px; border-radius: 30px; font-size: 0.8rem; font-weight: 700; margin-left: 10px; transition: all 0.3s; }
+        .service-card:hover .service-badge { transform: scale(1.05); box-shadow: 0 0 15px #FFD700; }
+        
         .token-balance { font-size: 1.8rem; color: #FFD700; }
         .order-book { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0; }
         .order-side { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; }
@@ -163,6 +177,7 @@
             h2 { font-size: 2.2rem; }
             h3 { font-size: 1.6rem; }
             p, li, span, div { font-size: 1rem; }
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
             .support-panel { flex-direction: row; }
             .users-list { width: 220px; }
             .chat-area { flex: 1; }
@@ -174,6 +189,7 @@
             .nav-link { padding: 12px 22px; }
             .content-card { padding: 36px; }
             h2 { font-size: 2.5rem; }
+            .services-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -239,7 +255,13 @@
 
     <div id="services-section" class="content-card hidden">
         <h2>Наши услуги</h2><div class="divider"></div>
-        <ul style="list-style:none;"><li style="padding:14px; margin:8px 0; background:rgba(255,215,0,0.02); border-radius:40px;">✦ Кредитование под залог BK-Token</li><li style="padding:14px; margin:8px 0; background:rgba(255,215,0,0.02); border-radius:40px;">✦ Стейкинг до 12% годовых</li><li style="padding:14px; margin:8px 0; background:rgba(255,215,0,0.02); border-radius:40px;">✦ Инвестиционные корзины Web3</li><li style="padding:14px; margin:8px 0; background:rgba(255,215,0,0.02); border-radius:40px;">✦ Персональные консультации</li><li style="padding:14px; margin:8px 0; background:rgba(255,215,0,0.02); border-radius:40px;">✦ Мультивалютные карты</li></ul>
+        <div class="services-grid">
+            <div class="service-card"><div class="service-icon">💰</div><div class="service-content"><div class="service-title">Кредитование</div><div class="service-desc">Под залог BK-Token</div></div><span class="service-badge">до 1M ₽</span></div>
+            <div class="service-card"><div class="service-icon">📈</div><div class="service-content"><div class="service-title">Стейкинг</div><div class="service-desc">До 12% годовых</div></div><span class="service-badge">APY 12%</span></div>
+            <div class="service-card"><div class="service-icon">🌐</div><div class="service-content"><div class="service-title">Web3 корзины</div><div class="service-desc">Инвестиционные</div></div><span class="service-badge">NEW</span></div>
+            <div class="service-card"><div class="service-icon">💬</div><div class="service-content"><div class="service-title">Консультации</div><div class="service-desc">Персональные</div></div><span class="service-badge">24/7</span></div>
+            <div class="service-card"><div class="service-icon">💳</div><div class="service-content"><div class="service-title">Мультивалютные</div><div class="service-desc">Карты</div></div><span class="service-badge">VISA/MC</span></div>
+        </div>
     </div>
 
     <div id="cards-section" class="content-card hidden">
@@ -323,6 +345,7 @@
     "use strict";
     
     let failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
+    let lockUntil = parseInt(localStorage.getItem('lockUntil')) || 0;
     const SALT = "BKbankDynamicSalt";
     let chartPeriod = '24H';
     let chartInterval = null;
@@ -377,7 +400,7 @@
     window.toggleTheme = () => { document.body.classList.toggle('light-theme'); localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
     function showModalOverlay() { const o = document.createElement('div'); o.className = 'modal-overlay'; o.id = 'modal-overlay'; o.onclick = () => { removeModals(); o.remove(); }; document.body.appendChild(o); }
     window.showLoginForm = function() { removeModals(); document.getElementById('modal-overlay')?.remove(); showModalOverlay(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Вход</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="window.login()">Войти</button><span class="text-link" onclick="window.showRegistrationForm()">Регистрация</span><div id="failedAttemptsWarning" style="color:#ff5e5e; text-align:center;"></div>`; document.body.appendChild(m); updateFailedAttemptsWarning(); };
-    function updateFailedAttemptsWarning() { const w = document.getElementById('failedAttemptsWarning'); if (w) w.textContent = failedAttempts > 0 ? `⚠️ ${failedAttempts}/5` : ''; }
+    function updateFailedAttemptsWarning() { const w = document.getElementById('failedAttemptsWarning'); if (w) { if (lockUntil > Date.now()) { const sec = Math.ceil((lockUntil - Date.now()) / 1000); w.textContent = `⏳ Заблокировано на ${sec} сек`; } else if (failedAttempts > 0) { w.textContent = `⚠️ ${failedAttempts}/5 попыток`; } else { w.textContent = ''; } } }
 
     let regStep = 1, regData = {}, captchaAnswer = 0;
     window.showRegistrationForm = function() { removeModals(); document.getElementById('modal-overlay')?.remove(); showModalOverlay(); regStep = 1; regData = {}; renderRegStep(); };
@@ -385,7 +408,9 @@
     window.nextRegStep = function() { const e = document.getElementById('registerError'); if (regStep === 1) { const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; if (!n||!u||!p||!c) return showError(e,'Все поля'); if (p.length<6) return showError(e,'Пароль от 6'); if (p!==c) return showError(e,'Не совпадают'); if (users[u]) return showError(e,'Занят'); regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); } else if (regStep === 2) { const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Email'); if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон'); if (em) { for (let u in users) if (users[u].email===em) return showError(e,'Email занят'); } if (ph && ph!=='+7') { for (let u in users) if (users[u].phone===ph) return showError(e,'Телефон занят'); } regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); } };
     window.prevRegStep = () => { regStep--; renderRegStep(); };
     window.completeRegistration = function() { const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); if (!c) return showError(e,'Введите ответ'); if (parseInt(c)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(e,'Неверно'); } const {name,username,email,phone,password} = regData; users[username] = { name, email, phone, passwordHash: hashPassword(password), balance:0, registrationDate:new Date().toISOString(), avatar:null }; localStorage.setItem('bankUsers', JSON.stringify(users)); currentUser = username; bktokBalances[username]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('currentSession', JSON.stringify({username,timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(name); updateUIForAuth(); };
-    window.login = function() { let u = document.getElementById('loginUsername').value.trim(); const p = document.getElementById('loginPassword').value, e = document.getElementById('loginError'); if (!u||!p) return showError(e,'Заполните'); let f = users[u] ? u : Object.keys(users).find(un => users[un].phone===u); if (!f) return showError(e,'Не найден'); if (users[f].passwordHash !== hashPassword(p)) { failedAttempts++; localStorage.setItem('failedAttempts', failedAttempts); updateFailedAttemptsWarning(); if (failedAttempts>=5) { localStorage.clear(); alert("Данные удалены!"); location.reload(); } return showError(e,'Неверные данные'); } failedAttempts = 0; localStorage.setItem('failedAttempts', '0'); currentUser = f; if (bktokBalances[f]===undefined) { bktokBalances[f]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); } localStorage.setItem('currentSession', JSON.stringify({username:f, timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(users[f].name); updateUIForAuth(); };
+    window.login = function() { 
+        if (lockUntil > Date.now()) { const sec = Math.ceil((lockUntil - Date.now()) / 1000); showError(document.getElementById('loginError'), `Подождите ${sec} сек`); return; }
+        let u = document.getElementById('loginUsername').value.trim(); const p = document.getElementById('loginPassword').value, e = document.getElementById('loginError'); if (!u||!p) return showError(e,'Заполните'); let f = users[u] ? u : Object.keys(users).find(un => users[un].phone===u); if (!f) return showError(e,'Не найден'); if (users[f].passwordHash !== hashPassword(p)) { failedAttempts++; localStorage.setItem('failedAttempts', failedAttempts); if (failedAttempts >= 5) { lockUntil = Date.now() + 30000; failedAttempts = 0; localStorage.setItem('lockUntil', lockUntil); localStorage.setItem('failedAttempts', '0'); updateFailedAttemptsWarning(); return showError(e, 'Слишком много попыток. Подождите 30 сек'); } updateFailedAttemptsWarning(); return showError(e,'Неверные данные'); } failedAttempts = 0; lockUntil = 0; localStorage.setItem('failedAttempts', '0'); localStorage.setItem('lockUntil', '0'); currentUser = f; if (bktokBalances[f]===undefined) { bktokBalances[f]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); } localStorage.setItem('currentSession', JSON.stringify({username:f, timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(users[f].name); updateUIForAuth(); };
 
     function showMainContent() { document.querySelector('.main-container').classList.remove('hidden'); window.toggleSection('about'); }
     function showWelcomeMessage(n) { const t = document.createElement('div'); t.className = 'toast-message'; t.innerHTML = `<strong>✨ Добро пожаловать, ${n}!</strong>`; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
@@ -457,9 +482,10 @@
     function showProfile() {
         if (!currentUser) return; const u = users[currentUser], c = document.getElementById('profile-section');
         c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${u.avatar||'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="window.uploadAvatar(event)"><div><strong>${u.name}</strong><br>@${currentUser}</div><button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:10px 20px; border-radius:30px; cursor:pointer;" onclick="window.logout()">Выйти</button></div>
-        <div class="profile-actions"><button class="profile-action-btn" onclick="window.showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="window.exportVault()">📤 Экспорт данных</button><button class="profile-action-btn" onclick="window.destroyAccount()">⚠️ Удалить аккаунт</button></div>
+        <div class="profile-actions"><button class="profile-action-btn" onclick="window.showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="window.switchAccount()">🔄 Сменить аккаунт</button><button class="profile-action-btn" onclick="window.exportVault()">📤 Экспорт данных</button><button class="profile-action-btn" onclick="window.destroyAccount()">⚠️ Удалить аккаунт</button></div>
         <div class="profile-info"><p>📧 ${u.email||'Не указан'}</p><p>📱 ${u.phone||'Не указан'}</p><p>💰 ${bktokBalances[currentUser]||0} BK</p></div>`; c.classList.remove('hidden');
     }
+    window.switchAccount = function() { localStorage.removeItem('currentSession'); currentUser = null; updateUIForAuth(); window.showLoginForm(); };
     window.showEditProfileForm = () => { const u = users[currentUser]; removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Редактирование</div><input id="editName" class="form-input" placeholder="Имя" value="${u.name||''}"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email||''}"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone||''}"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль"><button class="gold-button" onclick="window.saveProfile()">Сохранить</button><button class="dark-button" onclick="window.cancelEditProfile()">Отмена</button>`; document.body.appendChild(m); };
     window.cancelEditProfile = () => { removeModals(); showProfile(); };
     window.saveProfile = () => { const n = document.getElementById('editName').value.trim(), e = document.getElementById('editEmail').value.trim(), p = document.getElementById('editPhone').value.trim(), pass = document.getElementById('editPassword').value; if (n) users[currentUser].name = n; if (e) users[currentUser].email = e; if (p && /^\+7\d{10}$/.test(p)) users[currentUser].phone = p; if (pass && pass.length>=6) users[currentUser].passwordHash = hashPassword(pass); localStorage.setItem('bankUsers', JSON.stringify(users)); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!'); };
