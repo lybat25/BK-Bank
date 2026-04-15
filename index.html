@@ -11,6 +11,7 @@
     <link rel="apple-touch-icon" href="png/2025-01-31_14-13-47-Photoroom.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
+        /* Все стили остаются без изменений */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; height: 100%; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; transition: background 0.3s; }
@@ -184,7 +185,7 @@
         .profile-action-btn:hover { background: rgba(255,215,0,0.1); transform: translateX(5px); }
         .profile-info { padding: 15px; background: rgba(255,215,0,0.03); border-radius: 16px; }
         .support-panel { display: flex; flex-direction: column; gap: 15px; }
-        .chat-messages { max-height: 300px; overflow-y: auto; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 16px; margin-bottom: 15px; }
+        .chat-messages { max-height: 350px; overflow-y: auto; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 16px; margin-bottom: 15px; }
         .chat-message { margin-bottom: 12px; padding: 12px; border-radius: 16px; max-width: 85%; }
         .chat-message.client { background: rgba(255,215,0,0.15); margin-left: auto; border-bottom-right-radius: 4px; }
         .chat-message.support { background: rgba(255,255,255,0.06); margin-right: auto; border-bottom-left-radius: 4px; }
@@ -209,6 +210,12 @@
         .saved-account-name { font-weight: 600; color: #FFD700; }
         .saved-account-username { font-size: 0.85rem; opacity: 0.7; }
         .remove-account-btn { background: transparent; border: 1px solid #ff5e5e; color: #ff5e5e; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
+        
+        .rollback-request { background: rgba(255,100,100,0.1); border: 1px solid #ff5e5e; border-radius: 12px; padding: 12px; margin: 10px 0; }
+        .rollback-actions { display: flex; gap: 8px; margin-top: 10px; }
+        .rollback-btn { background: transparent; border: 1px solid #ff5e5e; color: #ff5e5e; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
+        .rollback-btn.accept { border-color: #4ade80; color: #4ade80; }
+        .rollback-btn:hover { opacity: 0.8; }
         
         @media (min-width: 640px) {
             .glass-header { padding: 12px 24px; }
@@ -272,7 +279,7 @@
 </header>
 
 <main class="main-container">
-    <!-- Все секции остаются без изменений -->
+    <!-- Секции about, services, cards, bktok, tasks, cases остаются без изменений -->
     <div id="about-section" class="content-card">
         <h2>BK-BANK<br><span style="font-size: 1.2rem;">Банк, в котором ваш труд становится валютой</span></h2>
         <div class="divider"></div>
@@ -398,7 +405,7 @@
 
     <div id="support-section" class="content-card hidden">
         <h2>🤖 Поддержка (AI)</h2><div class="divider"></div>
-        <p style="margin-bottom:15px; color:#FFD700;"><i>Задайте вопрос нашей нейросети, и она ответит вам!</i></p>
+        <p style="margin-bottom:15px; color:#FFD700;"><i>Задайте вопрос нашей нейросети. Она поможет с откатами транзакций и другими вопросами!</i></p>
         <div id="support-container"></div>
     </div>
 
@@ -457,6 +464,7 @@
     let bktokBalances = {};
     let userTasks = {};
     let savedAccounts = JSON.parse(localStorage.getItem('savedAccounts')) || {};
+    let rollbackRequests = JSON.parse(localStorage.getItem('rollbackRequests')) || [];
     
     let failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
     let lockUntil = parseInt(localStorage.getItem('lockUntil')) || 0;
@@ -480,8 +488,8 @@
     
     function updateBalance(user, amount, operation) {
         if (!currentUser) return false;
-        if (user !== currentUser && operation !== 'admin_mint') return false;
-        if (Math.abs(amount) > 1000000) return false;
+        if (user !== currentUser && operation !== 'admin_mint' && operation !== 'rollback') return false;
+        if (Math.abs(amount) > 1000000 && operation !== 'rollback') return false;
         
         bktokBalances[user] = (bktokBalances[user] || 0) + amount;
         if (bktokBalances[user] < 0) bktokBalances[user] = 0;
@@ -496,6 +504,7 @@
         failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
         lockUntil = parseInt(localStorage.getItem('lockUntil')) || 0;
         blockLevel = parseInt(localStorage.getItem('blockLevel')) || 0;
+        rollbackRequests = JSON.parse(localStorage.getItem('rollbackRequests')) || [];
     }
     loadUnencryptedData();
 
@@ -760,47 +769,212 @@
         else if (s==='profile') { if (currentUser) showProfile(); else window.showLoginForm(); }
     };
 
+    // ========== ПРОДВИНУТЫЙ AI С ОТКАТАМИ ==========
     function renderAISupport() {
         const c = document.getElementById('support-container');
         if (!currentUser) { c.innerHTML = '<p style="text-align:center; padding:20px;">🔒 Войдите, чтобы задать вопрос</p>'; return; }
-        if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'ai', text: '👋 Здравствуйте! Я нейросеть BK-Bank. Чем могу помочь?', time: new Date().toISOString() }];
-        c.innerHTML = `<div class="chat-messages" id="ai-chat-messages"></div>
+        if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'ai', text: '👋 Здравствуйте! Я нейросеть BK-Bank. Могу помочь с балансом, картами, токенами, а также создать запрос на откат транзакции (требуется согласие второй стороны).', time: new Date().toISOString() }];
+        
+        let h = `<div class="chat-messages" id="ai-chat-messages"></div>
         <div class="chat-input-area"><input id="ai-chat-input" class="chat-input" placeholder="Задайте вопрос..."><button class="chat-send-btn" onclick="window.sendAIMessage()">Отправить</button></div>`;
+        
+        // Показываем активные запросы на откат
+        const myRollbacks = rollbackRequests.filter(r => r.from === currentUser || r.to === currentUser);
+        if (myRollbacks.length > 0) {
+            h += `<div style="margin-top:20px;"><h4>🔄 Активные запросы на откат</h4>`;
+            myRollbacks.forEach(req => {
+                const isFromMe = req.from === currentUser;
+                const other = isFromMe ? req.to : req.from;
+                h += `<div class="rollback-request">
+                    <strong>Сделка #${req.tradeId}</strong> на ${req.amount} BK<br>
+                    ${isFromMe ? 'Вы запросили откат у' : 'Запрос от'} ${other}<br>
+                    <small>${new Date(req.time).toLocaleString()}</small>`;
+                if (!isFromMe && req.status === 'pending') {
+                    h += `<div class="rollback-actions">
+                        <button class="rollback-btn accept" onclick="window.respondRollback('${req.id}', 'accept')">✅ Принять</button>
+                        <button class="rollback-btn" onclick="window.respondRollback('${req.id}', 'reject')">❌ Отклонить</button>
+                    </div>`;
+                } else if (req.status === 'accepted') {
+                    h += `<div style="color:#4ade80;">✅ Откат выполнен</div>`;
+                } else if (req.status === 'rejected') {
+                    h += `<div style="color:#ff5e5e;">❌ Откат отклонён</div>`;
+                }
+                h += `</div>`;
+            });
+            h += `</div>`;
+        }
+        
+        c.innerHTML = h;
         loadAIMessages();
     }
     
     function loadAIMessages() {
-        const cont = document.getElementById('ai-chat-messages'); if (!cont) return;
-        cont.innerHTML = allSupportChats[currentUser].map(msg => `<div class="chat-message ${msg.from==='ai'?'support':'client'}"><strong>${msg.from==='ai'?'🤖 BK-AI':'👤 Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join('');
+        const cont = document.getElementById('ai-chat-messages');
+        if (!cont) return;
+        cont.innerHTML = allSupportChats[currentUser].map(msg => {
+            const isAI = msg.from === 'ai';
+            return `<div class="chat-message ${isAI ? 'support' : 'client'}"><strong>${isAI ? '🤖 BK-AI' : '👤 Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`;
+        }).join('');
         cont.scrollTop = cont.scrollHeight;
     }
     
     window.sendAIMessage = function() {
-        const inp = document.getElementById('ai-chat-input'); const txt = inp.value.trim(); if (!txt) return;
+        const inp = document.getElementById('ai-chat-input');
+        const txt = inp.value.trim();
+        if (!txt) return;
         allSupportChats[currentUser].push({ from: currentUser, text: txt, time: new Date().toISOString() });
-        if (MASTER_KEY) secureSetItem('allSupportChats', allSupportChats); inp.value = ''; loadAIMessages();
+        if (MASTER_KEY) secureSetItem('allSupportChats', allSupportChats);
+        inp.value = '';
+        loadAIMessages();
+        
         setTimeout(() => {
             const response = generateAIResponse(txt);
-            allSupportChats[currentUser].push({ from: 'ai', text: response, time: new Date().toISOString() });
-            if (MASTER_KEY) secureSetItem('allSupportChats', allSupportChats); loadAIMessages();
+            allSupportChats[currentUser].push({ from: 'ai', text: response.text, time: new Date().toISOString() });
+            if (MASTER_KEY) secureSetItem('allSupportChats', allSupportChats);
+            loadAIMessages();
+            
+            // Если AI создал запрос на откат, показываем его сразу
+            if (response.rollbackRequest) {
+                renderAISupport();
+            }
         }, 800);
     };
     
     function generateAIResponse(q) {
         const ql = q.toLowerCase();
-        if (ql.includes('баланс') || ql.includes('сколько') || ql.includes('денег')) return `💰 Ваш баланс: ${bktokBalances[currentUser]?.toFixed(2) || '0'} BK.`;
-        if (ql.includes('карт') || ql.includes('оформить')) return '💳 Вы можете оформить карту в разделе «Карты». Нажмите на стопку, чтобы разложить их и выбрать подходящую.';
-        if (ql.includes('токен') || ql.includes('bk')) return '🚀 BK-Token — это валюта, обеспеченная трудом. Зарабатывайте её, выполняя задания в разделе BKtok!';
-        if (ql.includes('задан')) return '📋 Задания обновляются каждый день. Заходите ежедневно и получайте BK за активность!';
-        if (ql.includes('кейс')) return '🎁 Кейсы можно открыть в разделе BKtok. Чем дороже кейс — тем круче награда!';
-        if (ql.includes('чат') || ql.includes('общение')) return '💬 В разделе «Чаты» вы можете общаться с другими пользователями BK-Bank.';
-        if (ql.includes('регистрац') || ql.includes('аккаунт')) return '📝 Зарегистрироваться можно, нажав кнопку «Регистрация» в правом верхнем углу.';
-        if (ql.includes('парол') || ql.includes('забыл')) return '🔐 Если забыли пароль — восстановить доступ можно только через экспортированное хранилище.';
-        if (ql.includes('привет') || ql.includes('здравств')) return '👋 Здравствуйте! Я ваш персональный ассистент BK-Bank. Спрашивайте!';
-        if (ql.includes('спасиб')) return '😊 Всегда пожалуйста! Обращайтесь, если понадобится помощь.';
-        if (ql.includes('пока') || ql.includes('до свидан')) return '👋 До встречи! Хорошего дня и успешных трейдов!';
-        return '🤔 Я пока не знаю ответа на этот вопрос. Попробуйте спросить про баланс, карты, токены или задания.';
+        
+        // Обработка отката транзакции
+        if (ql.includes('откат') || ql.includes('отменить сделку') || ql.includes('вернуть транзакцию')) {
+            const tradeMatch = ql.match(/#?(\d+)/);
+            const userMatch = ql.match(/с (@?\w+)/i) || ql.match(/пользовател[ья] (\w+)/i);
+            
+            if (tradeMatch && userMatch) {
+                const tradeId = tradeMatch[1];
+                const targetUser = userMatch[1].replace('@', '');
+                
+                if (!users[targetUser]) {
+                    return { text: `❌ Пользователь @${targetUser} не найден. Проверьте правильность никнейма.`, rollbackRequest: false };
+                }
+                
+                if (targetUser === currentUser) {
+                    return { text: `❌ Нельзя запросить откат у самого себя.`, rollbackRequest: false };
+                }
+                
+                const trade = bktokTrades.find(t => 
+                    t.buyer === currentUser || t.seller === currentUser
+                );
+                
+                if (!trade) {
+                    return { text: `❌ Сделка #${tradeId} не найдена в вашей истории.`, rollbackRequest: false };
+                }
+                
+                // Проверяем, нет ли уже активного запроса
+                const existing = rollbackRequests.find(r => 
+                    r.tradeId === tradeId && r.from === currentUser && r.to === targetUser && r.status === 'pending'
+                );
+                if (existing) {
+                    return { text: `⏳ Запрос на откат сделки #${tradeId} уже отправлен и ожидает ответа от @${targetUser}.`, rollbackRequest: false };
+                }
+                
+                // Создаём запрос на откат
+                const request = {
+                    id: Date.now() + Math.random().toString(36),
+                    from: currentUser,
+                    to: targetUser,
+                    tradeId: tradeId,
+                    amount: trade.amount,
+                    price: trade.price,
+                    time: new Date().toISOString(),
+                    status: 'pending'
+                };
+                rollbackRequests.push(request);
+                localStorage.setItem('rollbackRequests', JSON.stringify(rollbackRequests));
+                
+                // Отправляем уведомление второй стороне
+                if (!privateChats[`${currentUser}-${targetUser}`.split('-').sort().join('-')]) {
+                    const chatId = [currentUser, targetUser].sort().join('-');
+                    privateChats[chatId] = [{
+                        from: 'system',
+                        text: `🔄 ${currentUser} запросил откат сделки #${tradeId} на ${trade.amount} BK. Перейдите в Поддержку для подтверждения.`,
+                        time: new Date().toISOString()
+                    }];
+                    if (MASTER_KEY) secureSetItem('privateChats', privateChats);
+                }
+                
+                return { 
+                    text: `✅ Запрос на откат сделки #${tradeId} отправлен пользователю @${targetUser}. Ожидайте подтверждения.`,
+                    rollbackRequest: true
+                };
+            }
+            
+            return { 
+                text: `📝 Для отката транзакции укажите: "откат сделки #НОМЕР с @никнейм". Например: "откат сделки #12345 с @username"`,
+                rollbackRequest: false
+            };
+        }
+        
+        // Ответы на другие вопросы
+        if (ql.includes('баланс') || ql.includes('сколько') || ql.includes('денег')) return { text: `💰 Ваш баланс: ${bktokBalances[currentUser]?.toFixed(2) || '0'} BK.`, rollbackRequest: false };
+        if (ql.includes('карт') || ql.includes('оформить')) return { text: '💳 Вы можете оформить карту в разделе «Карты». Нажмите на стопку, чтобы разложить их и выбрать подходящую.', rollbackRequest: false };
+        if (ql.includes('токен') || ql.includes('bk')) return { text: '🚀 BK-Token — это валюта, обеспеченная трудом. Зарабатывайте её, выполняя задания в разделе BKtok!', rollbackRequest: false };
+        if (ql.includes('задан')) return { text: '📋 Задания обновляются каждый день. Заходите ежедневно и получайте BK за активность!', rollbackRequest: false };
+        if (ql.includes('кейс')) return { text: '🎁 Кейсы можно открыть в разделе BKtok. Чем дороже кейс — тем круче награда!', rollbackRequest: false };
+        if (ql.includes('чат') || ql.includes('общение')) return { text: '💬 В разделе «Чаты» вы можете общаться с другими пользователями BK-Bank.', rollbackRequest: false };
+        if (ql.includes('регистрац') || ql.includes('аккаунт')) return { text: '📝 Зарегистрироваться можно, нажав кнопку «Регистрация» в правом верхнем углу.', rollbackRequest: false };
+        if (ql.includes('парол') || ql.includes('забыл')) return { text: '🔐 Если забыли пароль — восстановить доступ можно только через экспортированное хранилище.', rollbackRequest: false };
+        if (ql.includes('привет') || ql.includes('здравств')) return { text: '👋 Здравствуйте! Я ваш персональный ассистент BK-Bank. Могу помочь с балансом, картами, токенами или откатом транзакций.', rollbackRequest: false };
+        if (ql.includes('спасиб')) return { text: '😊 Всегда пожалуйста! Обращайтесь, если понадобится помощь.', rollbackRequest: false };
+        if (ql.includes('пока') || ql.includes('до свидан')) return { text: '👋 До встречи! Хорошего дня и успешных трейдов!', rollbackRequest: false };
+        
+        return { 
+            text: '🤔 Я могу помочь с:\n• Баланс — "сколько у меня денег"\n• Карты — "как оформить карту"\n• Токены — "что такое BK"\n• Задания — "как заработать"\n• Откат сделки — "откат сделки #12345 с @username"', 
+            rollbackRequest: false 
+        };
     }
+    
+    window.respondRollback = function(requestId, action) {
+        const request = rollbackRequests.find(r => r.id === requestId);
+        if (!request || request.status !== 'pending') return;
+        if (request.to !== currentUser) return alert('Вы не можете ответить на этот запрос');
+        
+        if (action === 'accept') {
+            const trade = bktokTrades.find(t => 
+                (t.buyer === request.from && t.seller === request.to) ||
+                (t.seller === request.from && t.buyer === request.to)
+            );
+            
+            if (trade) {
+                // Возвращаем средства
+                updateBalance(request.from, request.amount, 'rollback');
+                updateBalance(request.to, -request.amount, 'rollback');
+                
+                request.status = 'accepted';
+                localStorage.setItem('rollbackRequests', JSON.stringify(rollbackRequests));
+                
+                // Уведомляем в чат
+                const chatId = [request.from, request.to].sort().join('-');
+                if (!privateChats[chatId]) privateChats[chatId] = [];
+                privateChats[chatId].push({
+                    from: 'system',
+                    text: `✅ Откат сделки #${request.tradeId} выполнен. ${request.amount} BK возвращены ${request.from}.`,
+                    time: new Date().toISOString()
+                });
+                if (MASTER_KEY) secureSetItem('privateChats', privateChats);
+                
+                alert('Откат выполнен успешно!');
+            } else {
+                request.status = 'rejected';
+                localStorage.setItem('rollbackRequests', JSON.stringify(rollbackRequests));
+                alert('Сделка не найдена. Запрос отклонён.');
+            }
+        } else {
+            request.status = 'rejected';
+            localStorage.setItem('rollbackRequests', JSON.stringify(rollbackRequests));
+            alert('Запрос на откат отклонён.');
+        }
+        
+        renderAISupport();
+    };
 
     function startChartUpdates() { if (chartInterval) clearInterval(chartInterval); chartInterval = setInterval(() => { if (currentUser && !document.getElementById('bktok-section')?.classList.contains('hidden')) renderChart(); }, 1000); }
     function loadBKtok() { if (!currentUser) return; if (bktokBalances[currentUser]===undefined) { updateBalance(currentUser, 100, 'admin_mint'); } document.getElementById('token-balance-display').textContent = bktokBalances[currentUser].toFixed(2) + ' BK'; updateOrderBook(); renderChart(); renderTradeHistory(); }
@@ -924,7 +1098,7 @@
     window.uploadAvatar = (e) => { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => { users[currentUser].avatar = ev.target.result; if (MASTER_KEY) secureSetItem('bankUsers', users); showProfile(); updateUIForAuth(); }; r.readAsDataURL(f); } };
     window.exportVault = () => {
         if (!MASTER_KEY) return alert('Войдите заново');
-        const d = { users, bktokBalances, bktokTrades, userTasks, privateChats, allSupportChats };
+        const d = { users, bktokBalances, bktokTrades, userTasks, privateChats, allSupportChats, rollbackRequests };
         const encrypted = CryptoJS.AES.encrypt(JSON.stringify(d), MASTER_KEY).toString();
         const b = new Blob([encrypted], {type: 'application/octet-stream'});
         const a = document.createElement('a');
@@ -950,6 +1124,7 @@
                 userTasks = data.userTasks || {};
                 privateChats = data.privateChats || {};
                 allSupportChats = data.allSupportChats || {};
+                rollbackRequests = data.rollbackRequests || [];
                 for (let u in users) { delete users[u].isAdmin; delete users[u].isSupport; }
                 MASTER_KEY = password;
                 secureSetItem('bankUsers', users);
@@ -958,6 +1133,7 @@
                 secureSetItem('userTasks', userTasks);
                 secureSetItem('privateChats', privateChats);
                 secureSetItem('allSupportChats', allSupportChats);
+                localStorage.setItem('rollbackRequests', JSON.stringify(rollbackRequests));
                 alert('Хранилище загружено! Войдите снова.');
                 window.logout();
             } catch(e) {
