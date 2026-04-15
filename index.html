@@ -172,6 +172,15 @@
         .captcha-question { font-size: 2rem; font-weight: 700; color: #FFD700; margin-bottom: 15px; letter-spacing: 5px; }
         .captcha-emoji { font-size: 2.5rem; margin-right: 10px; }
         
+        .account-switcher { margin-top: 20px; padding: 15px; background: rgba(255,215,0,0.03); border-radius: 16px; }
+        .saved-account-item { display: flex; align-items: center; gap: 10px; padding: 12px; margin-bottom: 8px; background: rgba(255,215,0,0.05); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+        .saved-account-item:hover { background: rgba(255,215,0,0.1); transform: translateX(5px); }
+        .saved-account-item img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #FFD700; }
+        .saved-account-info { flex: 1; }
+        .saved-account-name { font-weight: 600; color: #FFD700; }
+        .saved-account-username { font-size: 0.85rem; opacity: 0.7; }
+        .remove-account-btn { background: transparent; border: 1px solid #ff5e5e; color: #ff5e5e; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
+        
         @media (min-width: 640px) {
             .glass-header { padding: 12px 24px; }
             .logo-img { width: 42px; height: 42px; }
@@ -397,6 +406,7 @@
     let bktokTrades = JSON.parse(localStorage.getItem('bktokTrades')) || [];
     let bktokBalances = JSON.parse(localStorage.getItem('bktokBalances')) || {};
     let userTasks = JSON.parse(localStorage.getItem('userTasks')) || {};
+    let savedAccounts = JSON.parse(localStorage.getItem('savedAccounts')) || {};
     
     for (let u in users) {
         if (!users[u].avatar) users[u].avatar = null;
@@ -458,9 +468,36 @@
             <input id="loginCaptcha" class="form-input" placeholder="Введите ответ" style="text-align:center;"></div>`;
         }
         h += `<button class="gold-button" onclick="window.login()">🚪 Войти</button>
-        <span class="text-link" onclick="window.showRegistrationForm()">✨ Создать аккаунт</span>
-        <div id="failedAttemptsWarning" style="color:#ff5e5e; text-align:center; margin-top:10px;"></div>`;
+        <span class="text-link" onclick="window.showRegistrationForm()">✨ Создать аккаунт</span>`;
+        if (Object.keys(savedAccounts).length > 0) {
+            h += `<div style="margin-top:15px; padding-top:15px; border-top:1px solid rgba(255,215,0,0.2);">
+                <p style="color:#FFD700; margin-bottom:10px;">💾 Сохранённые аккаунты</p>`;
+            for (let u in savedAccounts) {
+                h += `<div style="display:flex; align-items:center; gap:10px; padding:10px; background:rgba(255,215,0,0.05); border-radius:12px; margin-bottom:8px; cursor:pointer;" onclick="window.quickLogin('${u}')">
+                    <img src="${users[u]?.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}" style="width:30px; height:30px; border-radius:50%; border:2px solid #FFD700;">
+                    <div style="flex:1;"><strong>${users[u]?.name || u}</strong><br><span style="font-size:0.8rem;">@${u}</span></div>
+                    <button onclick="event.stopPropagation(); window.removeSavedAccount('${u}')" style="background:transparent; border:none; color:#ff5e5e; font-size:1.2rem; cursor:pointer;">✕</button>
+                </div>`;
+            }
+            h += `</div>`;
+        }
+        h += `<div id="failedAttemptsWarning" style="color:#ff5e5e; text-align:center; margin-top:10px;"></div>`;
         m.innerHTML = h; document.body.appendChild(m); updateFailedAttemptsWarning(); 
+    };
+    
+    window.quickLogin = function(username) {
+        if (!users[username]) return;
+        currentUser = username;
+        if (bktokBalances[username]===undefined) { bktokBalances[username]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); }
+        localStorage.setItem('currentSession', JSON.stringify({username, timestamp:Date.now()}));
+        removeModals(); document.getElementById('modal-overlay')?.remove();
+        showMainContent(); showWelcomeMessage(users[username].name); updateUIForAuth();
+    };
+    
+    window.removeSavedAccount = function(username) {
+        delete savedAccounts[username];
+        localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts));
+        window.showLoginForm();
     };
     
     function updateFailedAttemptsWarning() { 
@@ -480,7 +517,7 @@
     function renderRegStep() { removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; let h = `<div class="form-title">📝 Регистрация</div><div class="step-indicator">${[1,2,3].map(i => `<div class="step-dot ${i===regStep?'active':''} ${i<regStep?'completed':''}"></div>`).join('')}</div><div id="registerError" class="error-text hidden"></div>`; if (regStep === 1) h += `<input id="regName" class="form-input" placeholder="👤 Ваше имя" value="${regData.name||''}"><input id="regUsername" class="form-input" placeholder="📛 Никнейм" value="${regData.username||''}"><input type="password" id="regPassword" class="form-input" placeholder="🔒 Пароль"><input type="password" id="regConfirm" class="form-input" placeholder="🔒 Подтвердите пароль"><button class="gold-button" onclick="window.nextRegStep()">Далее →</button>`; else if (regStep === 2) h += `<input id="regEmail" class="form-input" placeholder="📧 Email" value="${regData.email||''}"><input id="regPhone" class="form-input" placeholder="📱 Телефон +7..." value="${regData.phone||'+7'}"><button class="gold-button" onclick="window.nextRegStep()">Далее →</button><button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`; else { const n1 = Math.floor(Math.random()*15)+1, n2 = Math.floor(Math.random()*15)+1; captchaAnswer = n1+n2; h += `<div class="captcha-box"><div style="font-size:1rem; color:#888; margin-bottom:10px;">🔐 Проверка безопасности</div><div class="captcha-question"><span class="captcha-emoji">🔢</span> ${n1} + ${n2} = ?</div><input id="captchaInput" class="form-input" placeholder="Введите ответ" style="text-align:center;"></div><button class="gold-button" onclick="window.completeRegistration()">✅ Зарегистрироваться</button><button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`; } h += `<span class="text-link" onclick="window.showLoginForm()">← Уже есть аккаунт</span>`; m.innerHTML = h; document.body.appendChild(m); }
     window.nextRegStep = function() { const e = document.getElementById('registerError'); if (regStep === 1) { const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; if (!n||!u||!p||!c) return showError(e,'Все поля обязательны'); if (p.length<6) return showError(e,'Пароль должен быть не менее 6 символов'); if (p!==c) return showError(e,'Пароли не совпадают'); if (users[u]) return showError(e,'Этот никнейм уже занят'); regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); } else if (regStep === 2) { const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Некорректный Email'); if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон: +7XXXXXXXXXX'); if (em) { for (let u in users) if (users[u].email===em) return showError(e,'Email уже используется'); } if (ph && ph!=='+7') { for (let u in users) if (users[u].phone===ph) return showError(e,'Телефон уже используется'); } regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); } };
     window.prevRegStep = () => { regStep--; renderRegStep(); };
-    window.completeRegistration = function() { const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); if (!c) return showError(e,'Введите ответ'); if (parseInt(c)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(e,'Неверный ответ'); } const {name,username,email,phone,password} = regData; users[username] = { name, email, phone, passwordHash: hashPassword(password), balance:0, registrationDate:new Date().toISOString(), avatar:null }; localStorage.setItem('bankUsers', JSON.stringify(users)); currentUser = username; bktokBalances[username]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('currentSession', JSON.stringify({username,timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(name); updateUIForAuth(); };
+    window.completeRegistration = function() { const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); if (!c) return showError(e,'Введите ответ'); if (parseInt(c)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(e,'Неверный ответ'); } const {name,username,email,phone,password} = regData; users[username] = { name, email, phone, passwordHash: hashPassword(password), balance:0, registrationDate:new Date().toISOString(), avatar:null }; localStorage.setItem('bankUsers', JSON.stringify(users)); currentUser = username; bktokBalances[username]=100; savedAccounts[username] = true; localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('currentSession', JSON.stringify({username,timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(name); updateUIForAuth(); };
     
     window.login = function() { 
         if (lockUntil > Date.now()) { const sec = Math.ceil((lockUntil - Date.now()) / 1000); showError(document.getElementById('loginError'), `Подождите ${sec} сек`); return; }
@@ -489,9 +526,9 @@
         if (requireCaptcha) { const captcha = document.getElementById('loginCaptcha')?.value.trim(); if (!captcha) return showError(e,'Введите ответ капчи'); if (parseInt(captcha) !== loginCaptchaAnswer) { failedAttempts++; localStorage.setItem('failedAttempts', failedAttempts); if (failedAttempts >= 5) { blockLevel++; lockUntil = Date.now() + getBlockTime(blockLevel); failedAttempts = 0; localStorage.setItem('lockUntil', lockUntil); localStorage.setItem('blockLevel', blockLevel); localStorage.setItem('failedAttempts', '0'); updateFailedAttemptsWarning(); return showError(e, `Слишком много попыток. Подождите ${getBlockTime(blockLevel)/1000} сек`); } window.showLoginForm(); return showError(e,'Неверная капча'); } }
         let f = users[u] ? u : Object.keys(users).find(un => users[un].phone===u); if (!f) return showError(e,'Пользователь не найден'); 
         if (users[f].passwordHash !== hashPassword(p)) { failedAttempts++; localStorage.setItem('failedAttempts', failedAttempts); if (failedAttempts >= 5) { blockLevel++; lockUntil = Date.now() + getBlockTime(blockLevel); failedAttempts = 0; localStorage.setItem('lockUntil', lockUntil); localStorage.setItem('blockLevel', blockLevel); localStorage.setItem('failedAttempts', '0'); updateFailedAttemptsWarning(); return showError(e, `Слишком много попыток. Подождите ${getBlockTime(blockLevel)/1000} сек`); } window.showLoginForm(); return showError(e,'Неверный пароль'); } 
-        failedAttempts = 0; lockUntil = 0; blockLevel = 0; localStorage.setItem('failedAttempts', '0'); localStorage.setItem('lockUntil', '0'); localStorage.setItem('blockLevel', '0'); currentUser = f; if (bktokBalances[f]===undefined) { bktokBalances[f]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); } localStorage.setItem('currentSession', JSON.stringify({username:f, timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(users[f].name); updateUIForAuth(); };
+        failedAttempts = 0; lockUntil = 0; blockLevel = 0; localStorage.setItem('failedAttempts', '0'); localStorage.setItem('lockUntil', '0'); localStorage.setItem('blockLevel', '0'); currentUser = f; savedAccounts[f] = true; localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts)); if (bktokBalances[f]===undefined) { bktokBalances[f]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); } localStorage.setItem('currentSession', JSON.stringify({username:f, timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(users[f].name); updateUIForAuth(); };
 
-    function showMainContent() { document.querySelector('.main-container').classList.remove('hidden'); window.toggleSection('about'); }
+    function showMainContent() { document.querySelector('.main-container').classList.remove('hidden'); document.querySelector('header').classList.remove('hidden'); window.toggleSection('about'); }
     function showWelcomeMessage(n) { const t = document.createElement('div'); t.className = 'toast-message'; t.innerHTML = `<strong>✨ Добро пожаловать, ${n}!</strong>`; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
 
     window.toggleSection = (s) => {
@@ -560,6 +597,19 @@
 
     function showProfile() {
         if (!currentUser) return; const u = users[currentUser], c = document.getElementById('profile-section');
+        let savedHtml = '';
+        if (Object.keys(savedAccounts).length > 1) {
+            savedHtml = `<div class="account-switcher"><h4 style="color:#FFD700; margin-bottom:15px;">💾 Сохранённые аккаунты</h4>`;
+            for (let acc in savedAccounts) {
+                if (acc === currentUser) continue;
+                savedHtml += `<div class="saved-account-item" onclick="window.switchToAccount('${acc}')">
+                    <img src="${users[acc]?.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}">
+                    <div class="saved-account-info"><div class="saved-account-name">${users[acc]?.name || acc}</div><div class="saved-account-username">@${acc}</div></div>
+                    <button class="remove-account-btn" onclick="event.stopPropagation(); window.removeAccount('${acc}')">Удалить</button>
+                </div>`;
+            }
+            savedHtml += `</div>`;
+        }
         c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div>
         <div class="profile-header">
             <img src="${u.avatar||'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()">
@@ -570,10 +620,29 @@
                 <button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:10px 20px; border-radius:30px; cursor:pointer; font-weight:600;" onclick="window.logout()">🚪 Выйти</button>
             </div>
         </div>
+        ${savedHtml}
         <div class="profile-actions"><button class="profile-action-btn" onclick="window.showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="window.exportVault()">📤 Экспорт данных</button><button class="profile-action-btn" onclick="window.destroyAccount()">⚠️ Удалить аккаунт</button></div>
         <div class="profile-info"><p style="font-size:1rem;">📧 ${u.email||'Не указан'}</p><p style="font-size:1rem;">📱 ${u.phone||'Не указан'}</p><p style="font-size:1rem;">💰 ${bktokBalances[currentUser]||0} BK</p></div>`;
         c.classList.remove('hidden');
     }
+    
+    window.switchToAccount = function(username) {
+        if (!users[username]) return;
+        localStorage.setItem('currentSession', JSON.stringify({username, timestamp:Date.now()}));
+        currentUser = username;
+        updateUIForAuth();
+        showProfile();
+        showWelcomeMessage(`Переключено на ${users[username].name}`);
+    };
+    
+    window.removeAccount = function(username) {
+        if (confirm(`Удалить аккаунт ${username} из сохранённых?`)) {
+            delete savedAccounts[username];
+            localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts));
+            showProfile();
+        }
+    };
+    
     window.switchAccount = function() { 
         localStorage.removeItem('currentSession'); 
         currentUser = null; 
@@ -587,7 +656,7 @@
     window.saveProfile = () => { const n = document.getElementById('editName').value.trim(), e = document.getElementById('editEmail').value.trim(), p = document.getElementById('editPhone').value.trim(), pass = document.getElementById('editPassword').value; if (n) users[currentUser].name = n; if (e) users[currentUser].email = e; if (p && /^\+7\d{10}$/.test(p)) users[currentUser].phone = p; if (pass && pass.length>=6) users[currentUser].passwordHash = hashPassword(pass); localStorage.setItem('bankUsers', JSON.stringify(users)); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!'); };
     window.uploadAvatar = (e) => { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => { users[currentUser].avatar = ev.target.result; localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); updateUIForAuth(); }; r.readAsDataURL(f); } };
     window.exportVault = () => { const d = { users, bktokBalances, bktokTrades, userTasks, privateChats }; const b = new Blob([JSON.stringify(d)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `bkbank_${Date.now()}.bkwallet`; a.click(); };
-    window.destroyAccount = () => { if (confirm('УДАЛИТЬ АККАУНТ?')) { delete users[currentUser]; delete bktokBalances[currentUser]; localStorage.setItem('bankUsers', JSON.stringify(users)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); logout(); } };
+    window.destroyAccount = () => { if (confirm('УДАЛИТЬ АККАУНТ?')) { delete users[currentUser]; delete bktokBalances[currentUser]; delete savedAccounts[currentUser]; localStorage.setItem('bankUsers', JSON.stringify(users)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts)); logout(); } };
     window.logout = function() { 
         if (chartInterval) clearInterval(chartInterval); 
         localStorage.removeItem('currentSession'); 
