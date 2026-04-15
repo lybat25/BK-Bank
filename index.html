@@ -9,9 +9,7 @@
     <meta name="apple-mobile-web-app-title" content="BK-Bank">
     <meta name="theme-color" content="#0a0a0a">
     <link rel="apple-touch-icon" href="png/2025-01-31_14-13-47-Photoroom.png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
-        /* Все стили остаются без изменений */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; height: 100%; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; transition: background 0.3s; }
@@ -217,11 +215,12 @@
         .rollback-btn.accept { border-color: #4ade80; color: #4ade80; }
         .rollback-btn:hover { opacity: 0.8; }
         
-        .pow-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; }
+        .pow-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; display: flex; align-items: center; justify-content: center; }
         .pow-box { background: #1a1a1a; border: 2px solid #FFD700; border-radius: 20px; padding: 30px; text-align: center; max-width: 350px; }
         .pow-box h3 { color: #FFD700; margin-bottom: 20px; }
         .pow-progress { width: 100%; height: 8px; background: #333; border-radius: 4px; margin: 20px 0; overflow: hidden; }
-        .pow-progress-bar { height: 100%; background: #FFD700; width: 0%; transition: width 0.1s; }
+        .pow-progress-bar { height: 100%; background: #FFD700; width: 0%; transition: width 0.05s linear; }
+        .pow-status { color: #FFD700; font-size: 0.9rem; margin-top: 10px; }
         
         @media (min-width: 640px) {
             .glass-header { padding: 12px 24px; }
@@ -285,7 +284,6 @@
 </header>
 
 <main class="main-container">
-    <!-- Все секции остаются без изменений -->
     <div id="about-section" class="content-card">
         <h2>BK-BANK<br><span style="font-size: 1.2rem;">Банк, в котором ваш труд становится валютой</span></h2>
         <div class="divider"></div>
@@ -429,47 +427,17 @@
 (function() {
     "use strict";
     
-    // ========== УРОВЕНЬ 2: ЗАЩИТА LOCALSTORAGE ==========
-    const realStorage = window.localStorage;
-    const fakeStorage = {};
+    // ========== ЗАЩИТА LOCALSTORAGE (через замыкание) ==========
+    const _realStorage = window.localStorage;
     
-    // Подменяем localStorage для консоли
-    Object.defineProperty(window, 'localStorage', {
-        value: {
-            getItem: (key) => { console.warn('🔒 Доступ к хранилищу заблокирован'); return null; },
-            setItem: () => false,
-            removeItem: () => false,
-            clear: () => false,
-            get length() { return 0; },
-            key: () => null
-        },
-        writable: false,
-        configurable: false
-    });
-    
-    // Функции для работы с реальным хранилищем
-    function realGetItem(key) { return realStorage.getItem(key); }
-    function realSetItem(key, value) { realStorage.setItem(key, value); }
-    function realRemoveItem(key) { realStorage.removeItem(key); }
+    function realGetItem(key) { return _realStorage.getItem(key); }
+    function realSetItem(key, value) { _realStorage.setItem(key, value); }
+    function realRemoveItem(key) { _realStorage.removeItem(key); }
     
     // ========== ПЕРЕМЕННЫЕ ==========
     let MASTER_KEY = null;
     const SALT = "BKbankDynamicSalt";
     
-    // Защищённые объекты (Уровень 1)
-    const protectedState = {
-        users: {},
-        currentUser: null,
-        bktokBalances: {},
-        allSupportChats: {},
-        privateChats: {},
-        bktokOrders: { buy: [], sell: [] },
-        bktokTrades: [],
-        userTasks: {}
-    };
-    Object.freeze(protectedState);
-    
-    // Рабочие переменные (не замораживаем, но они в замыкании)
     let users = {};
     let currentUser = null;
     let bktokBalances = {};
@@ -492,7 +460,7 @@
     let loginCaptchaAnswer = 0;
     let requireCaptcha = false;
     
-    // ========== УРОВЕНЬ 3: MUTATIONOBSERVER ДЛЯ ЗАЩИТЫ DOM ==========
+    // ========== MUTATIONOBSERVER ДЛЯ ЗАЩИТЫ DOM ==========
     const domProtector = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.type === 'characterData' || mutation.type === 'childList') {
@@ -510,45 +478,50 @@
                     }
                 }
             }
-            if (mutation.type === 'attributes' && mutation.attributeName === 'textContent') {
-                const el = mutation.target;
-                if (el.id === 'token-balance-display' && currentUser) {
-                    const realBalance = bktokBalances[currentUser]?.toFixed(2) || '0';
-                    if (el.textContent !== realBalance + ' BK') {
-                        el.textContent = realBalance + ' BK';
-                    }
-                }
-            }
         });
     });
     
-    domProtector.observe(document.body, {
-        childList: true,
-        subtree: true,
-        characterData: true,
-        attributes: true,
-        attributeFilter: ['textContent']
-    });
+    domProtector.observe(document.body, { childList: true, subtree: true, characterData: true });
     
-    // ========== ФУНКЦИИ ШИФРОВАНИЯ ==========
-    async function proofOfWork(password, username, difficulty = 2000000) {
-        return new Promise((resolve) => {
-            const target = username + password + SALT;
-            let hash = target;
-            
-            function doWork(iteration = 0) {
-                if (iteration >= difficulty) {
-                    resolve(CryptoJS.SHA256(hash).toString());
-                    return;
-                }
-                hash = CryptoJS.SHA256(hash + iteration).toString();
-                if (iteration % 50000 === 0) {
-                    setTimeout(() => doWork(iteration + 1), 0);
-                } else {
-                    doWork(iteration + 1);
+    // ========== АСИНХРОННЫЙ PROOF-OF-WORK (Web Worker) ==========
+    const powWorkerCode = `
+        self.onmessage = function(e) {
+            const { password, username, salt, difficulty } = e.data;
+            let hash = username + password + salt;
+            for (let i = 0; i < difficulty; i++) {
+                hash = self.CryptoJS.SHA256(hash + i).toString();
+                if (i % 50000 === 0) {
+                    self.postMessage({ type: 'progress', progress: (i / difficulty) * 100 });
                 }
             }
-            doWork();
+            self.postMessage({ type: 'done', hash: self.CryptoJS.SHA256(hash).toString() });
+        };
+        importScripts('https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js');
+    `;
+    
+    const powBlob = new Blob([powWorkerCode], { type: 'application/javascript' });
+    const powWorkerUrl = URL.createObjectURL(powBlob);
+    
+    async function proofOfWork(password, username, difficulty = 1000000) {
+        return new Promise((resolve, reject) => {
+            const worker = new Worker(powWorkerUrl);
+            
+            worker.onmessage = (e) => {
+                const { type, progress, hash } = e.data;
+                if (type === 'progress') {
+                    updatePoWProgress(progress);
+                } else if (type === 'done') {
+                    worker.terminate();
+                    resolve(hash);
+                }
+            };
+            
+            worker.onerror = (e) => {
+                worker.terminate();
+                reject(e);
+            };
+            
+            worker.postMessage({ password, username, salt: SALT, difficulty });
         });
     }
     
@@ -678,7 +651,7 @@
                 <div class="pow-progress">
                     <div class="pow-progress-bar" id="pow-progress-bar" style="width:0%"></div>
                 </div>
-                <p style="color:#888; font-size:0.85rem;">Это защищает от перебора паролей</p>
+                <p class="pow-status" id="pow-status">Защита от перебора паролей</p>
             </div>
         `;
         document.body.appendChild(o);
@@ -686,7 +659,9 @@
     
     function updatePoWProgress(percent) {
         const bar = document.getElementById('pow-progress-bar');
+        const status = document.getElementById('pow-status');
         if (bar) bar.style.width = Math.min(percent, 100) + '%';
+        if (status) status.textContent = `${Math.round(percent)}% завершено`;
     }
     
     function hidePoWOverlay() {
@@ -740,10 +715,7 @@
         if (!savedAccounts[username]) return;
         
         showPoWOverlay();
-        let progress = 0;
-        const progressInterval = setInterval(() => { progress += 2; updatePoWProgress(progress); }, 40);
         await proofOfWork(password, username);
-        clearInterval(progressInterval);
         hidePoWOverlay();
         
         setMasterKey(password, username);
@@ -901,10 +873,7 @@
         } 
         
         showPoWOverlay();
-        let progress = 0;
-        const progressInterval = setInterval(() => { progress += 2; updatePoWProgress(progress); }, 40);
         await proofOfWork(p, u);
-        clearInterval(progressInterval); updatePoWProgress(100);
         setMasterKey(p, u);
         const decryptedUsers = secureGetItem('bankUsers');
         hidePoWOverlay();
@@ -1186,10 +1155,10 @@
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
     
-    // ========== ПУБЛИЧНЫЕ ФУНКЦИИ (только необходимые) ==========
+    // ========== ПУБЛИЧНЫЕ ФУНКЦИИ ==========
     const publicAPI = {
         toggleTheme, toggleSection, showLoginForm, showRegistrationForm,
-        login, register: window.completeRegistration, logout, switchAccount, quickLogin,
+        login, logout, switchAccount, quickLogin,
         completeTask, openCase, createOrder, cancelOrder,
         handleStackClick, changeChartPeriod, sendAIMessage,
         startNewChat, openPrivateChat, sendPrivateMessage,
