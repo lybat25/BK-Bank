@@ -11,7 +11,6 @@
     <link rel="apple-touch-icon" href="png/2025-01-31_14-13-47-Photoroom.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
-        /* ВСЕ СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; height: 100%; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; transition: background 0.3s; }
@@ -45,27 +44,56 @@
         .nav-link::after { content: ''; position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%) scaleX(0); width: 70%; height: 2px; background: #FFD700; transition: transform 0.3s ease; border-radius: 2px; }
         .nav-link:hover { color: #FFD700; transform: translateY(-2px); }
         .nav-link:hover::after { transform: translateX(-50%) scaleX(1); }
-        .auth-buttons { display: flex; gap: 6px; }
-        .login-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
-        .login-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: #FFD700; transition: left 0.3s ease; z-index: -1; }
-        .login-btn:hover { color: #0a0a0a; }
-        .login-btn:hover::before { left: 0; }
-        .register-btn { background: #FFD700; border: none; color: #0a0a0a; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
-        .register-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: #0a0a0a; transition: left 0.3s ease; z-index: -1; }
-        .register-btn:hover { color: #FFD700; transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255,215,0,0.3); }
-        .register-btn:hover::before { left: 0; }
+        .auth-buttons { display: flex; gap: 8px; }
+        
+        .login-btn, .register-btn { 
+            background: transparent; 
+            border: 1.5px solid #FFD700; 
+            color: #FFD700; 
+            padding: 8px 16px; 
+            border-radius: 40px; 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            cursor: pointer; 
+            transition: all 0.25s; 
+            position: relative; 
+            overflow: hidden;
+        }
+        .login-btn::before, .register-btn::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: -100%; 
+            width: 100%; 
+            height: 100%; 
+            background: #FFD700; 
+            transition: left 0.3s ease; 
+            z-index: -1; 
+        }
+        .login-btn:hover, .register-btn:hover { 
+            color: #0a0a0a; 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3); 
+        }
+        .login-btn:hover::before, .register-btn:hover::before { left: 0; }
+        
+        body.light-theme .login-btn, body.light-theme .register-btn { 
+            border: 1.5px solid #0a0a0a; 
+            color: #0a0a0a; 
+        }
+        body.light-theme .login-btn::before, body.light-theme .register-btn::before { 
+            background: #0a0a0a; 
+        }
+        body.light-theme .login-btn:hover, body.light-theme .register-btn:hover { 
+            color: #FFD700; 
+        }
+        
         .profile-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 6px 12px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 6px; }
         .profile-btn:hover { background: #FFD700; color: #0a0a0a; transform: translateY(-2px); }
         .profile-btn img { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #FFD700; }
         .theme-toggle { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 6px 12px; border-radius: 30px; cursor: pointer; font-size: 0.85rem; transition: all 0.25s; }
         .theme-toggle:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(255,215,0,0.3); }
         body.light-theme .theme-toggle { border: 1px solid #0a0a0a; color: #0a0a0a; }
-        body.light-theme .login-btn { border: 1.5px solid #0a0a0a; color: #0a0a0a; }
-        body.light-theme .login-btn::before { background: #0a0a0a; }
-        body.light-theme .login-btn:hover { color: #FFD700; }
-        body.light-theme .register-btn { background: #0a0a0a; color: #FFD700; }
-        body.light-theme .register-btn::before { background: #FFD700; }
-        body.light-theme .register-btn:hover { color: #0a0a0a; }
         body.light-theme .profile-btn { border: 1.5px solid #0a0a0a; color: #0a0a0a; }
         body.light-theme .profile-btn:hover { background: #0a0a0a; color: #FFD700; }
         
@@ -388,7 +416,6 @@
 (function() {
     "use strict";
     
-    // ========== БЕЗОПАСНОСТЬ УРОВЕНЬ 2 ==========
     let MASTER_KEY = null;
     const SALT = "BKbankDynamicSalt";
     
@@ -419,7 +446,6 @@
     
     function hashPassword(p) { return CryptoJS.SHA256(p + SALT).toString(); }
     
-    // ========== ДАННЫЕ ==========
     let users = {};
     let currentUser = null;
     let isStackExpanded = false;
@@ -440,7 +466,6 @@
     let loginCaptchaAnswer = 0;
     let requireCaptcha = false;
     
-    // ========== ЗАЩИТА БАЛАНСА ==========
     function verifyBalances() {
         const savedHash = localStorage.getItem('balanceHash');
         const currentHash = CryptoJS.SHA256(JSON.stringify(bktokBalances) + SALT).toString();
@@ -467,7 +492,6 @@
         return true;
     }
     
-    // Загрузка незашифрованных данных (счётчики попыток)
     function loadUnencryptedData() {
         failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
         lockUntil = parseInt(localStorage.getItem('lockUntil')) || 0;
@@ -503,12 +527,21 @@
         window.toggleSection('about'); 
     };
     window.toggleTheme = () => { document.body.classList.toggle('light-theme'); localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
-    function showModalOverlay() { const o = document.createElement('div'); o.className = 'modal-overlay'; o.id = 'modal-overlay'; o.onclick = () => { removeModals(); o.remove(); }; document.body.appendChild(o); }
+    function showModalOverlay() { 
+        const existing = document.getElementById('modal-overlay');
+        if (existing) existing.remove();
+        const o = document.createElement('div'); 
+        o.className = 'modal-overlay'; 
+        o.id = 'modal-overlay'; 
+        o.onclick = () => { removeModals(); o.remove(); }; 
+        document.body.appendChild(o); 
+    }
     
     function getBlockTime(level) { const times = [30000, 60000, 300000, 900000, 1800000]; return times[Math.min(level, times.length - 1)]; }
     
     window.showLoginForm = function() { 
-        removeModals(); document.getElementById('modal-overlay')?.remove(); showModalOverlay(); 
+        removeModals(); 
+        showModalOverlay(); 
         requireCaptcha = failedAttempts >= 2;
         const m = document.createElement('div'); m.className = 'modal-form'; 
         let h = `<div class="form-title">🔐 Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div>
@@ -595,7 +628,7 @@
 
     let regStep = 1, regData = {}, captchaAnswer = 0;
     window.showRegistrationForm = function() { 
-        removeModals(); document.getElementById('modal-overlay')?.remove(); 
+        removeModals(); 
         showModalOverlay(); 
         regStep = 1; regData = {}; 
         renderRegStep(); 
@@ -631,7 +664,7 @@
         h += `<span class="text-link" onclick="window.showLoginForm()">← Уже есть аккаунт</span>`; 
         m.innerHTML = h; document.body.appendChild(m); 
     }
-    window.nextRegStep = function() { const e = document.getElementById('registerError'); if (regStep === 1) { const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; if (!n||!u||!p||!c) return showError(e,'Все поля обязательны'); if (p.length<6) return showError(e,'Пароль должен быть не менее 6 символов'); if (p!==c) return showError(e,'Пароли не совпадают'); if (MASTER_KEY) { const du = secureGetItem('bankUsers'); if (du && du[u]) return showError(e,'Этот никнейм уже занят'); } regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); } else if (regStep === 2) { const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Некорректный Email'); if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон: +7XXXXXXXXXX'); regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); } };
+    window.nextRegStep = function() { const e = document.getElementById('registerError'); if (regStep === 1) { const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; if (!n||!u||!p||!c) return showError(e,'Все поля обязательны'); if (p.length<6) return showError(e,'Пароль должен быть не менее 6 символов'); if (p!==c) return showError(e,'Пароли не совпадают'); regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); } else if (regStep === 2) { const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Некорректный Email'); if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон: +7XXXXXXXXXX'); regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); } };
     window.prevRegStep = () => { regStep--; renderRegStep(); };
     window.completeRegistration = function() { 
         const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); 
@@ -945,7 +978,7 @@
     };
     window.showPublicProfile = function(u) { if (!users[u]) return; const c = document.getElementById('public-profile-section'); c.innerHTML = `<h2>${users[u].name}</h2><div class="divider"></div><p>@${u}</p><button class="gold-button" onclick="window.location.href='/'">Назад</button>`; c.classList.remove('hidden'); };
 
-    function removeModals() { document.querySelectorAll('.modal-form').forEach(m=>m.remove()); document.getElementById('modal-overlay')?.remove(); }
+    function removeModals() { document.querySelectorAll('.modal-form').forEach(m=>m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 })();
