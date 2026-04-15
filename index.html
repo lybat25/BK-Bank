@@ -325,6 +325,7 @@
     let failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
     const SALT = "BKbankDynamicSalt";
     let chartPeriod = '24H';
+    let chartInterval = null;
     function hashPassword(p) { return CryptoJS.SHA256(p + SALT).toString(); }
     
     let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
@@ -372,7 +373,7 @@
         }
     }
 
-    window.onload = () => { if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme'); const s = localStorage.getItem('currentSession'), viewUser = new URLSearchParams(window.location.search).get('user'); if (viewUser && users[viewUser]) { window.showPublicProfile(viewUser); return; } if (s) { const d = JSON.parse(s); if (Date.now() - d.timestamp < 86400000) { currentUser = d.username; showMainContent(); showWelcomeMessage(users[currentUser].name); updateUIForAuth(); return; } } showMainContent(); updateUIForAuth(); window.toggleSection('about'); };
+    window.onload = () => { if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme'); const s = localStorage.getItem('currentSession'), viewUser = new URLSearchParams(window.location.search).get('user'); if (viewUser && users[viewUser]) { window.showPublicProfile(viewUser); return; } if (s) { const d = JSON.parse(s); if (Date.now() - d.timestamp < 86400000) { currentUser = d.username; showMainContent(); showWelcomeMessage(users[currentUser].name); updateUIForAuth(); return; } } showMainContent(); updateUIForAuth(); window.toggleSection('about'); startChartUpdates(); };
     window.toggleTheme = () => { document.body.classList.toggle('light-theme'); localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
     function showModalOverlay() { const o = document.createElement('div'); o.className = 'modal-overlay'; o.id = 'modal-overlay'; o.onclick = () => { removeModals(); o.remove(); }; document.body.appendChild(o); }
     window.showLoginForm = function() { removeModals(); document.getElementById('modal-overlay')?.remove(); showModalOverlay(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Вход</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="Пароль"><button class="gold-button" onclick="window.login()">Войти</button><span class="text-link" onclick="window.showRegistrationForm()">Регистрация</span><div id="failedAttemptsWarning" style="color:#ff5e5e; text-align:center;"></div>`; document.body.appendChild(m); updateFailedAttemptsWarning(); };
@@ -395,7 +396,7 @@
         if (s==='about') document.getElementById('about-section')?.classList.remove('hidden');
         else if (s==='services') document.getElementById('services-section')?.classList.remove('hidden');
         else if (s==='cards') { document.getElementById('cards-section')?.classList.remove('hidden'); renderCardsStack(); }
-        else if (s==='bktok') { document.getElementById('bktok-section')?.classList.remove('hidden'); if (currentUser) loadBKtok(); }
+        else if (s==='bktok') { document.getElementById('bktok-section')?.classList.remove('hidden'); if (currentUser) loadBKtok(); startChartUpdates(); }
         else if (s==='tasks') { document.getElementById('tasks-section')?.classList.remove('hidden'); if (currentUser) renderTasks(); }
         else if (s==='cases') { document.getElementById('cases-section')?.classList.remove('hidden'); if (currentUser) renderCases(); }
         else if (s==='support') { document.getElementById('support-section')?.classList.remove('hidden'); renderSupportPanel(); }
@@ -403,6 +404,7 @@
         else if (s==='profile') { if (currentUser) showProfile(); else window.showLoginForm(); }
     };
 
+    function startChartUpdates() { if (chartInterval) clearInterval(chartInterval); chartInterval = setInterval(() => { if (currentUser && !document.getElementById('bktok-section')?.classList.contains('hidden')) renderChart(); }, 1000); }
     function loadBKtok() { if (!currentUser) return; if (bktokBalances[currentUser]===undefined) bktokBalances[currentUser]=100; document.getElementById('token-balance-display').textContent = bktokBalances[currentUser].toFixed(2) + ' BK'; updateOrderBook(); renderChart(); renderTradeHistory(); }
     window.changeChartPeriod = function(p) { chartPeriod = p; document.querySelectorAll('.chart-period').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); renderChart(); };
     function renderChart() {
@@ -464,7 +466,7 @@
     window.uploadAvatar = (e) => { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => { users[currentUser].avatar = ev.target.result; localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); updateUIForAuth(); }; r.readAsDataURL(f); } };
     window.exportVault = () => { const d = { users, bktokBalances, bktokTrades, userTasks, privateChats }; const b = new Blob([JSON.stringify(d)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `bkbank_${Date.now()}.bkwallet`; a.click(); };
     window.destroyAccount = () => { if (confirm('УДАЛИТЬ АККАУНТ?')) { delete users[currentUser]; delete bktokBalances[currentUser]; localStorage.setItem('bankUsers', JSON.stringify(users)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); logout(); } };
-    window.logout = function() { localStorage.removeItem('currentSession'); currentUser = null; updateUIForAuth(); window.toggleSection('about'); showWelcomeMessage('Вы вышли'); };
+    window.logout = function() { if (chartInterval) clearInterval(chartInterval); localStorage.removeItem('currentSession'); currentUser = null; updateUIForAuth(); window.toggleSection('about'); showWelcomeMessage('Вы вышли'); };
     window.showPublicProfile = function(u) { if (!users[u]) return; const c = document.getElementById('public-profile-section'); c.innerHTML = `<h2>${users[u].name}</h2><div class="divider"></div><p>@${u}</p><button class="gold-button" onclick="window.location.href='/'">Назад</button>`; c.classList.remove('hidden'); };
 
     function removeModals() { document.querySelectorAll('.modal-form').forEach(m=>m.remove()); }
