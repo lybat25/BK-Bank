@@ -81,7 +81,6 @@
         p, li, span, div { color: #ffffff; line-height: 1.6; font-size: 0.95rem; }
         .highlight { color: #FFD700; font-weight: 600; }
         
-        /* Старые стили для галочек */
         .comparison-table { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
         .comparison-item { background: rgba(255,215,0,0.05); border-radius: 16px; padding: 15px; border: 1px solid rgba(255,215,0,0.1); transition: all 0.3s ease; }
         .comparison-item:hover { transform: scale(1.01); border-color: #FFD700; background: rgba(255,215,0,0.08); }
@@ -263,15 +262,25 @@
         
         <h3>НАШИ ПРЕИМУЩЕСТВА</h3>
         <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin:20px 0;">
-            <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px;"><h4 style="color:#FFD700;">1. Приватность</h4><p>Ваши транзакции остаются вашей тайной.</p></div>
-            <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px;"><h4 style="color:#FFD700;">2. Мост в Web3</h4><p>Карта работает везде, где принимают Visa/Mastercard.</p></div>
-            <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px;"><h4 style="color:#FFD700;">3. Эстетика</h4><p>Карта BK-Bank — это артефакт.</p></div>
-            <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px;"><h4 style="color:#FFD700;">4. Безопасность</h4><p>Защита уровня MPC и страхование активов.</p></div>
+            <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px;"><h4 style="color:#FFD700;">1. Приватность</h4><p>Ваши транзакции остаются вашей тайной. Мы не храним данные о ваших расходах в открытом виде. Все операции проходят через шифрованные каналы, а ваша личность защищена лучше, чем в швейцарском банке.</p></div>
+            <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px;"><h4 style="color:#FFD700;">2. Мост в Web3</h4><p>Ваша карта BK-Bank работает везде, где принимают обычные банковские карты. Но в отличие от них, ваши средства — это токенизированный труд. Вы можете в любой момент конвертировать BK-Token в фиат, криптовалюту или оставить его расти.</p></div>
+            <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px;"><h4 style="color:#FFD700;">3. Эстетика</h4><p>Карта BK-Bank — это не кусок пластика с чипом. Это артефакт. Минимализм, золотое сечение, тактильно приятный металл. Вы будете доставать её из кошелька с удовольствием. И она не просто красивая — она умная.</p></div>
+            <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px;"><h4 style="color:#FFD700;">4. Безопасность</h4><p>Защита активов на уровне лучших мировых стандартов: многофакторная аутентификация, холодное хранение криптоактивов, страхование средств на карте. Ваш труд надёжно защищён.</p></div>
+            <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px; grid-column: span 2;"><h4 style="color:#FFD700;">5. Сообщество</h4><p>Владельцы карт BK-Bank — это не просто клиенты. Это со-основатели ценности BK-Token. Ваша активность, ваши приглашения, ваше участие в жизни экосистемы напрямую влияют на курс токена. Мы строим экономику, где каждый участник — бенефициар.</p></div>
+        </div>
+        
+        <h3>КАК НАЧАТЬ?</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:15px; margin:20px 0;">
+            <div style="flex:1; min-width:150px; background:rgba(255,215,0,0.03); border-radius:16px; padding:20px; text-align:center;"><div style="width:45px; height:45px; background:#FFD700; color:#0a0a0a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700; margin:0 auto 15px;">1</div><h4 style="color:#FFD700;">Регистрация</h4><p>2 минуты — и вы в системе.</p></div>
+            <div style="flex:1; min-width:150px; background:rgba(255,215,0,0.03); border-radius:16px; padding:20px; text-align:center;"><div style="width:45px; height:45px; background:#FFD700; color:#0a0a0a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700; margin:0 auto 15px;">2</div><h4 style="color:#FFD700;">Верификация</h4><p>Безопасный KYC за пару минут.</p></div>
+            <div style="flex:1; min-width:150px; background:rgba(255,215,0,0.03); border-radius:16px; padding:20px; text-align:center;"><div style="width:45px; height:45px; background:#FFD700; color:#0a0a0a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700; margin:0 auto 15px;">3</div><h4 style="color:#FFD700;">Первый токен</h4><p>Выполните задание — получите BK.</p></div>
+            <div style="flex:1; min-width:150px; background:rgba(255,215,0,0.03); border-radius:16px; padding:20px; text-align:center;"><div style="width:45px; height:45px; background:#FFD700; color:#0a0a0a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700; margin:0 auto 15px;">4</div><h4 style="color:#FFD700;">Рост</h4><p>Наблюдайте за ростом вашего капитала.</p></div>
         </div>
         
         <div style="text-align:center; margin-top:40px; padding:25px; background:linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.02)); border-radius:30px;">
             <h2 style="font-size:2rem;">BK-BANK: ВАШ ТРУД — НАША ВАЛЮТА</h2>
             <p style="font-size:1.1rem;">Присоединяйтесь к BK-Bank сегодня. Превратите свою ежедневную активность в растущий капитал.</p>
+            <p style="margin-top:15px; color:#FFD700; font-size:1.1rem;"><strong>BK-Bank. Ваш надёжный финансовый партнёр. Создавайте ценность. Управляйте будущим.</strong></p>
             <button class="gold-button" style="width:auto; padding:16px 40px; margin-top:20px;" onclick="window.showRegistrationForm()">✨ Открыть счёт ✨</button>
         </div>
     </div>
