@@ -367,12 +367,13 @@
     </div>
 
     <div id="support-section" class="content-card hidden">
-        <h2>Поддержка</h2><div class="divider"></div>
+        <h2>🤖 Поддержка (AI)</h2><div class="divider"></div>
+        <p style="margin-bottom:15px; color:#FFD700;"><i>Задайте вопрос нашей нейросети, и она ответит вам!</i></p>
         <div id="support-container"></div>
     </div>
 
     <div id="chats-section" class="content-card hidden">
-        <h2>Чаты</h2><div class="divider"></div>
+        <h2>💬 Чаты</h2><div class="divider"></div>
         <div id="chats-guest-message" style="text-align:center; padding:15px;">🔒 Войдите для доступа к чатам</div>
         <div id="chats-content"><div id="chats-container"></div></div>
     </div>
@@ -401,7 +402,7 @@
     let isStackExpanded = false;
     let allSupportChats = JSON.parse(localStorage.getItem('allSupportChats')) || {};
     let privateChats = JSON.parse(localStorage.getItem('privateChats')) || {};
-    let selectedClient = null, selectedPrivateChat = null;
+    let selectedPrivateChat = null;
     let bktokOrders = JSON.parse(localStorage.getItem('bktokOrders')) || { buy: [], sell: [] };
     let bktokTrades = JSON.parse(localStorage.getItem('bktokTrades')) || [];
     let bktokBalances = JSON.parse(localStorage.getItem('bktokBalances')) || {};
@@ -414,12 +415,6 @@
         if (users[u].password && !users[u].passwordHash) { users[u].passwordHash = hashPassword(users[u].password); delete users[u].password; }
     }
     localStorage.setItem('bankUsers', JSON.stringify(users));
-    
-    if (!users["admin"]) {
-        users["admin"] = { name: "Администратор", email: "admin@bk.local", phone: "+70000000000", passwordHash: hashPassword("admin123"), balance: 0, registrationDate: new Date().toISOString(), isAdmin: true, avatar: null };
-        users["support"] = { name: "Поддержка", email: "support@bk.local", phone: "+70000000001", passwordHash: hashPassword("support123"), balance: 0, registrationDate: new Date().toISOString(), isSupport: true, avatar: null };
-        localStorage.setItem('bankUsers', JSON.stringify(users));
-    }
 
     const cardList = [
         { img: 'png/2025-01-30_15-13-31-Photoroom.png' }, { img: 'png/2025-01-30_15-58-26-Photoroom.png' },
@@ -513,8 +508,43 @@
     }
 
     let regStep = 1, regData = {}, captchaAnswer = 0;
-    window.showRegistrationForm = function() { removeModals(); document.getElementById('modal-overlay')?.remove(); showModalOverlay(); regStep = 1; regData = {}; renderRegStep(); };
-    function renderRegStep() { removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; let h = `<div class="form-title">📝 Регистрация</div><div class="step-indicator">${[1,2,3].map(i => `<div class="step-dot ${i===regStep?'active':''} ${i<regStep?'completed':''}"></div>`).join('')}</div><div id="registerError" class="error-text hidden"></div>`; if (regStep === 1) h += `<input id="regName" class="form-input" placeholder="👤 Ваше имя" value="${regData.name||''}"><input id="regUsername" class="form-input" placeholder="📛 Никнейм" value="${regData.username||''}"><input type="password" id="regPassword" class="form-input" placeholder="🔒 Пароль"><input type="password" id="regConfirm" class="form-input" placeholder="🔒 Подтвердите пароль"><button class="gold-button" onclick="window.nextRegStep()">Далее →</button>`; else if (regStep === 2) h += `<input id="regEmail" class="form-input" placeholder="📧 Email" value="${regData.email||''}"><input id="regPhone" class="form-input" placeholder="📱 Телефон +7..." value="${regData.phone||'+7'}"><button class="gold-button" onclick="window.nextRegStep()">Далее →</button><button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`; else { const n1 = Math.floor(Math.random()*15)+1, n2 = Math.floor(Math.random()*15)+1; captchaAnswer = n1+n2; h += `<div class="captcha-box"><div style="font-size:1rem; color:#888; margin-bottom:10px;">🔐 Проверка безопасности</div><div class="captcha-question"><span class="captcha-emoji">🔢</span> ${n1} + ${n2} = ?</div><input id="captchaInput" class="form-input" placeholder="Введите ответ" style="text-align:center;"></div><button class="gold-button" onclick="window.completeRegistration()">✅ Зарегистрироваться</button><button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`; } h += `<span class="text-link" onclick="window.showLoginForm()">← Уже есть аккаунт</span>`; m.innerHTML = h; document.body.appendChild(m); }
+    window.showRegistrationForm = function() { 
+        removeModals(); document.getElementById('modal-overlay')?.remove(); 
+        showModalOverlay(); 
+        regStep = 1; regData = {}; 
+        renderRegStep(); 
+    };
+    function renderRegStep() { 
+        removeModals(); 
+        const m = document.createElement('div'); m.className = 'modal-form'; 
+        let h = `<div class="form-title">📝 Регистрация</div>
+        <div class="step-indicator">${[1,2,3].map(i => `<div class="step-dot ${i===regStep?'active':''} ${i<regStep?'completed':''}"></div>`).join('')}</div>
+        <div id="registerError" class="error-text hidden"></div>`; 
+        if (regStep === 1) {
+            h += `<input id="regName" class="form-input" placeholder="👤 Ваше имя" value="${regData.name||''}">
+            <input id="regUsername" class="form-input" placeholder="📛 Никнейм" value="${regData.username||''}">
+            <input type="password" id="regPassword" class="form-input" placeholder="🔒 Пароль">
+            <input type="password" id="regConfirm" class="form-input" placeholder="🔒 Подтвердите пароль">
+            <button class="gold-button" onclick="window.nextRegStep()">Далее →</button>`;
+        } else if (regStep === 2) {
+            h += `<input id="regEmail" class="form-input" placeholder="📧 Email" value="${regData.email||''}">
+            <input id="regPhone" class="form-input" placeholder="📱 Телефон +7..." value="${regData.phone||'+7'}">
+            <button class="gold-button" onclick="window.nextRegStep()">Далее →</button>
+            <button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`;
+        } else {
+            const n1 = Math.floor(Math.random()*15)+1, n2 = Math.floor(Math.random()*15)+1; 
+            captchaAnswer = n1+n2; 
+            h += `<div class="captcha-box">
+                <div style="font-size:1rem; color:#888; margin-bottom:10px;">🔐 Проверка безопасности</div>
+                <div class="captcha-question"><span class="captcha-emoji">🔢</span> ${n1} + ${n2} = ?</div>
+                <input id="captchaInput" class="form-input" placeholder="Введите ответ" style="text-align:center;">
+            </div>
+            <button class="gold-button" onclick="window.completeRegistration()">✅ Зарегистрироваться</button>
+            <button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`;
+        } 
+        h += `<span class="text-link" onclick="window.showLoginForm()">← Уже есть аккаунт</span>`; 
+        m.innerHTML = h; document.body.appendChild(m); 
+    }
     window.nextRegStep = function() { const e = document.getElementById('registerError'); if (regStep === 1) { const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; if (!n||!u||!p||!c) return showError(e,'Все поля обязательны'); if (p.length<6) return showError(e,'Пароль должен быть не менее 6 символов'); if (p!==c) return showError(e,'Пароли не совпадают'); if (users[u]) return showError(e,'Этот никнейм уже занят'); regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); } else if (regStep === 2) { const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Некорректный Email'); if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон: +7XXXXXXXXXX'); if (em) { for (let u in users) if (users[u].email===em) return showError(e,'Email уже используется'); } if (ph && ph!=='+7') { for (let u in users) if (users[u].phone===ph) return showError(e,'Телефон уже используется'); } regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); } };
     window.prevRegStep = () => { regStep--; renderRegStep(); };
     window.completeRegistration = function() { const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); if (!c) return showError(e,'Введите ответ'); if (parseInt(c)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(e,'Неверный ответ'); } const {name,username,email,phone,password} = regData; users[username] = { name, email, phone, passwordHash: hashPassword(password), balance:0, registrationDate:new Date().toISOString(), avatar:null }; localStorage.setItem('bankUsers', JSON.stringify(users)); currentUser = username; bktokBalances[username]=100; savedAccounts[username] = true; localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('currentSession', JSON.stringify({username,timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(name); updateUIForAuth(); };
@@ -540,10 +570,61 @@
         else if (s==='bktok') { document.getElementById('bktok-section')?.classList.remove('hidden'); if (currentUser) loadBKtok(); startChartUpdates(); }
         else if (s==='tasks') { document.getElementById('tasks-section')?.classList.remove('hidden'); if (currentUser) renderTasks(); }
         else if (s==='cases') { document.getElementById('cases-section')?.classList.remove('hidden'); if (currentUser) renderCases(); }
-        else if (s==='support') { document.getElementById('support-section')?.classList.remove('hidden'); renderSupportPanel(); }
+        else if (s==='support') { document.getElementById('support-section')?.classList.remove('hidden'); renderAISupport(); }
         else if (s==='chats') { document.getElementById('chats-section')?.classList.remove('hidden'); if (currentUser) renderPrivateChats(); }
         else if (s==='profile') { if (currentUser) showProfile(); else window.showLoginForm(); }
     };
+
+    function renderAISupport() {
+        const c = document.getElementById('support-container');
+        if (!currentUser) {
+            c.innerHTML = '<p style="text-align:center; padding:20px;">🔒 Войдите, чтобы задать вопрос</p>';
+            return;
+        }
+        if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'ai', text: '👋 Здравствуйте! Я нейросеть BK-Bank. Чем могу помочь?', time: new Date().toISOString() }];
+        c.innerHTML = `<div class="chat-messages" id="ai-chat-messages"></div>
+        <div class="chat-input-area"><input id="ai-chat-input" class="chat-input" placeholder="Задайте вопрос..."><button class="chat-send-btn" onclick="window.sendAIMessage()">Отправить</button></div>`;
+        loadAIMessages();
+    }
+    
+    function loadAIMessages() {
+        const cont = document.getElementById('ai-chat-messages');
+        if (!cont) return;
+        cont.innerHTML = allSupportChats[currentUser].map(msg => `<div class="chat-message ${msg.from==='ai'?'support':'client'}"><strong>${msg.from==='ai'?'🤖 BK-AI':'👤 Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join('');
+        cont.scrollTop = cont.scrollHeight;
+    }
+    
+    window.sendAIMessage = function() {
+        const inp = document.getElementById('ai-chat-input');
+        const txt = inp.value.trim();
+        if (!txt) return;
+        allSupportChats[currentUser].push({ from: currentUser, text: txt, time: new Date().toISOString() });
+        localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats));
+        inp.value = '';
+        loadAIMessages();
+        setTimeout(() => {
+            const response = generateAIResponse(txt);
+            allSupportChats[currentUser].push({ from: 'ai', text: response, time: new Date().toISOString() });
+            localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats));
+            loadAIMessages();
+        }, 800);
+    };
+    
+    function generateAIResponse(q) {
+        const ql = q.toLowerCase();
+        if (ql.includes('баланс') || ql.includes('сколько') || ql.includes('денег')) return `💰 Ваш баланс: ${bktokBalances[currentUser]?.toFixed(2) || '0'} BK.`;
+        if (ql.includes('карт') || ql.includes('оформить')) return '💳 Вы можете оформить карту в разделе «Карты». Нажмите на стопку, чтобы разложить их и выбрать подходящую.';
+        if (ql.includes('токен') || ql.includes('bk')) return '🚀 BK-Token — это валюта, обеспеченная трудом. Зарабатывайте её, выполняя задания в разделе BKtok!';
+        if (ql.includes('задан')) return '📋 Задания обновляются каждый день. Заходите ежедневно и получайте BK за активность!';
+        if (ql.includes('кейс')) return '🎁 Кейсы можно открыть в разделе BKtok. Чем дороже кейс — тем круче награда!';
+        if (ql.includes('чат') || ql.includes('общение')) return '💬 В разделе «Чаты» вы можете общаться с другими пользователями BK-Bank.';
+        if (ql.includes('регистрац') || ql.includes('аккаунт')) return '📝 Зарегистрироваться можно, нажав кнопку «Регистрация» в правом верхнем углу.';
+        if (ql.includes('парол') || ql.includes('забыл')) return '🔐 Если забыли пароль, нажмите «Забыли пароль?» на экране входа.';
+        if (ql.includes('привет') || ql.includes('здравств')) return '👋 Здравствуйте! Я ваш персональный ассистент BK-Bank. Спрашивайте!';
+        if (ql.includes('спасиб')) return '😊 Всегда пожалуйста! Обращайтесь, если понадобится помощь.';
+        if (ql.includes('пока') || ql.includes('до свидан')) return '👋 До встречи! Хорошего дня и успешных трейдов!';
+        return '🤔 Я пока не знаю ответа на этот вопрос. Попробуйте спросить про баланс, карты, токены или задания.';
+    }
 
     function startChartUpdates() { if (chartInterval) clearInterval(chartInterval); chartInterval = setInterval(() => { if (currentUser && !document.getElementById('bktok-section')?.classList.contains('hidden')) renderChart(); }, 1000); }
     function loadBKtok() { if (!currentUser) return; if (bktokBalances[currentUser]===undefined) bktokBalances[currentUser]=100; document.getElementById('token-balance-display').textContent = bktokBalances[currentUser].toFixed(2) + ' BK'; updateOrderBook(); renderChart(); renderTradeHistory(); }
@@ -581,13 +662,6 @@
     const cases = [{name:'Обычный',price:50,rewards:[5,10,20,30,50,100]},{name:'Редкий',price:200,rewards:[50,100,150,250,500,1000]},{name:'Легендарный',price:1000,rewards:[200,500,1000,2000,5000,10000]}];
     function renderCases() { if (!currentUser) return; const c = document.getElementById('cases-container'); c.innerHTML = cases.map(cs => `<div class="case-item" onclick="window.openCase('${cs.name}',${cs.price},[${cs.rewards}])"><h4>${cs.name}</h4><div style="color:#FFD700; margin-top:10px;">${cs.price} BK</div></div>`).join(''); }
     window.openCase = (n,p,r) => { if (bktokBalances[currentUser] < p) return alert('Недостаточно BK!'); bktokBalances[currentUser] -= p; const w = r[Math.floor(Math.random()*r.length)]; bktokBalances[currentUser] += w; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); showWelcomeMessage(`Выигрыш: ${w} BK!`); renderCases(); };
-
-    function renderSupportPanel() { const c = document.getElementById('support-container'); if (users[currentUser]?.isAdmin || users[currentUser]?.isSupport) { const clients = Object.keys(allSupportChats).filter(u => u!=='admin' && u!=='support' && allSupportChats[u]?.length); let h = `<div class="support-panel"><div class="users-list"><h4>Обращения</h4>`; clients.forEach(cl => h += `<div class="user-item ${selectedClient===cl?'active':''}" onclick="window.selectClient('${cl}')"><strong>${cl}</strong></div>`); h += `</div><div class="chat-area">`; if (selectedClient) { h += `<div><span>Чат с ${selectedClient}</span><button onclick="window.clearChat('${selectedClient}')" style="margin-left:10px; background:transparent; border:1px solid #ff5e5e; color:#ff5e5e; padding:4px 10px; border-radius:20px;">Очистить</button></div><div class="chat-messages" id="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Ответ..."><button class="chat-send-btn" onclick="window.sendOperatorMessage()">Отправить</button></div>`; } else h += `<p>Выберите пользователя</p>`; h += `</div></div>`; c.innerHTML = h; if (selectedClient) loadSupportMessages(); } else { if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'support', text: 'Здравствуйте! Чем могу помочь?', time: new Date().toISOString() }]; c.innerHTML = `<div class="chat-messages" id="chat-messages"></div><div class="chat-input-area"><input id="chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendClientMessage()">Отправить</button></div>`; loadSupportMessages(); } }
-    function loadSupportMessages() { const cont = document.getElementById('chat-messages'); if (!cont) return; const msgs = selectedClient ? allSupportChats[selectedClient] : allSupportChats[currentUser]; cont.innerHTML = (msgs||[]).map(msg => `<div class="chat-message ${msg.from==='support'?'support':'client'}"><strong>${msg.from==='support'?'Поддержка':msg.from}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join(''); cont.scrollTop = cont.scrollHeight; }
-    window.selectClient = (c) => { selectedClient = c; renderSupportPanel(); };
-    window.clearChat = (cl) => { if (confirm('Очистить?')) { allSupportChats[cl] = [{ from:'support', text:'Чат очищен.', time:new Date().toISOString() }]; localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); } };
-    window.sendClientMessage = () => { const inp = document.getElementById('chat-input'), txt = inp.value.trim(); if (!txt) return; allSupportChats[currentUser].push({from:currentUser,text:txt,time:new Date().toISOString()}); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); setTimeout(() => { allSupportChats[currentUser].push({from:'support',text:'Спасибо! Оператор скоро ответит.',time:new Date().toISOString()}); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); }, 1000); };
-    window.sendOperatorMessage = () => { const inp = document.getElementById('chat-input'), txt = inp.value.trim(); if (!txt||!selectedClient) return; allSupportChats[selectedClient].push({from:'support',text:txt,time:new Date().toISOString()}); localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats)); renderSupportPanel(); };
 
     function renderPrivateChats() { const c = document.getElementById('chats-container'), my = Object.keys(privateChats).filter(id => id.includes(currentUser)); let h = `<div class="support-panel"><div class="users-list"><h4>Чаты</h4><button class="gold-button" onclick="window.startNewChat()" style="margin-bottom:10px;">+ Новый</button>`; my.forEach(id => { const o = id.split('-').find(u => u!==currentUser); h += `<div class="user-item" onclick="window.openPrivateChat('${id}')"><strong>${o}</strong></div>`; }); h += `</div><div class="chat-area">`; if (selectedPrivateChat) { const o = selectedPrivateChat.split('-').find(u => u!==currentUser); h += `<h4>Чат с ${o}</h4><div class="chat-messages" id="private-chat-messages"></div><div class="chat-input-area"><input id="private-chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendPrivateMessage()">Отправить</button></div>`; } else h += `<p>Выберите чат</p>`; h += `</div></div>`; c.innerHTML = h; if (selectedPrivateChat) loadPrivateChatMessages(); }
     function loadPrivateChatMessages() { const cont = document.getElementById('private-chat-messages'); if (!cont) return; cont.innerHTML = (privateChats[selectedPrivateChat]||[]).map(msg => `<div class="chat-message ${msg.from===currentUser?'client':'support'}"><strong>${msg.from}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join(''); cont.scrollTop = cont.scrollHeight; }
