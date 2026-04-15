@@ -9,7 +9,10 @@
     <meta name="apple-mobile-web-app-title" content="BK-Bank">
     <meta name="theme-color" content="#0a0a0a">
     <link rel="apple-touch-icon" href="png/2025-01-31_14-13-47-Photoroom.png">
+    <!-- ИСПРАВЛЕНО: локальное подключение crypto-js -->
+    <script src="lib/crypto-js.min.js"></script>
     <style>
+        /* Все стили остаются без изменений */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; height: 100%; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; transition: background 0.3s; }
@@ -427,14 +430,11 @@
 (function() {
     "use strict";
     
-    // ========== ЗАЩИТА LOCALSTORAGE (через замыкание) ==========
     const _realStorage = window.localStorage;
-    
     function realGetItem(key) { return _realStorage.getItem(key); }
     function realSetItem(key, value) { _realStorage.setItem(key, value); }
     function realRemoveItem(key) { _realStorage.removeItem(key); }
     
-    // ========== ПЕРЕМЕННЫЕ ==========
     let MASTER_KEY = null;
     const SALT = "BKbankDynamicSalt";
     
@@ -460,43 +460,35 @@
     let loginCaptchaAnswer = 0;
     let requireCaptcha = false;
     
-    // ========== MUTATIONOBSERVER ДЛЯ ЗАЩИТЫ DOM ==========
     const domProtector = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.type === 'characterData' || mutation.type === 'childList') {
                 const el = mutation.target;
                 if (el.id === 'token-balance-display' && currentUser) {
                     const realBalance = bktokBalances[currentUser]?.toFixed(2) || '0';
-                    if (el.textContent !== realBalance + ' BK') {
-                        el.textContent = realBalance + ' BK';
-                    }
+                    if (el.textContent !== realBalance + ' BK') el.textContent = realBalance + ' BK';
                 }
                 if (el.id === 'header-username' && currentUser) {
                     const realName = users[currentUser]?.name || currentUser;
-                    if (el.textContent !== realName) {
-                        el.textContent = realName;
-                    }
+                    if (el.textContent !== realName) el.textContent = realName;
                 }
             }
         });
     });
-    
     domProtector.observe(document.body, { childList: true, subtree: true, characterData: true });
     
-    // ========== АСИНХРОННЫЙ PROOF-OF-WORK (Web Worker) ==========
+    // Асинхронный PoW с Web Worker
     const powWorkerCode = `
         self.onmessage = function(e) {
             const { password, username, salt, difficulty } = e.data;
             let hash = username + password + salt;
             for (let i = 0; i < difficulty; i++) {
                 hash = self.CryptoJS.SHA256(hash + i).toString();
-                if (i % 50000 === 0) {
-                    self.postMessage({ type: 'progress', progress: (i / difficulty) * 100 });
-                }
+                if (i % 50000 === 0) self.postMessage({ type: 'progress', progress: (i / difficulty) * 100 });
             }
             self.postMessage({ type: 'done', hash: self.CryptoJS.SHA256(hash).toString() });
         };
-        importScripts('https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js');
+        importScripts('lib/crypto-js.min.js');
     `;
     
     const powBlob = new Blob([powWorkerCode], { type: 'application/javascript' });
@@ -505,31 +497,18 @@
     async function proofOfWork(password, username, difficulty = 1000000) {
         return new Promise((resolve, reject) => {
             const worker = new Worker(powWorkerUrl);
-            
             worker.onmessage = (e) => {
                 const { type, progress, hash } = e.data;
-                if (type === 'progress') {
-                    updatePoWProgress(progress);
-                } else if (type === 'done') {
-                    worker.terminate();
-                    resolve(hash);
-                }
+                if (type === 'progress') updatePoWProgress(progress);
+                else if (type === 'done') { worker.terminate(); resolve(hash); }
             };
-            
-            worker.onerror = (e) => {
-                worker.terminate();
-                reject(e);
-            };
-            
+            worker.onerror = (e) => { worker.terminate(); reject(e); };
             worker.postMessage({ password, username, salt: SALT, difficulty });
         });
     }
     
     function setMasterKey(password, username) {
-        MASTER_KEY = CryptoJS.PBKDF2(password, username + SALT, {
-            keySize: 256 / 32,
-            iterations: 100000
-        }).toString();
+        MASTER_KEY = CryptoJS.PBKDF2(password, username + SALT, { keySize: 256 / 32, iterations: 100000 }).toString();
     }
     
     function secureSetItem(key, value) {
@@ -545,9 +524,7 @@
         try {
             const decrypted = CryptoJS.AES.decrypt(encrypted, MASTER_KEY).toString(CryptoJS.enc.Utf8);
             return JSON.parse(decrypted);
-        } catch(e) {
-            return null;
-        }
+        } catch(e) { return null; }
     }
     
     function hashPassword(p) { return CryptoJS.SHA256(p + SALT).toString(); }
@@ -556,10 +533,8 @@
         if (!currentUser) return false;
         if (user !== currentUser && operation !== 'admin_mint' && operation !== 'rollback') return false;
         if (Math.abs(amount) > 1000000 && operation !== 'rollback') return false;
-        
         bktokBalances[user] = (bktokBalances[user] || 0) + amount;
         if (bktokBalances[user] < 0) bktokBalances[user] = 0;
-        
         if (MASTER_KEY) secureSetItem('bktokBalances', bktokBalances);
         return true;
     }
@@ -595,15 +570,12 @@
 
     window.onload = async () => { 
         if (realGetItem('theme') === 'light') document.body.classList.add('light-theme');
-        
         const savedSession = realGetItem('currentSession');
         const savedMasterKey = sessionStorage.getItem('MASTER_KEY');
-        
         if (savedSession && savedMasterKey) {
             try {
                 const sessionData = JSON.parse(savedSession);
                 MASTER_KEY = savedMasterKey;
-                
                 const decryptedUsers = secureGetItem('bankUsers');
                 if (decryptedUsers && decryptedUsers[sessionData.username]) {
                     users = decryptedUsers;
@@ -614,7 +586,6 @@
                     bktokOrders = secureGetItem('bktokOrders') || { buy: [], sell: [] };
                     bktokTrades = secureGetItem('bktokTrades') || [];
                     userTasks = secureGetItem('userTasks') || {};
-                    
                     showMainContent();
                     updateUIForAuth();
                     startChartUpdates();
@@ -622,66 +593,37 @@
                 }
             } catch(e) {}
         }
-        
         showMainContent();
         updateUIForAuth();
         window.toggleSection('about');
     };
     
     window.toggleTheme = () => { document.body.classList.toggle('light-theme'); realSetItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
-    function showModalOverlay() { 
-        const existing = document.getElementById('modal-overlay');
-        if (existing) existing.remove();
-        const o = document.createElement('div'); 
-        o.className = 'modal-overlay'; 
-        o.id = 'modal-overlay'; 
-        document.body.appendChild(o); 
-    }
+    function showModalOverlay() { const existing = document.getElementById('modal-overlay'); if (existing) existing.remove(); const o = document.createElement('div'); o.className = 'modal-overlay'; o.id = 'modal-overlay'; document.body.appendChild(o); }
     
     function showPoWOverlay() {
-        const existing = document.getElementById('pow-overlay');
-        if (existing) existing.remove();
-        const o = document.createElement('div');
-        o.className = 'pow-overlay';
-        o.id = 'pow-overlay';
-        o.innerHTML = `
-            <div class="pow-box">
-                <h3>🔐 Проверка безопасности</h3>
-                <p style="color:#ccc; margin-bottom:20px;">Выполняется Proof-of-Work...</p>
-                <div class="pow-progress">
-                    <div class="pow-progress-bar" id="pow-progress-bar" style="width:0%"></div>
-                </div>
-                <p class="pow-status" id="pow-status">Защита от перебора паролей</p>
-            </div>
-        `;
+        const existing = document.getElementById('pow-overlay'); if (existing) existing.remove();
+        const o = document.createElement('div'); o.className = 'pow-overlay'; o.id = 'pow-overlay';
+        o.innerHTML = `<div class="pow-box"><h3>🔐 Проверка безопасности</h3><p style="color:#ccc; margin-bottom:20px;">Выполняется Proof-of-Work...</p><div class="pow-progress"><div class="pow-progress-bar" id="pow-progress-bar" style="width:0%"></div></div><p class="pow-status" id="pow-status">Защита от перебора паролей</p></div>`;
         document.body.appendChild(o);
     }
-    
     function updatePoWProgress(percent) {
-        const bar = document.getElementById('pow-progress-bar');
-        const status = document.getElementById('pow-status');
+        const bar = document.getElementById('pow-progress-bar'); const status = document.getElementById('pow-status');
         if (bar) bar.style.width = Math.min(percent, 100) + '%';
         if (status) status.textContent = `${Math.round(percent)}% завершено`;
     }
-    
-    function hidePoWOverlay() {
-        const o = document.getElementById('pow-overlay');
-        if (o) o.remove();
-    }
-    
+    function hidePoWOverlay() { const o = document.getElementById('pow-overlay'); if (o) o.remove(); }
     function getBlockTime(level) { const times = [30000, 60000, 300000, 900000, 1800000]; return times[Math.min(level, times.length - 1)]; }
     
     window.showLoginForm = function() { 
-        removeModals(); 
-        showModalOverlay(); 
+        removeModals(); showModalOverlay(); 
         requireCaptcha = failedAttempts >= 2;
         const m = document.createElement('div'); m.className = 'modal-form'; 
         let h = `<div class="form-title">🔐 Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div>
         <input id="loginUsername" class="form-input" placeholder="👤 Никнейм или телефон">
         <input type="password" id="loginPassword" class="form-input" placeholder="🔑 Пароль">`;
         if (requireCaptcha) {
-            const ops = ['+', '-', '×'];
-            const op = ops[Math.floor(Math.random() * ops.length)];
+            const ops = ['+', '-', '×']; const op = ops[Math.floor(Math.random() * ops.length)];
             let n1, n2, ans;
             if (op === '+') { n1 = Math.floor(Math.random() * 20) + 1; n2 = Math.floor(Math.random() * 20) + 1; ans = n1 + n2; }
             else if (op === '-') { n1 = Math.floor(Math.random() * 20) + 11; n2 = Math.floor(Math.random() * 10) + 1; ans = n1 - n2; }
@@ -710,30 +652,14 @@
     };
     
     window.quickLogin = async function(username) {
-        const password = prompt(`Введите пароль для ${username}:`);
-        if (!password) return;
+        const password = prompt(`Введите пароль для ${username}:`); if (!password) return;
         if (!savedAccounts[username]) return;
-        
-        showPoWOverlay();
-        await proofOfWork(password, username);
-        hidePoWOverlay();
-        
+        showPoWOverlay(); await proofOfWork(password, username); hidePoWOverlay();
         setMasterKey(password, username);
         const decryptedUsers = secureGetItem('bankUsers');
-        
-        if (!decryptedUsers || !decryptedUsers[username]) {
-            alert('Неверный пароль или повреждённые данные');
-            MASTER_KEY = null;
-            return;
-        }
-        
+        if (!decryptedUsers || !decryptedUsers[username]) { alert('Неверный пароль или повреждённые данные'); MASTER_KEY = null; return; }
         users = decryptedUsers;
-        if (users[username].passwordHash !== hashPassword(password)) {
-            alert('Неверный пароль');
-            MASTER_KEY = null;
-            return;
-        }
-        
+        if (users[username].passwordHash !== hashPassword(password)) { alert('Неверный пароль'); MASTER_KEY = null; return; }
         currentUser = username;
         bktokBalances = secureGetItem('bktokBalances') || {};
         allSupportChats = secureGetItem('allSupportChats') || {};
@@ -741,48 +667,29 @@
         bktokOrders = secureGetItem('bktokOrders') || { buy: [], sell: [] };
         bktokTrades = secureGetItem('bktokTrades') || [];
         userTasks = secureGetItem('userTasks') || {};
-        
-        if (bktokBalances[username] === undefined) {
-            bktokBalances[username] = 100;
-            secureSetItem('bktokBalances', bktokBalances);
-        }
-        
+        if (bktokBalances[username] === undefined) { bktokBalances[username] = 100; secureSetItem('bktokBalances', bktokBalances); }
         realSetItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
         sessionStorage.setItem('MASTER_KEY', MASTER_KEY);
-        
         removeModals(); document.getElementById('modal-overlay')?.remove();
         showMainContent(); showWelcomeMessage(users[username].name); updateUIForAuth();
         startChartUpdates();
     };
     
-    window.removeSavedAccount = function(username) {
-        delete savedAccounts[username];
-        realSetItem('savedAccounts', JSON.stringify(savedAccounts));
-        window.showLoginForm();
-    };
+    window.removeSavedAccount = function(username) { delete savedAccounts[username]; realSetItem('savedAccounts', JSON.stringify(savedAccounts)); window.showLoginForm(); };
     
     function updateFailedAttemptsWarning() { 
         const w = document.getElementById('failedAttemptsWarning'); 
         if (w) { 
-            if (lockUntil > Date.now()) { 
-                const sec = Math.ceil((lockUntil - Date.now()) / 1000); 
-                w.textContent = `⏳ Заблокировано на ${sec} сек`; 
-            } else if (failedAttempts > 0) { 
-                w.textContent = `⚠️ ${failedAttempts}/5 попыток`; 
-            } else { w.textContent = ''; } 
+            if (lockUntil > Date.now()) { const sec = Math.ceil((lockUntil - Date.now()) / 1000); w.textContent = `⏳ Заблокировано на ${sec} сек`; } 
+            else if (failedAttempts > 0) { w.textContent = `⚠️ ${failedAttempts}/5 попыток`; } 
+            else { w.textContent = ''; } 
         } 
     }
 
     let regStep = 1, regData = {}, captchaAnswer = 0;
-    window.showRegistrationForm = function() { 
-        removeModals(); 
-        showModalOverlay(); 
-        regStep = 1; regData = {}; 
-        renderRegStep(); 
-    };
+    window.showRegistrationForm = function() { removeModals(); showModalOverlay(); regStep = 1; regData = {}; renderRegStep(); };
     function renderRegStep() { 
-        removeModals(); 
-        const m = document.createElement('div'); m.className = 'modal-form'; 
+        removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; 
         let h = `<div class="form-title">📝 Регистрация</div>
         <div class="step-indicator">${[1,2,3].map(i => `<div class="step-dot ${i===regStep?'active':''} ${i<regStep?'completed':''}"></div>`).join('')}</div>
         <div id="registerError" class="error-text hidden"></div>`; 
@@ -818,46 +725,32 @@
         if (!c) return showError(e,'Введите ответ'); 
         if (parseInt(c)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(e,'Неверный ответ'); } 
         const {name, username, email, phone, password} = regData; 
-        
-        showPoWOverlay();
-        await proofOfWork(password, username);
-        hidePoWOverlay();
-        
+        showPoWOverlay(); await proofOfWork(password, username); hidePoWOverlay();
         setMasterKey(password, username);
         const existingUsers = secureGetItem('bankUsers') || {};
         if (existingUsers[username]) { MASTER_KEY = null; return showError(e,'Этот никнейм уже занят'); }
-        
         users = existingUsers;
         users[username] = { name, email, phone, passwordHash: hashPassword(password), balance: 0, registrationDate: new Date().toISOString(), avatar: null };
         secureSetItem('bankUsers', users);
-        
         currentUser = username;
         bktokBalances = secureGetItem('bktokBalances') || {};
         bktokBalances[username] = 100;
         secureSetItem('bktokBalances', bktokBalances);
-        
         allSupportChats = {}; privateChats = {}; bktokOrders = { buy: [], sell: [] }; bktokTrades = []; userTasks = {};
         savedAccounts[username] = true;
         realSetItem('savedAccounts', JSON.stringify(savedAccounts));
         realSetItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
         sessionStorage.setItem('MASTER_KEY', MASTER_KEY);
-        
         removeModals(); document.getElementById('modal-overlay')?.remove();
         showMainContent(); showWelcomeMessage(name); updateUIForAuth();
         startChartUpdates();
     };
     
     window.login = async function() { 
-        if (lockUntil > Date.now()) { 
-            const sec = Math.ceil((lockUntil - Date.now()) / 1000); 
-            showError(document.getElementById('loginError'), `Подождите ${sec} сек`); 
-            return; 
-        }
-        
+        if (lockUntil > Date.now()) { const sec = Math.ceil((lockUntil - Date.now()) / 1000); showError(document.getElementById('loginError'), `Подождите ${sec} сек`); return; }
         let u = document.getElementById('loginUsername').value.trim(); 
         const p = document.getElementById('loginPassword').value, e = document.getElementById('loginError'); 
         if (!u||!p) return showError(e,'Заполните все поля'); 
-        
         if (requireCaptcha) { 
             const captcha = document.getElementById('loginCaptcha')?.value.trim(); 
             if (!captcha) return showError(e,'Введите ответ капчи'); 
@@ -871,19 +764,12 @@
                 window.showLoginForm(); return showError(e,'Неверная капча'); 
             } 
         } 
-        
-        showPoWOverlay();
-        await proofOfWork(p, u);
-        setMasterKey(p, u);
-        const decryptedUsers = secureGetItem('bankUsers');
-        hidePoWOverlay();
-        
+        showPoWOverlay(); await proofOfWork(p, u); setMasterKey(p, u);
+        const decryptedUsers = secureGetItem('bankUsers'); hidePoWOverlay();
         if (!decryptedUsers) { MASTER_KEY = null; return showError(e,'Не удалось расшифровать данные. Проверьте пароль.'); } 
         users = decryptedUsers;
-        
         let f = users[u] ? u : Object.keys(users).find(un => users[un].phone === u);
         if (!f) { MASTER_KEY = null; return showError(e,'Пользователь не найден'); }
-        
         if (users[f].passwordHash !== hashPassword(p)) { 
             failedAttempts++; realSetItem('failedAttempts', failedAttempts); 
             if (failedAttempts >= 5) { 
@@ -893,25 +779,20 @@
             } 
             window.showLoginForm(); MASTER_KEY = null; return showError(e,'Неверный пароль'); 
         } 
-        
         failedAttempts = 0; lockUntil = 0; blockLevel = 0; 
         realSetItem('failedAttempts', '0'); realSetItem('lockUntil', '0'); realSetItem('blockLevel', '0'); 
         currentUser = f;
-        
         bktokBalances = secureGetItem('bktokBalances') || {};
         allSupportChats = secureGetItem('allSupportChats') || {};
         privateChats = secureGetItem('privateChats') || {};
         bktokOrders = secureGetItem('bktokOrders') || { buy: [], sell: [] };
         bktokTrades = secureGetItem('bktokTrades') || [];
         userTasks = secureGetItem('userTasks') || {};
-        
         savedAccounts[f] = true;
         realSetItem('savedAccounts', JSON.stringify(savedAccounts));
         if (bktokBalances[f] === undefined) { bktokBalances[f] = 100; secureSetItem('bktokBalances', bktokBalances); }
-        
         realSetItem('currentSession', JSON.stringify({username: f, timestamp: Date.now()}));
         sessionStorage.setItem('MASTER_KEY', MASTER_KEY);
-        
         removeModals(); document.getElementById('modal-overlay')?.remove();
         showMainContent(); showWelcomeMessage(users[f].name); updateUIForAuth();
         startChartUpdates();
@@ -938,16 +819,13 @@
         const c = document.getElementById('support-container');
         if (!currentUser) { c.innerHTML = '<p style="text-align:center; padding:20px;">🔒 Войдите, чтобы задать вопрос</p>'; return; }
         if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'ai', text: '👋 Здравствуйте! Я нейросеть BK-Bank. Могу помочь с балансом, картами, токенами, а также создать запрос на откат транзакции (требуется согласие второй стороны).', time: new Date().toISOString() }];
-        
         let h = `<div class="chat-messages" id="ai-chat-messages"></div>
         <div class="chat-input-area"><input id="ai-chat-input" class="chat-input" placeholder="Задайте вопрос..."><button class="chat-send-btn" onclick="window.sendAIMessage()">Отправить</button></div>`;
-        
         const myRollbacks = rollbackRequests.filter(r => r.from === currentUser || r.to === currentUser);
         if (myRollbacks.length > 0) {
             h += `<div style="margin-top:20px;"><h4>🔄 Активные запросы на откат</h4>`;
             myRollbacks.forEach(req => {
-                const isFromMe = req.from === currentUser;
-                const other = isFromMe ? req.to : req.from;
+                const isFromMe = req.from === currentUser; const other = isFromMe ? req.to : req.from;
                 h += `<div class="rollback-request">
                     <strong>Сделка #${req.tradeId}</strong> на ${req.amount} BK<br>
                     ${isFromMe ? 'Вы запросили откат у' : 'Запрос от'} ${other}<br>
@@ -957,11 +835,8 @@
                         <button class="rollback-btn accept" onclick="window.respondRollback('${req.id}', 'accept')">✅ Принять</button>
                         <button class="rollback-btn" onclick="window.respondRollback('${req.id}', 'reject')">❌ Отклонить</button>
                     </div>`;
-                } else if (req.status === 'accepted') {
-                    h += `<div style="color:#4ade80;">✅ Откат выполнен</div>`;
-                } else if (req.status === 'rejected') {
-                    h += `<div style="color:#ff5e5e;">❌ Откат отклонён</div>`;
-                }
+                } else if (req.status === 'accepted') h += `<div style="color:#4ade80;">✅ Откат выполнен</div>`;
+                else if (req.status === 'rejected') h += `<div style="color:#ff5e5e;">❌ Откат отклонён</div>`;
                 h += `</div>`;
             });
             h += `</div>`;
@@ -1120,11 +995,7 @@
     };
     
     window.removeAccount = function(username) {
-        if (confirm(`Удалить аккаунт ${username} из сохранённых?`)) {
-            delete savedAccounts[username];
-            realSetItem('savedAccounts', JSON.stringify(savedAccounts));
-            showProfile();
-        }
+        if (confirm(`Удалить аккаунт ${username} из сохранённых?`)) { delete savedAccounts[username]; realSetItem('savedAccounts', JSON.stringify(savedAccounts)); showProfile(); }
     };
     
     window.switchAccount = function() { 
@@ -1153,9 +1024,12 @@
 
     function removeModals() { document.querySelectorAll('.modal-form').forEach(m=>m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
     
-    // ========== ПУБЛИЧНЫЕ ФУНКЦИИ ==========
+    // ИСПРАВЛЕНО: правильный путь к Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/BK-Bank/sw.js').catch(err => console.log('SW не зарегистрирован:', err));
+    }
+    
     const publicAPI = {
         toggleTheme, toggleSection, showLoginForm, showRegistrationForm,
         login, logout, switchAccount, quickLogin,
