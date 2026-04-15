@@ -11,6 +11,7 @@
     <link rel="apple-touch-icon" href="png/2025-01-31_14-13-47-Photoroom.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
+        /* ВСЕ СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; height: 100%; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; transition: background 0.3s; }
@@ -386,35 +387,102 @@
 (function() {
     "use strict";
     
+    // ========== БЕЗОПАСНОСТЬ ==========
+    const STORAGE_KEY = CryptoJS.SHA256(navigator.userAgent + 'BK-BANK-SECURE').toString().slice(0, 16);
+    const SALT = "BKbankDynamicSalt";
+    
+    function secureSetItem(key, value) {
+        const encrypted = CryptoJS.AES.encrypt(JSON.stringify(value), STORAGE_KEY).toString();
+        localStorage.setItem(key, encrypted);
+    }
+    
+    function secureGetItem(key) {
+        const encrypted = localStorage.getItem(key);
+        if (!encrypted) return null;
+        try {
+            const decrypted = CryptoJS.AES.decrypt(encrypted, STORAGE_KEY).toString(CryptoJS.enc.Utf8);
+            return JSON.parse(decrypted);
+        } catch(e) {
+            return null;
+        }
+    }
+    
+    function hashPassword(p) { return CryptoJS.SHA256(p + SALT).toString(); }
+    
+    // ========== ДАННЫЕ ==========
+    let users = secureGetItem('bankUsers') || {};
+    
+    // Удаление любых попыток стать админом
+    for (let u in users) {
+        delete users[u].isAdmin;
+        delete users[u].isSupport;
+    }
+    secureSetItem('bankUsers', users);
+    
+    let currentUser = null;
+    let isStackExpanded = false;
+    let allSupportChats = secureGetItem('allSupportChats') || {};
+    let privateChats = secureGetItem('privateChats') || {};
+    let selectedPrivateChat = null;
+    let bktokOrders = secureGetItem('bktokOrders') || { buy: [], sell: [] };
+    let bktokTrades = secureGetItem('bktokTrades') || [];
+    let bktokBalances = secureGetItem('bktokBalances') || {};
+    let userTasks = secureGetItem('userTasks') || {};
+    let savedAccounts = secureGetItem('savedAccounts') || {};
+    
     let failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
     let lockUntil = parseInt(localStorage.getItem('lockUntil')) || 0;
     let blockLevel = parseInt(localStorage.getItem('blockLevel')) || 0;
-    const SALT = "BKbankDynamicSalt";
     let chartPeriod = '24H';
     let chartInterval = null;
     let loginCaptchaAnswer = 0;
     let requireCaptcha = false;
     
-    function hashPassword(p) { return CryptoJS.SHA256(p + SALT).toString(); }
+    // ========== ЗАЩИТА БАЛАНСА ==========
+    function verifyBalances() {
+        const savedHash = localStorage.getItem('balanceHash');
+        const currentHash = CryptoJS.SHA256(JSON.stringify(bktokBalances) + SALT).toString();
+        if (savedHash && savedHash !== currentHash) {
+            alert('⚠️ Обнаружено вмешательство в баланс. Данные сброшены.');
+            bktokBalances = {};
+            secureSetItem('bktokBalances', bktokBalances);
+            return false;
+        }
+        return true;
+    }
     
-    let users = JSON.parse(localStorage.getItem('bankUsers')) || {};
-    let currentUser = null;
-    let isStackExpanded = false;
-    let allSupportChats = JSON.parse(localStorage.getItem('allSupportChats')) || {};
-    let privateChats = JSON.parse(localStorage.getItem('privateChats')) || {};
-    let selectedPrivateChat = null;
-    let bktokOrders = JSON.parse(localStorage.getItem('bktokOrders')) || { buy: [], sell: [] };
-    let bktokTrades = JSON.parse(localStorage.getItem('bktokTrades')) || [];
-    let bktokBalances = JSON.parse(localStorage.getItem('bktokBalances')) || {};
-    let userTasks = JSON.parse(localStorage.getItem('userTasks')) || {};
-    let savedAccounts = JSON.parse(localStorage.getItem('savedAccounts')) || {};
+    function updateBalance(user, amount, operation) {
+        if (!currentUser) return false;
+        if (user !== currentUser && operation !== 'admin_mint') return false;
+        if (Math.abs(amount) > 1000000) return false;
+        
+        bktokBalances[user] = (bktokBalances[user] || 0) + amount;
+        if (bktokBalances[user] < 0) bktokBalances[user] = 0;
+        
+        const hash = CryptoJS.SHA256(JSON.stringify(bktokBalances) + SALT).toString();
+        localStorage.setItem('balanceHash', hash);
+        secureSetItem('bktokBalances', bktokBalances);
+        return true;
+    }
+    
+    // Проверка баланса при загрузке
+    verifyBalances();
+    
+    // Инициализация хэша баланса, если его нет
+    if (!localStorage.getItem('balanceHash')) {
+        const hash = CryptoJS.SHA256(JSON.stringify(bktokBalances) + SALT).toString();
+        localStorage.setItem('balanceHash', hash);
+    }
     
     for (let u in users) {
         if (!users[u].avatar) users[u].avatar = null;
         if (!users[u].phone) users[u].phone = '+70000000000';
-        if (users[u].password && !users[u].passwordHash) { users[u].passwordHash = hashPassword(users[u].password); delete users[u].password; }
+        if (users[u].password && !users[u].passwordHash) { 
+            users[u].passwordHash = hashPassword(users[u].password); 
+            delete users[u].password; 
+        }
     }
-    localStorage.setItem('bankUsers', JSON.stringify(users));
+    secureSetItem('bankUsers', users);
 
     const cardList = [
         { img: 'png/2025-01-30_15-13-31-Photoroom.png' }, { img: 'png/2025-01-30_15-58-26-Photoroom.png' },
@@ -437,7 +505,7 @@
         }
     }
 
-    window.onload = () => { if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme'); const s = localStorage.getItem('currentSession'), viewUser = new URLSearchParams(window.location.search).get('user'); if (viewUser && users[viewUser]) { window.showPublicProfile(viewUser); return; } if (s) { const d = JSON.parse(s); if (Date.now() - d.timestamp < 86400000) { currentUser = d.username; showMainContent(); showWelcomeMessage(users[currentUser].name); updateUIForAuth(); return; } } showMainContent(); updateUIForAuth(); window.toggleSection('about'); startChartUpdates(); };
+    window.onload = () => { if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme'); const s = secureGetItem('currentSession'), viewUser = new URLSearchParams(window.location.search).get('user'); if (viewUser && users[viewUser]) { window.showPublicProfile(viewUser); return; } if (s) { const d = s; if (Date.now() - d.timestamp < 86400000) { currentUser = d.username; showMainContent(); showWelcomeMessage(users[currentUser].name); updateUIForAuth(); return; } } showMainContent(); updateUIForAuth(); window.toggleSection('about'); startChartUpdates(); };
     window.toggleTheme = () => { document.body.classList.toggle('light-theme'); localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
     function showModalOverlay() { const o = document.createElement('div'); o.className = 'modal-overlay'; o.id = 'modal-overlay'; o.onclick = () => { removeModals(); o.remove(); }; document.body.appendChild(o); }
     
@@ -483,15 +551,15 @@
     window.quickLogin = function(username) {
         if (!users[username]) return;
         currentUser = username;
-        if (bktokBalances[username]===undefined) { bktokBalances[username]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); }
-        localStorage.setItem('currentSession', JSON.stringify({username, timestamp:Date.now()}));
+        if (bktokBalances[username]===undefined) { updateBalance(username, 100, 'admin_mint'); }
+        secureSetItem('currentSession', {username, timestamp:Date.now()});
         removeModals(); document.getElementById('modal-overlay')?.remove();
         showMainContent(); showWelcomeMessage(users[username].name); updateUIForAuth();
     };
     
     window.removeSavedAccount = function(username) {
         delete savedAccounts[username];
-        localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts));
+        secureSetItem('savedAccounts', savedAccounts);
         window.showLoginForm();
     };
     
@@ -547,7 +615,7 @@
     }
     window.nextRegStep = function() { const e = document.getElementById('registerError'); if (regStep === 1) { const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; if (!n||!u||!p||!c) return showError(e,'Все поля обязательны'); if (p.length<6) return showError(e,'Пароль должен быть не менее 6 символов'); if (p!==c) return showError(e,'Пароли не совпадают'); if (users[u]) return showError(e,'Этот никнейм уже занят'); regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); } else if (regStep === 2) { const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Некорректный Email'); if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон: +7XXXXXXXXXX'); if (em) { for (let u in users) if (users[u].email===em) return showError(e,'Email уже используется'); } if (ph && ph!=='+7') { for (let u in users) if (users[u].phone===ph) return showError(e,'Телефон уже используется'); } regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); } };
     window.prevRegStep = () => { regStep--; renderRegStep(); };
-    window.completeRegistration = function() { const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); if (!c) return showError(e,'Введите ответ'); if (parseInt(c)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(e,'Неверный ответ'); } const {name,username,email,phone,password} = regData; users[username] = { name, email, phone, passwordHash: hashPassword(password), balance:0, registrationDate:new Date().toISOString(), avatar:null }; localStorage.setItem('bankUsers', JSON.stringify(users)); currentUser = username; bktokBalances[username]=100; savedAccounts[username] = true; localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('currentSession', JSON.stringify({username,timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(name); updateUIForAuth(); };
+    window.completeRegistration = function() { const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); if (!c) return showError(e,'Введите ответ'); if (parseInt(c)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(e,'Неверный ответ'); } const {name,username,email,phone,password} = regData; users[username] = { name, email, phone, passwordHash: hashPassword(password), balance:0, registrationDate:new Date().toISOString(), avatar:null }; secureSetItem('bankUsers', users); currentUser = username; updateBalance(username, 100, 'admin_mint'); savedAccounts[username] = true; secureSetItem('savedAccounts', savedAccounts); secureSetItem('currentSession', {username, timestamp:Date.now()}); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(name); updateUIForAuth(); };
     
     window.login = function() { 
         if (lockUntil > Date.now()) { const sec = Math.ceil((lockUntil - Date.now()) / 1000); showError(document.getElementById('loginError'), `Подождите ${sec} сек`); return; }
@@ -556,7 +624,7 @@
         if (requireCaptcha) { const captcha = document.getElementById('loginCaptcha')?.value.trim(); if (!captcha) return showError(e,'Введите ответ капчи'); if (parseInt(captcha) !== loginCaptchaAnswer) { failedAttempts++; localStorage.setItem('failedAttempts', failedAttempts); if (failedAttempts >= 5) { blockLevel++; lockUntil = Date.now() + getBlockTime(blockLevel); failedAttempts = 0; localStorage.setItem('lockUntil', lockUntil); localStorage.setItem('blockLevel', blockLevel); localStorage.setItem('failedAttempts', '0'); updateFailedAttemptsWarning(); return showError(e, `Слишком много попыток. Подождите ${getBlockTime(blockLevel)/1000} сек`); } window.showLoginForm(); return showError(e,'Неверная капча'); } }
         let f = users[u] ? u : Object.keys(users).find(un => users[un].phone===u); if (!f) return showError(e,'Пользователь не найден'); 
         if (users[f].passwordHash !== hashPassword(p)) { failedAttempts++; localStorage.setItem('failedAttempts', failedAttempts); if (failedAttempts >= 5) { blockLevel++; lockUntil = Date.now() + getBlockTime(blockLevel); failedAttempts = 0; localStorage.setItem('lockUntil', lockUntil); localStorage.setItem('blockLevel', blockLevel); localStorage.setItem('failedAttempts', '0'); updateFailedAttemptsWarning(); return showError(e, `Слишком много попыток. Подождите ${getBlockTime(blockLevel)/1000} сек`); } window.showLoginForm(); return showError(e,'Неверный пароль'); } 
-        failedAttempts = 0; lockUntil = 0; blockLevel = 0; localStorage.setItem('failedAttempts', '0'); localStorage.setItem('lockUntil', '0'); localStorage.setItem('blockLevel', '0'); currentUser = f; savedAccounts[f] = true; localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts)); if (bktokBalances[f]===undefined) { bktokBalances[f]=100; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); } localStorage.setItem('currentSession', JSON.stringify({username:f, timestamp:Date.now()})); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(users[f].name); updateUIForAuth(); };
+        failedAttempts = 0; lockUntil = 0; blockLevel = 0; localStorage.setItem('failedAttempts', '0'); localStorage.setItem('lockUntil', '0'); localStorage.setItem('blockLevel', '0'); currentUser = f; savedAccounts[f] = true; secureSetItem('savedAccounts', savedAccounts); if (bktokBalances[f]===undefined) { updateBalance(f, 100, 'admin_mint'); } secureSetItem('currentSession', {username:f, timestamp:Date.now()}); removeModals(); document.getElementById('modal-overlay')?.remove(); showMainContent(); showWelcomeMessage(users[f].name); updateUIForAuth(); };
 
     function showMainContent() { document.querySelector('.main-container').classList.remove('hidden'); document.querySelector('header').classList.remove('hidden'); window.toggleSection('about'); }
     function showWelcomeMessage(n) { const t = document.createElement('div'); t.className = 'toast-message'; t.innerHTML = `<strong>✨ Добро пожаловать, ${n}!</strong>`; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
@@ -599,13 +667,13 @@
         const txt = inp.value.trim();
         if (!txt) return;
         allSupportChats[currentUser].push({ from: currentUser, text: txt, time: new Date().toISOString() });
-        localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats));
+        secureSetItem('allSupportChats', allSupportChats);
         inp.value = '';
         loadAIMessages();
         setTimeout(() => {
             const response = generateAIResponse(txt);
             allSupportChats[currentUser].push({ from: 'ai', text: response, time: new Date().toISOString() });
-            localStorage.setItem('allSupportChats', JSON.stringify(allSupportChats));
+            secureSetItem('allSupportChats', allSupportChats);
             loadAIMessages();
         }, 800);
     };
@@ -627,7 +695,7 @@
     }
 
     function startChartUpdates() { if (chartInterval) clearInterval(chartInterval); chartInterval = setInterval(() => { if (currentUser && !document.getElementById('bktok-section')?.classList.contains('hidden')) renderChart(); }, 1000); }
-    function loadBKtok() { if (!currentUser) return; if (bktokBalances[currentUser]===undefined) bktokBalances[currentUser]=100; document.getElementById('token-balance-display').textContent = bktokBalances[currentUser].toFixed(2) + ' BK'; updateOrderBook(); renderChart(); renderTradeHistory(); }
+    function loadBKtok() { if (!currentUser) return; if (bktokBalances[currentUser]===undefined) { updateBalance(currentUser, 100, 'admin_mint'); } document.getElementById('token-balance-display').textContent = bktokBalances[currentUser].toFixed(2) + ' BK'; updateOrderBook(); renderChart(); renderTradeHistory(); }
     window.changeChartPeriod = function(p) { chartPeriod = p; document.querySelectorAll('.chart-period').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); renderChart(); };
     function renderChart() {
         const container = document.getElementById('chart-bars'); if (!container) return;
@@ -651,23 +719,23 @@
         document.getElementById('my-orders').innerHTML = myOrders.length ? myOrders.map(o => `<div style="display:flex; justify-content:space-between; padding:8px; background:rgba(255,215,0,0.05); margin-bottom:5px; border-radius:8px;"><span>${o.side==='buy'?'🟢 Покупка':'🔴 Продажа'} ${o.amount} BK @ ${o.price} ₽</span><button onclick="window.cancelOrder('${o.id}')" style="background:transparent; border:none; color:#ff5e5e; cursor:pointer;">✕</button></div>`).join('') : '<p style="color:#888;">Нет активных ордеров</p>';
     }
     function renderTradeHistory() { const c = document.getElementById('trade-history'); if (!c) return; const userTrades = bktokTrades.filter(t=>t.buyer===currentUser||t.seller===currentUser).slice(-10).reverse(); c.innerHTML = userTrades.length ? userTrades.map(t => `<div style="padding:8px; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:${t.buyer===currentUser?'#4ade80':'#ff5e5e'};">${t.buyer===currentUser?'Покупка':'Продажа'}</span> ${t.amount} BK @ ${t.price} ₽ <small>${new Date(t.time).toLocaleTimeString()}</small></div>`).join('') : '<p style="color:#888;">Нет сделок</p>'; }
-    window.createOrder = (side) => { const price = parseFloat(document.getElementById('order-price').value), amount = parseFloat(document.getElementById('order-amount').value); if (!price||!amount||price<=0||amount<=0) return; const fee = amount * price * 0.001; if (side==='buy' && bktokBalances[currentUser] < amount*price + fee) return alert('Недостаточно средств'); if (side==='sell' && bktokBalances[currentUser] < amount) return alert('Недостаточно BK'); const order = { id: Date.now()+Math.random(), user: currentUser, side, price, amount }; bktokOrders[side].push(order); if (side==='buy') bktokBalances[currentUser] -= amount*price + fee; else bktokBalances[currentUser] -= amount; matchOrders(); localStorage.setItem('bktokOrders', JSON.stringify(bktokOrders)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); loadBKtok(); };
-    window.cancelOrder = (id) => { let order = bktokOrders.buy.find(o=>o.id==id) || bktokOrders.sell.find(o=>o.id==id); if (!order) return; if (order.side==='buy') bktokBalances[currentUser] += order.amount * order.price; else bktokBalances[currentUser] += order.amount; bktokOrders.buy = bktokOrders.buy.filter(o=>o.id!=id); bktokOrders.sell = bktokOrders.sell.filter(o=>o.id!=id); localStorage.setItem('bktokOrders', JSON.stringify(bktokOrders)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); loadBKtok(); };
-    function matchOrders() { bktokOrders.buy.sort((a,b)=>b.price-a.price); bktokOrders.sell.sort((a,b)=>a.price-b.price); for (let buy of bktokOrders.buy) { for (let sell of bktokOrders.sell) { if (buy.price >= sell.price && buy.user !== sell.user) { const amt = Math.min(buy.amount, sell.amount), pr = sell.price, fee = amt * pr * 0.001; bktokBalances[buy.user] = (bktokBalances[buy.user]||0) + amt; bktokBalances[sell.user] = (bktokBalances[sell.user]||0) + amt*pr - fee; bktokTrades.push({ buyer: buy.user, seller: sell.user, amount: amt, price: pr, time: new Date().toISOString() }); buy.amount -= amt; sell.amount -= amt; if (buy.amount <= 0.0001) bktokOrders.buy = bktokOrders.buy.filter(o=>o.id!==buy.id); if (sell.amount <= 0.0001) bktokOrders.sell = bktokOrders.sell.filter(o=>o.id!==sell.id); localStorage.setItem('bktokTrades', JSON.stringify(bktokTrades)); break; } } } bktokOrders.buy = bktokOrders.buy.filter(o=>o.amount>0.0001); bktokOrders.sell = bktokOrders.sell.filter(o=>o.amount>0.0001); }
+    window.createOrder = (side) => { const price = parseFloat(document.getElementById('order-price').value), amount = parseFloat(document.getElementById('order-amount').value); if (!price||!amount||price<=0||amount<=0) return; const fee = amount * price * 0.001; if (side==='buy' && bktokBalances[currentUser] < amount*price + fee) return alert('Недостаточно средств'); if (side==='sell' && bktokBalances[currentUser] < amount) return alert('Недостаточно BK'); const order = { id: Date.now()+Math.random(), user: currentUser, side, price, amount }; bktokOrders[side].push(order); if (side==='buy') updateBalance(currentUser, -(amount*price + fee), 'trade'); else updateBalance(currentUser, -amount, 'trade'); matchOrders(); secureSetItem('bktokOrders', bktokOrders); loadBKtok(); };
+    window.cancelOrder = (id) => { let order = bktokOrders.buy.find(o=>o.id==id) || bktokOrders.sell.find(o=>o.id==id); if (!order) return; if (order.side==='buy') updateBalance(currentUser, order.amount * order.price, 'refund'); else updateBalance(currentUser, order.amount, 'refund'); bktokOrders.buy = bktokOrders.buy.filter(o=>o.id!=id); bktokOrders.sell = bktokOrders.sell.filter(o=>o.id!=id); secureSetItem('bktokOrders', bktokOrders); loadBKtok(); };
+    function matchOrders() { bktokOrders.buy.sort((a,b)=>b.price-a.price); bktokOrders.sell.sort((a,b)=>a.price-b.price); for (let buy of bktokOrders.buy) { for (let sell of bktokOrders.sell) { if (buy.price >= sell.price && buy.user !== sell.user) { const amt = Math.min(buy.amount, sell.amount), pr = sell.price, fee = amt * pr * 0.001; updateBalance(buy.user, amt, 'trade'); updateBalance(sell.user, amt*pr - fee, 'trade'); bktokTrades.push({ buyer: buy.user, seller: sell.user, amount: amt, price: pr, time: new Date().toISOString() }); buy.amount -= amt; sell.amount -= amt; if (buy.amount <= 0.0001) bktokOrders.buy = bktokOrders.buy.filter(o=>o.id!==buy.id); if (sell.amount <= 0.0001) bktokOrders.sell = bktokOrders.sell.filter(o=>o.id!==sell.id); secureSetItem('bktokTrades', bktokTrades); break; } } } bktokOrders.buy = bktokOrders.buy.filter(o=>o.amount>0.0001); bktokOrders.sell = bktokOrders.sell.filter(o=>o.amount>0.0001); }
 
     const tasks = [{id:'daily',name:'Ежедневный вход',reward:10,cooldown:86400000},{id:'profile',name:'Заполнить профиль',reward:50,once:true},{id:'avatar',name:'Установить аватар',reward:30,once:true},{id:'trade',name:'Совершить сделку',reward:20,cooldown:3600000}];
     function renderTasks() { if (!currentUser) return; if (!userTasks[currentUser]) userTasks[currentUser] = {}; const c = document.getElementById('tasks-container'); c.innerHTML = tasks.map(t => { const comp = userTasks[currentUser][t.id], can = !comp || (t.cooldown && Date.now()-comp > t.cooldown); return `<div class="task-item ${!can?'completed':''}" onclick="${can?`window.completeTask('${t.id}')`:''}"><strong>${t.name}</strong><div style="color:#FFD700; margin-top:8px;">+${t.reward} BK</div></div>`; }).join(''); }
-    window.completeTask = (tid) => { const t = tasks.find(x=>x.id===tid); if (!t) return; if (!userTasks[currentUser]) userTasks[currentUser] = {}; const comp = userTasks[currentUser][tid]; if (comp) { if (t.once) return; if (t.cooldown && Date.now()-comp < t.cooldown) return; } if (tid==='profile' && (!users[currentUser].email || users[currentUser].phone==='+70000000000')) return alert('Заполните профиль!'); if (tid==='avatar' && !users[currentUser].avatar) return alert('Установите аватар!'); if (tid==='trade' && !bktokTrades.some(tr=>tr.buyer===currentUser||tr.seller===currentUser)) return alert('Совершите сделку!'); bktokBalances[currentUser] = (bktokBalances[currentUser]||0) + t.reward; userTasks[currentUser][tid] = Date.now(); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('userTasks', JSON.stringify(userTasks)); renderTasks(); showWelcomeMessage(`+${t.reward} BK!`); };
+    window.completeTask = (tid) => { const t = tasks.find(x=>x.id===tid); if (!t) return; if (!userTasks[currentUser]) userTasks[currentUser] = {}; const comp = userTasks[currentUser][tid]; if (comp) { if (t.once) return; if (t.cooldown && Date.now()-comp < t.cooldown) return; } if (tid==='profile' && (!users[currentUser].email || users[currentUser].phone==='+70000000000')) return alert('Заполните профиль!'); if (tid==='avatar' && !users[currentUser].avatar) return alert('Установите аватар!'); if (tid==='trade' && !bktokTrades.some(tr=>tr.buyer===currentUser||tr.seller===currentUser)) return alert('Совершите сделку!'); updateBalance(currentUser, t.reward, 'task'); userTasks[currentUser][tid] = Date.now(); secureSetItem('userTasks', userTasks); renderTasks(); showWelcomeMessage(`+${t.reward} BK!`); };
 
     const cases = [{name:'Обычный',price:50,rewards:[5,10,20,30,50,100]},{name:'Редкий',price:200,rewards:[50,100,150,250,500,1000]},{name:'Легендарный',price:1000,rewards:[200,500,1000,2000,5000,10000]}];
     function renderCases() { if (!currentUser) return; const c = document.getElementById('cases-container'); c.innerHTML = cases.map(cs => `<div class="case-item" onclick="window.openCase('${cs.name}',${cs.price},[${cs.rewards}])"><h4>${cs.name}</h4><div style="color:#FFD700; margin-top:10px;">${cs.price} BK</div></div>`).join(''); }
-    window.openCase = (n,p,r) => { if (bktokBalances[currentUser] < p) return alert('Недостаточно BK!'); bktokBalances[currentUser] -= p; const w = r[Math.floor(Math.random()*r.length)]; bktokBalances[currentUser] += w; localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); showWelcomeMessage(`Выигрыш: ${w} BK!`); renderCases(); };
+    window.openCase = (n,p,r) => { if (bktokBalances[currentUser] < p) return alert('Недостаточно BK!'); updateBalance(currentUser, -p, 'case'); const w = r[Math.floor(Math.random()*r.length)]; updateBalance(currentUser, w, 'case_win'); showWelcomeMessage(`Выигрыш: ${w} BK!`); renderCases(); };
 
     function renderPrivateChats() { const c = document.getElementById('chats-container'), my = Object.keys(privateChats).filter(id => id.includes(currentUser)); let h = `<div class="support-panel"><div class="users-list"><h4>Чаты</h4><button class="gold-button" onclick="window.startNewChat()" style="margin-bottom:10px;">+ Новый</button>`; my.forEach(id => { const o = id.split('-').find(u => u!==currentUser); h += `<div class="user-item" onclick="window.openPrivateChat('${id}')"><strong>${o}</strong></div>`; }); h += `</div><div class="chat-area">`; if (selectedPrivateChat) { const o = selectedPrivateChat.split('-').find(u => u!==currentUser); h += `<h4>Чат с ${o}</h4><div class="chat-messages" id="private-chat-messages"></div><div class="chat-input-area"><input id="private-chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendPrivateMessage()">Отправить</button></div>`; } else h += `<p>Выберите чат</p>`; h += `</div></div>`; c.innerHTML = h; if (selectedPrivateChat) loadPrivateChatMessages(); }
     function loadPrivateChatMessages() { const cont = document.getElementById('private-chat-messages'); if (!cont) return; cont.innerHTML = (privateChats[selectedPrivateChat]||[]).map(msg => `<div class="chat-message ${msg.from===currentUser?'client':'support'}"><strong>${msg.from}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join(''); cont.scrollTop = cont.scrollHeight; }
-    window.startNewChat = () => { const u = prompt('Никнейм:'); if (!u||!users[u]) return alert('Не найден'); if (u===currentUser) return alert('Нельзя'); const id = [currentUser,u].sort().join('-'); if (!privateChats[id]) privateChats[id]=[]; localStorage.setItem('privateChats', JSON.stringify(privateChats)); selectedPrivateChat=id; renderPrivateChats(); };
+    window.startNewChat = () => { const u = prompt('Никнейм:'); if (!u||!users[u]) return alert('Не найден'); if (u===currentUser) return alert('Нельзя'); const id = [currentUser,u].sort().join('-'); if (!privateChats[id]) privateChats[id]=[]; secureSetItem('privateChats', privateChats); selectedPrivateChat=id; renderPrivateChats(); };
     window.openPrivateChat = (id) => { selectedPrivateChat=id; renderPrivateChats(); };
-    window.sendPrivateMessage = () => { const inp = document.getElementById('private-chat-input'), txt = inp.value.trim(); if (!txt||!selectedPrivateChat) return; if (!privateChats[selectedPrivateChat]) privateChats[selectedPrivateChat]=[]; privateChats[selectedPrivateChat].push({from:currentUser,text:txt,time:new Date().toISOString()}); localStorage.setItem('privateChats', JSON.stringify(privateChats)); inp.value=''; loadPrivateChatMessages(); };
+    window.sendPrivateMessage = () => { const inp = document.getElementById('private-chat-input'), txt = inp.value.trim(); if (!txt||!selectedPrivateChat) return; if (!privateChats[selectedPrivateChat]) privateChats[selectedPrivateChat]=[]; privateChats[selectedPrivateChat].push({from:currentUser,text:txt,time:new Date().toISOString()}); secureSetItem('privateChats', privateChats); inp.value=''; loadPrivateChatMessages(); };
 
     function showProfile() {
         if (!currentUser) return; const u = users[currentUser], c = document.getElementById('profile-section');
@@ -702,7 +770,7 @@
     
     window.switchToAccount = function(username) {
         if (!users[username]) return;
-        localStorage.setItem('currentSession', JSON.stringify({username, timestamp:Date.now()}));
+        secureSetItem('currentSession', {username, timestamp:Date.now()});
         currentUser = username;
         updateUIForAuth();
         showProfile();
@@ -712,13 +780,13 @@
     window.removeAccount = function(username) {
         if (confirm(`Удалить аккаунт ${username} из сохранённых?`)) {
             delete savedAccounts[username];
-            localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts));
+            secureSetItem('savedAccounts', savedAccounts);
             showProfile();
         }
     };
     
     window.switchAccount = function() { 
-        localStorage.removeItem('currentSession'); 
+        secureSetItem('currentSession', null); 
         currentUser = null; 
         updateUIForAuth(); 
         document.querySelector('.main-container').classList.add('hidden');
@@ -727,13 +795,13 @@
     };
     window.showEditProfileForm = () => { const u = users[currentUser]; removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Редактирование</div><input id="editName" class="form-input" placeholder="Имя" value="${u.name||''}"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email||''}"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone||''}"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль"><button class="gold-button" onclick="window.saveProfile()">Сохранить</button><button class="dark-button" onclick="window.cancelEditProfile()">Отмена</button>`; document.body.appendChild(m); };
     window.cancelEditProfile = () => { removeModals(); showProfile(); };
-    window.saveProfile = () => { const n = document.getElementById('editName').value.trim(), e = document.getElementById('editEmail').value.trim(), p = document.getElementById('editPhone').value.trim(), pass = document.getElementById('editPassword').value; if (n) users[currentUser].name = n; if (e) users[currentUser].email = e; if (p && /^\+7\d{10}$/.test(p)) users[currentUser].phone = p; if (pass && pass.length>=6) users[currentUser].passwordHash = hashPassword(pass); localStorage.setItem('bankUsers', JSON.stringify(users)); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!'); };
-    window.uploadAvatar = (e) => { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => { users[currentUser].avatar = ev.target.result; localStorage.setItem('bankUsers', JSON.stringify(users)); showProfile(); updateUIForAuth(); }; r.readAsDataURL(f); } };
+    window.saveProfile = () => { const n = document.getElementById('editName').value.trim(), e = document.getElementById('editEmail').value.trim(), p = document.getElementById('editPhone').value.trim(), pass = document.getElementById('editPassword').value; if (n) users[currentUser].name = n; if (e) users[currentUser].email = e; if (p && /^\+7\d{10}$/.test(p)) users[currentUser].phone = p; if (pass && pass.length>=6) users[currentUser].passwordHash = hashPassword(pass); secureSetItem('bankUsers', users); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!'); };
+    window.uploadAvatar = (e) => { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => { users[currentUser].avatar = ev.target.result; secureSetItem('bankUsers', users); showProfile(); updateUIForAuth(); }; r.readAsDataURL(f); } };
     window.exportVault = () => { const d = { users, bktokBalances, bktokTrades, userTasks, privateChats }; const b = new Blob([JSON.stringify(d)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `bkbank_${Date.now()}.bkwallet`; a.click(); };
-    window.destroyAccount = () => { if (confirm('УДАЛИТЬ АККАУНТ?')) { delete users[currentUser]; delete bktokBalances[currentUser]; delete savedAccounts[currentUser]; localStorage.setItem('bankUsers', JSON.stringify(users)); localStorage.setItem('bktokBalances', JSON.stringify(bktokBalances)); localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts)); logout(); } };
+    window.destroyAccount = () => { if (confirm('УДАЛИТЬ АККАУНТ?')) { delete users[currentUser]; delete bktokBalances[currentUser]; delete savedAccounts[currentUser]; secureSetItem('bankUsers', users); secureSetItem('bktokBalances', bktokBalances); secureSetItem('savedAccounts', savedAccounts); logout(); } };
     window.logout = function() { 
         if (chartInterval) clearInterval(chartInterval); 
-        localStorage.removeItem('currentSession'); 
+        secureSetItem('currentSession', null); 
         currentUser = null; 
         updateUIForAuth(); 
         document.querySelector('.main-container').classList.add('hidden');
