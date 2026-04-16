@@ -1,18 +1,18 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>BK-Bank — Финансы нового поколения</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; worker-src 'self' blob:;">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BK-Bank">
     <meta name="theme-color" content="#0a0a0a">
     <link rel="apple-touch-icon" href="png/2025-01-31_14-13-47-Photoroom.png">
-    <!-- ИСПРАВЛЕНО: локальное подключение crypto-js -->
-    <script src="lib/crypto-js.min.js"></script>
+    <script src="lib/crypto-js.min.js" integrity="sha384-S7gHL8f1cU3NnXz0aSUw2j9kO2Xo9o5vP8s+jbPm4I6fH0k3o6FjPpI7k7gD6U8" crossorigin="anonymous"></script>
     <style>
-        /* Все стили остаются без изменений */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; height: 100%; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; transition: background 0.3s; }
@@ -35,7 +35,6 @@
         .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.04) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.03) 0%, transparent 50%); pointer-events: none; z-index: -1; }
         .particle { position: fixed; width: 2px; height: 2px; background: #FFD700; border-radius: 50%; opacity: 0.15; pointer-events: none; z-index: -1; animation: float 20s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0) translateX(0); } 25% { transform: translateY(-30px) translateX(15px); } 50% { transform: translateY(-15px) translateX(-20px); } 75% { transform: translateY(20px) translateX(10px); } }
-        
         .glass-header { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); background-color: rgba(18, 18, 18, 0.85); border-bottom: 1px solid rgba(255, 215, 0, 0.15); padding: 10px 16px; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); flex-wrap: wrap; }
         .logo-wrapper { display: flex; align-items: center; gap: 8px; }
         .logo-img { width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
@@ -47,49 +46,13 @@
         .nav-link:hover { color: #FFD700; transform: translateY(-2px); }
         .nav-link:hover::after { transform: translateX(-50%) scaleX(1); }
         .auth-buttons { display: flex; gap: 8px; }
-        
-        .login-btn, .register-btn { 
-            background: transparent; 
-            border: 1.5px solid #FFD700; 
-            color: #FFD700; 
-            padding: 8px 16px; 
-            border-radius: 40px; 
-            font-weight: 600; 
-            font-size: 0.85rem; 
-            cursor: pointer; 
-            transition: all 0.25s; 
-            position: relative; 
-            overflow: hidden;
-        }
-        .login-btn::before, .register-btn::before { 
-            content: ''; 
-            position: absolute; 
-            top: 0; 
-            left: -100%; 
-            width: 100%; 
-            height: 100%; 
-            background: #FFD700; 
-            transition: left 0.3s ease; 
-            z-index: -1; 
-        }
-        .login-btn:hover, .register-btn:hover { 
-            color: #0a0a0a; 
-            transform: translateY(-2px); 
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3); 
-        }
+        .login-btn, .register-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
+        .login-btn::before, .register-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: #FFD700; transition: left 0.3s ease; z-index: -1; }
+        .login-btn:hover, .register-btn:hover { color: #0a0a0a; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3); }
         .login-btn:hover::before, .register-btn:hover::before { left: 0; }
-        
-        body.light-theme .login-btn, body.light-theme .register-btn { 
-            border: 1.5px solid #0a0a0a; 
-            color: #0a0a0a; 
-        }
-        body.light-theme .login-btn::before, body.light-theme .register-btn::before { 
-            background: #0a0a0a; 
-        }
-        body.light-theme .login-btn:hover, body.light-theme .register-btn:hover { 
-            color: #FFD700; 
-        }
-        
+        body.light-theme .login-btn, body.light-theme .register-btn { border: 1.5px solid #0a0a0a; color: #0a0a0a; }
+        body.light-theme .login-btn::before, body.light-theme .register-btn::before { background: #0a0a0a; }
+        body.light-theme .login-btn:hover, body.light-theme .register-btn:hover { color: #FFD700; }
         .profile-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 6px 12px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 6px; }
         .profile-btn:hover { background: #FFD700; color: #0a0a0a; transform: translateY(-2px); }
         .profile-btn img { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #FFD700; }
@@ -98,7 +61,6 @@
         body.light-theme .theme-toggle { border: 1px solid #0a0a0a; color: #0a0a0a; }
         body.light-theme .profile-btn { border: 1.5px solid #0a0a0a; color: #0a0a0a; }
         body.light-theme .profile-btn:hover { background: #0a0a0a; color: #FFD700; }
-        
         .main-container { max-width: 1300px; margin: 20px auto; padding: 0 12px; }
         .content-card { background: rgba(25, 25, 25, 0.75); backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.12); border-radius: 24px; padding: 20px; margin-bottom: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); animation: fadeInUp 0.6s ease-out; transition: transform 0.3s ease, border-color 0.3s ease; }
         .content-card:hover { border-color: rgba(255, 215, 0, 0.3); transform: translateY(-3px); }
@@ -111,13 +73,18 @@
         body.light-theme .divider { background: linear-gradient(90deg, #0a0a0a, transparent); }
         p, li, span, div { color: #ffffff; line-height: 1.6; font-size: 0.95rem; }
         .highlight { color: #FFD700; font-weight: 600; }
-        
+        .sensitive-data { transition: all 0.2s; }
+        .password-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 10001; display: flex; align-items: center; justify-content: center; }
+        .password-box { background: #1a1a1a; border: 2px solid #FFD700; border-radius: 20px; padding: 30px; max-width: 350px; width: 90%; }
+        .password-box h3 { color: #FFD700; margin-bottom: 20px; text-align: center; }
+        .password-box input { width: 100%; padding: 14px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,215,0,0.3); border-radius: 40px; color: white; font-size: 1rem; margin-bottom: 20px; }
+        .password-box input:focus { border-color: #FFD700; outline: none; }
+        .password-box button { width: 100%; padding: 14px; background: linear-gradient(135deg, #FFD700, #FFB300); border: none; border-radius: 40px; font-weight: 700; cursor: pointer; color: #0a0a0a; }
         .comparison-table { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
         .comparison-item { background: rgba(255,215,0,0.05); border-radius: 16px; padding: 15px; border: 1px solid rgba(255,215,0,0.1); transition: all 0.3s ease; }
         .comparison-item:hover { transform: scale(1.01); border-color: #FFD700; background: rgba(255,215,0,0.08); }
         .comparison-item h4 { color: #FFD700; margin-bottom: 10px; font-size: 1.1rem; }
         .check, .cross { color: #FFD700; font-size: 1rem; margin-right: 6px; }
-        
         .services-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
         .service-card { background: rgba(255,215,0,0.03); border: 1px solid rgba(255,215,0,0.1); border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 15px; cursor: default; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); position: relative; overflow: hidden; }
         .service-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent); transition: left 0.6s; }
@@ -130,7 +97,6 @@
         .service-desc { font-size: 0.9rem; opacity: 0.8; }
         .service-badge { background: #FFD700; color: #0a0a0a; padding: 4px 12px; border-radius: 30px; font-size: 0.8rem; font-weight: 700; margin-left: 10px; transition: all 0.3s; }
         .service-card:hover .service-badge { transform: scale(1.05); box-shadow: 0 0 15px #FFD700; }
-        
         .token-balance { font-size: 1.8rem; color: #FFD700; }
         .order-book { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0; }
         .order-side { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; }
@@ -198,11 +164,9 @@
         .user-item { padding: 10px; margin-bottom: 6px; background: rgba(255,215,0,0.05); border-radius: 10px; cursor: pointer; font-size: 0.9rem; }
         .user-item:hover { background: rgba(255,215,0,0.1); }
         .user-item.active { background: rgba(255,215,0,0.15); border: 1px solid #FFD700; }
-        
         .captcha-box { background: rgba(255,215,0,0.05); border: 2px solid rgba(255,215,0,0.3); border-radius: 20px; padding: 20px; margin: 20px 0; text-align: center; }
         .captcha-question { font-size: 2rem; font-weight: 700; color: #FFD700; margin-bottom: 15px; letter-spacing: 5px; }
         .captcha-emoji { font-size: 2.5rem; margin-right: 10px; }
-        
         .account-switcher { margin-top: 20px; padding: 15px; background: rgba(255,215,0,0.03); border-radius: 16px; }
         .saved-account-item { display: flex; align-items: center; gap: 10px; padding: 12px; margin-bottom: 8px; background: rgba(255,215,0,0.05); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
         .saved-account-item:hover { background: rgba(255,215,0,0.1); transform: translateX(5px); }
@@ -211,20 +175,17 @@
         .saved-account-name { font-weight: 600; color: #FFD700; }
         .saved-account-username { font-size: 0.85rem; opacity: 0.7; }
         .remove-account-btn { background: transparent; border: 1px solid #ff5e5e; color: #ff5e5e; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
-        
         .rollback-request { background: rgba(255,100,100,0.1); border: 1px solid #ff5e5e; border-radius: 12px; padding: 12px; margin: 10px 0; }
         .rollback-actions { display: flex; gap: 8px; margin-top: 10px; }
         .rollback-btn { background: transparent; border: 1px solid #ff5e5e; color: #ff5e5e; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
         .rollback-btn.accept { border-color: #4ade80; color: #4ade80; }
         .rollback-btn:hover { opacity: 0.8; }
-        
         .pow-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; display: flex; align-items: center; justify-content: center; }
         .pow-box { background: #1a1a1a; border: 2px solid #FFD700; border-radius: 20px; padding: 30px; text-align: center; max-width: 350px; }
         .pow-box h3 { color: #FFD700; margin-bottom: 20px; }
         .pow-progress { width: 100%; height: 8px; background: #333; border-radius: 4px; margin: 20px 0; overflow: hidden; }
         .pow-progress-bar { height: 100%; background: #FFD700; width: 0%; transition: width 0.05s linear; }
         .pow-status { color: #FFD700; font-size: 0.9rem; margin-top: 10px; }
-        
         @media (min-width: 640px) {
             .glass-header { padding: 12px 24px; }
             .logo-img { width: 42px; height: 42px; }
@@ -245,7 +206,6 @@
             .chat-area { flex: 1; }
             .profile-avatar { width: 70px; height: 70px; }
         }
-        
         @media (min-width: 1024px) {
             .glass-header { padding: 14px 32px; }
             .nav-link { padding: 12px 22px; }
@@ -293,26 +253,21 @@
         <p style="font-size: 1.1rem; margin-bottom: 25px;"><strong>Ваш надёжный финансовый партнёр в мире, где ценность создаётся не печатным станком, а реальными действиями живых людей.</strong></p>
         <p style="font-size: 1rem;">В BK-Bank мы понимаем: каждая покупка — это не просто транзакция, а часть Вашей жизни. Но мы пошли дальше. Мы первые, кто сказал: <span class="highlight">ваше время, ваше внимание и ваш ежедневный труд — это актив</span>. И мы научились превращать этот актив в реальную, растущую в цене валюту.</p>
         <p style="margin-top: 20px; font-size: 1rem;"><strong>Добро пожаловать в первую в мире экосистему Labor-Backed Finance.</strong></p>
-        
         <h3>BK-TOKEN: ЭКОНОМИКА НА ВАШИХ УСИЛИЯХ</h3>
         <p style="font-size: 1rem;">Всё гениальное просто. В традиционной экономике вы работаете — вам платят зарплату. В криптоэкономике вы покупаете токен в надежде, что он вырастет. Мы объединили эти две модели и убрали слабое звено — спекуляцию.</p>
         <h4 style="color: #FFD700; margin: 25px 0 15px; font-size: 1.3rem;">Как это работает?</h4>
         <p style="font-size: 1rem;"><span class="highlight">Токен даётся за задания.</span> Вы не покупаете BK-Token на бирже за свои кровные. Вы получаете его бесплатно, просто будучи активным участником экосистемы BK-Bank.</p>
         <p style="margin-top: 20px; font-size: 1rem;"><span class="highlight">Цена строится из части труда.</span> Каждый выпущенный BK-Token — это оцифрованная и зафиксированная единица человеческого усилия.</p>
-        
         <div class="comparison-table">
             <div class="comparison-item"><h4>Обычный токен</h4><p><span class="cross">✖</span> Цена зависит от хайпа</p><p><span class="cross">✖</span> Памп и дамп</p><p><span class="cross">✖</span> Ценность эфемерна</p></div>
             <div class="comparison-item"><h4>BK-Token</h4><p><span class="check">✔</span> Цена зависит от заданий</p><p><span class="check">✔</span> Органический рост</p><p><span class="check">✔</span> Обеспечен трудом</p></div>
         </div>
-        
         <p style="font-size: 1rem;"><span class="highlight">Это экономика, где ваш ежедневный труд — это майнинг.</span></p>
-        
         <h3>ФИЛОСОФИЯ BK-BANK</h3>
         <div style="background: rgba(255,215,0,0.05); padding: 25px; border-radius: 20px; margin: 20px 0;">
             <p style="font-size: 1.2rem; font-style: italic;">«Я ношу карту. И эта карта не прячет мои покупки, но создаёт их оформление».</p>
             <p style="margin-top: 15px; font-size: 1rem;">«И эта карта платит мне за то, что я просто живу и действую».</p>
         </div>
-        
         <h3>НАШИ ПРЕИМУЩЕСТВА</h3>
         <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin:20px 0;">
             <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px;"><h4 style="color:#FFD700;">1. Приватность</h4><p>Ваши транзакции остаются вашей тайной. Мы не храним данные о ваших расходах в открытом виде. Все операции проходят через шифрованные каналы, а ваша личность защищена лучше, чем в швейцарском банке.</p></div>
@@ -321,7 +276,6 @@
             <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px;"><h4 style="color:#FFD700;">4. Безопасность</h4><p>Защита активов на уровне лучших мировых стандартов: многофакторная аутентификация, холодное хранение криптоактивов, страхование средств на карте. Ваш труд надёжно защищён.</p></div>
             <div style="background:rgba(255,215,0,0.03); border-radius:16px; padding:18px; grid-column: span 2;"><h4 style="color:#FFD700;">5. Сообщество</h4><p>Владельцы карт BK-Bank — это не просто клиенты. Это со-основатели ценности BK-Token. Ваша активность, ваши приглашения, ваше участие в жизни экосистемы напрямую влияют на курс токена. Мы строим экономику, где каждый участник — бенефициар.</p></div>
         </div>
-        
         <h3>КАК НАЧАТЬ?</h3>
         <div style="display:flex; flex-wrap:wrap; gap:15px; margin:20px 0;">
             <div style="flex:1; min-width:150px; background:rgba(255,215,0,0.03); border-radius:16px; padding:20px; text-align:center;"><div style="width:45px; height:45px; background:#FFD700; color:#0a0a0a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700; margin:0 auto 15px;">1</div><h4 style="color:#FFD700;">Регистрация</h4><p>2 минуты — и вы в системе.</p></div>
@@ -329,7 +283,6 @@
             <div style="flex:1; min-width:150px; background:rgba(255,215,0,0.03); border-radius:16px; padding:20px; text-align:center;"><div style="width:45px; height:45px; background:#FFD700; color:#0a0a0a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700; margin:0 auto 15px;">3</div><h4 style="color:#FFD700;">Первый токен</h4><p>Выполните задание — получите BK.</p></div>
             <div style="flex:1; min-width:150px; background:rgba(255,215,0,0.03); border-radius:16px; padding:20px; text-align:center;"><div style="width:45px; height:45px; background:#FFD700; color:#0a0a0a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700; margin:0 auto 15px;">4</div><h4 style="color:#FFD700;">Рост</h4><p>Наблюдайте за ростом вашего капитала.</p></div>
         </div>
-        
         <div style="text-align:center; margin-top:40px; padding:25px; background:linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.02)); border-radius:30px;">
             <h2 style="font-size:2rem;">BK-BANK: ВАШ ТРУД — НАША ВАЛЮТА</h2>
             <p style="font-size:1.1rem;">Присоединяйтесь к BK-Bank сегодня. Превратите свою ежедневную активность в растущий капитал.</p>
@@ -337,7 +290,6 @@
             <button class="gold-button" style="width:auto; padding:16px 40px; margin-top:20px;" onclick="window.showRegistrationForm()">✨ Открыть счёт ✨</button>
         </div>
     </div>
-
     <div id="services-section" class="content-card hidden">
         <h2>Наши услуги</h2><div class="divider"></div>
         <div class="services-grid">
@@ -348,14 +300,12 @@
             <div class="service-card"><div class="service-icon">💳</div><div class="service-content"><div class="service-title">Мультивалютные</div><div class="service-desc">Карты</div></div><span class="service-badge">VISA/MC</span></div>
         </div>
     </div>
-
     <div id="cards-section" class="content-card hidden">
         <h2>Эксклюзивные карты</h2><div class="divider"></div>
         <p style="font-size:1rem;">Каждая карта — это ваш пропуск в мир, где труд конвертируется в капитал.</p>
         <div id="cards-stack-container" style="display:flex; justify-content:center; margin:30px 0; position:relative; min-height:350px; perspective:1200px;"></div>
         <div style="text-align:center;"><div style="background:rgba(255,215,0,0.05); border:1px solid rgba(255,215,0,0.2); border-radius:40px; padding:16px 30px; color:#FFD700; display:inline-block; font-size:1.1rem;"><strong>✨ Выберите карту ✨</strong></div></div>
     </div>
-
     <div id="bktok-section" class="content-card hidden">
         <h2>🚀 BKtok Биржа</h2><div class="divider"></div>
         <div id="bktok-guest-message" style="text-align:center; padding:20px; background:rgba(255,215,0,0.05); border-radius:16px; margin-bottom:20px;">
@@ -363,7 +313,7 @@
         </div>
         <div id="bktok-content">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; margin-bottom:25px;">
-                <div><span style="color:#888; font-size:1rem;">Ваш баланс:</span><div class="token-balance" id="token-balance-display">0 BK</div></div>
+                <div><span style="color:#888; font-size:1rem;">Ваш баланс:</span><div class="token-balance sensitive-data" id="token-balance-display">0 BK</div></div>
                 <div style="display:flex; gap:10px;">
                     <button class="gold-button" style="width:auto; padding:12px 24px;" onclick="window.toggleSection('tasks')">📋 Задания</button>
                     <button class="gold-button" style="width:auto; padding:12px 24px;" onclick="window.toggleSection('cases')">🎁 Кейсы</button>
@@ -395,33 +345,28 @@
             <div style="margin-top:20px;"><h4>📜 История сделок</h4><div id="trade-history" style="max-height:150px; overflow-y:auto;"></div></div>
         </div>
     </div>
-
     <div id="tasks-section" class="content-card hidden">
         <h2>📋 Задания</h2><div class="divider"></div>
         <div id="tasks-guest-message" style="text-align:center; padding:15px;">🔒 Войдите для просмотра</div>
         <div id="tasks-content"><div class="tasks-grid" id="tasks-container"></div></div>
         <button class="gold-button" onclick="window.toggleSection('bktok')">← На биржу</button>
     </div>
-
     <div id="cases-section" class="content-card hidden">
         <h2>🎁 Кейсы</h2><div class="divider"></div>
         <div id="cases-guest-message" style="text-align:center; padding:15px;">🔒 Войдите для открытия</div>
         <div id="cases-content"><div class="cases-grid" id="cases-container"></div></div>
         <button class="gold-button" onclick="window.toggleSection('bktok')">← На биржу</button>
     </div>
-
     <div id="support-section" class="content-card hidden">
         <h2>🤖 Поддержка (AI)</h2><div class="divider"></div>
         <p style="margin-bottom:15px; color:#FFD700;"><i>Задайте вопрос нашей нейросети. Она поможет с откатами транзакций и другими вопросами!</i></p>
         <div id="support-container"></div>
     </div>
-
     <div id="chats-section" class="content-card hidden">
         <h2>💬 Чаты</h2><div class="divider"></div>
         <div id="chats-guest-message" style="text-align:center; padding:15px;">🔒 Войдите для доступа к чатам</div>
         <div id="chats-content"><div id="chats-container"></div></div>
     </div>
-
     <div id="profile-section" class="content-card hidden"></div>
     <div id="public-profile-section" class="content-card hidden"></div>
 </main>
@@ -430,13 +375,138 @@
 (function() {
     "use strict";
     
+    let devtoolsOpen = false;
+    const threshold = 160;
+    function checkDevTools() {
+        const widthDiff = window.outerWidth - window.innerWidth;
+        const heightDiff = window.outerHeight - window.innerHeight;
+        if (widthDiff > threshold || heightDiff > threshold) {
+            if (!devtoolsOpen) {
+                devtoolsOpen = true;
+                document.querySelectorAll('[data-sensitive]').forEach(el => el.textContent = '•••');
+                if (MASTER_KEY) {
+                    const start = performance.now();
+                    debugger;
+                    if (performance.now() - start < 10) {
+                        MASTER_KEY = null;
+                        alert('⚠️ Обнаружен отладчик. Сессия завершена.');
+                        window.logout();
+                    }
+                }
+            }
+        } else { devtoolsOpen = false; }
+    }
+    setInterval(checkDevTools, 500);
+    
+    let isTabActive = true;
+    document.addEventListener('visibilitychange', () => {
+        isTabActive = !document.hidden;
+        if (!isTabActive) {
+            document.querySelectorAll('.sensitive-data').forEach(el => {
+                el.setAttribute('data-real', el.textContent);
+                el.textContent = '••••••';
+            });
+        } else {
+            document.querySelectorAll('.sensitive-data').forEach(el => {
+                const real = el.getAttribute('data-real');
+                if (real) el.textContent = real;
+            });
+        }
+    });
+    
+    function sanitizeAvatarUrl(url) {
+        if (!url) return 'png/2025-01-30_17-50-13-Photoroom.png';
+        if (url.startsWith('data:image/')) {
+            if (!url.match(/^data:image\/(png|jpeg|jpg|gif|webp);base64,/i)) return 'png/2025-01-30_17-50-13-Photoroom.png';
+            return url;
+        }
+        if (url.startsWith('png/') && url.endsWith('.png')) return url;
+        return 'png/2025-01-30_17-50-13-Photoroom.png';
+    }
+    
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    function constantTimeCompare(a, b) {
+        if (a.length !== b.length) return false;
+        let result = 0;
+        for (let i = 0; i < a.length; i++) result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+        return result === 0;
+    }
+    
+    const rateLimits = new Map();
+    const taskLocks = new Map();
+    function checkRateLimit(action, maxPerMinute = 10) {
+        const key = `${action}_${currentUser || 'anonymous'}`;
+        const now = Date.now();
+        const attempts = rateLimits.get(key) || [];
+        const recent = attempts.filter(t => now - t < 60000);
+        if (recent.length >= maxPerMinute) throw new Error('Слишком много попыток. Подождите минуту.');
+        recent.push(now);
+        rateLimits.set(key, recent);
+        return true;
+    }
+    function acquireTaskLock(taskId) {
+        const key = `${currentUser}_${taskId}`;
+        if (taskLocks.get(key)) return false;
+        taskLocks.set(key, performance.now());
+        return true;
+    }
+    function releaseTaskLock(taskId) {
+        const key = `${currentUser}_${taskId}`;
+        taskLocks.delete(key);
+    }
+    
     const _realStorage = window.localStorage;
     function realGetItem(key) { return _realStorage.getItem(key); }
     function realSetItem(key, value) { _realStorage.setItem(key, value); }
     function realRemoveItem(key) { _realStorage.removeItem(key); }
     
     let MASTER_KEY = null;
-    const SALT = "BKbankDynamicSalt";
+    const BASE_SALT = "BK_SECURE_SALT_V2_2026";
+    
+    function getUserSalt(username) { return CryptoJS.SHA256(username + BASE_SALT).toString(); }
+    function getDifficulty(username, failedAttempts) {
+        const base = 100000000;
+        const multiplier = Math.min(Math.pow(2, failedAttempts), 8);
+        return base * multiplier;
+    }
+    
+    function secureSetItem(key, value) {
+        if (!MASTER_KEY) return;
+        const data = JSON.stringify(value);
+        const encrypted = CryptoJS.AES.encrypt(data, MASTER_KEY).toString();
+        const hmac = CryptoJS.HmacSHA256(encrypted, MASTER_KEY).toString();
+        realSetItem(key, JSON.stringify({ encrypted, hmac }));
+    }
+    
+    function secureGetItem(key) {
+        if (!MASTER_KEY) return null;
+        const stored = realGetItem(key);
+        if (!stored) return null;
+        try {
+            const { encrypted, hmac } = JSON.parse(stored);
+            const computedHmac = CryptoJS.HmacSHA256(encrypted, MASTER_KEY).toString();
+            if (computedHmac !== hmac) { console.error('⚠️ Данные повреждены!'); return { error: 'corrupted' }; }
+            const decrypted = CryptoJS.AES.decrypt(encrypted, MASTER_KEY).toString(CryptoJS.enc.Utf8);
+            return { data: JSON.parse(decrypted) };
+        } catch(e) { return { error: 'decrypt_failed' }; }
+    }
+    
+    function deriveMasterKey(password, username) {
+        const salt = getUserSalt(username);
+        return CryptoJS.PBKDF2(password, salt, {
+            keySize: 512 / 32,
+            iterations: 600000,
+            hasher: CryptoJS.algo.SHA512
+        }).toString();
+    }
+    
+    function hashPassword(p) { return CryptoJS.SHA256(p + getUserSalt(p)).toString(); }
     
     let users = {};
     let currentUser = null;
@@ -446,12 +516,10 @@
     let bktokOrders = { buy: [], sell: [] };
     let bktokTrades = [];
     let userTasks = {};
-    
     let isStackExpanded = false;
     let selectedPrivateChat = null;
     let savedAccounts = JSON.parse(realGetItem('savedAccounts') || '{}');
     let rollbackRequests = [];
-    
     let failedAttempts = parseInt(realGetItem('failedAttempts') || '0');
     let lockUntil = parseInt(realGetItem('lockUntil') || '0');
     let blockLevel = parseInt(realGetItem('blockLevel') || '0');
@@ -459,75 +527,6 @@
     let chartInterval = null;
     let loginCaptchaAnswer = 0;
     let requireCaptcha = false;
-    
-    const domProtector = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.type === 'characterData' || mutation.type === 'childList') {
-                const el = mutation.target;
-                if (el.id === 'token-balance-display' && currentUser) {
-                    const realBalance = bktokBalances[currentUser]?.toFixed(2) || '0';
-                    if (el.textContent !== realBalance + ' BK') el.textContent = realBalance + ' BK';
-                }
-                if (el.id === 'header-username' && currentUser) {
-                    const realName = users[currentUser]?.name || currentUser;
-                    if (el.textContent !== realName) el.textContent = realName;
-                }
-            }
-        });
-    });
-    domProtector.observe(document.body, { childList: true, subtree: true, characterData: true });
-    
-    // Асинхронный PoW с Web Worker
-    const powWorkerCode = `
-        self.onmessage = function(e) {
-            const { password, username, salt, difficulty } = e.data;
-            let hash = username + password + salt;
-            for (let i = 0; i < difficulty; i++) {
-                hash = self.CryptoJS.SHA256(hash + i).toString();
-                if (i % 50000 === 0) self.postMessage({ type: 'progress', progress: (i / difficulty) * 100 });
-            }
-            self.postMessage({ type: 'done', hash: self.CryptoJS.SHA256(hash).toString() });
-        };
-        importScripts('lib/crypto-js.min.js');
-    `;
-    
-    const powBlob = new Blob([powWorkerCode], { type: 'application/javascript' });
-    const powWorkerUrl = URL.createObjectURL(powBlob);
-    
-    async function proofOfWork(password, username, difficulty = 1000000) {
-        return new Promise((resolve, reject) => {
-            const worker = new Worker(powWorkerUrl);
-            worker.onmessage = (e) => {
-                const { type, progress, hash } = e.data;
-                if (type === 'progress') updatePoWProgress(progress);
-                else if (type === 'done') { worker.terminate(); resolve(hash); }
-            };
-            worker.onerror = (e) => { worker.terminate(); reject(e); };
-            worker.postMessage({ password, username, salt: SALT, difficulty });
-        });
-    }
-    
-    function setMasterKey(password, username) {
-        MASTER_KEY = CryptoJS.PBKDF2(password, username + SALT, { keySize: 256 / 32, iterations: 100000 }).toString();
-    }
-    
-    function secureSetItem(key, value) {
-        if (!MASTER_KEY) return;
-        const encrypted = CryptoJS.AES.encrypt(JSON.stringify(value), MASTER_KEY).toString();
-        realSetItem(key, encrypted);
-    }
-    
-    function secureGetItem(key) {
-        if (!MASTER_KEY) return null;
-        const encrypted = realGetItem(key);
-        if (!encrypted) return null;
-        try {
-            const decrypted = CryptoJS.AES.decrypt(encrypted, MASTER_KEY).toString(CryptoJS.enc.Utf8);
-            return JSON.parse(decrypted);
-        } catch(e) { return null; }
-    }
-    
-    function hashPassword(p) { return CryptoJS.SHA256(p + SALT).toString(); }
     
     function updateBalance(user, amount, operation) {
         if (!currentUser) return false;
@@ -553,65 +552,123 @@
         { img: 'png/2025-01-30_23-01-20-Photoroom.png' }, { img: 'png/classkr.png' }, { img: 'png/Bk-bakcl.png' }
     ];
 
-    function renderCardsStack() { const c = document.getElementById('cards-stack-container'); if (!c) return; isStackExpanded = false; c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="position:absolute; width:220px; transition:all 0.5s; cursor:pointer; filter:drop-shadow(0 15px 30px rgba(0,0,0,0.6)); transform:rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px); z-index:${i+1};" onclick="window.handleStackClick(event)"><img src="${card.img}" style="width:100%; border-radius:16px; border:2px solid rgba(255,215,0,0.3); mix-blend-mode:lighten;"></div>`).join(''); }
-    window.handleStackClick = (e) => { e.stopPropagation(); const c = document.getElementById('cards-stack-container'), cards = c.querySelectorAll('.stack-card'); if (!isStackExpanded) { cards.forEach((card, i) => { card.style.transform = `translateX(${(i-3)*110}px) translateY(${Math.abs(i-3)*6}px) rotate(${(i-3)*5}deg)`; card.style.zIndex = i + 10; }); isStackExpanded = true; } else { cards.forEach((card, i) => { card.style.transform = `rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px)`; card.style.zIndex = i + 1; }); isStackExpanded = false; } };
+    function renderCardsStack() { 
+        const c = document.getElementById('cards-stack-container'); 
+        if (!c) return; 
+        isStackExpanded = false; 
+        c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="position:absolute; width:220px; transition:all 0.5s; cursor:pointer; filter:drop-shadow(0 15px 30px rgba(0,0,0,0.6)); transform:rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px); z-index:${i+1};" onclick="window.handleStackClick(event)"><img src="${card.img}" style="width:100%; border-radius:16px; border:2px solid rgba(255,215,0,0.3); mix-blend-mode:lighten;"></div>`).join(''); 
+    }
+    
+    window.handleStackClick = (e) => { 
+        e.stopPropagation(); 
+        const c = document.getElementById('cards-stack-container'), cards = c.querySelectorAll('.stack-card'); 
+        if (!isStackExpanded) { 
+            cards.forEach((card, i) => { 
+                card.style.transform = `translateX(${(i-3)*110}px) translateY(${Math.abs(i-3)*6}px) rotate(${(i-3)*5}deg)`; 
+                card.style.zIndex = i + 10; 
+            }); 
+            isStackExpanded = true; 
+        } else { 
+            cards.forEach((card, i) => { 
+                card.style.transform = `rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px)`; 
+                card.style.zIndex = i + 1; 
+            }); 
+            isStackExpanded = false; 
+        } 
+    };
 
     function updateUIForAuth() {
         const authBtns = document.getElementById('auth-buttons'), profileBtn = document.getElementById('profile-btn-header');
         if (currentUser) {
             authBtns.classList.add('hidden'); profileBtn.classList.remove('hidden');
-            const u = users[currentUser]; document.getElementById('header-username').textContent = u.name || currentUser; if (u.avatar) document.getElementById('header-avatar').src = u.avatar;
-            ['bktok','tasks','cases','chats'].forEach(s => { document.getElementById(s+'-guest-message')?.classList.add('hidden'); document.getElementById(s+'-content')?.classList.remove('hidden'); });
+            const u = users[currentUser]; 
+            document.getElementById('header-username').textContent = u.name || currentUser; 
+            document.getElementById('header-avatar').src = sanitizeAvatarUrl(u.avatar);
+            ['bktok','tasks','cases','chats'].forEach(s => { 
+                document.getElementById(s+'-guest-message')?.classList.add('hidden'); 
+                document.getElementById(s+'-content')?.classList.remove('hidden'); 
+            });
         } else {
             authBtns.classList.remove('hidden'); profileBtn.classList.add('hidden');
-            ['bktok','tasks','cases','chats'].forEach(s => { document.getElementById(s+'-guest-message')?.classList.remove('hidden'); document.getElementById(s+'-content')?.classList.add('hidden'); });
+            ['bktok','tasks','cases','chats'].forEach(s => { 
+                document.getElementById(s+'-guest-message')?.classList.remove('hidden'); 
+                document.getElementById(s+'-content')?.classList.add('hidden'); 
+            });
         }
     }
 
     window.onload = async () => { 
         if (realGetItem('theme') === 'light') document.body.classList.add('light-theme');
-        const savedSession = realGetItem('currentSession');
-        const savedMasterKey = sessionStorage.getItem('MASTER_KEY');
-        if (savedSession && savedMasterKey) {
-            try {
-                const sessionData = JSON.parse(savedSession);
-                MASTER_KEY = savedMasterKey;
-                const decryptedUsers = secureGetItem('bankUsers');
-                if (decryptedUsers && decryptedUsers[sessionData.username]) {
-                    users = decryptedUsers;
-                    currentUser = sessionData.username;
-                    bktokBalances = secureGetItem('bktokBalances') || {};
-                    allSupportChats = secureGetItem('allSupportChats') || {};
-                    privateChats = secureGetItem('privateChats') || {};
-                    bktokOrders = secureGetItem('bktokOrders') || { buy: [], sell: [] };
-                    bktokTrades = secureGetItem('bktokTrades') || [];
-                    userTasks = secureGetItem('userTasks') || {};
-                    showMainContent();
-                    updateUIForAuth();
-                    startChartUpdates();
-                    return;
-                }
-            } catch(e) {}
-        }
         showMainContent();
         updateUIForAuth();
         window.toggleSection('about');
     };
     
-    window.toggleTheme = () => { document.body.classList.toggle('light-theme'); realSetItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
-    function showModalOverlay() { const existing = document.getElementById('modal-overlay'); if (existing) existing.remove(); const o = document.createElement('div'); o.className = 'modal-overlay'; o.id = 'modal-overlay'; document.body.appendChild(o); }
+    window.toggleTheme = () => { 
+        document.body.classList.toggle('light-theme'); 
+        realSetItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); 
+    };
+    
+    function showModalOverlay() { 
+        const existing = document.getElementById('modal-overlay'); 
+        if (existing) existing.remove(); 
+        const o = document.createElement('div'); 
+        o.className = 'modal-overlay'; 
+        o.id = 'modal-overlay'; 
+        document.body.appendChild(o); 
+    }
+    
+    function showPasswordModal(title, callback) {
+        const existing = document.querySelector('.password-modal');
+        if (existing) existing.remove();
+        const modal = document.createElement('div');
+        modal.className = 'password-modal';
+        modal.innerHTML = `<div class="password-box"><h3>${escapeHtml(title)}</h3><input type="password" id="modal-password-input" placeholder="Введите пароль" autocomplete="off"><button id="modal-password-submit">Подтвердить</button><button id="modal-password-cancel" style="background:#333; color:#FFD700; margin-top:10px;">Отмена</button></div>`;
+        document.body.appendChild(modal);
+        const input = document.getElementById('modal-password-input');
+        const submitBtn = document.getElementById('modal-password-submit');
+        const cancelBtn = document.getElementById('modal-password-cancel');
+        input.focus();
+        const cleanup = () => modal.remove();
+        submitBtn.onclick = () => { const password = input.value; cleanup(); callback(password); };
+        cancelBtn.onclick = () => { cleanup(); callback(null); };
+        input.onkeydown = (e) => { if (e.key === 'Enter') { const password = input.value; cleanup(); callback(password); } else if (e.key === 'Escape') { cleanup(); callback(null); } };
+    }
+    
+    const powWorkerCode = `delete self.XMLHttpRequest;delete self.fetch;delete self.WebSocket;importScripts('lib/crypto-js.min.js');self.onmessage=function(e){if(!e.data||typeof e.data!=='object')return;const{username,salt,difficulty}=e.data;const safeDifficulty=Math.min(difficulty,800000000);let hash=username+salt;for(let i=0;i<safeDifficulty;i++){hash=self.CryptoJS.SHA256(hash+i).toString();if(i%500000===0)self.postMessage({type:'progress',progress:(i/safeDifficulty)*100});}self.postMessage({type:'done',hash:self.CryptoJS.SHA256(hash).toString()});};`;
+    const powBlob = new Blob([powWorkerCode], { type: 'application/javascript' });
+    const powWorkerUrl = URL.createObjectURL(powBlob);
+    
+    async function proofOfWork(username, difficulty = 100000000) {
+        return new Promise((resolve, reject) => {
+            const worker = new Worker(powWorkerUrl);
+            worker.onmessage = (e) => {
+                const { type, progress, hash } = e.data;
+                if (type === 'progress') updatePoWProgress(progress);
+                else if (type === 'done') { worker.terminate(); resolve(hash); }
+            };
+            worker.onerror = (e) => { worker.terminate(); reject(e); };
+            worker.postMessage({ username, salt: getUserSalt(username), difficulty });
+        });
+    }
     
     function showPoWOverlay() {
-        const existing = document.getElementById('pow-overlay'); if (existing) existing.remove();
-        const o = document.createElement('div'); o.className = 'pow-overlay'; o.id = 'pow-overlay';
+        const existing = document.getElementById('pow-overlay'); 
+        if (existing) existing.remove();
+        const o = document.createElement('div'); 
+        o.className = 'pow-overlay'; 
+        o.id = 'pow-overlay';
         o.innerHTML = `<div class="pow-box"><h3>🔐 Проверка безопасности</h3><p style="color:#ccc; margin-bottom:20px;">Выполняется Proof-of-Work...</p><div class="pow-progress"><div class="pow-progress-bar" id="pow-progress-bar" style="width:0%"></div></div><p class="pow-status" id="pow-status">Защита от перебора паролей</p></div>`;
         document.body.appendChild(o);
     }
+    
     function updatePoWProgress(percent) {
-        const bar = document.getElementById('pow-progress-bar'); const status = document.getElementById('pow-status');
+        const bar = document.getElementById('pow-progress-bar'); 
+        const status = document.getElementById('pow-status');
         if (bar) bar.style.width = Math.min(percent, 100) + '%';
         if (status) status.textContent = `${Math.round(percent)}% завершено`;
     }
+    
     function hidePoWOverlay() { const o = document.getElementById('pow-overlay'); if (o) o.remove(); }
     function getBlockTime(level) { const times = [30000, 60000, 300000, 900000, 1800000]; return times[Math.min(level, times.length - 1)]; }
     
@@ -619,9 +676,7 @@
         removeModals(); showModalOverlay(); 
         requireCaptcha = failedAttempts >= 2;
         const m = document.createElement('div'); m.className = 'modal-form'; 
-        let h = `<div class="form-title">🔐 Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div>
-        <input id="loginUsername" class="form-input" placeholder="👤 Никнейм или телефон">
-        <input type="password" id="loginPassword" class="form-input" placeholder="🔑 Пароль">`;
+        let h = `<div class="form-title">🔐 Вход в BK-Bank</div><div id="loginError" class="error-text hidden"></div><input id="loginUsername" class="form-input" placeholder="👤 Никнейм или телефон"><input type="password" id="loginPassword" class="form-input" placeholder="🔑 Пароль">`;
         if (requireCaptcha) {
             const ops = ['+', '-', '×']; const op = ops[Math.floor(Math.random() * ops.length)];
             let n1, n2, ans;
@@ -629,21 +684,13 @@
             else if (op === '-') { n1 = Math.floor(Math.random() * 20) + 11; n2 = Math.floor(Math.random() * 10) + 1; ans = n1 - n2; }
             else { n1 = Math.floor(Math.random() * 10) + 1; n2 = Math.floor(Math.random() * 10) + 1; ans = n1 * n2; }
             loginCaptchaAnswer = ans;
-            h += `<div class="captcha-box"><div style="font-size:1rem; color:#888; margin-bottom:10px;">🤖 Подтвердите, что вы человек</div>
-            <div class="captcha-question"><span class="captcha-emoji">🧮</span> ${n1} ${op} ${n2} = ?</div>
-            <input id="loginCaptcha" class="form-input" placeholder="Введите ответ" style="text-align:center;"></div>`;
+            h += `<div class="captcha-box"><div style="font-size:1rem; color:#888; margin-bottom:10px;">🤖 Подтвердите, что вы человек</div><div class="captcha-question"><span class="captcha-emoji">🧮</span> ${n1} ${op} ${n2} = ?</div><input id="loginCaptcha" class="form-input" placeholder="Введите ответ" style="text-align:center;"></div>`;
         }
-        h += `<button class="gold-button" onclick="window.login()">🚪 Войти</button>
-        <span class="text-link" onclick="window.showRegistrationForm()">✨ Создать аккаунт</span>`;
+        h += `<button class="gold-button" onclick="window.login()">🚪 Войти</button><span class="text-link" onclick="window.showRegistrationForm()">✨ Создать аккаунт</span>`;
         if (Object.keys(savedAccounts).length > 0) {
-            h += `<div style="margin-top:15px; padding-top:15px; border-top:1px solid rgba(255,215,0,0.2);">
-                <p style="color:#FFD700; margin-bottom:10px;">💾 Сохранённые аккаунты</p>`;
+            h += `<div style="margin-top:15px; padding-top:15px; border-top:1px solid rgba(255,215,0,0.2);"><p style="color:#FFD700; margin-bottom:10px;">💾 Сохранённые аккаунты</p>`;
             for (let u in savedAccounts) {
-                h += `<div style="display:flex; align-items:center; gap:10px; padding:10px; background:rgba(255,215,0,0.05); border-radius:12px; margin-bottom:8px; cursor:pointer;" onclick="window.quickLogin('${u}')">
-                    <img src="png/2025-01-30_17-50-13-Photoroom.png" style="width:30px; height:30px; border-radius:50%; border:2px solid #FFD700;">
-                    <div style="flex:1;"><strong>${u}</strong></div>
-                    <button onclick="event.stopPropagation(); window.removeSavedAccount('${u}')" style="background:transparent; border:none; color:#ff5e5e; font-size:1.2rem; cursor:pointer;">✕</button>
-                </div>`;
+                h += `<div style="display:flex; align-items:center; gap:10px; padding:10px; background:rgba(255,215,0,0.05); border-radius:12px; margin-bottom:8px; cursor:pointer;" onclick="window.quickLogin('${u}')"><img src="png/2025-01-30_17-50-13-Photoroom.png" style="width:30px; height:30px; border-radius:50%; border:2px solid #FFD700;"><div style="flex:1;"><strong>${escapeHtml(u)}</strong></div><button onclick="event.stopPropagation(); window.removeSavedAccount('${u}')" style="background:transparent; border:none; color:#ff5e5e; font-size:1.2rem; cursor:pointer;">✕</button></div>`;
             }
             h += `</div>`;
         }
@@ -651,28 +698,31 @@
         m.innerHTML = h; document.body.appendChild(m); updateFailedAttemptsWarning(); 
     };
     
-    window.quickLogin = async function(username) {
-        const password = prompt(`Введите пароль для ${username}:`); if (!password) return;
+    window.quickLogin = function(username) {
         if (!savedAccounts[username]) return;
-        showPoWOverlay(); await proofOfWork(password, username); hidePoWOverlay();
-        setMasterKey(password, username);
-        const decryptedUsers = secureGetItem('bankUsers');
-        if (!decryptedUsers || !decryptedUsers[username]) { alert('Неверный пароль или повреждённые данные'); MASTER_KEY = null; return; }
-        users = decryptedUsers;
-        if (users[username].passwordHash !== hashPassword(password)) { alert('Неверный пароль'); MASTER_KEY = null; return; }
-        currentUser = username;
-        bktokBalances = secureGetItem('bktokBalances') || {};
-        allSupportChats = secureGetItem('allSupportChats') || {};
-        privateChats = secureGetItem('privateChats') || {};
-        bktokOrders = secureGetItem('bktokOrders') || { buy: [], sell: [] };
-        bktokTrades = secureGetItem('bktokTrades') || [];
-        userTasks = secureGetItem('userTasks') || {};
-        if (bktokBalances[username] === undefined) { bktokBalances[username] = 100; secureSetItem('bktokBalances', bktokBalances); }
-        realSetItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
-        sessionStorage.setItem('MASTER_KEY', MASTER_KEY);
-        removeModals(); document.getElementById('modal-overlay')?.remove();
-        showMainContent(); showWelcomeMessage(users[username].name); updateUIForAuth();
-        startChartUpdates();
+        showPasswordModal(`Введите пароль для ${username}`, async (password) => {
+            if (!password) return;
+            showPoWOverlay();
+            await proofOfWork(username, getDifficulty(username, failedAttempts));
+            const key = deriveMasterKey(password, username);
+            MASTER_KEY = key;
+            const result = secureGetItem('bankUsers');
+            hidePoWOverlay();
+            if (!result || result.error) { alert('Неверный пароль или данные повреждены'); MASTER_KEY = null; return; }
+            users = result.data;
+            if (!users[username] || !constantTimeCompare(users[username].passwordHash, hashPassword(password))) { alert('Неверный пароль'); MASTER_KEY = null; return; }
+            currentUser = username;
+            bktokBalances = (secureGetItem('bktokBalances') || {}).data || {};
+            allSupportChats = (secureGetItem('allSupportChats') || {}).data || {};
+            privateChats = (secureGetItem('privateChats') || {}).data || {};
+            bktokOrders = (secureGetItem('bktokOrders') || {}).data || { buy: [], sell: [] };
+            bktokTrades = (secureGetItem('bktokTrades') || {}).data || [];
+            userTasks = (secureGetItem('userTasks') || {}).data || {};
+            if (bktokBalances[username] === undefined) { bktokBalances[username] = 100; secureSetItem('bktokBalances', bktokBalances); }
+            removeModals(); document.getElementById('modal-overlay')?.remove();
+            showMainContent(); showWelcomeMessage(users[username].name); updateUIForAuth();
+            startChartUpdates();
+        });
     };
     
     window.removeSavedAccount = function(username) { delete savedAccounts[username]; realSetItem('savedAccounts', JSON.stringify(savedAccounts)); window.showLoginForm(); };
@@ -688,59 +738,64 @@
 
     let regStep = 1, regData = {}, captchaAnswer = 0;
     window.showRegistrationForm = function() { removeModals(); showModalOverlay(); regStep = 1; regData = {}; renderRegStep(); };
+    
     function renderRegStep() { 
         removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; 
-        let h = `<div class="form-title">📝 Регистрация</div>
-        <div class="step-indicator">${[1,2,3].map(i => `<div class="step-dot ${i===regStep?'active':''} ${i<regStep?'completed':''}"></div>`).join('')}</div>
-        <div id="registerError" class="error-text hidden"></div>`; 
+        let h = `<div class="form-title">📝 Регистрация</div><div class="step-indicator">${[1,2,3].map(i => `<div class="step-dot ${i===regStep?'active':''} ${i<regStep?'completed':''}"></div>`).join('')}</div><div id="registerError" class="error-text hidden"></div>`; 
         if (regStep === 1) {
-            h += `<input id="regName" class="form-input" placeholder="👤 Ваше имя" value="${regData.name||''}">
-            <input id="regUsername" class="form-input" placeholder="📛 Никнейм" value="${regData.username||''}">
-            <input type="password" id="regPassword" class="form-input" placeholder="🔒 Пароль">
-            <input type="password" id="regConfirm" class="form-input" placeholder="🔒 Подтвердите пароль">
-            <button class="gold-button" onclick="window.nextRegStep()">Далее →</button>`;
+            h += `<input id="regName" class="form-input" placeholder="👤 Ваше имя" value="${escapeHtml(regData.name||'')}"><input id="regUsername" class="form-input" placeholder="📛 Никнейм" value="${escapeHtml(regData.username||'')}"><input type="password" id="regPassword" class="form-input" placeholder="🔒 Пароль"><input type="password" id="regConfirm" class="form-input" placeholder="🔒 Подтвердите пароль"><button class="gold-button" onclick="window.nextRegStep()">Далее →</button>`;
         } else if (regStep === 2) {
-            h += `<input id="regEmail" class="form-input" placeholder="📧 Email" value="${regData.email||''}">
-            <input id="regPhone" class="form-input" placeholder="📱 Телефон +7..." value="${regData.phone||'+7'}">
-            <button class="gold-button" onclick="window.nextRegStep()">Далее →</button>
-            <button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`;
+            h += `<input id="regEmail" class="form-input" placeholder="📧 Email" value="${escapeHtml(regData.email||'')}"><input id="regPhone" class="form-input" placeholder="📱 Телефон +7..." value="${escapeHtml(regData.phone||'+7')}"><button class="gold-button" onclick="window.nextRegStep()">Далее →</button><button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`;
         } else {
             const n1 = Math.floor(Math.random()*15)+1, n2 = Math.floor(Math.random()*15)+1; 
             captchaAnswer = n1+n2; 
-            h += `<div class="captcha-box">
-                <div style="font-size:1rem; color:#888; margin-bottom:10px;">🔐 Проверка безопасности</div>
-                <div class="captcha-question"><span class="captcha-emoji">🔢</span> ${n1} + ${n2} = ?</div>
-                <input id="captchaInput" class="form-input" placeholder="Введите ответ" style="text-align:center;">
-            </div>
-            <button class="gold-button" onclick="window.completeRegistration()">✅ Зарегистрироваться</button>
-            <button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`;
+            h += `<div class="captcha-box"><div style="font-size:1rem; color:#888; margin-bottom:10px;">🔐 Проверка безопасности</div><div class="captcha-question"><span class="captcha-emoji">🔢</span> ${n1} + ${n2} = ?</div><input id="captchaInput" class="form-input" placeholder="Введите ответ" style="text-align:center;"></div><button class="gold-button" onclick="window.completeRegistration()">✅ Зарегистрироваться</button><button class="dark-button" onclick="window.prevRegStep()">← Назад</button>`;
         } 
         h += `<span class="text-link" onclick="window.showLoginForm()">← Уже есть аккаунт</span>`; 
         m.innerHTML = h; document.body.appendChild(m); 
     }
-    window.nextRegStep = function() { const e = document.getElementById('registerError'); if (regStep === 1) { const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; if (!n||!u||!p||!c) return showError(e,'Все поля обязательны'); if (p.length<6) return showError(e,'Пароль должен быть не менее 6 символов'); if (p!==c) return showError(e,'Пароли не совпадают'); regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); } else if (regStep === 2) { const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Некорректный Email'); if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон: +7XXXXXXXXXX'); regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); } };
+    
+    window.nextRegStep = function() { 
+        const e = document.getElementById('registerError'); 
+        if (regStep === 1) { 
+            const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; 
+            if (!n||!u||!p||!c) return showError(e,'Все поля обязательны'); 
+            if (p.length<6) return showError(e,'Пароль должен быть не менее 6 символов'); 
+            if (p!==c) return showError(e,'Пароли не совпадают'); 
+            regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); 
+        } else if (regStep === 2) { 
+            const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); 
+            if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Некорректный Email'); 
+            if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон: +7XXXXXXXXXX'); 
+            regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); 
+        } 
+    };
+    
     window.prevRegStep = () => { regStep--; renderRegStep(); };
+    
     window.completeRegistration = async function() { 
         const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); 
         if (!c) return showError(e,'Введите ответ'); 
         if (parseInt(c)!==captchaAnswer) { regStep=3; renderRegStep(); return showError(e,'Неверный ответ'); } 
+        try { checkRateLimit('register', 5); } catch(err) { return showError(e, err.message); }
         const {name, username, email, phone, password} = regData; 
-        showPoWOverlay(); await proofOfWork(password, username); hidePoWOverlay();
-        setMasterKey(password, username);
-        const existingUsers = secureGetItem('bankUsers') || {};
-        if (existingUsers[username]) { MASTER_KEY = null; return showError(e,'Этот никнейм уже занят'); }
-        users = existingUsers;
+        showPoWOverlay();
+        await proofOfWork(username, getDifficulty(username, 0));
+        const key = deriveMasterKey(password, username);
+        MASTER_KEY = key;
+        const existing = secureGetItem('bankUsers');
+        hidePoWOverlay();
+        if (existing && existing.data && existing.data[username]) { MASTER_KEY = null; return showError(e,'Этот никнейм уже занят'); }
+        users = (existing && existing.data) ? existing.data : {};
         users[username] = { name, email, phone, passwordHash: hashPassword(password), balance: 0, registrationDate: new Date().toISOString(), avatar: null };
         secureSetItem('bankUsers', users);
         currentUser = username;
-        bktokBalances = secureGetItem('bktokBalances') || {};
+        bktokBalances = {};
         bktokBalances[username] = 100;
         secureSetItem('bktokBalances', bktokBalances);
         allSupportChats = {}; privateChats = {}; bktokOrders = { buy: [], sell: [] }; bktokTrades = []; userTasks = {};
         savedAccounts[username] = true;
         realSetItem('savedAccounts', JSON.stringify(savedAccounts));
-        realSetItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
-        sessionStorage.setItem('MASTER_KEY', MASTER_KEY);
         removeModals(); document.getElementById('modal-overlay')?.remove();
         showMainContent(); showWelcomeMessage(name); updateUIForAuth();
         startChartUpdates();
@@ -764,13 +819,23 @@
                 window.showLoginForm(); return showError(e,'Неверная капча'); 
             } 
         } 
-        showPoWOverlay(); await proofOfWork(p, u); setMasterKey(p, u);
-        const decryptedUsers = secureGetItem('bankUsers'); hidePoWOverlay();
-        if (!decryptedUsers) { MASTER_KEY = null; return showError(e,'Не удалось расшифровать данные. Проверьте пароль.'); } 
-        users = decryptedUsers;
+        showPoWOverlay();
+        await proofOfWork(u, getDifficulty(u, failedAttempts));
+        const key = deriveMasterKey(p, u);
+        MASTER_KEY = key;
+        const result = secureGetItem('bankUsers');
+        hidePoWOverlay();
+        if (!result || result.error) {
+            await new Promise(r => setTimeout(r, 500 + Math.random() * 500));
+            MASTER_KEY = null;
+            return showError(e, result?.error === 'corrupted' ? 'Данные повреждены' : 'Неверный пароль');
+        }
+        users = result.data;
         let f = users[u] ? u : Object.keys(users).find(un => users[un].phone === u);
-        if (!f) { MASTER_KEY = null; return showError(e,'Пользователь не найден'); }
-        if (users[f].passwordHash !== hashPassword(p)) { 
+        if (!f) { await new Promise(r => setTimeout(r, 500 + Math.random() * 500)); MASTER_KEY = null; return showError(e,'Пользователь не найден'); }
+        const isValid = constantTimeCompare(users[f].passwordHash, hashPassword(p));
+        if (!isValid) { 
+            await new Promise(r => setTimeout(r, 500 + Math.random() * 500));
             failedAttempts++; realSetItem('failedAttempts', failedAttempts); 
             if (failedAttempts >= 5) { 
                 blockLevel++; lockUntil = Date.now() + getBlockTime(blockLevel); failedAttempts = 0; 
@@ -782,24 +847,29 @@
         failedAttempts = 0; lockUntil = 0; blockLevel = 0; 
         realSetItem('failedAttempts', '0'); realSetItem('lockUntil', '0'); realSetItem('blockLevel', '0'); 
         currentUser = f;
-        bktokBalances = secureGetItem('bktokBalances') || {};
-        allSupportChats = secureGetItem('allSupportChats') || {};
-        privateChats = secureGetItem('privateChats') || {};
-        bktokOrders = secureGetItem('bktokOrders') || { buy: [], sell: [] };
-        bktokTrades = secureGetItem('bktokTrades') || [];
-        userTasks = secureGetItem('userTasks') || {};
+        bktokBalances = (secureGetItem('bktokBalances') || {}).data || {};
+        allSupportChats = (secureGetItem('allSupportChats') || {}).data || {};
+        privateChats = (secureGetItem('privateChats') || {}).data || {};
+        bktokOrders = (secureGetItem('bktokOrders') || {}).data || { buy: [], sell: [] };
+        bktokTrades = (secureGetItem('bktokTrades') || {}).data || [];
+        userTasks = (secureGetItem('userTasks') || {}).data || {};
         savedAccounts[f] = true;
         realSetItem('savedAccounts', JSON.stringify(savedAccounts));
         if (bktokBalances[f] === undefined) { bktokBalances[f] = 100; secureSetItem('bktokBalances', bktokBalances); }
-        realSetItem('currentSession', JSON.stringify({username: f, timestamp: Date.now()}));
-        sessionStorage.setItem('MASTER_KEY', MASTER_KEY);
         removeModals(); document.getElementById('modal-overlay')?.remove();
         showMainContent(); showWelcomeMessage(users[f].name); updateUIForAuth();
         startChartUpdates();
     };
 
     function showMainContent() { document.querySelector('.main-container').classList.remove('hidden'); document.querySelector('header').classList.remove('hidden'); window.toggleSection('about'); }
-    function showWelcomeMessage(n) { const t = document.createElement('div'); t.className = 'toast-message'; t.innerHTML = `<strong>✨ Добро пожаловать, ${n}!</strong>`; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
+    
+    function showWelcomeMessage(n) { 
+        const t = document.createElement('div'); 
+        t.className = 'toast-message'; 
+        t.innerHTML = `<strong>✨ Добро пожаловать, ${escapeHtml(n)}!</strong>`; 
+        document.body.appendChild(t); 
+        setTimeout(() => t.remove(), 3000); 
+    }
 
     window.toggleSection = (s) => {
         if (!currentUser && (s==='profile'||s==='chats'||s==='bktok'||s==='tasks'||s==='cases')) { window.showLoginForm(); return; }
@@ -819,22 +889,15 @@
         const c = document.getElementById('support-container');
         if (!currentUser) { c.innerHTML = '<p style="text-align:center; padding:20px;">🔒 Войдите, чтобы задать вопрос</p>'; return; }
         if (!allSupportChats[currentUser]) allSupportChats[currentUser] = [{ from: 'ai', text: '👋 Здравствуйте! Я нейросеть BK-Bank. Могу помочь с балансом, картами, токенами, а также создать запрос на откат транзакции (требуется согласие второй стороны).', time: new Date().toISOString() }];
-        let h = `<div class="chat-messages" id="ai-chat-messages"></div>
-        <div class="chat-input-area"><input id="ai-chat-input" class="chat-input" placeholder="Задайте вопрос..."><button class="chat-send-btn" onclick="window.sendAIMessage()">Отправить</button></div>`;
+        let h = `<div class="chat-messages" id="ai-chat-messages"></div><div class="chat-input-area"><input id="ai-chat-input" class="chat-input" placeholder="Задайте вопрос..."><button class="chat-send-btn" onclick="window.sendAIMessage()">Отправить</button></div>`;
         const myRollbacks = rollbackRequests.filter(r => r.from === currentUser || r.to === currentUser);
         if (myRollbacks.length > 0) {
             h += `<div style="margin-top:20px;"><h4>🔄 Активные запросы на откат</h4>`;
             myRollbacks.forEach(req => {
                 const isFromMe = req.from === currentUser; const other = isFromMe ? req.to : req.from;
-                h += `<div class="rollback-request">
-                    <strong>Сделка #${req.tradeId}</strong> на ${req.amount} BK<br>
-                    ${isFromMe ? 'Вы запросили откат у' : 'Запрос от'} ${other}<br>
-                    <small>${new Date(req.time).toLocaleString()}</small>`;
+                h += `<div class="rollback-request"><strong>Сделка #${req.tradeId}</strong> на ${req.amount} BK<br>${isFromMe ? 'Вы запросили откат у' : 'Запрос от'} ${escapeHtml(other)}<br><small>${new Date(req.time).toLocaleString()}</small>`;
                 if (!isFromMe && req.status === 'pending') {
-                    h += `<div class="rollback-actions">
-                        <button class="rollback-btn accept" onclick="window.respondRollback('${req.id}', 'accept')">✅ Принять</button>
-                        <button class="rollback-btn" onclick="window.respondRollback('${req.id}', 'reject')">❌ Отклонить</button>
-                    </div>`;
+                    h += `<div class="rollback-actions"><button class="rollback-btn accept" onclick="window.respondRollback('${req.id}', 'accept')">✅ Принять</button><button class="rollback-btn" onclick="window.respondRollback('${req.id}', 'reject')">❌ Отклонить</button></div>`;
                 } else if (req.status === 'accepted') h += `<div style="color:#4ade80;">✅ Откат выполнен</div>`;
                 else if (req.status === 'rejected') h += `<div style="color:#ff5e5e;">❌ Откат отклонён</div>`;
                 h += `</div>`;
@@ -846,7 +909,7 @@
     
     function loadAIMessages() {
         const cont = document.getElementById('ai-chat-messages'); if (!cont) return;
-        cont.innerHTML = allSupportChats[currentUser].map(msg => `<div class="chat-message ${msg.from==='ai'?'support':'client'}"><strong>${msg.from==='ai'?'🤖 BK-AI':'👤 Вы'}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join('');
+        cont.innerHTML = allSupportChats[currentUser].map(msg => `<div class="chat-message ${msg.from==='ai'?'support':'client'}"><strong>${msg.from==='ai'?'🤖 BK-AI':'👤 Вы'}:</strong><br>${escapeHtml(msg.text)}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join('');
         cont.scrollTop = cont.scrollHeight;
     }
     
@@ -897,47 +960,198 @@
     };
 
     function startChartUpdates() { if (chartInterval) clearInterval(chartInterval); chartInterval = setInterval(() => { if (currentUser && !document.getElementById('bktok-section')?.classList.contains('hidden')) renderChart(); }, 1000); }
-    function loadBKtok() { if (!currentUser) return; if (bktokBalances[currentUser]===undefined) { bktokBalances[currentUser] = 100; if (MASTER_KEY) secureSetItem('bktokBalances', bktokBalances); } document.getElementById('token-balance-display').textContent = bktokBalances[currentUser].toFixed(2) + ' BK'; updateOrderBook(); renderChart(); renderTradeHistory(); }
+    
+    function loadBKtok() { 
+        if (!currentUser) return; 
+        if (bktokBalances[currentUser]===undefined) { bktokBalances[currentUser] = 100; if (MASTER_KEY) secureSetItem('bktokBalances', bktokBalances); } 
+        document.getElementById('token-balance-display').textContent = bktokBalances[currentUser].toFixed(2) + ' BK'; 
+        updateOrderBook(); renderChart(); renderTradeHistory(); 
+    }
+    
     window.changeChartPeriod = function(p) { chartPeriod = p; document.querySelectorAll('.chart-period').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); renderChart(); };
+    
     function renderChart() {
         const container = document.getElementById('chart-bars'); if (!container) return;
-        let trades = [...bktokTrades].reverse(); const periodMs = { '1H': 3600000, '6H': 21600000, '24H': 86400000, '1W': 604800000 };
-        const cutoff = Date.now() - (periodMs[chartPeriod] || 86400000); trades = trades.filter(t => new Date(t.time).getTime() > cutoff);
+        let trades = [...bktokTrades].reverse(); 
+        const periodMs = { '1H': 3600000, '6H': 21600000, '24H': 86400000, '1W': 604800000 };
+        const cutoff = Date.now() - (periodMs[chartPeriod] || 86400000); 
+        trades = trades.filter(t => new Date(t.time).getTime() > cutoff);
         if (trades.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px; color:#888;">Нет данных</p>'; document.getElementById('chart-open').textContent='0'; document.getElementById('chart-high').textContent='0'; document.getElementById('chart-low').textContent='0'; document.getElementById('chart-change').textContent='0%'; return; }
         const bars = [], barCount = Math.min(12, trades.length), step = Math.floor(trades.length / barCount) || 1;
-        for (let i = 0; i < barCount; i++) { const slice = trades.slice(i*step, (i+1)*step); if (!slice.length) continue; const prices = slice.map(t=>t.price); bars.push({ open: prices[prices.length-1], close: prices[0], high: Math.max(...prices), low: Math.min(...prices), isRed: prices[0] < prices[prices.length-1] }); }
+        for (let i = 0; i < barCount; i++) { 
+            const slice = trades.slice(i*step, (i+1)*step); 
+            if (!slice.length) continue; 
+            const prices = slice.map(t=>t.price); 
+            bars.push({ open: prices[prices.length-1], close: prices[0], high: Math.max(...prices), low: Math.min(...prices), isRed: prices[0] < prices[prices.length-1] }); 
+        }
         const max = Math.max(...bars.map(b=>b.high)), min = Math.min(...bars.map(b=>b.low)), range = max - min || 1;
         container.innerHTML = bars.map(b => { const height = ((b.close-min)/range)*120+40; return `<div class="chart-bar-wrapper"><div class="chart-bar ${b.isRed?'red':''}" style="height:${height}px;" title="O:${b.open.toFixed(2)} H:${b.high.toFixed(2)} L:${b.low.toFixed(2)} C:${b.close.toFixed(2)}"></div><div class="chart-bar-value">${b.close.toFixed(2)}</div></div>`; }).join('');
         const first = bars[0]?.open||0, last = bars[bars.length-1]?.close||0, change = last - first, percent = first ? ((change/first)*100).toFixed(2) : 0;
         document.getElementById('chart-open').textContent = first.toFixed(2); document.getElementById('chart-high').textContent = max.toFixed(2); document.getElementById('chart-low').textContent = min.toFixed(2);
         const ce = document.getElementById('chart-change'); ce.textContent = (change>=0?'+':'') + percent + '%'; ce.className = 'chart-stat-value ' + (change>=0?'positive':'negative');
     }
+    
     function updateOrderBook() {
-        let buyHtml = '', sellHtml = ''; const buyOrders = [...bktokOrders.buy].sort((a,b)=>b.price-a.price), sellOrders = [...bktokOrders.sell].sort((a,b)=>a.price-b.price);
+        let buyHtml = '', sellHtml = ''; 
+        const buyOrders = [...bktokOrders.buy].sort((a,b)=>b.price-a.price), sellOrders = [...bktokOrders.sell].sort((a,b)=>a.price-b.price);
         buyOrders.slice(0,8).forEach(o => buyHtml += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid rgba(255,255,255,0.05);"><span>${o.amount.toFixed(2)} BK</span><span style="color:#4ade80;">${o.price.toFixed(2)} ₽</span></div>`);
         sellOrders.slice(0,8).forEach(o => sellHtml += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid rgba(255,255,255,0.05);"><span>${o.amount.toFixed(2)} BK</span><span style="color:#ff5e5e;">${o.price.toFixed(2)} ₽</span></div>`);
-        document.getElementById('buy-orders').innerHTML = buyHtml || '<p style="color:#888; padding:10px;">Нет заявок</p>'; document.getElementById('sell-orders').innerHTML = sellHtml || '<p style="color:#888; padding:10px;">Нет заявок</p>';
+        document.getElementById('buy-orders').innerHTML = buyHtml || '<p style="color:#888; padding:10px;">Нет заявок</p>'; 
+        document.getElementById('sell-orders').innerHTML = sellHtml || '<p style="color:#888; padding:10px;">Нет заявок</p>';
         const myOrders = [...bktokOrders.buy, ...bktokOrders.sell].filter(o=>o.user===currentUser);
         document.getElementById('my-orders').innerHTML = myOrders.length ? myOrders.map(o => `<div style="display:flex; justify-content:space-between; padding:8px; background:rgba(255,215,0,0.05); margin-bottom:5px; border-radius:8px;"><span>${o.side==='buy'?'🟢 Покупка':'🔴 Продажа'} ${o.amount} BK @ ${o.price} ₽</span><button onclick="window.cancelOrder('${o.id}')" style="background:transparent; border:none; color:#ff5e5e; cursor:pointer;">✕</button></div>`).join('') : '<p style="color:#888;">Нет активных ордеров</p>';
     }
-    function renderTradeHistory() { const c = document.getElementById('trade-history'); if (!c) return; const userTrades = bktokTrades.filter(t=>t.buyer===currentUser||t.seller===currentUser).slice(-10).reverse(); c.innerHTML = userTrades.length ? userTrades.map(t => `<div style="padding:8px; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:${t.buyer===currentUser?'#4ade80':'#ff5e5e'};">${t.buyer===currentUser?'Покупка':'Продажа'}</span> ${t.amount} BK @ ${t.price} ₽ <small>${new Date(t.time).toLocaleTimeString()}</small></div>`).join('') : '<p style="color:#888;">Нет сделок</p>'; }
-    window.createOrder = (side) => { const price = parseFloat(document.getElementById('order-price').value), amount = parseFloat(document.getElementById('order-amount').value); if (!price||!amount||price<=0||amount<=0) return; const fee = amount * price * 0.001; if (side==='buy' && bktokBalances[currentUser] < amount*price + fee) return alert('Недостаточно средств'); if (side==='sell' && bktokBalances[currentUser] < amount) return alert('Недостаточно BK'); const order = { id: Date.now()+Math.random(), user: currentUser, side, price, amount }; bktokOrders[side].push(order); if (side==='buy') updateBalance(currentUser, -(amount*price + fee), 'trade'); else updateBalance(currentUser, -amount, 'trade'); matchOrders(); if (MASTER_KEY) secureSetItem('bktokOrders', bktokOrders); loadBKtok(); };
-    window.cancelOrder = (id) => { let order = bktokOrders.buy.find(o=>o.id==id) || bktokOrders.sell.find(o=>o.id==id); if (!order) return; if (order.side==='buy') updateBalance(currentUser, order.amount * order.price, 'refund'); else updateBalance(currentUser, order.amount, 'refund'); bktokOrders.buy = bktokOrders.buy.filter(o=>o.id!=id); bktokOrders.sell = bktokOrders.sell.filter(o=>o.id!=id); if (MASTER_KEY) secureSetItem('bktokOrders', bktokOrders); loadBKtok(); };
-    function matchOrders() { bktokOrders.buy.sort((a,b)=>b.price-a.price); bktokOrders.sell.sort((a,b)=>a.price-b.price); for (let buy of bktokOrders.buy) { for (let sell of bktokOrders.sell) { if (buy.price >= sell.price && buy.user !== sell.user) { const amt = Math.min(buy.amount, sell.amount), pr = sell.price, fee = amt * pr * 0.001; updateBalance(buy.user, amt, 'trade'); updateBalance(sell.user, amt*pr - fee, 'trade'); bktokTrades.push({ buyer: buy.user, seller: sell.user, amount: amt, price: pr, time: new Date().toISOString() }); buy.amount -= amt; sell.amount -= amt; if (buy.amount <= 0.0001) bktokOrders.buy = bktokOrders.buy.filter(o=>o.id!==buy.id); if (sell.amount <= 0.0001) bktokOrders.sell = bktokOrders.sell.filter(o=>o.id!==sell.id); if (MASTER_KEY) secureSetItem('bktokTrades', bktokTrades); break; } } } bktokOrders.buy = bktokOrders.buy.filter(o=>o.amount>0.0001); bktokOrders.sell = bktokOrders.sell.filter(o=>o.amount>0.0001); }
+    
+    function renderTradeHistory() { 
+        const c = document.getElementById('trade-history'); if (!c) return; 
+        const userTrades = bktokTrades.filter(t=>t.buyer===currentUser||t.seller===currentUser).slice(-10).reverse(); 
+        c.innerHTML = userTrades.length ? userTrades.map(t => `<div style="padding:8px; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:${t.buyer===currentUser?'#4ade80':'#ff5e5e'};">${t.buyer===currentUser?'Покупка':'Продажа'}</span> ${t.amount} BK @ ${t.price} ₽ <small>${new Date(t.time).toLocaleTimeString()}</small></div>`).join('') : '<p style="color:#888;">Нет сделок</p>'; 
+    }
+    
+    window.createOrder = (side) => { 
+        const price = parseFloat(document.getElementById('order-price').value), amount = parseFloat(document.getElementById('order-amount').value); 
+        if (!price||!amount||price<=0||amount<=0) return; 
+        const fee = amount * price * 0.001; 
+        if (side==='buy' && bktokBalances[currentUser] < amount*price + fee) return alert('Недостаточно средств'); 
+        if (side==='sell' && bktokBalances[currentUser] < amount) return alert('Недостаточно BK'); 
+        const order = { id: Date.now()+Math.random(), user: currentUser, side, price, amount }; 
+        bktokOrders[side].push(order); 
+        if (side==='buy') updateBalance(currentUser, -(amount*price + fee), 'trade'); 
+        else updateBalance(currentUser, -amount, 'trade'); 
+        matchOrders(); 
+        if (MASTER_KEY) secureSetItem('bktokOrders', bktokOrders); 
+        loadBKtok(); 
+    };
+    
+    window.cancelOrder = (id) => { 
+        let order = bktokOrders.buy.find(o=>o.id==id) || bktokOrders.sell.find(o=>o.id==id); 
+        if (!order) return; 
+        if (order.side==='buy') updateBalance(currentUser, order.amount * order.price, 'refund'); 
+        else updateBalance(currentUser, order.amount, 'refund'); 
+        bktokOrders.buy = bktokOrders.buy.filter(o=>o.id!=id); 
+        bktokOrders.sell = bktokOrders.sell.filter(o=>o.id!=id); 
+        if (MASTER_KEY) secureSetItem('bktokOrders', bktokOrders); 
+        loadBKtok(); 
+    };
+    
+    function matchOrders() { 
+        bktokOrders.buy.sort((a,b)=>b.price-a.price); 
+        bktokOrders.sell.sort((a,b)=>a.price-b.price); 
+        for (let buy of bktokOrders.buy) { 
+            for (let sell of bktokOrders.sell) { 
+                if (buy.price >= sell.price && buy.user !== sell.user) { 
+                    const amt = Math.min(buy.amount, sell.amount), pr = sell.price, fee = amt * pr * 0.001; 
+                    updateBalance(buy.user, amt, 'trade'); 
+                    updateBalance(sell.user, amt*pr - fee, 'trade'); 
+                    bktokTrades.push({ buyer: buy.user, seller: sell.user, amount: amt, price: pr, time: new Date().toISOString() }); 
+                    buy.amount -= amt; 
+                    sell.amount -= amt; 
+                    if (buy.amount <= 0.0001) bktokOrders.buy = bktokOrders.buy.filter(o=>o.id!==buy.id); 
+                    if (sell.amount <= 0.0001) bktokOrders.sell = bktokOrders.sell.filter(o=>o.id!==sell.id); 
+                    if (MASTER_KEY) secureSetItem('bktokTrades', bktokTrades); 
+                    break; 
+                } 
+            } 
+        } 
+        bktokOrders.buy = bktokOrders.buy.filter(o=>o.amount>0.0001); 
+        bktokOrders.sell = bktokOrders.sell.filter(o=>o.amount>0.0001); 
+    }
 
-    const tasks = [{id:'daily',name:'Ежедневный вход',reward:10,cooldown:86400000},{id:'profile',name:'Заполнить профиль',reward:50,once:true},{id:'avatar',name:'Установить аватар',reward:30,once:true},{id:'trade',name:'Совершить сделку',reward:20,cooldown:3600000}];
-    function renderTasks() { if (!currentUser) return; if (!userTasks[currentUser]) userTasks[currentUser] = {}; const c = document.getElementById('tasks-container'); c.innerHTML = tasks.map(t => { const comp = userTasks[currentUser][t.id], can = !comp || (t.cooldown && Date.now()-comp > t.cooldown); return `<div class="task-item ${!can?'completed':''}" onclick="${can?`window.completeTask('${t.id}')`:''}"><strong>${t.name}</strong><div style="color:#FFD700; margin-top:8px;">+${t.reward} BK</div></div>`; }).join(''); }
-    window.completeTask = (tid) => { const t = tasks.find(x=>x.id===tid); if (!t) return; if (!userTasks[currentUser]) userTasks[currentUser] = {}; const comp = userTasks[currentUser][tid]; if (comp) { if (t.once) return; if (t.cooldown && Date.now()-comp < t.cooldown) return; } if (tid==='profile' && (!users[currentUser].email || users[currentUser].phone==='+70000000000')) return alert('Заполните профиль!'); if (tid==='avatar' && !users[currentUser].avatar) return alert('Установите аватар!'); if (tid==='trade' && !bktokTrades.some(tr=>tr.buyer===currentUser||tr.seller===currentUser)) return alert('Совершите сделку!'); updateBalance(currentUser, t.reward, 'task'); userTasks[currentUser][tid] = Date.now(); if (MASTER_KEY) secureSetItem('userTasks', userTasks); renderTasks(); showWelcomeMessage(`+${t.reward} BK!`); };
+    const tasks = [
+        {id:'daily',name:'Ежедневный вход',reward:10,cooldown:86400000},
+        {id:'profile',name:'Заполнить профиль',reward:50,once:true},
+        {id:'avatar',name:'Установить аватар',reward:30,once:true},
+        {id:'trade',name:'Совершить сделку',reward:20,cooldown:3600000}
+    ];
+    
+    function renderTasks() { 
+        if (!currentUser) return; 
+        if (!userTasks[currentUser]) userTasks[currentUser] = {}; 
+        const c = document.getElementById('tasks-container'); 
+        c.innerHTML = tasks.map(t => { 
+            const comp = userTasks[currentUser][t.id], can = !comp || (t.cooldown && Date.now()-comp > t.cooldown); 
+            return `<div class="task-item ${!can?'completed':''}" onclick="${can?`window.completeTask('${t.id}')`:''}"><strong>${escapeHtml(t.name)}</strong><div style="color:#FFD700; margin-top:8px;">+${t.reward} BK</div></div>`; 
+        }).join(''); 
+    }
+    
+    window.completeTask = (tid) => {
+        const t = tasks.find(x=>x.id===tid); if (!t) return;
+        if (!acquireTaskLock(tid)) { alert('⏳ Задание уже выполняется!'); return; }
+        try {
+            if (!userTasks[currentUser]) userTasks[currentUser] = {};
+            const comp = userTasks[currentUser][tid];
+            if (comp) { if (t.once) return; if (t.cooldown && Date.now()-comp < t.cooldown) return; }
+            if (tid==='profile' && (!users[currentUser].email || users[currentUser].phone==='+70000000000')) return alert('Заполните профиль!');
+            if (tid==='avatar' && !users[currentUser].avatar) return alert('Установите аватар!');
+            if (tid==='trade' && !bktokTrades.some(tr=>tr.buyer===currentUser||tr.seller===currentUser)) return alert('Совершите сделку!');
+            updateBalance(currentUser, t.reward, 'task');
+            userTasks[currentUser][tid] = Date.now();
+            if (MASTER_KEY) secureSetItem('userTasks', userTasks);
+            renderTasks(); showWelcomeMessage(`+${t.reward} BK!`);
+        } finally { releaseTaskLock(tid); }
+    };
 
-    const cases = [{name:'Обычный',price:50,rewards:[5,10,20,30,50,100]},{name:'Редкий',price:200,rewards:[50,100,150,250,500,1000]},{name:'Легендарный',price:1000,rewards:[200,500,1000,2000,5000,10000]}];
-    function renderCases() { if (!currentUser) return; const c = document.getElementById('cases-container'); c.innerHTML = cases.map(cs => `<div class="case-item" onclick="window.openCase('${cs.name}',${cs.price},[${cs.rewards}])"><h4>${cs.name}</h4><div style="color:#FFD700; margin-top:10px;">${cs.price} BK</div></div>`).join(''); }
-    window.openCase = (n,p,r) => { if (bktokBalances[currentUser] < p) return alert('Недостаточно BK!'); updateBalance(currentUser, -p, 'case'); const w = r[Math.floor(Math.random()*r.length)]; updateBalance(currentUser, w, 'case_win'); showWelcomeMessage(`Выигрыш: ${w} BK!`); renderCases(); };
+    const cases = [
+        {name:'Обычный',price:50,rewards:[5,10,20,30,50,100]},
+        {name:'Редкий',price:200,rewards:[50,100,150,250,500,1000]},
+        {name:'Легендарный',price:1000,rewards:[200,500,1000,2000,5000,10000]}
+    ];
+    
+    function renderCases() { 
+        if (!currentUser) return; 
+        const c = document.getElementById('cases-container'); 
+        c.innerHTML = cases.map(cs => `<div class="case-item" onclick="window.openCase('${cs.name}',${cs.price},[${cs.rewards}])"><h4>${escapeHtml(cs.name)}</h4><div style="color:#FFD700; margin-top:10px;">${cs.price} BK</div></div>`).join(''); 
+    }
+    
+    window.openCase = (n,p,r) => { 
+        if (bktokBalances[currentUser] < p) return alert('Недостаточно BK!'); 
+        updateBalance(currentUser, -p, 'case'); 
+        const w = r[Math.floor(Math.random()*r.length)]; 
+        updateBalance(currentUser, w, 'case_win'); 
+        showWelcomeMessage(`Выигрыш: ${w} BK!`); 
+        renderCases(); 
+    };
 
-    function renderPrivateChats() { const c = document.getElementById('chats-container'), my = Object.keys(privateChats).filter(id => id.includes(currentUser)); let h = `<div class="support-panel"><div class="users-list"><h4>Чаты</h4><button class="gold-button" onclick="window.startNewChat()" style="margin-bottom:10px;">+ Новый</button>`; my.forEach(id => { const o = id.split('-').find(u => u!==currentUser); h += `<div class="user-item" onclick="window.openPrivateChat('${id}')"><strong>${o}</strong></div>`; }); h += `</div><div class="chat-area">`; if (selectedPrivateChat) { const o = selectedPrivateChat.split('-').find(u => u!==currentUser); h += `<h4>Чат с ${o}</h4><div class="chat-messages" id="private-chat-messages"></div><div class="chat-input-area"><input id="private-chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendPrivateMessage()">Отправить</button></div>`; } else h += `<p>Выберите чат</p>`; h += `</div></div>`; c.innerHTML = h; if (selectedPrivateChat) loadPrivateChatMessages(); }
-    function loadPrivateChatMessages() { const cont = document.getElementById('private-chat-messages'); if (!cont) return; cont.innerHTML = (privateChats[selectedPrivateChat]||[]).map(msg => `<div class="chat-message ${msg.from===currentUser?'client':'support'}"><strong>${msg.from}:</strong><br>${msg.text}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join(''); cont.scrollTop = cont.scrollHeight; }
-    window.startNewChat = () => { const u = prompt('Никнейм:'); if (!u||!users[u]) return alert('Не найден'); if (u===currentUser) return alert('Нельзя'); const id = [currentUser,u].sort().join('-'); if (!privateChats[id]) privateChats[id]=[]; if (MASTER_KEY) secureSetItem('privateChats', privateChats); selectedPrivateChat=id; renderPrivateChats(); };
+    function renderPrivateChats() { 
+        const c = document.getElementById('chats-container'), my = Object.keys(privateChats).filter(id => id.includes(currentUser)); 
+        let h = `<div class="support-panel"><div class="users-list"><h4>Чаты</h4><button class="gold-button" onclick="window.startNewChat()" style="margin-bottom:10px;">+ Новый</button>`; 
+        my.forEach(id => { const o = id.split('-').find(u => u!==currentUser); h += `<div class="user-item" onclick="window.openPrivateChat('${id}')"><strong>${escapeHtml(o)}</strong></div>`; }); 
+        h += `</div><div class="chat-area">`; 
+        if (selectedPrivateChat) { 
+            const o = selectedPrivateChat.split('-').find(u => u!==currentUser); 
+            h += `<h4>Чат с ${escapeHtml(o)}</h4><div class="chat-messages" id="private-chat-messages"></div><div class="chat-input-area"><input id="private-chat-input" class="chat-input" placeholder="Сообщение..."><button class="chat-send-btn" onclick="window.sendPrivateMessage()">Отправить</button></div>`; 
+        } else h += `<p>Выберите чат</p>`; 
+        h += `</div></div>`; 
+        c.innerHTML = h; 
+        if (selectedPrivateChat) loadPrivateChatMessages(); 
+    }
+    
+    function loadPrivateChatMessages() { 
+        const cont = document.getElementById('private-chat-messages'); if (!cont) return; 
+        cont.innerHTML = (privateChats[selectedPrivateChat]||[]).map(msg => `<div class="chat-message ${msg.from===currentUser?'client':'support'}"><strong>${escapeHtml(msg.from)}:</strong><br>${escapeHtml(msg.text)}<small>${new Date(msg.time).toLocaleTimeString().slice(0,5)}</small></div>`).join(''); 
+        cont.scrollTop = cont.scrollHeight; 
+    }
+    
+    window.startNewChat = () => { 
+        const u = prompt('Никнейм:'); 
+        if (!u||!users[u]) return alert('Не найден'); 
+        if (u===currentUser) return alert('Нельзя'); 
+        const id = [currentUser,u].sort().join('-'); 
+        if (!privateChats[id]) privateChats[id]=[]; 
+        if (MASTER_KEY) secureSetItem('privateChats', privateChats); 
+        selectedPrivateChat=id; renderPrivateChats(); 
+    };
+    
     window.openPrivateChat = (id) => { selectedPrivateChat=id; renderPrivateChats(); };
-    window.sendPrivateMessage = () => { const inp = document.getElementById('private-chat-input'), txt = inp.value.trim(); if (!txt||!selectedPrivateChat) return; if (!privateChats[selectedPrivateChat]) privateChats[selectedPrivateChat]=[]; privateChats[selectedPrivateChat].push({from:currentUser,text:txt,time:new Date().toISOString()}); if (MASTER_KEY) secureSetItem('privateChats', privateChats); inp.value=''; loadPrivateChatMessages(); };
+    
+    window.sendPrivateMessage = () => { 
+        const inp = document.getElementById('private-chat-input'), txt = inp.value.trim(); 
+        if (!txt||!selectedPrivateChat) return; 
+        if (!privateChats[selectedPrivateChat]) privateChats[selectedPrivateChat]=[]; 
+        privateChats[selectedPrivateChat].push({from:currentUser,text:txt,time:new Date().toISOString()}); 
+        if (MASTER_KEY) secureSetItem('privateChats', privateChats); 
+        inp.value=''; loadPrivateChatMessages(); 
+    };
 
     function showProfile() {
         if (!currentUser) return; const u = users[currentUser], c = document.getElementById('profile-section');
@@ -946,52 +1160,36 @@
             savedHtml = `<div class="account-switcher"><h4 style="color:#FFD700; margin-bottom:15px;">💾 Сохранённые аккаунты</h4>`;
             for (let acc in savedAccounts) {
                 if (acc === currentUser) continue;
-                savedHtml += `<div class="saved-account-item" onclick="window.switchToAccount('${acc}')">
-                    <img src="${users[acc]?.avatar || 'png/2025-01-30_17-50-13-Photoroom.png'}">
-                    <div class="saved-account-info"><div class="saved-account-name">${users[acc]?.name || acc}</div><div class="saved-account-username">@${acc}</div></div>
-                    <button class="remove-account-btn" onclick="event.stopPropagation(); window.removeAccount('${acc}')">Удалить</button>
-                </div>`;
+                savedHtml += `<div class="saved-account-item" onclick="window.switchToAccount('${acc}')"><img src="${sanitizeAvatarUrl(users[acc]?.avatar)}"><div class="saved-account-info"><div class="saved-account-name">${escapeHtml(users[acc]?.name || acc)}</div><div class="saved-account-username">@${escapeHtml(acc)}</div></div><button class="remove-account-btn" onclick="event.stopPropagation(); window.removeAccount('${acc}')">Удалить</button></div>`;
             }
             savedHtml += `</div>`;
         }
-        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div>
-        <div class="profile-header">
-            <img src="${u.avatar||'png/2025-01-30_17-50-13-Photoroom.png'}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()">
-            <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="window.uploadAvatar(event)">
-            <div><strong style="font-size:1.3rem;">${u.name}</strong><br>@${currentUser}</div>
-            <div style="display:flex; gap:8px; margin-left:auto;">
-                <button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:10px 20px; border-radius:30px; cursor:pointer; font-weight:600;" onclick="window.switchAccount()">🔄 Сменить</button>
-                <button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:10px 20px; border-radius:30px; cursor:pointer; font-weight:600;" onclick="window.logout()">🚪 Выйти</button>
-            </div>
-        </div>
-        ${savedHtml}
-        <div class="profile-actions">
-            <button class="profile-action-btn" onclick="window.showEditProfileForm()">✏️ Редактировать профиль</button>
-            <button class="profile-action-btn" onclick="window.destroyAccount()">⚠️ Удалить аккаунт</button>
-        </div>
-        <div class="profile-info"><p style="font-size:1rem;">📧 ${u.email||'Не указан'}</p><p style="font-size:1rem;">📱 ${u.phone||'Не указан'}</p><p style="font-size:1rem;">💰 ${bktokBalances[currentUser]||0} BK</p></div>`;
+        c.innerHTML = `<h2>Личный кабинет</h2><div class="divider"></div><div class="profile-header"><img src="${sanitizeAvatarUrl(u.avatar)}" class="profile-avatar" onclick="document.getElementById('avatarInput').click()"><input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="window.uploadAvatar(event)"><div><strong style="font-size:1.3rem;">${escapeHtml(u.name)}</strong><br>@${escapeHtml(currentUser)}</div><div style="display:flex; gap:8px; margin-left:auto;"><button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:10px 20px; border-radius:30px; cursor:pointer; font-weight:600;" onclick="window.switchAccount()">🔄 Сменить</button><button style="background:transparent; border:1.5px solid #FFD700; color:#FFD700; padding:10px 20px; border-radius:30px; cursor:pointer; font-weight:600;" onclick="window.logout()">🚪 Выйти</button></div></div>${savedHtml}<div class="profile-actions"><button class="profile-action-btn" onclick="window.showEditProfileForm()">✏️ Редактировать профиль</button><button class="profile-action-btn" onclick="window.destroyAccount()">⚠️ Удалить аккаунт</button></div><div class="profile-info"><p style="font-size:1rem;">📧 ${escapeHtml(u.email||'Не указан')}</p><p style="font-size:1rem;">📱 ${escapeHtml(u.phone||'Не указан')}</p><p style="font-size:1rem;" class="sensitive-data">💰 ${bktokBalances[currentUser]||0} BK</p></div>`;
         c.classList.remove('hidden');
     }
     
-    window.switchToAccount = async function(username) {
-        const password = prompt(`Введите пароль для ${username}:`); if (!password) return;
-        showPoWOverlay(); await proofOfWork(password, username); hidePoWOverlay();
-        setMasterKey(password, username);
-        const decryptedUsers = secureGetItem('bankUsers');
-        if (!decryptedUsers || !decryptedUsers[username]) { alert('Неверный пароль'); MASTER_KEY = null; return; }
-        users = decryptedUsers;
-        if (users[username].passwordHash !== hashPassword(password)) { alert('Неверный пароль'); MASTER_KEY = null; return; }
-        currentUser = username;
-        bktokBalances = secureGetItem('bktokBalances') || {};
-        allSupportChats = secureGetItem('allSupportChats') || {};
-        privateChats = secureGetItem('privateChats') || {};
-        bktokOrders = secureGetItem('bktokOrders') || { buy: [], sell: [] };
-        bktokTrades = secureGetItem('bktokTrades') || [];
-        userTasks = secureGetItem('userTasks') || {};
-        realSetItem('currentSession', JSON.stringify({username, timestamp: Date.now()}));
-        sessionStorage.setItem('MASTER_KEY', MASTER_KEY);
-        updateUIForAuth(); showProfile();
-        showWelcomeMessage(`Переключено на ${users[username].name}`);
+    window.switchToAccount = function(username) {
+        showPasswordModal(`Введите пароль для ${username}`, async (password) => {
+            if (!password) return;
+            showPoWOverlay();
+            await proofOfWork(username, getDifficulty(username, 0));
+            const key = deriveMasterKey(password, username);
+            MASTER_KEY = key;
+            const result = secureGetItem('bankUsers');
+            hidePoWOverlay();
+            if (!result || result.error || !result.data[username]) { alert('Неверный пароль'); MASTER_KEY = null; return; }
+            users = result.data;
+            if (!constantTimeCompare(users[username].passwordHash, hashPassword(password))) { alert('Неверный пароль'); MASTER_KEY = null; return; }
+            currentUser = username;
+            bktokBalances = (secureGetItem('bktokBalances') || {}).data || {};
+            allSupportChats = (secureGetItem('allSupportChats') || {}).data || {};
+            privateChats = (secureGetItem('privateChats') || {}).data || {};
+            bktokOrders = (secureGetItem('bktokOrders') || {}).data || { buy: [], sell: [] };
+            bktokTrades = (secureGetItem('bktokTrades') || {}).data || [];
+            userTasks = (secureGetItem('userTasks') || {}).data || {};
+            updateUIForAuth(); showProfile();
+            showWelcomeMessage(`Переключено на ${users[username].name}`);
+        });
     };
     
     window.removeAccount = function(username) {
@@ -1000,35 +1198,70 @@
     
     window.switchAccount = function() { 
         MASTER_KEY = null; currentUser = null;
-        realRemoveItem('currentSession'); sessionStorage.removeItem('MASTER_KEY');
         updateUIForAuth(); 
         document.querySelector('.main-container').classList.add('hidden');
         document.querySelector('header').classList.add('hidden');
         window.showLoginForm(); 
     };
-    window.showEditProfileForm = () => { const u = users[currentUser]; removeModals(); const m = document.createElement('div'); m.className = 'modal-form'; m.innerHTML = `<div class="form-title">Редактирование</div><input id="editName" class="form-input" placeholder="Имя" value="${u.name||''}"><input id="editEmail" class="form-input" placeholder="Email" value="${u.email||''}"><input id="editPhone" class="form-input" placeholder="Телефон" value="${u.phone||''}"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль"><button class="gold-button" onclick="window.saveProfile()">Сохранить</button><button class="dark-button" onclick="window.cancelEditProfile()">Отмена</button>`; document.body.appendChild(m); };
+    
+    window.showEditProfileForm = () => { 
+        const u = users[currentUser]; removeModals(); 
+        const m = document.createElement('div'); m.className = 'modal-form'; 
+        m.innerHTML = `<div class="form-title">Редактирование</div><input id="editName" class="form-input" placeholder="Имя" value="${escapeHtml(u.name||'')}"><input id="editEmail" class="form-input" placeholder="Email" value="${escapeHtml(u.email||'')}"><input id="editPhone" class="form-input" placeholder="Телефон" value="${escapeHtml(u.phone||'')}"><input type="password" id="editPassword" class="form-input" placeholder="Новый пароль"><button class="gold-button" onclick="window.saveProfile()">Сохранить</button><button class="dark-button" onclick="window.cancelEditProfile()">Отмена</button>`; 
+        document.body.appendChild(m); 
+    };
+    
     window.cancelEditProfile = () => { removeModals(); showProfile(); };
-    window.saveProfile = () => { const n = document.getElementById('editName').value.trim(), e = document.getElementById('editEmail').value.trim(), p = document.getElementById('editPhone').value.trim(), pass = document.getElementById('editPassword').value; if (n) users[currentUser].name = n; if (e) users[currentUser].email = e; if (p && /^\+7\d{10}$/.test(p)) users[currentUser].phone = p; if (pass && pass.length>=6) users[currentUser].passwordHash = hashPassword(pass); if (MASTER_KEY) secureSetItem('bankUsers', users); removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!'); };
-    window.uploadAvatar = (e) => { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => { users[currentUser].avatar = ev.target.result; if (MASTER_KEY) secureSetItem('bankUsers', users); showProfile(); updateUIForAuth(); }; r.readAsDataURL(f); } };
-    window.destroyAccount = () => { if (confirm('УДАЛИТЬ АККАУНТ?')) { delete users[currentUser]; delete bktokBalances[currentUser]; delete savedAccounts[currentUser]; if (MASTER_KEY) { secureSetItem('bankUsers', users); secureSetItem('bktokBalances', bktokBalances); } realSetItem('savedAccounts', JSON.stringify(savedAccounts)); logout(); } };
+    
+    window.saveProfile = () => { 
+        const n = document.getElementById('editName').value.trim(), e = document.getElementById('editEmail').value.trim(), p = document.getElementById('editPhone').value.trim(), pass = document.getElementById('editPassword').value; 
+        if (n) users[currentUser].name = n; 
+        if (e) users[currentUser].email = e; 
+        if (p && /^\+7\d{10}$/.test(p)) users[currentUser].phone = p; 
+        if (pass && pass.length>=6) users[currentUser].passwordHash = hashPassword(pass); 
+        if (MASTER_KEY) secureSetItem('bankUsers', users); 
+        removeModals(); showProfile(); showWelcomeMessage('Профиль обновлён!'); 
+    };
+    
+    window.uploadAvatar = (e) => { 
+        const f = e.target.files[0]; 
+        if (f) { 
+            const r = new FileReader(); 
+            r.onload = (ev) => { 
+                users[currentUser].avatar = ev.target.result; 
+                if (MASTER_KEY) secureSetItem('bankUsers', users); 
+                showProfile(); updateUIForAuth(); 
+            }; 
+            r.readAsDataURL(f); 
+        } 
+    };
+    
+    window.destroyAccount = () => { 
+        if (confirm('УДАЛИТЬ АККАУНТ?')) { 
+            delete users[currentUser]; delete bktokBalances[currentUser]; delete savedAccounts[currentUser]; 
+            if (MASTER_KEY) { secureSetItem('bankUsers', users); secureSetItem('bktokBalances', bktokBalances); } 
+            realSetItem('savedAccounts', JSON.stringify(savedAccounts)); logout(); 
+        } 
+    };
+    
     window.logout = function() { 
         if (chartInterval) clearInterval(chartInterval); 
         MASTER_KEY = null; currentUser = null;
-        realRemoveItem('currentSession'); sessionStorage.removeItem('MASTER_KEY');
         updateUIForAuth(); 
         document.querySelector('.main-container').classList.add('hidden');
         document.querySelector('header').classList.add('hidden');
         window.showLoginForm(); 
     };
-    window.showPublicProfile = function(u) { if (!users[u]) return; const c = document.getElementById('public-profile-section'); c.innerHTML = `<h2>${users[u].name}</h2><div class="divider"></div><p>@${u}</p><button class="gold-button" onclick="window.location.href='/'">Назад</button>`; c.classList.remove('hidden'); };
+    
+    window.showPublicProfile = function(u) { 
+        if (!users[u]) return; 
+        const c = document.getElementById('public-profile-section'); 
+        c.innerHTML = `<h2>${escapeHtml(users[u].name)}</h2><div class="divider"></div><img src="${sanitizeAvatarUrl(users[u].avatar)}" style="width:100px; border-radius:50%; border:2px solid #FFD700;"><p>@${escapeHtml(u)}</p><button class="gold-button" onclick="window.location.href='/'">Назад</button>`; 
+        c.classList.remove('hidden'); 
+    };
 
     function removeModals() { document.querySelectorAll('.modal-form').forEach(m=>m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
-    
-    // ИСПРАВЛЕНО: правильный путь к Service Worker
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/BK-Bank/sw.js').catch(err => console.log('SW не зарегистрирован:', err));
-    }
     
     const publicAPI = {
         toggleTheme, toggleSection, showLoginForm, showRegistrationForm,
