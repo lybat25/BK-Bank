@@ -1,20 +1,21 @@
-from flask import Flask, render_template, request, jsonify, session, send_from_directory
+from flask import Flask, render_template_string, request, jsonify, session, send_from_directory
 import sqlite3
 import hashlib
 import secrets
 import os
 import json
+import re
+import random
 from datetime import timedelta, datetime
 from functools import wraps
 
-app = Flask(__name__, static_folder='static', template_folder='templates')
+app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
-app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
+app.config['UPLOAD_FOLDER'] = 'uploads'
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-os.makedirs('static/png', exist_ok=True)
+os.makedirs('png', exist_ok=True)
 
 def init_db():
     conn = sqlite3.connect('database.db')
@@ -135,13 +136,20 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+with open('index.html', 'r', encoding='utf-8') as f:
+    INDEX_HTML = f.read()
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template_string(INDEX_HTML)
 
-@app.route('/static/<path:filename>')
-def serve_static(filename):
-    return send_from_directory('static', filename)
+@app.route('/png/<path:filename>')
+def serve_png(filename):
+    return send_from_directory('png', filename)
+
+@app.route('/uploads/<path:filename>')
+def serve_uploads(filename):
+    return send_from_directory('uploads', filename)
 
 @app.route('/api/register', methods=['POST'])
 def register():
@@ -250,10 +258,7 @@ def check_session():
         conn.close()
         
         if user:
-            return jsonify({
-                'success': True,
-                'user': dict(user)
-            })
+            return jsonify({'success': True, 'user': dict(user)})
     return jsonify({'success': False})
 
 @app.route('/api/profile', methods=['GET'])
@@ -331,7 +336,6 @@ def update_profile():
         conn.commit()
     
     conn.close()
-    
     return jsonify({'success': True, 'message': 'Профиль обновлен'})
 
 @app.route('/api/profile/avatar', methods=['POST'])
@@ -348,7 +352,7 @@ def upload_avatar():
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(filepath)
     
-    avatar_url = f'/static/uploads/{filename}'
+    avatar_url = f'/uploads/{filename}'
     
     conn = get_db()
     c = conn.cursor()
@@ -366,7 +370,6 @@ def get_bktok_balance():
     c.execute('SELECT bktok_balance FROM users WHERE id = ?', (session['user_id'],))
     user = c.fetchone()
     conn.close()
-    
     return jsonify({'success': True, 'balance': user['bktok_balance'] if user else 0})
 
 @app.route('/api/bktok/orders', methods=['GET'])
@@ -387,12 +390,7 @@ def get_orders():
     my_orders = [dict(row) for row in c.fetchall()]
     
     conn.close()
-    
-    return jsonify({
-        'success': True,
-        'orders': orders,
-        'my_orders': my_orders
-    })
+    return jsonify({'success': True, 'orders': orders, 'my_orders': my_orders})
 
 @app.route('/api/bktok/order', methods=['POST'])
 @login_required
@@ -419,14 +417,12 @@ def create_order():
         if user['bktok_balance'] < required:
             conn.close()
             return jsonify({'success': False, 'message': 'Недостаточно средств'})
-        
         c.execute('UPDATE users SET bktok_balance = bktok_balance - ? WHERE id = ?', 
                   (required, session['user_id']))
     else:
         if user['bktok_balance'] < amount:
             conn.close()
             return jsonify({'success': False, 'message': 'Недостаточно BK'})
-        
         c.execute('UPDATE users SET bktok_balance = bktok_balance - ? WHERE id = ?', 
                   (amount, session['user_id']))
     
@@ -435,10 +431,8 @@ def create_order():
               (session['user_id'], order_type, price, amount, amount))
     
     match_orders(conn)
-    
     conn.commit()
     conn.close()
-    
     return jsonify({'success': True, 'message': 'Ордер создан'})
 
 def match_orders(conn):
@@ -465,16 +459,13 @@ def match_orders(conn):
                 trade_price = sell['price']
                 fee = trade_amount * trade_price * 0.001
                 
-                c.execute('''UPDATE users SET bktok_balance = bktok_balance + ? 
-                             WHERE id = ?''', (trade_amount, buy['user_id']))
-                
-                c.execute('''UPDATE users SET bktok_balance = bktok_balance + ? 
-                             WHERE id = ?''', (trade_amount * trade_price - fee, sell['user_id']))
-                
+                c.execute('UPDATE users SET bktok_balance = bktok_balance + ? WHERE id = ?', 
+                          (trade_amount, buy['user_id']))
+                c.execute('UPDATE users SET bktok_balance = bktok_balance + ? WHERE id = ?', 
+                          (trade_amount * trade_price - fee, sell['user_id']))
                 c.execute('''INSERT INTO bktok_trades (buyer_id, seller_id, amount, price)
                              VALUES (?, ?, ?, ?)''',
                           (buy['user_id'], sell['user_id'], trade_amount, trade_price))
-                
                 c.execute('UPDATE bktok_orders SET remaining = remaining - ? WHERE id = ?',
                           (trade_amount, buy['id']))
                 c.execute('UPDATE bktok_orders SET remaining = remaining - ? WHERE id = ?',
@@ -508,7 +499,6 @@ def cancel_order(order_id):
     c.execute('UPDATE bktok_orders SET remaining = 0 WHERE id = ?', (order_id,))
     conn.commit()
     conn.close()
-    
     return jsonify({'success': True, 'message': 'Ордер отменен'})
 
 @app.route('/api/bktok/trades', methods=['GET'])
@@ -529,7 +519,6 @@ def get_trades():
     ''')
     trades = [dict(row) for row in c.fetchall()]
     conn.close()
-    
     return jsonify({'success': True, 'trades': trades})
 
 @app.route('/api/tasks', methods=['GET'])
@@ -570,7 +559,6 @@ def complete_task(task_id):
         return jsonify({'success': False, 'message': 'Задание не найдено'})
     
     task = tasks_config[task_id]
-    
     conn = get_db()
     c = conn.cursor()
     
@@ -612,11 +600,9 @@ def complete_task(task_id):
     
     c.execute('UPDATE users SET bktok_balance = bktok_balance + ? WHERE id = ?',
               (task['reward'], session['user_id']))
-    
     c.execute('''INSERT OR REPLACE INTO tasks_completed (user_id, task_id, completed_at)
                  VALUES (?, ?, ?)''',
               (session['user_id'], task_id, datetime.utcnow().isoformat()))
-    
     conn.commit()
     
     c.execute('SELECT bktok_balance FROM users WHERE id = ?', (session['user_id'],))
@@ -653,7 +639,6 @@ def open_case(case_id):
         return jsonify({'success': False, 'message': 'Кейс не найден'})
     
     case = cases_config[case_id]
-    
     conn = get_db()
     c = conn.cursor()
     
@@ -664,7 +649,6 @@ def open_case(case_id):
         conn.close()
         return jsonify({'success': False, 'message': 'Недостаточно BK'})
     
-    import random
     win_amount = random.choice(case['rewards'])
     net_change = win_amount - case['price']
     
@@ -694,7 +678,8 @@ def get_support_chat():
     messages = [dict(row) for row in c.fetchall()]
     
     if not messages:
-        welcome = {'sender': 'ai', 'message': '👋 Здравствуйте! Я нейросеть BK-Bank. Чем могу помочь?', 'created_at': datetime.utcnow().isoformat()}
+        welcome = {'sender': 'ai', 'message': '👋 Здравствуйте! Я нейросеть BK-Bank. Чем могу помочь?', 
+                   'created_at': datetime.utcnow().isoformat()}
         messages = [welcome]
     
     conn.close()
@@ -715,7 +700,6 @@ def send_support_message():
     c.execute('INSERT INTO support_chats (user_id, sender, message) VALUES (?, ?, ?)',
               (session['user_id'], 'user', message))
     
-    import re
     ai_response = "🤔 Я могу помочь с балансом, картами или токенами."
     msg_lower = message.lower()
     
