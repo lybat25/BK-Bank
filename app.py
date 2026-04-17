@@ -25,7 +25,7 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
         name TEXT NOT NULL,
-        email TEXT UNIQUE,
+        email TEXT,
         phone TEXT,
         password TEXT NOT NULL,
         avatar TEXT,
@@ -117,6 +117,7 @@ def init_db():
     
     conn.commit()
     conn.close()
+    print("✅ База данных инициализирована")
 
 init_db()
 
@@ -737,6 +738,147 @@ def send_support_message():
         'ai_response': {'sender': 'ai', 'message': ai_response}
     })
 
+@app.route('/api/chats/list', methods=['GET'])
+@login_required
+def get_chat_list():
+    conn = get_db()
+    c = conn.cursor()
+    
+    c.execute('''
+        SELECT DISTINCT chat_id FROM private_chats 
+        WHERE chat_id LIKE '%_' || ? || '\_%' ESCAPE '\'
+    ''', (str(session['user_id']),))
+    
+    chats = []
+    for row in c.fetchall():
+        chat_id = row['chat_id']
+        parts = chat_id.split('-')
+        other_id = parts[0] if str(parts[1]) == str(session['user_id']) else parts[1]
+        
+        c.execute('SELECT id, username, name, avatar FROM users WHERE id = ?', (other_id,))
+        user = c.fetchone()
+        if user:
+            c.execute('''
+                SELECT message, created_at, sender_id FROM private_chats 
+                WHERE chat_id = ? 
+                ORDER BY created_at DESC LIMIT 1
+            ''', (chat_id,))
+            last_msg = c.fetchone()
+            
+            chats.append({
+                'chat_id': chat_id,
+                'user_id': user['id'],
+                'name': user['name'],
+                'username': user['username'],
+                'avatar': user['avatar'],
+                'last_message': dict(last_msg) if last_msg else None
+            })
+    
+    conn.close()
+    return jsonify({'success': True, 'chats': chats})
+
+@app.route('/api/chat/messages/<chat_id>', methods=['GET'])
+@login_required
+def get_chat_messages(chat_id):
+    parts = chat_id.split('-')
+    if str(session['user_id']) not in parts:
+        return jsonify({'success': False, 'message': 'Нет доступа к этому чату'}), 403
+    
+    conn = get_db()
+    c = conn.cursor()
+    
+    c.execute('''
+        SELECT p.id, p.chat_id, p.sender_id, p.message, p.created_at, u.username, u.name, u.avatar
+        FROM private_chats p
+        JOIN users u ON p.sender_id = u.id
+        WHERE p.chat_id = ?
+        ORDER BY p.created_at ASC
+    ''', (chat_id,))
+    
+    messages = [dict(row) for row in c.fetchall()]
+    conn.close()
+    
+    return jsonify({'success': True, 'messages': messages})
+
+@app.route('/api/chat/send', methods=['POST'])
+@login_required
+def send_private_message():
+    data = request.json
+    chat_id = data.get('chat_id')
+    message_text = data.get('message', '').strip()
+    
+    if not chat_id or not message_text:
+        return jsonify({'success': False, 'message': 'Не указан чат или сообщение пустое'})
+    
+    parts = chat_id.split('-')
+    if str(session['user_id']) not in parts:
+        return jsonify({'success': False, 'message': 'Нет доступа к этому чату'}), 403
+    
+    conn = get_db()
+    c = conn.cursor()
+    
+    c.execute('''
+        INSERT INTO private_chats (chat_id, sender_id, message)
+        VALUES (?, ?, ?)
+    ''', (chat_id, session['user_id'], message_text))
+    
+    conn.commit()
+    
+    c.execute('''
+        SELECT p.id, p.chat_id, p.sender_id, p.message, p.created_at, u.username, u.name, u.avatar
+        FROM private_chats p
+        JOIN users u ON p.sender_id = u.id
+        WHERE p.id = ?
+    ''', (c.lastrowid,))
+    
+    message = dict(c.fetchone())
+    conn.close()
+    
+    return jsonify({'success': True, 'message': message})
+
+@app.route('/api/chat/create', methods=['POST'])
+@login_required
+def create_chat():
+    data = request.json
+    target_username = data.get('username', '').strip()
+    
+    if not target_username:
+        return jsonify({'success': False, 'message': 'Не указан пользователь'})
+    
+    conn = get_db()
+    c = conn.cursor()
+    
+    c.execute('SELECT id, username, name, avatar FROM users WHERE username = ?', (target_username,))
+    target_user = c.fetchone()
+    
+    if not target_user:
+        conn.close()
+        return jsonify({'success': False, 'message': 'Пользователь не найден'})
+    
+    if target_user['id'] == session['user_id']:
+        conn.close()
+        return jsonify({'success': False, 'message': 'Нельзя создать чат с самим собой'})
+    
+    user_ids = sorted([session['user_id'], target_user['id']])
+    chat_id = f"{user_ids[0]}-{user_ids[1]}"
+    
+    c.execute('SELECT COUNT(*) as count FROM private_chats WHERE chat_id = ?', (chat_id,))
+    exists = c.fetchone()['count'] > 0
+    
+    conn.close()
+    
+    return jsonify({
+        'success': True,
+        'chat_id': chat_id,
+        'exists': exists,
+        'target_user': {
+            'id': target_user['id'],
+            'username': target_user['username'],
+            'name': target_user['name'],
+            'avatar': target_user['avatar']
+        }
+    })
+
 @app.route('/api/users/search', methods=['GET'])
 @login_required
 def search_users():
@@ -850,4 +992,7 @@ def decline_friend():
     return jsonify({'success': True, 'message': 'Запрос отклонен'})
 
 if __name__ == '__main__':
+    print("🚀 BK-Bank сервер запущен!")
+    print("📍 Откройте в браузере: http://127.0.0.1:5000")
+    print("📱 Для доступа с телефона используйте локальный IP компьютера (например, http://192.168.1.5:5000)")
     app.run(debug=True, host='0.0.0.0', port=5000)
