@@ -659,7 +659,6 @@
                 document.getElementById(s+'-content')?.classList.add('hidden'); 
             });
         }
-        addBackupButton();
     }
 
     window.onload = async () => { 
@@ -1124,6 +1123,7 @@
         ${savedHtml}
         <div class="profile-actions">
             <button class="profile-action-btn" onclick="showEditProfileForm()">✏️ Редактировать профиль</button>
+            <button class="profile-action-btn" onclick="showBackupModal()">💾 Управление бэкапами</button>
             <button class="profile-action-btn" onclick="destroyAccount()">⚠️ Удалить аккаунт</button>
         </div>
         <div class="profile-info"><p style="font-size:1rem;">📧 ${escapeHtml(u.email||'Не указан')}</p><p style="font-size:1rem;">📱 ${escapeHtml(u.phone||'Не указан')}</p><p style="font-size:1rem;" class="sensitive-data">💰 ${bktokBalances[currentUser]||0} BK</p></div>`;
@@ -1449,23 +1449,6 @@
         } catch (error) { console.error('Ошибка авто-бэкапа:', error); }
     }
     
-    function addBackupButton() {
-        const header = document.querySelector('.nav-links');
-        if (header && currentUser) {
-            const existing = document.getElementById('backup-nav-btn');
-            if (existing) return;
-            const backupBtn = document.createElement('button');
-            backupBtn.id = 'backup-nav-btn';
-            backupBtn.className = 'nav-link';
-            backupBtn.innerHTML = '💾 Бэкап';
-            backupBtn.onclick = showBackupModal;
-            backupBtn.style.cssText = `background:rgba(255,215,0,0.1); border:1px solid #FFD700;`;
-            const supportBtn = Array.from(header.children).find(b => b.textContent === 'Поддержка');
-            if (supportBtn) header.insertBefore(backupBtn, supportBtn);
-            else header.appendChild(backupBtn);
-        }
-    }
-    
     function showBackupInfo() {
         if (!currentUser) return;
         const lastBackup = localStorage.getItem(`bk_last_backup_${currentUser}`);
@@ -1483,7 +1466,7 @@
     switchAccount = async function() { if (currentUser) await autoBackup('switch'); return originalSwitchAccount(); };
     
     const originalUpdateUIForAuth = updateUIForAuth;
-    updateUIForAuth = function() { originalUpdateUIForAuth(); if (currentUser) { addBackupButton(); showBackupInfo(); } };
+    updateUIForAuth = function() { originalUpdateUIForAuth(); if (currentUser) { showBackupInfo(); } };
     
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
