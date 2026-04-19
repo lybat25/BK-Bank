@@ -408,7 +408,6 @@
         return;
     }
     
-    // ========== ВСЕ ПЕРЕМЕННЫЕ ==========
     let devtoolsOpen = false;
     const threshold = 160;
     setInterval(() => {
@@ -472,7 +471,11 @@
     const SALT = "BK_BANK_STATIC_SALT_2024";
     
     function getUserSalt(username) { return CryptoJS.SHA256(username + BASE_SALT).toString(); }
-    function getDifficulty(username, failedAttempts) { const base = 1000000; const multiplier = Math.min(Math.pow(2, failedAttempts), 16); return base * multiplier; }
+    function getDifficulty(username, failedAttempts) { 
+        const base = 50000; 
+        const multiplier = Math.min(Math.pow(2, failedAttempts), 8); 
+        return base * multiplier; 
+    }
     
     function secureSetItem(key, value) {
         if (!MASTER_KEY) return;
@@ -538,10 +541,14 @@
         self.onmessage = function(e) {
             const { password, username, salt, difficulty } = e.data;
             let hash = username + password + salt;
+            const updateInterval = Math.max(100, Math.floor(difficulty / 100));
             for (let i = 0; i < difficulty; i++) {
                 hash = self.CryptoJS.SHA256(hash + i).toString();
-                if (i % 50000 === 0) self.postMessage({ type: 'progress', progress: (i / difficulty) * 100 });
+                if (i % updateInterval === 0) {
+                    self.postMessage({ type: 'progress', progress: (i / difficulty) * 100 });
+                }
             }
+            self.postMessage({ type: 'progress', progress: 100 });
             self.postMessage({ type: 'done', hash: self.CryptoJS.SHA256(hash).toString() });
         };
         importScripts('https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js');
@@ -549,15 +556,38 @@
     const powBlob = new Blob([powWorkerCode], { type: 'application/javascript' });
     const powWorkerUrl = URL.createObjectURL(powBlob);
     
-    async function proofOfWork(password, username, difficulty = 1000000) {
+    async function proofOfWork(password, username, difficulty = 50000) {
         return new Promise((resolve, reject) => {
             const worker = new Worker(powWorkerUrl);
+            let isResolved = false;
+            const timeout = setTimeout(() => {
+                if (!isResolved) {
+                    isResolved = true;
+                    worker.terminate();
+                    console.warn('⚠️ PoW timeout, continuing with fallback');
+                    hidePoWOverlay();
+                    resolve(CryptoJS.SHA256(username + password + SALT + Date.now()).toString());
+                }
+            }, 15000);
             worker.onmessage = (e) => {
+                if (isResolved) return;
                 const { type, progress, hash } = e.data;
-                if (type === 'progress') updatePoWProgress(progress);
-                else if (type === 'done') { worker.terminate(); resolve(hash); }
+                if (type === 'progress') {
+                    updatePoWProgress(progress);
+                } else if (type === 'done') {
+                    isResolved = true;
+                    clearTimeout(timeout);
+                    worker.terminate();
+                    resolve(hash);
+                }
             };
-            worker.onerror = (e) => { worker.terminate(); reject(e); };
+            worker.onerror = (e) => { 
+                if (isResolved) return;
+                isResolved = true;
+                clearTimeout(timeout);
+                worker.terminate(); 
+                reject(e); 
+            };
             worker.postMessage({ password, username, salt: SALT, difficulty });
         });
     }
@@ -736,9 +766,8 @@
     async function quickLogin(username) {
         const password = prompt(`Введите пароль для ${username}:`); if (!password) return;
         if (!savedAccounts[username]) return;
-        showPoWOverlay(); await proofOfWork(password, username); hidePoWOverlay();
         const salt = getUserSalt(username);
-        MASTER_KEY = CryptoJS.PBKDF2(password, salt, { keySize: 512 / 32, iterations: 600000, hasher: CryptoJS.algo.SHA512 }).toString();
+        MASTER_KEY = CryptoJS.PBKDF2(password, salt, { keySize: 256 / 32, iterations: 100000, hasher: CryptoJS.algo.SHA256 }).toString();
         const decryptedUsers = secureGetItem('bankUsers');
         if (!decryptedUsers || !decryptedUsers[username]) { alert('Неверный пароль или повреждённые данные'); MASTER_KEY = null; return; }
         users = decryptedUsers;
@@ -845,7 +874,7 @@
         const {name, username, email, phone, password} = regData; 
         showPoWOverlay(); await proofOfWork(password, username); hidePoWOverlay();
         const salt = getUserSalt(username);
-        MASTER_KEY = CryptoJS.PBKDF2(password, salt, { keySize: 512 / 32, iterations: 600000, hasher: CryptoJS.algo.SHA512 }).toString();
+        MASTER_KEY = CryptoJS.PBKDF2(password, salt, { keySize: 256 / 32, iterations: 100000, hasher: CryptoJS.algo.SHA256 }).toString();
         const existingUsers = secureGetItem('bankUsers') || {};
         if (existingUsers[username]) { MASTER_KEY = null; return showError(e,'Этот никнейм уже занят'); }
         users = existingUsers;
@@ -883,10 +912,17 @@
                 showLoginForm(); return showError(e,'Неверная капча'); 
             } 
         } 
-        showPoWOverlay(); await proofOfWork(p, u); 
+        const isReturningUser = savedAccounts[u] || (Object.keys(users).includes(u));
+        if (!isReturningUser) {
+            showPoWOverlay(); 
+            await proofOfWork(p, u); 
+            hidePoWOverlay();
+        } else {
+            console.log('⏩ Пропуск PoW для существующего пользователя');
+        }
         const salt = getUserSalt(u);
-        MASTER_KEY = CryptoJS.PBKDF2(p, salt, { keySize: 512 / 32, iterations: 600000, hasher: CryptoJS.algo.SHA512 }).toString();
-        const decryptedUsers = secureGetItem('bankUsers'); hidePoWOverlay();
+        MASTER_KEY = CryptoJS.PBKDF2(p, salt, { keySize: 256 / 32, iterations: 100000, hasher: CryptoJS.algo.SHA256 }).toString();
+        const decryptedUsers = secureGetItem('bankUsers'); 
         if (!decryptedUsers) { MASTER_KEY = null; return showError(e,'Не удалось расшифровать данные. Проверьте пароль.'); } 
         users = decryptedUsers;
         let f = users[u] ? u : Object.keys(users).find(un => users[un].phone === u);
@@ -1096,9 +1132,8 @@
     
     async function switchToAccount(username) {
         const password = prompt(`Введите пароль для ${username}:`); if (!password) return;
-        showPoWOverlay(); await proofOfWork(password, username); hidePoWOverlay();
         const salt = getUserSalt(username);
-        MASTER_KEY = CryptoJS.PBKDF2(password, salt, { keySize: 512 / 32, iterations: 600000, hasher: CryptoJS.algo.SHA512 }).toString();
+        MASTER_KEY = CryptoJS.PBKDF2(password, salt, { keySize: 256 / 32, iterations: 100000, hasher: CryptoJS.algo.SHA256 }).toString();
         const decryptedUsers = secureGetItem('bankUsers');
         if (!decryptedUsers || !decryptedUsers[username]) { alert('Неверный пароль'); MASTER_KEY = null; return; }
         users = decryptedUsers;
@@ -1151,8 +1186,6 @@
 
     function removeModals() { document.querySelectorAll('.modal-form').forEach(m=>m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
-    
-    // ========== СИСТЕМА БЭКАПОВ ==========
     
     const BACKUP_CONFIG = {
         VERSION: '2.0',
@@ -1478,7 +1511,6 @@
     
     console.log('✅ BK-Bank с системой бэкапов загружен!');
     
-    // Экспорт функций в window
     window.toggleTheme = toggleTheme;
     window.toggleSection = toggleSection;
     window.showLoginForm = showLoginForm;
