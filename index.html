@@ -3,29 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>BK-Bank — Финансы нового поколения</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com blob: 'unsafe-inline' 'unsafe-hashes'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; worker-src 'self' blob:;">
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="BK-Bank">
-    <meta name="theme-color" content="#0a0a0a">
-    <link rel="apple-touch-icon" href="png/2025-01-31_14-13-47-Photoroom.png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; height: 100%; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; transition: background 0.3s; }
-        body.light-theme { background: #FFD700; }
-        body.light-theme .glass-header { background: rgba(255, 215, 0, 0.9); border-bottom: 1px solid #0a0a0a; }
-        body.light-theme .bank-name { background: linear-gradient(135deg, #0a0a0a, #333); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        body.light-theme .nav-link { color: #0a0a0a; }
-        body.light-theme .nav-link:hover { color: #000; background: rgba(0,0,0,0.1); }
-        body.light-theme .content-card { background: rgba(0, 0, 0, 0.05); back<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BK-Bank — Финансы нового поколения</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com blob: 'unsafe-inline' 'unsafe-hashes'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; worker-src 'self' blob:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; worker-src 'self' blob:;">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -43,48 +21,6 @@
         body.light-theme .nav-link { color: #0a0a0a; }
         body.light-theme .nav-link:hover { color: #000; background: rgba(0,0,0,0.1); }
         body.light-theme .content-card { background: rgba(0, 0, 0, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
-        body.light-theme p, body.light-theme li, body.light-theme span, body.light-theme div { color: #0a0a0a; }
-        body.light-theme strong { color: #000; }
-        body.light-theme .form-input { background: rgba(0,0,0,0.05); border: 1.5px solid rgba(0,0,0,0.2); color: #0a0a0a; }
-        body.light-theme .form-input::placeholder { color: #333; }
-        body.light-theme .gold-button { background: linear-gradient(135deg, #0a0a0a, #333); color: #FFD700; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #1a1a1a; }
-        ::-webkit-scrollbar-thumb { background: #FFD700; border-radius: 10px; }
-        body.light-theme ::-webkit-scrollbar-track { background: #FFD700; }
-        body.light-theme ::-webkit-scrollbar-thumb { background: #0a0a0a; }
-        .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.04) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.03) 0%, transparent 50%); pointer-events: none; z-index: -1; }
-        .particle { position: fixed; width: 2px; height: 2px; background: #FFD700; border-radius: 50%; opacity: 0.15; pointer-events: none; z-index: -1; animation: float 20s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0) translateX(0); } 25% { transform: translateY(-30px) translateX(15px); } 50% { transform: translateY(-15px) translateX(-20px); } 75% { transform: translateY(20px) translateX(10px); } }
-        .glass-header { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); background-color: rgba(18, 18, 18, 0.85); border-bottom: 1px solid rgba(255, 215, 0, 0.15); padding: 10px 16px; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); flex-wrap: wrap; }
-        .logo-wrapper { display: flex; align-items: center; gap: 8px; }
-        .logo-img { width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
-        .bank-name { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #FFD700, #FFC200, #FFE44D); background-size: 200% 200%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradientShift 4s ease infinite; }
-        @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-        .nav-links { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
-        .nav-link { background: transparent; border: none; color: #e0e0e0; padding: 8px 12px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; position: relative; }
-        .nav-link::after { content: ''; position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%) scaleX(0); width: 70%; height: 2px; background: #FFD700; transition: transform 0.3s ease; border-radius: 2px; }
-        .nav-link:hover { color: #FFD700; transform: translateY(-2px); }
-        .nav-link:hover::after { transform: translateX(-50%) scaleX(1); }
-        .auth-buttons { display: flex; gap: 8px; }
-        .login-btn, .register-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
-        .login-btn::before, .register-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: #FFD700; transition: left 0.3s ease; z-index: -1; }
-        .login-btn:hover, .register-btn:hover { color: #0a0a0a; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3); }
-        .login-btn:hover::before, .register-btn:hover::before { left: 0; }
-        body.light-theme .login-btn, body.light-theme .register-btn { border: 1.5px solid #0a0a0a; color: #0a0a0a; }
-        body.light-theme .login-btn::before, body.light-theme .register-btn::before { background: #0a0a0a; }
-        body.light-theme .login-btn:hover, body.light-theme .register-btn:hover { color: #FFD700; }
-        .profile-btn { background: transparent; border: 1.5px solid #FFD700; color: #FFD700; padding: 6px 12px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 6px; }
-        .profile-btn:hover { background: #FFD700; color: #0a0a0a; transform: translateY(-2px); }
-        .profile-btn img { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #FFD700; }
-        .theme-toggle { background: transparent; border: 1px solid #FFD700; color: #FFD700; padding: 6px 12px; border-radius: 30px; cursor: pointer; font-size: 0.85rem; transition: all 0.25s; }
-        .theme-toggle:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(255,215,0,0.3); }
-        body.light-theme .theme-toggle { border: 1px solid #0a0a0a; color: #0a0a0a; }
-        body.light-theme .profile-btn { border: 1.5px solid #0a0a0a; color: #0a0a0a; }
-        body.light-theme .profile-btn:hover { background: #0a0a0a; color: #FFD700; }
-        .main-container { max-width: 1300px; margin: 20px auto; padding: 0 12px; }
-        .content-card { background: rgba(25, 25, 25, 0.75); backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.12); border-radius: 24px; padding: 20px; margin-bottom: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); animation: fadeInUp 0.6s ease-out; transition: transform 0.3s ease, border-color 0.3s ease; }
-drop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
         body.light-theme p, body.light-theme li, body.light-theme span, body.light-theme div { color: #0a0a0a; }
         body.light-theme strong { color: #000; }
         body.light-theme .form-input { background: rgba(0,0,0,0.05); border: 1.5px solid rgba(0,0,0,0.2); color: #0a0a0a; }
@@ -249,6 +185,27 @@ drop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
         .pow-progress { width: 100%; height: 8px; background: #333; border-radius: 4px; margin: 20px 0; overflow: hidden; }
         .pow-progress-bar { height: 100%; background: #FFD700; width: 0%; transition: width 0.05s linear; }
         .pow-status { color: #FFD700; font-size: 0.9rem; margin-top: 10px; }
+        .backup-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 10002; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s; }
+        .backup-container { background: #1a1a1a; border: 2px solid #FFD700; border-radius: 30px; padding: 30px; max-width: 500px; width: 90%; max-height: 85vh; overflow-y: auto; animation: modalPop 0.4s; }
+        .backup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .backup-header h2 { margin: 0; font-size: 1.8rem; }
+        .backup-close { background: transparent; border: none; color: #FFD700; font-size: 28px; cursor: pointer; transition: all 0.3s; }
+        .backup-close:hover { transform: rotate(90deg); }
+        .backup-info-card { background: rgba(255,215,0,0.05); border-radius: 16px; padding: 20px; margin-bottom: 25px; }
+        .backup-info-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,215,0,0.1); }
+        .backup-info-item:last-child { border-bottom: none; }
+        .backup-section { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+        .backup-section h3 { color: #FFD700; margin-bottom: 15px; font-size: 1.2rem; }
+        .backup-input { width: 100%; padding: 14px; margin-bottom: 15px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,215,0,0.2); border-radius: 40px; color: white; font-size: 0.95rem; }
+        .backup-input:focus { border-color: #FFD700; outline: none; }
+        .backup-btn { padding: 12px 20px; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.3s; width: 100%; }
+        .backup-btn-primary { background: linear-gradient(135deg, #FFD700, #FFB300); color: #0a0a0a; }
+        .backup-btn-success { background: #2ecc71; color: white; }
+        .backup-btn-warning { background: #f39c12; color: white; }
+        .backup-btn-danger { background: #e74c3c; color: white; }
+        .backup-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255,215,0,0.3); }
+        .backup-warning { color: #e74c3c; font-size: 0.85rem; margin-top: 10px; }
+        .backup-file-label { display: block; padding: 14px; background: rgba(255,215,0,0.1); border: 2px dashed rgba(255,215,0,0.3); border-radius: 40px; text-align: center; cursor: pointer; margin-bottom: 15px; }
         @media (min-width: 640px) {
             .glass-header { padding: 12px 24px; }
             .logo-img { width: 42px; height: 42px; }
@@ -353,6 +310,7 @@ drop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
             <button class="gold-button" style="width:auto; padding:16px 40px; margin-top:20px;" onclick="window.showRegistrationForm()">✨ Открыть счёт ✨</button>
         </div>
     </div>
+    
     <div id="services-section" class="content-card hidden">
         <h2>Наши услуги</h2><div class="divider"></div>
         <div class="services-grid">
@@ -363,12 +321,14 @@ drop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
             <div class="service-card"><div class="service-icon">💳</div><div class="service-content"><div class="service-title">Мультивалютные</div><div class="service-desc">Карты</div></div><span class="service-badge">VISA/MC</span></div>
         </div>
     </div>
+    
     <div id="cards-section" class="content-card hidden">
         <h2>Эксклюзивные карты</h2><div class="divider"></div>
         <p style="font-size:1rem;">Каждая карта — это ваш пропуск в мир, где труд конвертируется в капитал.</p>
         <div id="cards-stack-container" style="display:flex; justify-content:center; margin:30px 0; position:relative; min-height:350px; perspective:1200px;"></div>
         <div style="text-align:center;"><div style="background:rgba(255,215,0,0.05); border:1px solid rgba(255,215,0,0.2); border-radius:40px; padding:16px 30px; color:#FFD700; display:inline-block; font-size:1.1rem;"><strong>✨ Выберите карту ✨</strong></div></div>
     </div>
+    
     <div id="bktok-section" class="content-card hidden">
         <h2>🚀 BKtok Биржа</h2><div class="divider"></div>
         <div id="bktok-guest-message" style="text-align:center; padding:20px; background:rgba(255,215,0,0.05); border-radius:16px; margin-bottom:20px;">
@@ -408,28 +368,33 @@ drop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
             <div style="margin-top:20px;"><h4>📜 История сделок</h4><div id="trade-history" style="max-height:150px; overflow-y:auto;"></div></div>
         </div>
     </div>
+    
     <div id="tasks-section" class="content-card hidden">
         <h2>📋 Задания</h2><div class="divider"></div>
         <div id="tasks-guest-message" style="text-align:center; padding:15px;">🔒 Войдите для просмотра</div>
         <div id="tasks-content"><div class="tasks-grid" id="tasks-container"></div></div>
         <button class="gold-button" onclick="window.toggleSection('bktok')">← На биржу</button>
     </div>
+    
     <div id="cases-section" class="content-card hidden">
         <h2>🎁 Кейсы</h2><div class="divider"></div>
         <div id="cases-guest-message" style="text-align:center; padding:15px;">🔒 Войдите для открытия</div>
         <div id="cases-content"><div class="cases-grid" id="cases-container"></div></div>
         <button class="gold-button" onclick="window.toggleSection('bktok')">← На биржу</button>
     </div>
+    
     <div id="support-section" class="content-card hidden">
         <h2>🤖 Поддержка (AI)</h2><div class="divider"></div>
         <p style="margin-bottom:15px; color:#FFD700;"><i>Задайте вопрос нашей нейросети. Она поможет с откатами транзакций и другими вопросами!</i></p>
         <div id="support-container"></div>
     </div>
+    
     <div id="chats-section" class="content-card hidden">
         <h2>💬 Чаты</h2><div class="divider"></div>
         <div id="chats-guest-message" style="text-align:center; padding:15px;">🔒 Войдите для доступа к чатам</div>
         <div id="chats-content"><div id="chats-container"></div></div>
     </div>
+    
     <div id="profile-section" class="content-card hidden"></div>
     <div id="public-profile-section" class="content-card hidden"></div>
 </main>
@@ -443,6 +408,7 @@ drop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
         return;
     }
     
+    // ========== ВСЕ ПЕРЕМЕННЫЕ ==========
     let devtoolsOpen = false;
     const threshold = 160;
     setInterval(() => {
@@ -620,19 +586,50 @@ drop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
         { img: 'png/2025-01-30_23-01-20-Photoroom.png' }, { img: 'png/classkr.png' }, { img: 'png/Bk-bakcl.png' }
     ];
 
-    function renderCardsStack() { const c = document.getElementById('cards-stack-container'); if (!c) return; isStackExpanded = false; c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="position:absolute; width:220px; transition:all 0.5s; cursor:pointer; filter:drop-shadow(0 15px 30px rgba(0,0,0,0.6)); transform:rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px); z-index:${i+1};" onclick="handleStackClick(event)"><img src="${card.img}" style="width:100%; border-radius:16px; border:2px solid rgba(255,215,0,0.3); mix-blend-mode:lighten;"></div>`).join(''); }
-    function handleStackClick(e) { e.stopPropagation(); const c = document.getElementById('cards-stack-container'), cards = c.querySelectorAll('.stack-card'); if (!isStackExpanded) { cards.forEach((card, i) => { card.style.transform = `translateX(${(i-3)*110}px) translateY(${Math.abs(i-3)*6}px) rotate(${(i-3)*5}deg)`; card.style.zIndex = i + 10; }); isStackExpanded = true; } else { cards.forEach((card, i) => { card.style.transform = `rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px)`; card.style.zIndex = i + 1; }); isStackExpanded = false; } }
+    function renderCardsStack() { 
+        const c = document.getElementById('cards-stack-container'); 
+        if (!c) return; 
+        isStackExpanded = false; 
+        c.innerHTML = cardList.map((card, i) => `<div class="stack-card" style="position:absolute; width:220px; transition:all 0.5s; cursor:pointer; filter:drop-shadow(0 15px 30px rgba(0,0,0,0.6)); transform:rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px); z-index:${i+1};" onclick="handleStackClick(event)"><img src="${card.img}" style="width:100%; border-radius:16px; border:2px solid rgba(255,215,0,0.3); mix-blend-mode:lighten;"></div>`).join(''); 
+    }
+    
+    function handleStackClick(e) { 
+        e.stopPropagation(); 
+        const c = document.getElementById('cards-stack-container'), cards = c.querySelectorAll('.stack-card'); 
+        if (!isStackExpanded) { 
+            cards.forEach((card, i) => { 
+                card.style.transform = `translateX(${(i-3)*110}px) translateY(${Math.abs(i-3)*6}px) rotate(${(i-3)*5}deg)`; 
+                card.style.zIndex = i + 10; 
+            }); 
+            isStackExpanded = true; 
+        } else { 
+            cards.forEach((card, i) => { 
+                card.style.transform = `rotate(${[-8,-4,0,4,8,12,16][i]}deg) translateX(${[-25,-15,-5,0,5,15,25][i]}px)`; 
+                card.style.zIndex = i + 1; 
+            }); 
+            isStackExpanded = false; 
+        } 
+    }
 
     function updateUIForAuth() {
         const authBtns = document.getElementById('auth-buttons'), profileBtn = document.getElementById('profile-btn-header');
         if (currentUser) {
             authBtns.classList.add('hidden'); profileBtn.classList.remove('hidden');
-            const u = users[currentUser]; document.getElementById('header-username').textContent = u.name || currentUser; if (u.avatar) document.getElementById('header-avatar').src = u.avatar;
-            ['bktok','tasks','cases','chats'].forEach(s => { document.getElementById(s+'-guest-message')?.classList.add('hidden'); document.getElementById(s+'-content')?.classList.remove('hidden'); });
+            const u = users[currentUser]; 
+            document.getElementById('header-username').textContent = u.name || currentUser; 
+            if (u.avatar) document.getElementById('header-avatar').src = u.avatar;
+            ['bktok','tasks','cases','chats'].forEach(s => { 
+                document.getElementById(s+'-guest-message')?.classList.add('hidden'); 
+                document.getElementById(s+'-content')?.classList.remove('hidden'); 
+            });
         } else {
             authBtns.classList.remove('hidden'); profileBtn.classList.add('hidden');
-            ['bktok','tasks','cases','chats'].forEach(s => { document.getElementById(s+'-guest-message')?.classList.remove('hidden'); document.getElementById(s+'-content')?.classList.add('hidden'); });
+            ['bktok','tasks','cases','chats'].forEach(s => { 
+                document.getElementById(s+'-guest-message')?.classList.remove('hidden'); 
+                document.getElementById(s+'-content')?.classList.add('hidden'); 
+            });
         }
+        addBackupButton();
     }
 
     window.onload = async () => { 
@@ -665,7 +662,10 @@ drop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
         toggleSection('about');
     };
     
-    function toggleTheme() { document.body.classList.toggle('light-theme'); realSetItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); }
+    function toggleTheme() { 
+        document.body.classList.toggle('light-theme'); 
+        realSetItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); 
+    }
     
     function showModalOverlay() { 
         const existing = document.getElementById('modal-overlay'); 
@@ -817,7 +817,26 @@ drop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
         if (existing) existing.remove();
         document.body.appendChild(m); 
     }
-    function nextRegStep() { const e = document.getElementById('registerError'); if (regStep === 1) { const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; if (!n||!u||!p||!c) return showError(e,'Все поля обязательны'); if (p.length<6) return showError(e,'Пароль должен быть не менее 6 символов'); if (p!==c) return showError(e,'Пароли не совпадают'); regData = { name:n, username:u, password:p }; regStep = 2; renderRegStep(); } else if (regStep === 2) { const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Некорректный Email'); if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон: +7XXXXXXXXXX'); regData.email = em||''; regData.phone = ph||'+70000000000'; regStep = 3; renderRegStep(); } }
+    function nextRegStep() { 
+        const e = document.getElementById('registerError'); 
+        if (regStep === 1) { 
+            const n = document.getElementById('regName').value.trim(), u = document.getElementById('regUsername').value.trim(), p = document.getElementById('regPassword').value, c = document.getElementById('regConfirm').value; 
+            if (!n||!u||!p||!c) return showError(e,'Все поля обязательны'); 
+            if (p.length<6) return showError(e,'Пароль должен быть не менее 6 символов'); 
+            if (p!==c) return showError(e,'Пароли не совпадают'); 
+            regData = { name:n, username:u, password:p }; 
+            regStep = 2; 
+            renderRegStep(); 
+        } else if (regStep === 2) { 
+            const em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(); 
+            if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showError(e,'Некорректный Email'); 
+            if (ph && ph!=='+7' && !/^\+7\d{10}$/.test(ph)) return showError(e,'Телефон: +7XXXXXXXXXX'); 
+            regData.email = em||''; 
+            regData.phone = ph||'+70000000000'; 
+            regStep = 3; 
+            renderRegStep(); 
+        } 
+    }
     function prevRegStep() { regStep--; renderRegStep(); }
     async function completeRegistration() { 
         const e = document.getElementById('registerError'), c = document.getElementById('captchaInput').value.trim(); 
@@ -1133,8 +1152,333 @@ drop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
     function removeModals() { document.querySelectorAll('.modal-form').forEach(m=>m.remove()); }
     function showError(el, msg) { if (!el) return; el.textContent = msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
     
-    console.log('✅ Функции экспортированы в window');
+    // ========== СИСТЕМА БЭКАПОВ ==========
     
+    const BACKUP_CONFIG = {
+        VERSION: '2.0',
+        AUTO_BACKUP_ENABLED: true,
+        MAX_BACKUPS: 10,
+        ENCRYPTION_ITERATIONS: 100000
+    };
+    
+    async function encryptBackupData(data, password) {
+        return new Promise((resolve, reject) => {
+            try {
+                const salt = CryptoJS.lib.WordArray.random(128/8);
+                const iv = CryptoJS.lib.WordArray.random(128/8);
+                const key = CryptoJS.PBKDF2(password, salt, { keySize: 256/32, iterations: BACKUP_CONFIG.ENCRYPTION_ITERATIONS });
+                const dataString = JSON.stringify(data);
+                const encrypted = CryptoJS.AES.encrypt(dataString, key, { iv: iv });
+                const hmac = CryptoJS.HmacSHA256(encrypted.toString(), key).toString();
+                resolve(JSON.stringify({
+                    version: BACKUP_CONFIG.VERSION,
+                    salt: salt.toString(),
+                    iv: iv.toString(),
+                    data: encrypted.toString(),
+                    hmac: hmac,
+                    timestamp: new Date().toISOString(),
+                    checksum: CryptoJS.SHA256(dataString).toString()
+                }));
+            } catch (e) { reject(e); }
+        });
+    }
+    
+    async function decryptBackupData(encryptedData, password) {
+        return new Promise((resolve, reject) => {
+            try {
+                const parsed = JSON.parse(encryptedData);
+                if (!parsed.version || !parsed.salt || !parsed.iv || !parsed.data) { reject(new Error('Неверный формат файла бэкапа')); return; }
+                const salt = CryptoJS.enc.Hex.parse(parsed.salt);
+                const iv = CryptoJS.enc.Hex.parse(parsed.iv);
+                const key = CryptoJS.PBKDF2(password, salt, { keySize: 256/32, iterations: BACKUP_CONFIG.ENCRYPTION_ITERATIONS });
+                if (parsed.hmac) {
+                    const computedHmac = CryptoJS.HmacSHA256(parsed.data, key).toString();
+                    if (computedHmac !== parsed.hmac) { reject(new Error('Файл поврежден или неверный пароль')); return; }
+                }
+                const decrypted = CryptoJS.AES.decrypt(parsed.data, key, { iv: iv });
+                const dataString = decrypted.toString(CryptoJS.enc.Utf8);
+                if (!dataString) { reject(new Error('Неверный пароль')); return; }
+                const data = JSON.parse(dataString);
+                if (parsed.checksum) {
+                    const computedChecksum = CryptoJS.SHA256(dataString).toString();
+                    if (computedChecksum !== parsed.checksum) { reject(new Error('Данные повреждены')); return; }
+                }
+                resolve(data);
+            } catch (e) { reject(new Error('Неверный пароль или поврежденный файл')); }
+        });
+    }
+    
+    async function createBackup() {
+        if (!currentUser) { alert('Войдите в систему'); return; }
+        const password = prompt('🔐 Придумайте пароль для шифрования бэкапа (минимум 6 символов):');
+        if (!password || password.length < 6) { alert('Пароль должен быть не менее 6 символов'); return; }
+        if (!confirm('📦 Создать резервную копию всех данных? Это может занять несколько секунд.')) return;
+        showToast('🔄 Создание бэкапа...', 'info');
+        try {
+            const backupData = {
+                user: users[currentUser],
+                balance: bktokBalances[currentUser] || 0,
+                tasks: userTasks[currentUser] || {},
+                trades: bktokTrades.filter(t => t.buyer === currentUser || t.seller === currentUser),
+                orders: [...bktokOrders.buy, ...bktokOrders.sell].filter(o => o.user === currentUser),
+                supportChat: allSupportChats[currentUser] || [],
+                privateChats: Object.entries(privateChats).filter(([id]) => id.includes(currentUser)).reduce((acc, [id, msgs]) => ({...acc, [id]: msgs}), {}),
+                settings: { theme: document.body.classList.contains('light-theme') ? 'light' : 'dark', savedAccounts: savedAccounts },
+                metadata: { username: currentUser, created: new Date().toISOString(), appVersion: '2.0' }
+            };
+            const encrypted = await encryptBackupData(backupData, password);
+            const backups = JSON.parse(localStorage.getItem('bk_backups') || '[]');
+            backups.unshift({ id: Date.now(), username: currentUser, timestamp: new Date().toISOString(), size: encrypted.length, encrypted: encrypted });
+            if (backups.length > BACKUP_CONFIG.MAX_BACKUPS) backups.pop();
+            localStorage.setItem('bk_backups', JSON.stringify(backups));
+            localStorage.setItem(`bk_last_backup_${currentUser}`, Date.now().toString());
+            showToast('✅ Бэкап успешно создан!', 'success');
+            if (confirm('Бэкап создан! Скачать файл на устройство?')) downloadBackupFile(encrypted);
+            if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({ type: 'BACKUP_CREATED', user: currentUser });
+            }
+        } catch (error) { console.error('Ошибка создания бэкапа:', error); showToast('❌ Ошибка создания бэкапа', 'error'); }
+    }
+    
+    function downloadBackupFile(encryptedData = null) {
+        if (!currentUser) { alert('Войдите в систему'); return; }
+        if (encryptedData) saveBackupToFile(encryptedData);
+        else {
+            const backups = JSON.parse(localStorage.getItem('bk_backups') || '[]');
+            const lastBackup = backups.find(b => b.username === currentUser);
+            if (!lastBackup) { alert('Бэкапы не найдены. Создайте новый бэкап.'); return; }
+            saveBackupToFile(lastBackup.encrypted);
+        }
+    }
+    
+    function saveBackupToFile(encryptedData) {
+        const blob = new Blob([encryptedData], { type: 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `BK-Bank_Backup_${currentUser}_${new Date().toISOString().split('T')[0]}.bkp`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('📥 Файл бэкапа скачан', 'success');
+    }
+    
+    async function restoreFromFile(file) {
+        if (!currentUser) { alert('Войдите в систему'); return; }
+        const password = prompt('🔐 Введите пароль от бэкапа:'); if (!password) return;
+        if (!confirm('⚠️ ВНИМАНИЕ! Все текущие данные будут заменены данными из бэкапа. Продолжить?')) return;
+        if (!confirm('❗ Вы ТОЧНО уверены? Это действие нельзя отменить!')) return;
+        showToast('🔄 Восстановление данных...', 'info');
+        try {
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const encryptedData = e.target.result;
+                    const backupData = await decryptBackupData(encryptedData, password);
+                    if (backupData.metadata.username !== currentUser) {
+                        if (!confirm(`Бэкап принадлежит пользователю ${backupData.metadata.username}. Восстановить в текущий аккаунт?`)) return;
+                    }
+                    if (backupData.user) Object.assign(users[currentUser], backupData.user);
+                    if (backupData.balance !== undefined) bktokBalances[currentUser] = backupData.balance;
+                    if (backupData.tasks) userTasks[currentUser] = backupData.tasks;
+                    if (backupData.supportChat) allSupportChats[currentUser] = backupData.supportChat;
+                    if (backupData.privateChats) Object.assign(privateChats, backupData.privateChats);
+                    if (backupData.settings) {
+                        if (backupData.settings.theme === 'light') document.body.classList.add('light-theme');
+                        else document.body.classList.remove('light-theme');
+                        if (backupData.settings.savedAccounts) {
+                            Object.assign(savedAccounts, backupData.settings.savedAccounts);
+                            localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts));
+                        }
+                    }
+                    if (MASTER_KEY) {
+                        secureSetItem('bankUsers', users);
+                        secureSetItem('bktokBalances', bktokBalances);
+                        secureSetItem('userTasks', userTasks);
+                        secureSetItem('allSupportChats', allSupportChats);
+                        secureSetItem('privateChats', privateChats);
+                    }
+                    showToast('✅ Данные успешно восстановлены!', 'success');
+                    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.controller.postMessage({ type: 'BACKUP_RESTORED', user: currentUser });
+                    }
+                    updateUIForAuth();
+                    setTimeout(() => { if (confirm('Данные восстановлены. Перезагрузить страницу для применения всех изменений?')) location.reload(); }, 1000);
+                } catch (error) { console.error('Ошибка восстановления:', error); showToast('❌ ' + error.message, 'error'); }
+            };
+            reader.readAsText(file);
+        } catch (error) { console.error('Ошибка чтения файла:', error); showToast('❌ Ошибка чтения файла', 'error'); }
+    }
+    
+    async function restoreFromStorage() {
+        if (!currentUser) { alert('Войдите в систему'); return; }
+        const backups = JSON.parse(localStorage.getItem('bk_backups') || '[]');
+        const userBackups = backups.filter(b => b.username === currentUser);
+        if (userBackups.length === 0) { alert('Нет доступных бэкапов'); return; }
+        const backup = userBackups[0];
+        const password = prompt(`🔐 Введите пароль от бэкапа (создан ${new Date(backup.timestamp).toLocaleString('ru-RU')}):`);
+        if (!password) return;
+        if (!confirm('⚠️ Восстановить данные из локального бэкапа?')) return;
+        showToast('🔄 Восстановление...', 'info');
+        try {
+            const backupData = await decryptBackupData(backup.encrypted, password);
+            if (backupData.user) Object.assign(users[currentUser], backupData.user);
+            if (backupData.balance !== undefined) bktokBalances[currentUser] = backupData.balance;
+            if (backupData.tasks) userTasks[currentUser] = backupData.tasks;
+            if (MASTER_KEY) {
+                secureSetItem('bankUsers', users);
+                secureSetItem('bktokBalances', bktokBalances);
+                secureSetItem('userTasks', userTasks);
+            }
+            showToast('✅ Данные восстановлены!', 'success');
+            updateUIForAuth();
+        } catch (error) { showToast('❌ ' + error.message, 'error'); }
+    }
+    
+    function showBackupModal() {
+        if (!currentUser) { alert('Войдите в систему'); return; }
+        const existing = document.querySelector('.backup-modal');
+        if (existing) existing.remove();
+        const modal = document.createElement('div');
+        modal.className = 'backup-modal';
+        modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+        const backups = JSON.parse(localStorage.getItem('bk_backups') || '[]');
+        const userBackups = backups.filter(b => b.username === currentUser);
+        const lastBackup = userBackups[0];
+        const lastBackupTime = localStorage.getItem(`bk_last_backup_${currentUser}`);
+        modal.innerHTML = `
+            <div class="backup-container" onclick="event.stopPropagation()">
+                <div class="backup-header"><h2>💾 Управление бэкапами</h2><button class="backup-close" onclick="this.closest('.backup-modal').remove()">&times;</button></div>
+                <div class="backup-info-card">
+                    <div class="backup-info-item"><span>📅 Последний бэкап:</span><strong>${lastBackupTime ? new Date(parseInt(lastBackupTime)).toLocaleString('ru-RU') : 'Никогда'}</strong></div>
+                    <div class="backup-info-item"><span>📦 Доступно бэкапов:</span><strong>${userBackups.length}</strong></div>
+                    ${lastBackup ? `<div class="backup-info-item"><span>💿 Размер последнего:</span><strong>${(lastBackup.size / 1024).toFixed(2)} KB</strong></div>` : ''}
+                </div>
+                <div class="backup-section">
+                    <h3>📤 Создать новый бэкап</h3>
+                    <p style="margin-bottom:15px; opacity:0.8;">Создайте зашифрованную копию всех данных</p>
+                    <button class="backup-btn backup-btn-primary" onclick="window.createBackup(); this.closest('.backup-modal').remove();">🔐 Создать бэкап</button>
+                </div>
+                <div class="backup-section">
+                    <h3>📥 Скачать бэкап</h3>
+                    <p style="margin-bottom:15px; opacity:0.8;">Сохраните файл на устройство</p>
+                    <button class="backup-btn backup-btn-success" onclick="window.downloadBackupFile(); this.closest('.backup-modal').remove();">💾 Скачать последний бэкап</button>
+                </div>
+                <div class="backup-section">
+                    <h3>📂 Восстановить из файла</h3>
+                    <p style="margin-bottom:15px; opacity:0.8;">Загрузите файл бэкапа (.bkp)</p>
+                    <input type="file" id="backupFileInput" accept=".bkp,text/plain,application/octet-stream" style="display:none;">
+                    <button class="backup-btn backup-btn-warning" onclick="document.getElementById('backupFileInput').click()">📁 Выбрать файл</button>
+                    <p class="backup-warning">⚠️ Текущие данные будут заменены!</p>
+                </div>
+                ${userBackups.length > 0 ? `
+                <div class="backup-section">
+                    <h3>🔄 Восстановить из хранилища</h3>
+                    <p style="margin-bottom:15px; opacity:0.8;">Использовать сохраненный бэкап</p>
+                    <button class="backup-btn backup-btn-danger" onclick="window.restoreFromStorage(); this.closest('.backup-modal').remove();">⚡ Восстановить</button>
+                </div>` : ''}
+                <div style="text-align:center; margin-top:20px;">
+                    <button class="backup-close" style="background:transparent; border:1px solid #FFD700; color:#FFD700; padding:10px 30px; border-radius:30px;" onclick="this.closest('.backup-modal').remove()">Закрыть</button>
+                </div>
+            </div>`;
+        document.body.appendChild(modal);
+        setTimeout(() => {
+            const fileInput = document.getElementById('backupFileInput');
+            if (fileInput) fileInput.onchange = (e) => { const file = e.target.files[0]; if (file) { modal.remove(); restoreFromFile(file); } };
+        }, 100);
+    }
+    
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.style.cssText = `position:fixed; top:80px; right:20px; background:${type==='success'?'#2ecc71':type==='error'?'#e74c3c':'#FFD700'}; color:${type==='info'?'#0a0a0a':'white'}; padding:15px 20px; border-radius:40px; z-index:10003; animation:slideIn 0.4s ease; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,0.3);`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.animation = 'slideOut 0.4s ease'; setTimeout(() => toast.remove(), 400); }, 3000);
+    }
+    
+    async function autoBackup(reason = 'auto') {
+        if (!currentUser || !BACKUP_CONFIG.AUTO_BACKUP_ENABLED) return;
+        try {
+            const backupData = {
+                user: users[currentUser],
+                balance: bktokBalances[currentUser] || 0,
+                tasks: userTasks[currentUser] || {},
+                metadata: { username: currentUser, created: new Date().toISOString(), reason: reason }
+            };
+            const autoPassword = users[currentUser].passwordHash.substring(0, 32);
+            const encrypted = await encryptBackupData(backupData, autoPassword);
+            const backups = JSON.parse(localStorage.getItem('bk_autobackups') || '[]');
+            backups.unshift({ id: Date.now(), username: currentUser, timestamp: new Date().toISOString(), reason: reason, encrypted: encrypted });
+            if (backups.length > 5) backups.pop();
+            localStorage.setItem('bk_autobackups', JSON.stringify(backups));
+        } catch (error) { console.error('Ошибка авто-бэкапа:', error); }
+    }
+    
+    function addBackupButton() {
+        const header = document.querySelector('.nav-links');
+        if (header && currentUser) {
+            const existing = document.getElementById('backup-nav-btn');
+            if (existing) return;
+            const backupBtn = document.createElement('button');
+            backupBtn.id = 'backup-nav-btn';
+            backupBtn.className = 'nav-link';
+            backupBtn.innerHTML = '💾 Бэкап';
+            backupBtn.onclick = showBackupModal;
+            backupBtn.style.cssText = `background:rgba(255,215,0,0.1); border:1px solid #FFD700;`;
+            const supportBtn = Array.from(header.children).find(b => b.textContent === 'Поддержка');
+            if (supportBtn) header.insertBefore(backupBtn, supportBtn);
+            else header.appendChild(backupBtn);
+        }
+    }
+    
+    function showBackupInfo() {
+        if (!currentUser) return;
+        const lastBackup = localStorage.getItem(`bk_last_backup_${currentUser}`);
+        if (lastBackup) {
+            const time = new Date(parseInt(lastBackup));
+            const daysAgo = Math.floor((Date.now() - time) / (1000 * 60 * 60 * 24));
+            if (daysAgo > 7) showToast(`💡 Последний бэкап был ${daysAgo} дней назад. Рекомендуем создать новый!`, 'info');
+        }
+    }
+    
+    const originalLogout = logout;
+    logout = async function() { if (currentUser) await autoBackup('logout'); return originalLogout(); };
+    
+    const originalSwitchAccount = switchAccount;
+    switchAccount = async function() { if (currentUser) await autoBackup('switch'); return originalSwitchAccount(); };
+    
+    const originalUpdateUIForAuth = updateUIForAuth;
+    updateUIForAuth = function() { originalUpdateUIForAuth(); if (currentUser) { addBackupButton(); showBackupInfo(); } };
+    
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                .then(registration => { console.log('✅ Service Worker зарегистрирован'); if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); })
+                .catch(error => console.error('❌ Ошибка регистрации SW:', error));
+        });
+    }
+    
+    document.addEventListener('dragover', (e) => e.preventDefault());
+    document.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        for (let file of files) {
+            if (file.name.endsWith('.bkp')) { if (confirm(`Восстановить данные из файла "${file.name}"?`)) restoreFromFile(file); break; }
+        }
+    });
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('action') === 'backup') setTimeout(() => { if (currentUser) showBackupModal(); }, 1000);
+    
+    const style = document.createElement('style');
+    style.textContent = `@keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } } @keyframes slideOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(50px); } }`;
+    document.head.appendChild(style);
+    
+    console.log('✅ BK-Bank с системой бэкапов загружен!');
+    
+    // Экспорт функций в window
     window.toggleTheme = toggleTheme;
     window.toggleSection = toggleSection;
     window.showLoginForm = showLoginForm;
@@ -1166,6 +1510,10 @@ drop-filter: blur(15px); border: 1px solid rgba(0, 0, 0, 0.2); }
     window.completeRegistration = completeRegistration;
     window.nextRegStep = nextRegStep;
     window.prevRegStep = prevRegStep;
+    window.createBackup = createBackup;
+    window.downloadBackupFile = downloadBackupFile;
+    window.restoreFromStorage = restoreFromStorage;
+    window.showBackupModal = showBackupModal;
     
 })();
 </script>
